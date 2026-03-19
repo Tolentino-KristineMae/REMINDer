@@ -40,6 +40,13 @@ const PaidBillsPage = () => {
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState('');
 
+    const STORAGE_BASE_URL =
+        import.meta.env.VITE_STORAGE_BASE_URL ||
+        import.meta.env.VITE_BACKEND_BASE_URL ||
+        'http://localhost:8000';
+
+    const buildStorageUrl = (path) => `${STORAGE_BASE_URL.replace(/\/$/, '')}/storage/${path}`;
+
     useEffect(() => {
         fetchPaidBills();
     }, []);
@@ -94,7 +101,7 @@ const PaidBillsPage = () => {
     };
 
     const handleViewProof = (filePath) => {
-        setPreviewImage(`http://localhost:8000/storage/${filePath}`);
+        setPreviewImage(buildStorageUrl(filePath));
     };
 
     const confirmDelete = (bill) => {
@@ -145,7 +152,7 @@ const PaidBillsPage = () => {
             {/* Audio Player (Hidden) */}
             <audio 
                 ref={audioRef}
-                src={playingAudio ? `http://localhost:8000/storage/${playingAudio}` : ""}
+                src={playingAudio ? buildStorageUrl(playingAudio) : ""}
                 onEnded={() => setPlayingAudio(null)}
                 className="hidden"
             />
@@ -378,7 +385,7 @@ const PaidBillsPage = () => {
                                         <div className="h-32 bg-gray-100 relative group/img overflow-hidden">
                                             {bill.proof_of_payments?.[0]?.file_path ? (
                                                 <img 
-                                                    src={`http://localhost:8000/storage/${bill.proof_of_payments[0].file_path}`} 
+                                                    src={buildStorageUrl(bill.proof_of_payments[0].file_path)} 
                                                     className="w-full h-full object-cover transition-transform group-hover/img:scale-110"
                                                     alt=""
                                                 />
