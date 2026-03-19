@@ -19,12 +19,12 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 
 WORKDIR /app
 
-# Copy only composer files first for better layer caching
-COPY Rback/composer.json Rback/composer.lock* ./Rback/
-RUN cd Rback && composer install --no-dev --optimize-autoloader --no-interaction
-
-# Copy the rest of the backend
+# Copy backend first so `artisan` exists for Composer post-install scripts.
+# (Laravel's Composer scripts run `php artisan package:discover`.)
 COPY Rback ./Rback
+RUN cd Rback && \
+    if [ ! -f .env ] && [ -f .env.example ]; then cp .env.example .env; fi && \
+    composer install --no-dev --optimize-autoloader --no-interaction
 
 # Build frontend and copy dist -> Laravel public
 COPY frontend/package.json frontend/package-lock.json* ./frontend/
@@ -32,10 +32,7 @@ RUN cd frontend && npm ci
 COPY frontend ./frontend
 RUN cd frontend && npm run build && rm -rf ../Rback/public/* && cp -R dist/* ../Rback/public/
 
-# Ensure Laravel has a key available at build-time.
-# Note: Render will still provide APP_KEY at runtime. If APP_KEY isn't set yet,
-# Laravel will fall back to whatever is in .env inside the container (if any).
-RUN cd Rback && if [ -z "$APP_KEY" ]; then true; fi
+# (Optional) APP_KEY will be provided via Render Environment Variables at runtime.
 
 EXPOSE 8000
 
