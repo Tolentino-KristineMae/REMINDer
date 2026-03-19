@@ -1,2 +1,9 @@
 buildCommand: chmod +x build.sh && ./build.sh && composer install --no-dev --optimize-autoloader
 startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+envVars:
+  - key: APP_KEY
+    value: base64:/FJ4HHNRBbQbUBiAFXtQMahcxMls/JowqoEWrpzCCl0=
+  - key: APP_ENV
+    value: production
+  - key: APP_DEBUG
+    value: false
