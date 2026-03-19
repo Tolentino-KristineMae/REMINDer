@@ -11,24 +11,35 @@ import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const [stats, setStats] = useState({ total: 0, paid: 0, pending: 0, total_amount: 0 });
+    const [stats, setStats] = useState({
+        total: 0,
+        paid: 0,
+        pending: 0,
+        overdue: 0,
+        total_amount: 0,
+        total_paid_amount: 0,
+        total_unpaid_amount: 0,
+    });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get('/bills/dashboard');
-                const { stats } = response.data;
+                const response = await api.get('/bills/stats');
+                const data = response.data;
                 setStats({
-                    total: stats.total || 0,
-                    paid: stats.paid || 0,
-                    pending: stats.pending || 0,
-                    overdue: stats.overdue || 0,
-                    total_amount: stats.total_amount || 0,
-                    total_paid_amount: stats.total_paid_amount || 0,
-                    total_unpaid_amount: stats.total_unpaid_amount || 0
+                    total: data.total || 0,
+                    paid: data.paid || 0,
+                    pending: data.pending || 0,
+                    overdue: data.overdue || 0,
+                    total_amount: data.total_amount || 0,
+                    total_paid_amount: data.total_paid_amount || 0,
+                    total_unpaid_amount: data.total_unpaid_amount || 0,
                 });
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -41,6 +52,14 @@ const Dashboard = () => {
             currency: 'PHP'
         }).format(amount);
     };
+
+    if (loading) {
+        return (
+            <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-10 flex items-center justify-center">
+                <div className="text-center text-sm text-gray-500">Loading dashboard stats...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-10 relative">

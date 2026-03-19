@@ -119,53 +119,50 @@ class BillController extends Controller
     public function dashboardData()
     {
         $today = now()->toDateString();
-        $totalBills = Bill::count();
-        $paidBills = Bill::where('status', 'paid')->count();
-        $pendingBills = Bill::where('status', 'pending')->count();
-        $overdueBills = Bill::where('status', 'pending')
-            ->where('due_date', '<', $today)
-            ->count();
-        $totalAmount = Bill::sum('amount');
-        $totalPaidAmount = Bill::where('status', 'paid')->sum('amount');
-        $totalUnpaidAmount = Bill::where('status', 'pending')->sum('amount');
-        
-        $bills = Bill::with(['category', 'personInCharge', 'proofOfPayments'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-            
+
+        $stats = Bill::selectRaw('COUNT(*) as total')
+            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid")
+            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending")
+            ->selectRaw("SUM(CASE WHEN status = 'pending' AND due_date < ? THEN 1 ELSE 0 END) as overdue", [$today])
+            ->selectRaw('SUM(amount) as total_amount')
+            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) as total_paid_amount")
+            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
+            ->first();
+
         return response()->json([
             'stats' => [
-                'total' => $totalBills,
-                'paid' => $paidBills,
-                'pending' => $pendingBills,
-                'overdue' => $overdueBills,
-                'total_amount' => $totalAmount,
-                'total_paid_amount' => $totalPaidAmount,
-                'total_unpaid_amount' => $totalUnpaidAmount,
+                'total' => (int) $stats->total,
+                'paid' => (int) $stats->paid,
+                'pending' => (int) $stats->pending,
+                'overdue' => (int) $stats->overdue,
+                'total_amount' => (float) $stats->total_amount,
+                'total_paid_amount' => (float) $stats->total_paid_amount,
+                'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
             ],
-            'bills' => $bills,
-            'categories' => \App\Models\Category::all(),
-            'people' => \App\Models\PersonInCharge::all(),
         ]);
     }
 
     public function stats()
     {
         $today = now()->toDateString();
-        $totalBills = Bill::count();
-        $paidBills = Bill::where('status', 'paid')->count();
-        $pendingBills = Bill::where('status', 'pending')->count();
-        $overdueBills = Bill::where('status', 'pending')
-            ->where('due_date', '<', $today)
-            ->count();
-        $totalAmount = Bill::sum('amount');
-        
+
+        $stats = Bill::selectRaw('COUNT(*) as total')
+            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid")
+            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending")
+            ->selectRaw("SUM(CASE WHEN status = 'pending' AND due_date < ? THEN 1 ELSE 0 END) as overdue", [$today])
+            ->selectRaw('SUM(amount) as total_amount')
+            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) as total_paid_amount")
+            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
+            ->first();
+
         return response()->json([
-            'total' => $totalBills,
-            'paid' => $paidBills,
-            'pending' => $pendingBills,
-            'overdue' => $overdueBills,
-            'total_amount' => $totalAmount,
+            'total' => (int) $stats->total,
+            'paid' => (int) $stats->paid,
+            'pending' => (int) $stats->pending,
+            'overdue' => (int) $stats->overdue,
+            'total_amount' => (float) $stats->total_amount,
+            'total_paid_amount' => (float) $stats->total_paid_amount,
+            'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
         ]);
     }
 }

@@ -45,6 +45,7 @@ const AddBillPage = () => {
             } catch (err) {
                 console.error('Failed to fetch page data:', err);
                 setError(`Connection failed: ${err.message}. Please ensure the backend server is running.`);
+                setDataLoading(false);
             }
         };
         fetchRequiredData();
