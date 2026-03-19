@@ -30,7 +30,7 @@ RUN cd Rback && \
 COPY frontend/package.json frontend/package-lock.json* ./frontend/
 RUN cd frontend && npm ci
 COPY frontend ./frontend
-RUN cd frontend && npm run build && rm -rf ../Rback/public/* && cp -R dist/* ../Rback/public/
+RUN cd frontend && npm run build && cp -R dist/* ../Rback/public/
 
 # (Optional) APP_KEY will be provided via Render Environment Variables at runtime.
 
