@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -35,13 +33,38 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::where('email', $request->input('email'))->first();
+
+        if (!$user) {
             return response()->json([
                 'message' => 'Invalid login details'
             ], 401);
         }
 
-        $user = User::where('email', $request['email'])->firstOrFail();
+        $storedPassword = (string) $user->password;
+        $looksHashed = str_starts_with($storedPassword, '$2y$')
+            || str_starts_with($storedPassword, '$2a$')
+            || str_starts_with($storedPassword, '$argon2');
+
+        $passwordMatches = $looksHashed
+            ? Hash::check($request->input('password'), $storedPassword)
+            : hash_equals($storedPassword, (string) $request->input('password'));
+
+        if (!$passwordMatches) {
+            return response()->json([
+                'message' => 'Invalid login details'
+            ], 401);
+        }
+
+        if (!$looksHashed) {
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
+        }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
