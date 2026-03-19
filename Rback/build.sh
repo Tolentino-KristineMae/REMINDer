@@ -19,3 +19,19 @@ chmod -R 775 storage/
 chmod -R 775 bootstrap/cache/
 
 echo "Storage and cache directories created successfully!"
+
+# Copy production environment file if it exists
+if [ -f ".env.production" ]; then
+    echo "Copying .env.production to .env..."
+    cp .env.production .env
+    echo "Environment file configured for production!"
+fi
+
+# Run database migrations and seeders
+echo "Running database migrations..."
+php artisan migrate --force
+
+echo "Seeding database with initial data..."
+php artisan db:seed --force
+
+echo "Build completed successfully!"
