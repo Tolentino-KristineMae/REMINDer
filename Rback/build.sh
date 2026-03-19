@@ -27,6 +27,11 @@ if [ -f ".env.production" ]; then
     echo "Environment file configured for production!"
 fi
 
+# Clear route cache
+echo "Clearing route cache..."
+php artisan route:clear
+php artisan cache:clear
+
 # Run database migrations and seeders
 echo "Running database migrations..."
 php artisan migrate --force
