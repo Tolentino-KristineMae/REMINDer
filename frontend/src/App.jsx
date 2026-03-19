@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ModalProvider } from './context/ModalContext';
 import Login from './components/Login';
+import Setup from './components/Setup';
 import Dashboard from './components/Dashboard';
 import Sidebar from './components/Sidebar';
 import AddBillPage from './components/AddBillPage';
@@ -51,6 +52,7 @@ const App = () => {
                 <Router>
                     <Routes>
                         <Route path="/login" element={<Login />} />
+                        <Route path="/setup" element={<Setup />} />
                         <Route 
                             path="/" 
                             element={

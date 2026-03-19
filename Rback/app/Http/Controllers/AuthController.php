@@ -88,4 +88,27 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
+
+    // Temporary endpoint to create a user (for setup only)
+    public function createUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $user = User::updateOrCreate(
+            ['email' => $request->email],
+            [
+                'name' => $request->name,
+                'password' => Hash::make($request->password),
+            ]
+        );
+
+        return response()->json([
+            'message' => 'User created successfully',
+            'user' => $user
+        ]);
+    }
 }

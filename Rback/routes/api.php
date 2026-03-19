@@ -9,6 +9,7 @@ Route::get('/status', function () {
 });
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/create-user', [AuthController::class, 'createUser']); // Setup endpoint
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
