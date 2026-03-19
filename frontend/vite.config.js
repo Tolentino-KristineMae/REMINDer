@@ -77,7 +77,7 @@ Disallow:
   ],
   base: '/',
   build: {
-    outDir: path.resolve(__dirname, '../Rback/public'),
+    outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
     rollupOptions: {
       output: {
