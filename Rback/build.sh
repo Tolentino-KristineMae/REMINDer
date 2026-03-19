@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+# Get the directory where the script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+echo "Creating storage and cache directories in $SCRIPT_DIR..."
+
+# Create necessary storage directories
+mkdir -p storage/framework/cache/data
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/views
+mkdir -p storage/logs
+mkdir -p bootstrap/cache
+
+# Set permissions
+chmod -R 775 storage/
+chmod -R 775 bootstrap/cache/
+
+echo "Storage and cache directories created successfully!"
