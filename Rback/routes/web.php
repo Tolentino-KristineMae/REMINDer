@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+
+// API routes that need to work (also defined in api.php as backup)
+Route::post('/api/login', [AuthController::class, 'login']);
+Route::post('/api/register', [AuthController::class, 'register']);
 
 // Serve the built React app (SPA) from `public/index.html`.
 // This ensures routes like `/add-bill` work after refresh in production.
