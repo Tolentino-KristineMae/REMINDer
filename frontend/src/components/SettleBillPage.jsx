@@ -122,6 +122,9 @@ const SettleBillPage = () => {
             formData.append('voice_record', audioBlob, 'recording.webm');
         }
 
+        console.log('FormData proof:', formData.get('proof'));
+        console.log('FormData details:', formData.get('details'));
+
         try {
             await api.post(`/bills/${id}/proof`, formData);
             setIsUploaded(true);
