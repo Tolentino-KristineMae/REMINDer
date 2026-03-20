@@ -23,7 +23,7 @@ WORKDIR /app
 # (Laravel's Composer scripts run `php artisan package:discover`.)
 COPY Rback ./Rback
 RUN cd Rback && \
-    if [ ! -f .env ] && [ -f .env.example ]; then cp .env.example .env; fi && \
+    cp .env.example .env && \
     composer install --no-dev --optimize-autoloader --no-interaction
 
 # Build frontend and copy dist -> Laravel public
