@@ -21,11 +21,12 @@ COPY . .
 
 RUN composer install --no-interaction --no-dev
 
-# Use .env.production as the container's .env (Render won't automatically pick up the custom filename)
-RUN if [ -f .env.production ] && [ ! -f .env ]; then cp .env.production .env; fi
+# Use .env.production as the container's .env
+# (We overwrite .env to ensure the container always uses the intended DB settings.)
+RUN if [ -f .env.production ]; then cp -f .env.production .env; fi
 
 # Avoid build-time config caching so runtime env (and the copied .env) is respected.
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000"]
+CMD ["sh", "-c", "if [ -f .env.production ]; then cp -f .env.production .env; fi && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000"]
