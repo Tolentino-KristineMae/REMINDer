@@ -55,11 +55,13 @@ class BillController extends Controller
     public function uploadProof(Request $request, Bill $bill)
     {
         $request->validate([
-            // UI allows up to ~5MB; Laravel 'max' is in KB.
-            // Some browsers/apps upload receipts as `webp`, so include it.
-            'proof' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            // Keep the upload permissive: accept receipt file + optional details.
+            // Voice is optional (can be missing).
+            //
+            // Note: Laravel's `max` is in KB.
+            'proof' => 'required|file|max:5120',
             'details' => 'nullable|string',
-            'voice_record' => 'nullable|mimes:mp3,wav,m4a,ogg,webm|max:5120',
+            'voice_record' => 'nullable|file|max:5120',
         ]);
 
         $proofPath = null;
