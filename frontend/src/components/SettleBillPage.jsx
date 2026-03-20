@@ -134,7 +134,9 @@ const SettleBillPage = () => {
         } catch (err) {
             // Show the exact Laravel validation message if possible.
             // Axios error shape: err.response.data = { message, errors, ... } on 422.
-            console.error('uploadProof failed:', err?.response?.status, err?.response?.data);
+            console.error('uploadProof failed:', err?.response?.status);
+            console.error('Full response:', err?.response?.data);
+            console.error('Request:', err?.request);
 
             const proofErr = err?.response?.data?.errors?.proof?.[0];
             const voiceErr = err?.response?.data?.errors?.voice_record?.[0];
