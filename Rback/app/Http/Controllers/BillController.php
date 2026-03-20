@@ -129,6 +129,34 @@ class BillController extends Controller
             ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
             ->first();
 
+        // Calendar / Paid Bills / Team pages expect:
+        // - response.data.people
+        // - response.data.bills (array)
+        // Each bill should also include keys the frontend uses:
+        // - person_in_charge (instead of personInCharge)
+        // - proof_of_payments (instead of proofOfPayments)
+        $people = \App\Models\PersonInCharge::query()->get();
+
+        $bills = Bill::with(['category', 'personInCharge', 'proofOfPayments'])->get();
+
+        $billsPayload = $bills->map(function (Bill $bill) {
+            return [
+                // Base columns used by the frontend
+                'id' => $bill->id,
+                'amount' => $bill->amount,
+                'due_date' => $bill->due_date,
+                'details' => $bill->details,
+                'category_id' => $bill->category_id,
+                'person_in_charge_id' => $bill->person_in_charge_id,
+                'status' => $bill->status,
+
+                // Relations with frontend-expected snake_case keys
+                'category' => $bill->category,
+                'person_in_charge' => $bill->personInCharge,
+                'proof_of_payments' => $bill->proofOfPayments,
+            ];
+        })->values();
+
         return response()->json([
             'stats' => [
                 'total' => (int) $stats->total,
@@ -139,6 +167,8 @@ class BillController extends Controller
                 'total_paid_amount' => (float) $stats->total_paid_amount,
                 'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
             ],
+            'people' => $people,
+            'bills' => $billsPayload,
         ]);
     }
 
