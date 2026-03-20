@@ -138,6 +138,24 @@ const SettleBillPage = () => {
             console.error('Full response:', err?.response?.data);
             console.error('Request:', err?.request);
 
+            // Network-layer failures (no HTTP response) come in as "undefined response" in Axios.
+            // Your console shows `net::ERR_INTERNET_DISCONNECTED`, which is not a Laravel validation error.
+            if (!err?.response) {
+                const code = err?.code;
+                const msg = err?.message || '';
+                if (
+                    code === 'ERR_INTERNET_DISCONNECTED' ||
+                    code === 'ERR_NETWORK' ||
+                    msg.toLowerCase().includes('network')
+                ) {
+                    setError('No internet connection. Please check your network and try again.');
+                    return;
+                }
+
+                setError('Upload request failed (no server response). Please check your connection and the backend URL.');
+                return;
+            }
+
             const proofErr = err?.response?.data?.errors?.proof?.[0];
             const voiceErr = err?.response?.data?.errors?.voice_record?.[0];
             const genericMsg = err?.response?.data?.message;
