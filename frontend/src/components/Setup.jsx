@@ -15,7 +15,11 @@ const Setup = () => {
             setMessage('Account created! You can now login.');
             setError('');
         } catch (err) {
-            setError('Failed to create account. Please try again.');
+            const msg =
+                err?.response?.data?.message ||
+                'Failed to create account. Please try again.';
+            console.error('Account creation failed:', err);
+            setError(msg);
             setMessage('');
         }
     };

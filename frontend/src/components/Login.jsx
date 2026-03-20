@@ -15,8 +15,13 @@ const Login = () => {
         try {
             await login(email, password);
             navigate('/');
-        } catch {
-            setError('Invalid login details. Please try again.');
+        } catch (err) {
+            // Axios errors: err.response?.data may contain { message: ... } from Laravel
+            const msg =
+                err?.response?.data?.message ||
+                'Invalid login details. Please try again.';
+            console.error('Login failed:', err);
+            setError(msg);
         }
     };
 
