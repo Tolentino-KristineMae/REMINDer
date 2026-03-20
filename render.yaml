@@ -4,7 +4,7 @@ services:
   - type: web
     name: reminder-api
     runtime: docker
-    dockerfilePath: Dockerfile
+    dockerfilePath: ./Dockerfile
     rootDir: .
     # Build is handled by Dockerfile
     startCommand: sh -c "cd /app/Rback && php artisan serve --host=0.0.0.0 --port=$PORT"
