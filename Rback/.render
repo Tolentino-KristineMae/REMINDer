@@ -6,7 +6,8 @@
 # Required Environment variables (Environment tab):
 #   APP_KEY       — run locally: php artisan key:generate --show  (paste full value, starts with base64:)
 #   APP_URL       — https://your-service.onrender.com
-#   DATABASE_URL  — from Render PostgreSQL (or set DB_* for MySQL)
+#   DATABASE_URL  — Supabase Postgres URI (Dashboard → Connect → URI), sslmode=require
+#   DB_CONNECTION — pgsql   (when using Supabase)
 #
 # Optional (Vercel frontend):
 #   CORS_ALLOWED_ORIGINS — https://your-app.vercel.app

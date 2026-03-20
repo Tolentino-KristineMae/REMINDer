@@ -11,6 +11,7 @@ import CalendarPage from './components/CalendarPage';
 import PaidBillsPage from './components/PaidBillsPage';
 import TeamPage from './components/TeamPage';
 import SettleBillPage from './components/SettleBillPage';
+import DeploymentStatus from './components/DeploymentStatus';
 import { Menu } from 'lucide-react';
 
 const PrivateRoute = ({ children }) => {
@@ -53,6 +54,7 @@ const App = () => {
                     <Routes>
                         <Route path="/login" element={<Login />} />
                         <Route path="/setup" element={<Setup />} />
+                        <Route path="/deployment-status" element={<DeploymentStatus />} />
                         <Route 
                             path="/" 
                             element={

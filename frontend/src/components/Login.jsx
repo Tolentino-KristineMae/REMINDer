@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Wallet, ShieldCheck, Lock } from 'lucide-react';
 
 const Login = () => {
@@ -80,6 +80,14 @@ const Login = () => {
                         >
                             Access Admin Portal
                         </button>
+                        <p className="text-center mt-4">
+                            <Link
+                                to="/deployment-status"
+                                className="text-[10px] font-bold text-gray-400 hover:text-green-600 uppercase tracking-wider"
+                            >
+                                Deployment &amp; Supabase status
+                            </Link>
+                        </p>
                     </form>
                 </div>
 
