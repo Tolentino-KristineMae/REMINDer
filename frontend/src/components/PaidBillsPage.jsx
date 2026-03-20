@@ -40,10 +40,30 @@ const PaidBillsPage = () => {
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState('');
 
-    const STORAGE_BASE_URL =
-        import.meta.env.VITE_STORAGE_BASE_URL ||
-        import.meta.env.VITE_BACKEND_BASE_URL ||
-        'http://localhost:8000';
+    const STORAGE_BASE_URL = (() => {
+        const a = import.meta.env.VITE_STORAGE_BASE_URL?.trim();
+        if (a) {
+            return a.replace(/\/+$/, '');
+        }
+        const b = import.meta.env.VITE_BACKEND_BASE_URL?.trim();
+        if (b) {
+            return b.replace(/\/+$/, '');
+        }
+        const api = import.meta.env.VITE_API_BASE_URL?.trim();
+        if (api) {
+            const origin = api.replace(/\/api\/?$/i, '').replace(/\/+$/, '');
+            if (origin) {
+                return origin;
+            }
+        }
+        if (import.meta.env.DEV) {
+            return 'http://localhost:8000';
+        }
+        if (typeof window !== 'undefined') {
+            return window.location.origin;
+        }
+        return 'http://localhost:8000';
+    })();
 
     const buildStorageUrl = (path) => `${STORAGE_BASE_URL.replace(/\/$/, '')}/storage/${path}`;
 

@@ -1,8 +1,22 @@
 import axios from 'axios';
 
-const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL ||
-    (typeof window !== 'undefined' ? `${window.location.origin}/api` : 'http://localhost:8000/api');
+// Split hosting (e.g. Vercel + Render): set VITE_API_BASE_URL in Vercel to your API root, including `/api`.
+// Example: https://your-service.onrender.com/api
+// Same-origin production (Laravel serves the SPA): leave unset — falls back to current origin + `/api`.
+// Local dev: uses http://localhost:8000/api when unset.
+const API_BASE_URL = (() => {
+    const raw = import.meta.env.VITE_API_BASE_URL?.trim();
+    if (raw) {
+        return raw.replace(/\/+$/, '');
+    }
+    if (import.meta.env.DEV) {
+        return 'http://localhost:8000/api';
+    }
+    if (typeof window !== 'undefined') {
+        return `${window.location.origin}/api`;
+    }
+    return 'http://localhost:8000/api';
+})();
 
 const api = axios.create({
     baseURL: API_BASE_URL,
