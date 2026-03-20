@@ -131,8 +131,15 @@ const SettleBillPage = () => {
             setTimeout(() => {
                 navigate('/paid-bills');
             }, 2000);
-        } catch {
-            setError('Failed to upload proof. Please try again.');
+        } catch (err) {
+            // Show backend validation/exception message (e.g. file too large).
+            const serverMessage =
+                err?.response?.data?.message ||
+                err?.response?.data?.error ||
+                err?.response?.data?.errors?.proof?.[0] ||
+                err?.response?.data?.errors?.voice_record?.[0] ||
+                'Failed to upload proof. Please try again.';
+            setError(serverMessage);
         } finally {
             setLoading(false);
         }
