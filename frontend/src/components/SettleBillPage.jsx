@@ -132,14 +132,15 @@ const SettleBillPage = () => {
                 navigate('/paid-bills');
             }, 2000);
         } catch (err) {
-            // Show backend validation/exception message (e.g. file too large).
-            const serverMessage =
-                err?.response?.data?.message ||
-                err?.response?.data?.error ||
-                err?.response?.data?.errors?.proof?.[0] ||
-                err?.response?.data?.errors?.voice_record?.[0] ||
-                'Failed to upload proof. Please try again.';
-            setError(serverMessage);
+            // Show the exact Laravel validation message if possible.
+            // Axios error shape: err.response.data = { message, errors, ... } on 422.
+            console.error('uploadProof failed:', err?.response?.status, err?.response?.data);
+
+            const proofErr = err?.response?.data?.errors?.proof?.[0];
+            const voiceErr = err?.response?.data?.errors?.voice_record?.[0];
+            const genericMsg = err?.response?.data?.message;
+
+            setError(proofErr || voiceErr || genericMsg || 'Failed to upload proof. Please try again.');
         } finally {
             setLoading(false);
         }

@@ -56,7 +56,8 @@ class BillController extends Controller
     {
         $request->validate([
             // UI allows up to ~5MB; Laravel 'max' is in KB.
-            'proof' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            // Some browsers/apps upload receipts as `webp`, so include it.
+            'proof' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'details' => 'nullable|string',
             'voice_record' => 'nullable|mimes:mp3,wav,m4a,ogg,webm|max:5120',
         ]);
