@@ -1,0 +1,21 @@
+# Optional Blueprint: link repo in Render → Blueprints → New Blueprint Instance.
+# If you already created the Web Service manually, set the same env vars in the Dashboard instead.
+services:
+  - type: web
+    name: reminder-api
+    runtime: native
+    rootDir: Rback
+    buildCommand: composer install --no-dev --optimize-autoloader && cd ../frontend && npm ci && npm run build && rm -rf ../Rback/public/assets && cp -r dist/. ../Rback/public/ && cd ../Rback && chmod +x build.sh && ./build.sh
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      # Set in Dashboard after first deploy (Generate: php artisan key:generate --show)
+      - key: APP_KEY
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false

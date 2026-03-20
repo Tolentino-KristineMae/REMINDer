@@ -4,6 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BillController;
 
+// So GET /api is handled by the API stack (not the SPA web fallback).
+Route::get('/', function () {
+    return response()->json([
+        'message' => 'REMINDer API',
+        'health' => '/api/status',
+    ]);
+});
+
 Route::get('/status', function () {
     return response()->json(['status' => 'ok']);
 });

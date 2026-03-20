@@ -27,6 +27,17 @@ if [ -f ".env.production" ]; then
     echo "Environment file configured for production!"
 fi
 
+# Laravel requires APP_KEY (encryption, sessions). Render must set it in Dashboard → Environment.
+if [ -z "${APP_KEY:-}" ]; then
+    echo "=================================================================================="
+    echo "ERROR: APP_KEY is not set."
+    echo "Render Dashboard → your Web Service → Environment → add APP_KEY"
+    echo "Generate locally: php artisan key:generate --show"
+    echo "Use the full line value (starts with base64:)."
+    echo "=================================================================================="
+    exit 1
+fi
+
 # Clear route cache
 echo "Clearing route cache..."
 php artisan route:clear
