@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
     libpng-dev \
@@ -9,7 +9,9 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     postgresql-client \
-    && docker-php-ext-install pdo pdo_pgsql
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
