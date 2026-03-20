@@ -112,6 +112,7 @@ const SettleBillPage = () => {
             return;
         }
 
+        console.log('File being uploaded:', file.name, file.size, file.type);
         setLoading(true);
         setError('');
         const formData = new FormData();
@@ -122,11 +123,7 @@ const SettleBillPage = () => {
         }
 
         try {
-            await api.post(`/bills/${id}/proof`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            await api.post(`/bills/${id}/proof`, formData);
             setIsUploaded(true);
             setTimeout(() => {
                 navigate('/paid-bills');
