@@ -15,8 +15,8 @@ services:
         value: false
       # Set in Dashboard after first deploy (Generate: php artisan key:generate --show)
       - key: APP_KEY
-        sync: false
+        value: base64:HtR3VtIyI1D1om1T0VhigLi3cpusYAIOMbRbL/BNydE=
       - key: APP_URL
-        sync: false
+        value: https://reminder-api.onrender.com
       - key: DATABASE_URL
-        sync: false
+        value: postgresql://postgres:X9fXhUtMu37dUyrM@db.onkhvozgxedcsubgvrsf.supabase.co:5432/postgres?sslmode=require
