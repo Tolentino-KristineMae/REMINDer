@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ModalProvider } from './context/ModalContext';
@@ -13,6 +13,40 @@ import TeamPage from './components/TeamPage';
 import SettleBillPage from './components/SettleBillPage';
 import DeploymentStatus from './components/DeploymentStatus';
 import { Menu } from 'lucide-react';
+
+const DateTimeDisplay = () => {
+    const [dateTime, setDateTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => setDateTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const formatTime = (date) => {
+        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    };
+
+    const formatDate = (date) => {
+        const day = date.getDate();
+        const month = date.toLocaleString('en-US', { month: 'short' });
+        const year = date.getFullYear();
+        return `${day} ${month} ${year}`;
+    };
+
+    return (
+        <div className="flex items-center gap-3 text-right">
+            <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">REMINDer</p>
+                <p className="text-xs font-black text-gray-900 leading-none">System</p>
+            </div>
+            <div className="h-8 w-px bg-gray-200" />
+            <div className="text-right">
+                <p className="text-xs font-bold text-gray-900 leading-none">{formatTime(dateTime)}</p>
+                <p className="text-[10px] font-medium text-gray-500 leading-none">{formatDate(dateTime)}</p>
+            </div>
+        </div>
+    );
+};
 
 const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
@@ -37,10 +71,12 @@ const PrivateRoute = ({ children }) => {
                         >
                             <Menu size={18} className="stroke-[2.5]" />
                         </button>
-                        <div className="text-right">
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">REMINDer</p>
-                            <p className="text-xs font-black text-gray-900 leading-none">System</p>
-                        </div>
+                        <DateTimeDisplay />
+                    </div>
+                </div>
+                <div className="hidden lg:sticky lg:top-0 lg:z-30 lg:bg-[#f8fafc]/80 lg:backdrop-blur lg:border-b lg:border-gray-100 lg:block">
+                    <div className="h-14 px-6 flex items-center justify-end">
+                        <DateTimeDisplay />
                     </div>
                 </div>
                 {children}
