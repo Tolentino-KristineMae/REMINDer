@@ -69,13 +69,30 @@ class BillController extends Controller
 
         try {
             $proofUrl = null;
-            $disk = config('filesystems.default', 'public');
+            // Use 's3' for Supabase storage if AWS_BUCKET is set, otherwise fallback to default/public
+            $disk = env('AWS_BUCKET') ? 's3' : config('filesystems.default', 'public');
             
             if ($request->hasFile('proof')) {
-                // Store the file and get the path
-                $proofPath = $request->file('proof')->store('proofs', $disk);
+                $file = $request->file('proof');
+                // Use the file's original name with a timestamp to avoid duplicates
+                $filename = time() . '_' . $file->getClientOriginalName();
+                // Store in the root of the bucket/directory to keep URLs simple
+                $proofPath = $file->storeAs('', $filename, $disk);
+
+                if (!$proofPath) {
+                    throw new \Exception('Failed to store file on disk: ' . $disk);
+                }
+
                 // Get the full public URL
                 $proofUrl = Storage::disk($disk)->url($proofPath);
+                
+                \Illuminate\Support\Facades\Log::info('Upload successful', [
+                    'disk' => $disk,
+                    'path' => $proofPath,
+                    'url' => $proofUrl
+                ]);
+            } else {
+                throw new \Exception('No file provided in the request');
             }
 
             $proofData = [
@@ -123,7 +140,7 @@ class BillController extends Controller
         }
 
         if (!empty($pathsToDelete)) {
-            $disk = config('filesystems.default', 'public');
+            $disk = env('AWS_BUCKET') ? 's3' : config('filesystems.default', 'public');
             Storage::disk($disk)->delete($pathsToDelete);
         }
 
