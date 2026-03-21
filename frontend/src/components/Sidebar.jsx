@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Plus,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
@@ -40,6 +41,7 @@ const C = {
 
 const menuItems = [
   { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
+  { icon: <Plus size={18} />,            label: 'Add Bill',   path: '/add-bill' },
   { icon: <Calendar size={18} />,        label: 'Calendar',   path: '/calendar' },
   { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },
   { icon: <Users size={18} />,           label: 'Person In Charge', path: '/team' },

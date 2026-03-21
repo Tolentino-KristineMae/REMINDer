@@ -449,6 +449,18 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Floating Action Button for Add Bill */}
+            <button
+                onClick={() => navigate('/add-bill')}
+                className="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-2xl shadow-2xl shadow-green-500/40 flex items-center justify-center hover:scale-110 hover:rotate-90 active:scale-95 transition-all duration-300 group z-40 border-4 border-white"
+                title="Add New Bill"
+            >
+                <Plus size={32} className="group-hover:stroke-[3]" />
+                <span className="absolute right-full mr-4 px-3 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none uppercase tracking-widest">
+                    Quick Add Bill
+                </span>
+            </button>
         </div>
     );
 };
