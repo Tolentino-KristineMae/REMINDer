@@ -68,75 +68,87 @@ const Dashboard = () => {
 
             {/* Stats Grid - Organized Layout */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6">
-                {/* Card 1: Total Paid */}
-                <div className="bg-gradient-to-br from-green-700 to-green-900 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
-                    <div className="absolute top-0 right-0 w-28 h-28 bg-white/5 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                {/* Card 1: Total Paid - Green Theme (Success/Positive) */}
+                <div className="bg-gradient-to-br from-emerald-500 to-green-700 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
-                            <div className="w-11 h-11 bg-white/15 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                                <Wallet size={22} className="text-green-200" />
+                            <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                <Wallet size={22} className="text-emerald-100" />
                             </div>
-                            <span className="text-[10px] font-bold text-green-200 bg-white/10 px-2 py-1 rounded-full flex items-center gap-1">
-                                <TrendingUp size={10} /> Paid
+                            <span className="text-[10px] font-bold text-emerald-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
+                                <CheckCircle2 size={10} /> Paid
                             </span>
                         </div>
-                        <p className="text-[11px] font-semibold text-green-200/80 uppercase tracking-wider mb-1">Total Paid</p>
+                        <p className="text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-1">Total Paid</p>
                         <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.total_paid_amount)}</p>
-                        <p className="text-[10px] text-green-300/70 mt-2 font-medium">All time earnings</p>
+                        <div className="flex items-center gap-1 mt-2">
+                            <TrendingUp size={12} className="text-emerald-200" />
+                            <p className="text-[10px] text-emerald-200 font-medium">All time settled</p>
+                        </div>
                     </div>
                 </div>
 
-                {/* Card 2: Total Unpaid */}
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-lg hover:shadow-red-500/5 transition-all duration-300">
-                    <div className="absolute top-0 right-0 w-28 h-28 bg-red-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                {/* Card 2: Total Unpaid - Orange/Amber Theme (Warning) */}
+                <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-orange-500/25 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
-                            <div className="w-11 h-11 bg-red-50 rounded-xl flex items-center justify-center">
-                                <Receipt size={22} className="text-red-500" />
+                            <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                <Receipt size={22} className="text-orange-100" />
                             </div>
-                            <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full flex items-center gap-1">
+                            <span className="text-[10px] font-bold text-orange-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
                                 <AlertCircle size={10} /> Unpaid
                             </span>
                         </div>
-                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Total Unpaid</p>
-                        <p className="text-2xl font-black text-gray-900 tracking-tight">{formatCurrency(stats.total_unpaid_amount)}</p>
-                        <p className="text-[10px] text-red-500 mt-2 font-medium">Pending & Overdue</p>
+                        <p className="text-[11px] font-semibold text-orange-100 uppercase tracking-wider mb-1">Total Unpaid</p>
+                        <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.total_unpaid_amount)}</p>
+                        <div className="flex items-center gap-1 mt-2">
+                            <Clock size={12} className="text-orange-100" />
+                            <p className="text-[10px] text-orange-100 font-medium">Pending & Overdue</p>
+                        </div>
                     </div>
                 </div>
 
-                {/* Card 3: Pending Bills */}
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-lg hover:shadow-amber-500/5 transition-all duration-300">
-                    <div className="absolute top-0 right-0 w-28 h-28 bg-amber-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                {/* Card 3: Pending Bills - Blue Theme (Info/Progress) */}
+                <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/25 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
-                            <div className="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center">
-                                <Clock size={22} className="text-amber-500" />
+                            <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                <Clock size={22} className="text-blue-100" />
                             </div>
-                            <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-full flex items-center gap-1">
+                            <span className="text-[10px] font-bold text-blue-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
                                 <Clock size={10} /> Pending
                             </span>
                         </div>
-                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Pending Bills</p>
-                        <p className="text-2xl font-black text-gray-900 tracking-tight">{stats.pending}</p>
-                        <p className="text-[10px] text-amber-600 mt-2 font-medium">Requires action</p>
+                        <p className="text-[11px] font-semibold text-blue-100 uppercase tracking-wider mb-1">Pending Bills</p>
+                        <p className="text-2xl font-black tracking-tight">{stats.pending}</p>
+                        <div className="flex items-center gap-1 mt-2">
+                            <AlertCircle size={12} className="text-blue-100" />
+                            <p className="text-[10px] text-blue-100 font-medium">Awaiting payment</p>
+                        </div>
                     </div>
                 </div>
 
-                {/* Card 4: Overdue Bills */}
-                <div className="bg-white p-5 rounded-2xl border border-red-100 shadow-sm relative overflow-hidden group hover:shadow-lg hover:shadow-red-500/10 transition-all duration-300">
-                    <div className="absolute top-0 right-0 w-28 h-28 bg-red-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                {/* Card 4: Overdue Bills - Red Theme (Danger/Critical) */}
+                <div className="bg-gradient-to-br from-red-500 to-rose-600 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-red-500/25 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
-                            <div className="w-11 h-11 bg-red-50 rounded-xl flex items-center justify-center">
-                                <AlertCircle size={22} className="text-red-500" />
+                            <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                <AlertCircle size={22} className="text-red-100" />
                             </div>
-                            <span className="text-[10px] font-bold text-white bg-red-500 px-2 py-1 rounded-full flex items-center gap-1">
+                            <span className="text-[10px] font-bold text-red-100 bg-red-600/50 px-2.5 py-1 rounded-full flex items-center gap-1">
                                 <AlertCircle size={10} /> Overdue
                             </span>
                         </div>
-                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Overdue Bills</p>
-                        <p className="text-2xl font-black text-red-600 tracking-tight">{stats.overdue}</p>
-                        <p className="text-[10px] text-red-500 mt-2 font-medium">Immediate attention</p>
+                        <p className="text-[11px] font-semibold text-red-100 uppercase tracking-wider mb-1">Overdue Bills</p>
+                        <p className="text-2xl font-black tracking-tight">{stats.overdue}</p>
+                        <div className="flex items-center gap-1 mt-2">
+                            <AlertCircle size={12} className="text-red-200" />
+                            <p className="text-[10px] text-red-100 font-medium">Needs immediate action</p>
+                        </div>
                     </div>
                 </div>
             </div>
