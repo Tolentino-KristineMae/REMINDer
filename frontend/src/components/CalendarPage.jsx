@@ -177,7 +177,7 @@ const CalendarPage = () => {
                                         <div 
                                             key={dayIndex} 
                                             className={`
-                                                flex-1 min-w-[140px] sm:min-w-[160px] border-r border-gray-100/60 last:border-r-0 px-2 sm:px-3 py-3 sm:py-4 flex flex-col gap-2 sm:gap-3 relative transition-all duration-500
+                                                flex-1 min-w-[120px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/60 last:border-r-0 px-1.5 sm:px-3 py-2 sm:py-4 flex flex-col gap-2 sm:gap-3 relative transition-all duration-500 overflow-hidden
                                                 ${isSelected ? 'bg-gradient-to-b from-green-50/80 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50/30 to-white' : 'bg-white'}
                                             `}
                                         >
@@ -187,7 +187,7 @@ const CalendarPage = () => {
                                             {/* Date badge */}
                                             <div className="text-center shrink-0">
                                                 <span className={`
-                                                    inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] px-2 sm:px-3 py-1 rounded-full transition-all duration-300
+                                                    inline-block text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all duration-300
                                                     ${isSelected 
                                                         ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/20' 
                                                         : isToday 
@@ -209,7 +209,7 @@ const CalendarPage = () => {
                                                                 key={bill.id}
                                                                 onClick={() => handleBillClick(bill)}
                                                                 className={`
-                                                                    relative rounded-xl p-3 sm:p-3.5 transition-all duration-300 cursor-pointer group hover:shadow-lg hover:-translate-y-0.5 w-full
+                                                                    relative rounded-lg sm:rounded-xl p-2 sm:p-3.5 transition-all duration-300 cursor-pointer group hover:shadow-lg hover:-translate-y-0.5 w-full min-w-0 overflow-hidden
                                                                     ${isPaid 
                                                                         ? 'bg-gradient-to-br from-gray-50 to-white border border-gray-100/50' 
                                                                         : 'bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-emerald-100/50'
@@ -218,45 +218,45 @@ const CalendarPage = () => {
                                                             >
                                                                 {/* Elegant status accent bar */}
                                                                 <div className={`
-                                                                    absolute top-0 left-0 right-0 h-1 rounded-t-xl
+                                                                    absolute top-0 left-0 right-0 h-0.5 sm:h-1 rounded-t-lg sm:rounded-t-xl
                                                                     ${isPaid ? 'bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300' : 'bg-gradient-to-r from-red-400 via-red-500 to-red-400'}
                                                                 `}></div>
                                                                 
                                                                 {/* Status badge */}
-                                                                <div className="mt-1.5 mb-2">
+                                                                <div className="mt-1 mb-1.5 sm:mt-1.5 sm:mb-2">
                                                                     {isPaid ? (
-                                                                        <span className="inline-flex items-center gap-1 text-[8px] sm:text-[9px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                                                                            <CheckCircle2 size={9} /> Paid
+                                                                        <span className="inline-flex items-center gap-0.5 text-[7px] sm:text-[9px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-emerald-100">
+                                                                            <CheckCircle2 size={8} className="sm:size-9" /> Paid
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="inline-flex items-center gap-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md">
-                                                                            <AlertCircle size={9} /> DUE
+                                                                        <span className="inline-flex items-center gap-0.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-[7px] sm:text-[9px] font-black px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md">
+                                                                            <AlertCircle size={8} className="sm:size-9" /> DUE
                                                                         </span>
                                                                     )}
                                                                 </div>
 
                                                                 {/* Bill details - full width */}
-                                                                <h4 className={`font-bold text-[11px] sm:text-[12px] mb-2 leading-snug ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'} break-words`}>
+                                                                <h4 className={`font-bold text-[10px] sm:text-[12px] mb-1 sm:mb-2 leading-tight ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'} break-words line-clamp-2`}>
                                                                     {bill.details}
                                                                 </h4>
                                                                 
                                                                 {/* Organized info section */}
-                                                                <div className="flex items-end justify-between gap-2">
+                                                                <div className="flex items-end justify-between gap-1 sm:gap-2">
                                                                     <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                                                                        <p className={`text-[9px] sm:text-[10px] font-semibold ${isPaid ? 'text-gray-400' : 'text-gray-500'} truncate`}>
+                                                                        <p className={`text-[8px] sm:text-[10px] font-semibold ${isPaid ? 'text-gray-400' : 'text-gray-500'} truncate`}>
                                                                             {bill.category?.name}
                                                                         </p>
-                                                                        <p className={`text-base sm:text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'} whitespace-nowrap`}>
+                                                                        <p className={`text-sm sm:text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'} whitespace-nowrap`}>
                                                                             ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
                                                                         </p>
                                                                     </div>
                                                                     
                                                                     {/* Category icon */}
-                                                                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center shrink-0 ${isPaid ? 'bg-gray-100' : 'bg-emerald-50'}`}>
+                                                                    <div className={`w-7 h-7 sm:w-9 sm:h-9 rounded-md sm:rounded-lg flex items-center justify-center shrink-0 ${isPaid ? 'bg-gray-100' : 'bg-emerald-50'}`}>
                                                                         {isPaid ? (
-                                                                            <CheckCircle2 size={16} className="text-gray-400" />
+                                                                            <CheckCircle2 size={14} className="sm:size-16 text-gray-400" />
                                                                         ) : (
-                                                                            <FileText size={16} className="text-emerald-500" />
+                                                                            <FileText size={14} className="sm:size-16 text-emerald-500" />
                                                                         )}
                                                                     </div>
                                                                 </div>

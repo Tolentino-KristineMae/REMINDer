@@ -115,7 +115,9 @@ const Dashboard = () => {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5 mb-4 sm:mb-6">
                 {/* Card 1: Total Paid - Green Theme (Success/Positive) */}
                 <div className="bg-gradient-to-br from-emerald-500 to-green-700 p-3 sm:p-5 rounded-xl sm:rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300">
+                    {/* Decorative elements like Overview */}
                     <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -ml-8 -mb-8" />
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
@@ -136,7 +138,9 @@ const Dashboard = () => {
 
                 {/* Card 2: Total Unpaid - Orange/Amber Theme (Warning) */}
                 <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-3 sm:p-5 rounded-xl sm:rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-orange-500/25 transition-all duration-300">
+                    {/* Decorative elements like Overview */}
                     <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -ml-8 -mb-8" />
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
@@ -157,7 +161,9 @@ const Dashboard = () => {
 
                 {/* Card 3: Pending Bills - Blue Theme (Info/Progress) */}
                 <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 sm:p-5 rounded-xl sm:rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/25 transition-all duration-300">
+                    {/* Decorative elements like Overview */}
                     <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -ml-8 -mb-8" />
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
@@ -178,7 +184,9 @@ const Dashboard = () => {
 
                 {/* Card 4: Overdue Bills - Red Theme (Danger/Critical) */}
                 <div className="bg-gradient-to-br from-red-500 to-rose-600 p-3 sm:p-5 rounded-xl sm:rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-red-500/25 transition-all duration-300">
+                    {/* Decorative elements like Overview */}
                     <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -ml-8 -mb-8" />
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
@@ -202,6 +210,8 @@ const Dashboard = () => {
                 {/* Categories Analytics Card */}
                 <div className="xl:col-span-9 space-y-6 min-w-0">
                     <div className="bg-white p-4 sm:p-6 rounded-2xl border-2 border-indigo-100 shadow-lg shadow-indigo-100/30 min-h-[380px] sm:min-h-[420px] flex flex-col relative overflow-hidden">
+                        {/* Gradient accent bar like Overview */}
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 via-purple-500 to-indigo-600"></div>
                         {/* Decorative corner accent */}
                         <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-bl-full -mr-8 -mt-8" />
                         
@@ -268,6 +278,8 @@ const Dashboard = () => {
                 {/* Settlement Card */}
                 <div className="xl:col-span-3 space-y-6">
                     <div className="bg-white p-4 sm:p-6 rounded-2xl border-2 border-emerald-100 shadow-lg shadow-emerald-100/30 h-full flex flex-col relative overflow-hidden">
+                        {/* Gradient accent bar like Overview */}
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
                         {/* Decorative corner accent */}
                         <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-8 -mt-8" />
                         
