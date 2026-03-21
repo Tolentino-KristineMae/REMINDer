@@ -84,7 +84,16 @@ class BillController extends Controller
                 }
 
                 // Get the full public URL
-                $proofUrl = Storage::disk($disk)->url($proofPath);
+                if ($disk === 's3') {
+                    // For Supabase S3, we construct the public URL manually to ensure it's a direct public link
+                    // Format: https://[ref].supabase.co/storage/v1/object/public/[bucket]/[path]
+                    $endpoint = env('AWS_ENDPOINT');
+                    $projectRef = explode('.', parse_url($endpoint, PHP_URL_HOST))[0];
+                    $bucket = env('AWS_BUCKET');
+                    $proofUrl = "https://{$projectRef}.supabase.co/storage/v1/object/public/{$bucket}/{$proofPath}";
+                } else {
+                    $proofUrl = Storage::disk($disk)->url($proofPath);
+                }
                 
                 \Illuminate\Support\Facades\Log::info('Upload successful', [
                     'disk' => $disk,

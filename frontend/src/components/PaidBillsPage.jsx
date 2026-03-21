@@ -61,7 +61,13 @@ const PaidBillsPage = () => {
         return 'http://localhost:8000';
     })();
 
-    const buildStorageUrl = (path) => `${STORAGE_BASE_URL.replace(/\/$/, '')}/storage/${path}`;
+    const buildStorageUrl = (path) => {
+        if (!path) return '';
+        // If path is already a full URL (like from Supabase), return it as is
+        if (path.startsWith('http')) return path;
+        // Otherwise build the local storage URL
+        return `${STORAGE_BASE_URL.replace(/\/$/, '')}/storage/${path}`;
+    };
 
     useEffect(() => {
         fetchPaidBills();
