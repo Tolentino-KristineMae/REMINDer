@@ -57,11 +57,17 @@ class BillController extends Controller
         $request->validate([
             'proof' => 'required|file|max:5120',
             'details' => 'nullable|string',
+            'voice_record' => 'nullable|file|max:5120',
         ]);
 
         $proofPath = null;
         if ($request->hasFile('proof')) {
             $proofPath = $request->file('proof')->store('proofs', 'public');
+        }
+
+        $voicePath = null;
+        if ($request->hasFile('voice_record')) {
+            $voicePath = $request->file('voice_record')->store('voice_records', 'public');
         }
 
         $proofData = [
@@ -71,6 +77,10 @@ class BillController extends Controller
 
         if ($request->has('details')) {
             $proofData['details'] = $request->details;
+        }
+
+        if ($voicePath) {
+            $proofData['voice_record_path'] = $voicePath;
         }
 
         ProofOfPayment::create($proofData);
@@ -91,6 +101,9 @@ class BillController extends Controller
         foreach ($bill->proofOfPayments as $proof) {
             if ($proof->file_path) {
                 $pathsToDelete[] = $proof->file_path;
+            }
+            if ($proof->voice_record_path) {
+                $pathsToDelete[] = $proof->voice_record_path;
             }
         }
 
