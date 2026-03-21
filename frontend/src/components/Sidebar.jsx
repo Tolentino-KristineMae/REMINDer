@@ -1,141 +1,345 @@
-import React from 'react';
+import { useState } from "react";
 import { useAuth } from '../context/AuthContext';
-import { 
-    LayoutDashboard, 
-    Calendar, 
-    BarChart3, 
-    Users, 
-    Settings, 
-    HelpCircle, 
-    LogOut,
-    CheckCircle2,
-    X
+import {
+  LayoutDashboard,
+  Calendar,
+  BarChart3,
+  Users,
+  Settings,
+  HelpCircle,
+  LogOut,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
 
-const Sidebar = ({ isOpen, onClose }) => {
-    const { user, logout } = useAuth();
+const C = {
+  bg:           '#f6f6f6',
+  border:       '#e8e8e8',
+  text:         '#2d2d2d',
+  textMuted:    '#a0a0a0',
+  textActive:   '#16a34a',
+  iconDefault:  '#7a7a7a',
+  iconActive:   '#16a34a',
+  activeBg:     '#edfaf3',
+  activeBorder: '#16a34a',
+  hoverBg:      '#eeeeee',
+  badgeBg:      '#dcfce7',
+  badgeText:    '#15803d',
+  logoutHover:  '#fff1f2',
+  logoutText:   '#ef4444',
+  toggle:       '#e2e2e2',
+  toggleBorder: '#d4d4d4',
+};
 
-    const menuItems = [
-        { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
-        { icon: <Calendar size={18} />, label: 'Calendar', path: '/calendar' },
-        { icon: <CheckCircle2 size={18} />, label: 'Paid Bills', path: '/paid-bills' },
-        { icon: <Users size={18} />, label: 'Team', path: '/team' },
-        { icon: <BarChart3 size={18} />, label: 'Analytics', path: '/analytics' },
-    ];
+const menuItems = [
+  { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
+  { icon: <Calendar size={18} />,        label: 'Calendar',   path: '/calendar' },
+  { icon: <CheckCircle2 size={18} />,    label: 'Paid Bills', path: '/paid-bills' },
+  { icon: <Users size={18} />,           label: 'Team',       path: '/team' },
+  { icon: <BarChart3 size={18} />,       label: 'Analytics',  path: '/analytics' },
+];
 
-    const generalItems = [
-        { icon: <Settings size={18} />, label: 'Settings', path: '/settings' },
-        { icon: <HelpCircle size={18} />, label: 'Help', path: '/help' },
-    ];
+const generalItems = [
+  { icon: <Settings size={18} />,   label: 'Settings', path: '/settings' },
+  { icon: <HelpCircle size={18} />, label: 'Help',     path: '/help' },
+];
 
+const Tooltip = ({ label }) => (
+  <span style={{
+    position:      'absolute',
+    left:          'calc(100% + 10px)',
+    top:           '50%',
+    transform:     'translateY(-50%)',
+    background:    '#1a1a1a',
+    color:         '#fff',
+    fontSize:      '12px',
+    fontWeight:    600,
+    padding:       '5px 10px',
+    borderRadius:  '8px',
+    whiteSpace:    'nowrap',
+    pointerEvents: 'none',
+    zIndex:        9999,
+    boxShadow:     '0 4px 14px rgba(0,0,0,0.18)',
+  }}>
+    {label}
+    <span style={{
+      position:         'absolute',
+      right:            '100%',
+      top:              '50%',
+      transform:        'translateY(-50%)',
+      border:           '5px solid transparent',
+      borderRightColor: '#1a1a1a',
+    }} />
+  </span>
+);
+
+const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logout }) => {
+  const [hovered, setHovered] = useState(false);
+
+  const baseStyle = (isActive) => ({
+    position:       'relative',
+    display:        'flex',
+    alignItems:     'center',
+    gap:            collapsed ? 0 : '11px',
+    justifyContent: collapsed ? 'center' : 'flex-start',
+    width:          '100%',
+    padding:        collapsed ? '10px 0' : '8px 12px',
+    borderRadius:   '10px',
+    border:         'none',
+    cursor:         'pointer',
+    transition:     'background 0.15s, color 0.15s',
+    textDecoration: 'none',
+    boxSizing:      'border-box',
+    background: isLogout
+      ? (hovered ? C.logoutHover : 'transparent')
+      : isActive
+        ? C.activeBg
+        : hovered
+          ? C.hoverBg
+          : 'transparent',
+    color: isLogout
+      ? (hovered ? C.logoutText : C.textMuted)
+      : isActive ? C.textActive : C.text,
+  });
+
+  const iconStyle = (isActive) => ({
+    display:    'flex',
+    flexShrink: 0,
+    color: isLogout
+      ? (hovered ? C.logoutText : C.iconDefault)
+      : isActive ? C.iconActive : C.iconDefault,
+    transform:  hovered ? 'scale(1.12)' : 'scale(1)',
+    transition: 'transform 0.15s',
+  });
+
+  const inner = (isActive) => (
+    <>
+      {isActive && !isLogout && (
+        <span style={{
+          position:     'absolute',
+          left:         '-12px',
+          top:          '50%',
+          transform:    'translateY(-50%)',
+          width:        '4px',
+          height:       '55%',
+          borderRadius: '0 4px 4px 0',
+          background:   C.activeBorder,
+        }} />
+      )}
+
+      <span style={iconStyle(isActive)}>{icon}</span>
+
+      {!collapsed && (
+        <span style={{
+          fontSize:   '14px',
+          fontWeight: isActive ? 600 : 500,
+          flex:       1,
+          textAlign:  'left',
+          whiteSpace: 'nowrap',
+        }}>
+          {label}
+        </span>
+      )}
+
+      {!collapsed && badge && (
+        <span style={{
+          background:   C.badgeBg,
+          color:        C.badgeText,
+          fontSize:     '9px',
+          fontWeight:   700,
+          padding:      '2px 7px',
+          borderRadius: '999px',
+        }}>
+          {badge}
+        </span>
+      )}
+
+      {collapsed && hovered && <Tooltip label={label} />}
+    </>
+  );
+
+  if (isLogout) {
     return (
-        <>
-            {isOpen && (
-                <button
-                    type="button"
-                    aria-label="Close menu"
-                    onClick={onClose}
-                    className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-                />
-            )}
-
-            <aside
-                className={`
-                    w-64 h-screen flex flex-col p-4 fixed left-0 top-0 z-50
-                    transition-transform duration-200 ease-out
-                    ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-                    lg:translate-x-0
-                `}
-                style={{ 
-                    background: 'rgba(21, 128, 61, 0.95)',
-                    backdropFilter: 'blur(20px)',
-                    borderRight: '1px solid rgba(255,255,255,.1)'
-                }}
-            >
-                <div className="lg:hidden flex items-center justify-between px-2 pt-1 pb-3">
-                    <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Menu</span>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center border border-white/10 text-white hover:bg-white/10"
-                        aria-label="Close sidebar"
-                    >
-                        <X size={18} className="stroke-[2.5]" />
-                    </button>
-                </div>
-
-                <div className="p-4 mb-4">
-                    <Logo size="lg" />
-                </div>
-
-                <div className="flex-1 space-y-6 overflow-y-auto">
-                    <div>
-                        <h3 className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-2 px-2">Menu</h3>
-                        <nav className="space-y-0.5">
-                            {menuItems.map((item) => (
-                                <NavLink
-                                    key={item.label}
-                                    to={item.path}
-                                    className={({ isActive }) => `
-                                        flex items-center justify-between px-3 py-2.5 rounded-xl transition-all group
-                                        ${isActive ? 'bg-white/20 text-white' : 'text-white/60 hover:bg-white/10 hover:text-white'}
-                                    `}
-                                    onClick={() => onClose?.()}
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <span className="group-hover:scale-110 transition-transform">{item.icon}</span>
-                                        <span className="font-medium text-sm">{item.label}</span>
-                                    </div>
-                                    {item.badge && (
-                                        <span className="bg-green-400 text-green-900 text-[9px] px-1.5 py-0.5 rounded-full font-bold">{item.badge}</span>
-                                    )}
-                                </NavLink>
-                            ))}
-                        </nav>
-                    </div>
-
-                    <div>
-                        <h3 className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-2 px-2">General</h3>
-                        <nav className="space-y-0.5">
-                            {generalItems.map((item) => (
-                                <NavLink
-                                    key={item.label}
-                                    to={item.path}
-                                    className={({ isActive }) => `
-                                        flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group
-                                        ${isActive ? 'bg-white/20 text-white' : 'text-white/60 hover:bg-white/10 hover:text-white'}
-                                    `}
-                                    onClick={() => onClose?.()}
-                                >
-                                    <span className="group-hover:scale-110 transition-transform">{item.icon}</span>
-                                    <span className="font-medium text-sm">{item.label}</span>
-                                </NavLink>
-                            ))}
-                            <button
-                                onClick={logout}
-                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/60 hover:bg-red-500/20 hover:text-red-300 transition-all group"
-                            >
-                                <LogOut size={18} className="group-hover:scale-110 transition-transform" />
-                                <span className="font-medium text-sm">Logout</span>
-                            </button>
-                        </nav>
-                    </div>
-                </div>
-
-                <div className="mt-auto pt-4 border-t border-white/10">
-                    <div className="flex items-center gap-3 px-2 py-2">
-                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} className="w-9 h-9 rounded-full border-2 border-white/20" alt="Avatar" />
-                        <div className="flex-1 min-w-0">
-                            <p className="text-[11px] font-bold text-white truncate">{user?.name || 'Admin'}</p>
-                            <p className="text-[9px] text-white/50 truncate">{user?.email}</p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </>
+      <div style={{ position: 'relative' }}>
+        <button
+          onClick={logout}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          style={baseStyle(false)}
+        >
+          {inner(false)}
+        </button>
+      </div>
     );
+  }
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <NavLink
+        to={path}
+        end={path === '/'}
+        onClick={() => onClose?.()}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={({ isActive }) => baseStyle(isActive)}
+      >
+        {({ isActive }) => inner(isActive)}
+      </NavLink>
+    </div>
+  );
+};
+
+const Sidebar = ({ isOpen, onClose }) => {
+  const { user, logout } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
+
+  const W = collapsed ? 72 : 256;
+
+  return (
+    <>
+      {isOpen && (
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={onClose}
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          style={{ border: 'none', cursor: 'pointer' }}
+        />
+      )}
+
+      <aside
+        className={`
+          fixed left-0 top-0 z-50 h-screen flex flex-col
+          transition-transform duration-200 ease-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0
+        `}
+        style={{
+          width:      W,
+          minWidth:   W,
+          padding:    '16px 12px',
+          background: C.bg,
+          borderRight:`1px solid ${C.border}`,
+          boxShadow:  '2px 0 12px rgba(0,0,0,0.06)',
+          transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
+          overflow:   'hidden',
+          boxSizing:  'border-box',
+        }}
+      >
+        <div style={{
+          display:        'flex',
+          alignItems:     'center',
+          justifyContent: collapsed ? 'center' : 'space-between',
+          marginBottom:   '28px',
+          padding:        '4px 4px 0',
+        }}>
+          <Logo size={collapsed ? 'sm' : 'lg'} />
+
+          <button
+            onClick={() => setCollapsed(v => !v)}
+            title={collapsed ? 'Expand' : 'Collapse'}
+            style={{
+              width:          28,
+              height:         28,
+              flexShrink:     0,
+              border:         `1px solid ${C.toggleBorder}`,
+              borderRadius:   '8px',
+              background:     C.toggle,
+              color:          C.iconDefault,
+              cursor:         'pointer',
+              display:        'flex',
+              alignItems:     'center',
+              justifyContent: 'center',
+              marginLeft:     collapsed ? 0 : '8px',
+              transition:     'background 0.15s',
+            }}
+          >
+            {collapsed
+              ? <ChevronRight size={15} strokeWidth={2.5} />
+              : <ChevronLeft  size={15} strokeWidth={2.5} />}
+          </button>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+
+          {!collapsed ? (
+            <p style={{
+              fontSize:      '10px',
+              fontWeight:    600,
+              color:         C.textMuted,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              margin:        '0 0 6px 8px',
+            }}>Menu</p>
+          ) : <div style={{ height: 8 }} />}
+
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '20px' }}>
+            {menuItems.map(item => (
+              <NavItem key={item.label} {...item} collapsed={collapsed} onClose={onClose} />
+            ))}
+          </nav>
+
+          {!collapsed ? (
+            <p style={{
+              fontSize:      '10px',
+              fontWeight:    600,
+              color:         C.textMuted,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              margin:        '0 0 6px 8px',
+            }}>General</p>
+          ) : (
+            <div style={{ height: '1px', background: C.border, margin: '4px 8px 12px' }} />
+          )}
+
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {generalItems.map(item => (
+              <NavItem key={item.label} {...item} collapsed={collapsed} onClose={onClose} />
+            ))}
+            <NavItem
+              icon={<LogOut size={18} />}
+              label="Logout"
+              path="#"
+              collapsed={collapsed}
+              isLogout
+              logout={logout}
+            />
+          </nav>
+        </div>
+
+        <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '12px', marginTop: '12px' }}>
+          {collapsed ? (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <img
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
+                style={{ width: 34, height: 34, borderRadius: '50%', border: `2px solid ${C.border}` }}
+                alt="Avatar"
+              />
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 8px' }}>
+              <img
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
+                style={{ width: 34, height: 34, borderRadius: '50%', border: `2px solid ${C.border}`, flexShrink: 0 }}
+                alt="Avatar"
+              />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: C.text, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {user?.name || 'Admin'}
+                </p>
+                <p style={{ fontSize: '9px', color: C.textMuted, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {user?.email}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </aside>
+    </>
+  );
 };
 
 export default Sidebar;
