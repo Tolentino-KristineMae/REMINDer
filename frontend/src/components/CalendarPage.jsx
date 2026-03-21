@@ -111,8 +111,8 @@ const CalendarPage = () => {
                 <div className="flex-[3] flex flex-col min-w-0">
                     {/* Elegant Calendar Container */}
                     <div className="bg-white rounded-[2rem] shadow-2xl shadow-gray-200/40 border border-white/80 relative flex flex-col flex-1 overflow-hidden">
-                        {/* Decorative header gradient */}
-                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 z-30"></div>
+                        {/* Decorative header gradient - Unified in flow to prevent overlap */}
+                        <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 shrink-0"></div>
                         
                         {/* Unified Day Columns & Header */}
                         <div className="flex-1 min-h-0 overflow-auto custom-scrollbar" ref={scrollContainerRef}>
@@ -135,15 +135,17 @@ const CalendarPage = () => {
                                             }}
                                             className={`
                                                 flex-1 min-w-[140px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/60 last:border-r-0 px-2 py-3 sm:py-5 flex flex-col gap-3 relative transition-all duration-500 scroll-mx-4 cursor-pointer group
-                                                ${isSelected ? 'bg-gradient-to-b from-green-50/80 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50/30 to-white' : 'bg-white hover:bg-gray-50/50'}
+                                                ${isSelected ? 'bg-gradient-to-b from-green-50 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50 to-white' : 'bg-white hover:bg-gray-50/50'}
                                             `}
                                         >
                                             {/* Elegant column divider */}
                                             <div className="absolute top-4 bottom-4 -right-px w-px bg-gradient-to-b from-transparent via-gray-200/50 to-transparent"></div>
                                             
                                             {/* Date badge - Sticky Header for Day */}
-                                            <div className="sticky top-0 z-20 bg-inherit pb-4 mb-2 flex flex-col items-center gap-3">
-                                                <span className={`text-[11px] font-extrabold uppercase tracking-[0.2em] transition-all duration-300 ${
+                                            <div className={`sticky top-0 z-20 pb-4 mb-2 flex flex-col items-center gap-3 ${
+                                                isSelected ? 'bg-green-50' : isToday ? 'bg-emerald-50' : 'bg-white'
+                                            }`}>
+                                                <span className={`text-[11px] font-extrabold uppercase tracking-[0.2em] pt-3 transition-all duration-300 ${
                                                     isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-500'
                                                 }`}>
                                                     {dayName}
