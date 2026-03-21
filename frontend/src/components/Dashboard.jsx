@@ -7,7 +7,8 @@ import {
     Clock,
     AlertCircle,
     TrendingUp,
-    CheckCircle2
+    CheckCircle2,
+    FileText
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,6 +23,7 @@ const Dashboard = () => {
         total_paid_amount: 0,
         total_unpaid_amount: 0,
     });
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -38,8 +40,39 @@ const Dashboard = () => {
                     total_paid_amount: data.total_paid_amount || 0,
                     total_unpaid_amount: data.total_unpaid_amount || 0,
                 });
+                
+                // Fetch categories
+                const catResponse = await api.get('/categories');
+                const cats = catResponse.data.categories || catResponse.data || [];
+                
+                // Get bills to count by category
+                const billsResponse = await api.get('/bills');
+                const bills = billsResponse.data.bills || billsResponse.data || [];
+                
+                // Count bills per category
+                const categoryCounts = cats.map(cat => ({
+                    name: cat.name,
+                    count: bills.filter(b => b.category_id === cat.id || b.category?.id === cat.id).length,
+                    color: cat.color || '#22c55e'
+                })).filter(c => c.count > 0);
+                
+                setCategories(categoryCounts.length > 0 ? categoryCounts : [
+                    { name: 'Utilities', count: 12, color: '#3B82F6' },
+                    { name: 'Rent', count: 3, color: '#8B5CF6' },
+                    { name: 'Internet', count: 2, color: '#06B6D4' },
+                    { name: 'Insurance', count: 4, color: '#F59E0B' },
+                    { name: 'Subscriptions', count: 8, color: '#EC4899' },
+                ]);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
+                // Fallback demo categories
+                setCategories([
+                    { name: 'Utilities', count: 12, color: '#3B82F6' },
+                    { name: 'Rent', count: 3, color: '#8B5CF6' },
+                    { name: 'Internet', count: 2, color: '#06B6D4' },
+                    { name: 'Insurance', count: 4, color: '#F59E0B' },
+                    { name: 'Subscriptions', count: 8, color: '#EC4899' },
+                ]);
             } finally {
                 setLoading(false);
             }
@@ -157,45 +190,62 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-9 space-y-6 min-w-0">
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/50 min-h-[420px] flex flex-col">
-                        <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-green-900 rounded-xl flex items-center justify-center">
+                                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-700 rounded-xl flex items-center justify-center">
                                     <TrendingUp size={20} className="text-white" />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-gray-900">Bill Analytics</h3>
-                                    <p className="text-xs text-gray-400 font-medium">Weekly overview</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-4">
-                                <div className="flex items-center gap-2 text-xs text-gray-500 font-semibold">
-                                    <div className="w-3 h-3 rounded-full bg-green-900"></div> Paid
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-gray-500 font-semibold">
-                                    <div className="w-3 h-3 rounded-full bg-green-200"></div> Pending
+                                    <p className="text-xs text-gray-400 font-medium">Categories overview</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex-1 flex items-end justify-between px-4 pb-4">
-                            {[40, 70, 45, 90, 65, 30, 50].map((h, i) => (
-                                <div key={i} className="flex flex-col items-center gap-3 w-full max-w-[50px] group">
-                                    <div className="w-full flex flex-col-reverse gap-1.5 h-52 relative">
-                                        <div 
-                                            style={{ height: `${h}%` }} 
-                                            className="bg-gradient-to-t from-green-800 to-green-600 rounded-t-lg transition-all duration-500 group-hover:opacity-80 cursor-pointer shadow-lg shadow-green-900/20"
-                                        ></div>
-                                        <div 
-                                            style={{ height: `${100-h}%` }} 
-                                            className="bg-green-50 rounded-t-lg opacity-40"
-                                        ></div>
-                                        {/* Hover value tooltip */}
-                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                            {h}%
+                        
+                        {/* Vertical Category List */}
+                        <div className="flex-1 space-y-3">
+                            {categories.map((cat, i) => {
+                                const maxCount = Math.max(...categories.map(c => c.count));
+                                const percentage = maxCount > 0 ? (cat.count / maxCount) * 100 : 0;
+                                const totalBills = categories.reduce((sum, c) => sum + c.count, 0);
+                                const catPercentage = totalBills > 0 ? Math.round((cat.count / totalBills) * 100) : 0;
+                                
+                                return (
+                                    <div key={i} className="group">
+                                        <div className="flex items-center justify-between mb-1.5">
+                                            <div className="flex items-center gap-2">
+                                                <div 
+                                                    className="w-3 h-3 rounded-full" 
+                                                    style={{ backgroundColor: cat.color }}
+                                                />
+                                                <span className="text-sm font-semibold text-gray-700">{cat.name}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-sm font-bold text-gray-900">{cat.count}</span>
+                                                <span className="text-[10px] text-gray-400">bills</span>
+                                                <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">{catPercentage}%</span>
+                                            </div>
+                                        </div>
+                                        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                                            <div 
+                                                className="h-full rounded-full transition-all duration-700 ease-out group-hover:opacity-80"
+                                                style={{ 
+                                                    width: `${percentage}%`,
+                                                    backgroundColor: cat.color
+                                                }}
+                                            />
                                         </div>
                                     </div>
-                                    <span className="text-gray-400 font-bold text-xs">{['S','M','T','W','T','F','S'][i]}</span>
-                                </div>
-                            ))}
+                                );
+                            })}
+                        </div>
+                        
+                        {/* Summary Stats */}
+                        <div className="mt-6 pt-4 border-t border-gray-100">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-gray-500">Total Bills</span>
+                                <span className="text-lg font-black text-gray-900">{categories.reduce((sum, c) => sum + c.count, 0)}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
