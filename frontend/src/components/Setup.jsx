@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../api/axios';
+import Logo from './Logo';
 
 const Setup = () => {
     const [name, setName] = useState('');
@@ -25,9 +26,14 @@ const Setup = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] p-4">
-            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Setup Account</h2>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-green-50/30 to-emerald-50/20 p-4">
+            <div className="max-w-md w-full">
+                <div className="flex justify-center mb-8">
+                    <Logo size="lg" />
+                </div>
+                <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-green-900/5 p-8 border border-white/50">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">Account Creation</h2>
+                    <p className="text-gray-400 text-sm text-center mb-8">Create your REMINDer account</p>
                 
                 {message && (
                     <div className="bg-green-50 text-green-600 p-3 rounded-xl border border-green-100 font-bold text-sm mb-6">
