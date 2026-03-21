@@ -87,7 +87,7 @@ const Logo = ({ size = 'xl', className, dark = false }) => {
             <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 <div className={`${selectedSize.main} font-black tracking-tighter leading-none`}>
                     <span style={{ color: textColor }}>REM</span>
-                    <span style={{ color: accentColor }}>INDer</span>
+                    <span style={{ color: accentColor }}>INDear</span>
                 </div>
                 <p className={`${selectedSize.sub} font-bold uppercase tracking-widest`} style={{ color: subColor }}>System</p>
             </div>
