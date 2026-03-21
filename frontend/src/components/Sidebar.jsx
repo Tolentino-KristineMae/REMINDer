@@ -132,7 +132,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
     transition: 'transform 0.15s',
   });
 
-  const inner = (isActive) => (
+  const inner = (isActive, hovered) => (
     <>
       {(isActive || hovered) && !isLogout && (
         <span style={{
@@ -191,7 +191,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
           onMouseLeave={() => setHovered(false)}
           style={baseStyle(false)}
         >
-          {inner(false)}
+          {inner(false, hovered)}
         </button>
       </div>
     );
@@ -207,7 +207,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
         onMouseLeave={() => setHovered(false)}
         style={({ isActive }) => baseStyle(isActive)}
       >
-        {({ isActive }) => inner(isActive)}
+        {({ isActive }) => inner(isActive, hovered)}
       </NavLink>
     </div>
   );
