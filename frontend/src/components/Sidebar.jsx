@@ -9,8 +9,8 @@ import {
   HelpCircle,
   LogOut,
   CheckCircle2,
-  PanelLeftClose,
-  PanelLeftOpen,
+  ArrowLeftToLine,
+  ArrowRightToLine,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
@@ -261,7 +261,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 transition:     'background 0.15s',
               }}
             >
-              <PanelLeftClose size={16} strokeWidth={2.5} />
+              <ArrowLeftToLine size={16} strokeWidth={2.5} />
             </button>
           )}
         </div>
@@ -286,7 +286,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               transition:     'background 0.15s',
             }}
           >
-            <PanelLeftOpen size={16} strokeWidth={2.5} />
+            <ArrowRightToLine size={16} strokeWidth={2.5} />
           </button>
         )}
 
