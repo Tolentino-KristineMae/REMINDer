@@ -35,21 +35,24 @@ const CalendarPage = () => {
     }, []);
 
     useEffect(() => {
-        if (billsListRef.current) {
-            const container = billsListRef.current;
-            const firstBill = container.querySelector('[data-bill-id]');
-            if (firstBill) {
-                const containerHeight = container.clientHeight;
-                const elementTop = firstBill.offsetTop;
-                const scrollTo = elementTop - (containerHeight / 2) + (firstBill.clientHeight / 2);
-                container.scrollTo({
-                    top: scrollTo,
-                    behavior: 'smooth'
-                });
-            } else {
-                container.scrollTo({ top: 0, behavior: 'smooth' });
+        const timer = setTimeout(() => {
+            if (billsListRef.current) {
+                const container = billsListRef.current;
+                const firstBill = container.querySelector('[data-bill-id]');
+                if (firstBill) {
+                    const containerHeight = container.clientHeight;
+                    const elementTop = firstBill.offsetTop;
+                    const scrollTo = elementTop - (containerHeight / 2) + (firstBill.clientHeight / 2);
+                    container.scrollTo({
+                        top: scrollTo,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    container.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             }
-        }
+        }, 100);
+        return () => clearTimeout(timer);
     }, [currentDate]);
 
     // Helper functions for dates
