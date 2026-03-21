@@ -93,13 +93,6 @@ const CalendarPage = () => {
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col">
 
-            {/* Month Display */}
-            <div className="flex items-center gap-3 mb-6">
-                <div className="bg-white px-4 py-2 rounded-xl border border-green-100 shadow-sm">
-                    <span className="text-base font-black text-green-900 leading-none">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
-                </div>
-            </div>
-
             <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
                 {/* Main Calendar Section */}
                 <div className="flex-[3] flex flex-col min-w-0">

@@ -87,7 +87,16 @@ const Logo = ({ size = 'xl', className, dark = false }) => {
             <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 <div className={`${selectedSize.main} font-black tracking-tighter leading-none`}>
                     <span style={{ color: textColor }}>REM</span>
-                    <span style={{ color: accentColor }}>INDear</span>
+                    <span style={{ color: textColor }}>IN</span>
+                    <span 
+                        style={{ 
+                            background: `linear-gradient(to bottom, ${textColor} 50%, ${accentColor} 50%)`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                        }}
+                    >D</span>
+                    <span style={{ color: accentColor }}>ear</span>
                 </div>
                 <p className={`${selectedSize.sub} font-bold uppercase tracking-widest`} style={{ color: subColor }}>System</p>
             </div>
