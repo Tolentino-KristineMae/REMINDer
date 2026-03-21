@@ -18,17 +18,20 @@ import Logo from './Logo';
 const C = {
   bg:           '#052e16',
   border:       '#14532d',
-  text:         '#dcfce7',
-  textMuted:    '#86efac',
-  textActive:   '#22c55e',
-  iconDefault:  '#86efac',
-  iconActive:   '#22c55e',
-  activeBg:     '#166534',
+  text:         '#e2e8f0',
+  textMuted:    '#94a3b8',
+  textActive:   '#ffffff',
+  textHover:    '#ffffff',
+  iconDefault:  '#94a3b8',
+  iconActive:   '#ffffff',
+  iconHover:    '#ffffff',
+  activeBg:     'rgba(34, 197, 94, 0.15)',
   activeBorder: '#22c55e',
-  hoverBg:      '#14532d',
+  hoverBg:      'rgba(255, 255, 255, 0.08)',
+  hoverBorder:  'rgba(255, 255, 255, 0.1)',
   badgeBg:      '#22c55e',
   badgeText:    '#052e16',
-  logoutHover:  '#7f1d1d',
+  logoutHover:  'rgba(239, 68, 68, 0.15)',
   logoutText:   '#fca5a5',
   toggle:       '#ffffff',
   toggleBorder: '#ffffff',
@@ -51,19 +54,19 @@ const generalItems = [
 const Tooltip = ({ label }) => (
   <span style={{
     position:      'absolute',
-    left:          'calc(100% + 10px)',
+    left:          'calc(100% + 12px)',
     top:           '50%',
     transform:     'translateY(-50%)',
-    background:    'rgba(0,0,0,0.8)',
-    color:         '#fff',
+    background:    'rgba(255, 255, 255, 0.98)',
+    color:         '#052e16',
     fontSize:      '12px',
     fontWeight:    600,
-    padding:       '5px 10px',
-    borderRadius:  '8px',
+    padding:       '8px 14px',
+    borderRadius:  '10px',
     whiteSpace:    'nowrap',
     pointerEvents: 'none',
     zIndex:        9999,
-    boxShadow:     '0 4px 14px rgba(0,0,0,0.18)',
+    boxShadow:     '0 8px 25px rgba(0,0,0,0.25), 0 0 0 1px rgba(34, 197, 94, 0.1)',
     fontFamily:    "'Plus Jakarta Sans', sans-serif",
   }}>
     {label}
@@ -72,8 +75,8 @@ const Tooltip = ({ label }) => (
       right:            '100%',
       top:              '50%',
       transform:        'translateY(-50%)',
-      border:           '5px solid transparent',
-      borderRightColor: 'rgba(0,0,0,0.8)',
+      border:           '6px solid transparent',
+      borderRightColor: 'rgba(255, 255, 255, 0.98)',
     }} />
   </span>
 );
@@ -88,11 +91,11 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
     gap:            collapsed ? 0 : '11px',
     justifyContent: collapsed ? 'center' : 'flex-start',
     width:          '100%',
-    padding:        collapsed ? '10px 0' : '8px 12px',
-    borderRadius:   '10px',
-    border:         'none',
+    padding:        collapsed ? '10px 0' : '10px 12px',
+    borderRadius:   '12px',
+    border:         isActive ? `1px solid ${C.activeBorder}` : (hovered ? `1px solid ${C.hoverBorder}` : '1px solid transparent'),
     cursor:         'pointer',
-    transition:     'background 0.15s, color 0.15s',
+    transition:     'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
     textDecoration: 'none',
     boxSizing:      'border-box',
     background: isLogout
@@ -104,7 +107,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
           : 'transparent',
     color: isLogout
       ? (hovered ? C.logoutText : C.textMuted)
-      : isActive ? C.textActive : C.text,
+      : isActive ? C.textActive : (hovered ? C.textHover : C.text),
   });
 
   const iconStyle = (isActive) => ({
@@ -112,9 +115,9 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
     flexShrink: 0,
     color: isLogout
       ? (hovered ? C.logoutText : C.iconDefault)
-      : isActive ? C.iconActive : C.iconDefault,
-    transform:  hovered ? 'scale(1.12)' : 'scale(1)',
-    transition: 'transform 0.15s',
+      : isActive ? C.iconActive : (hovered ? C.iconHover : C.iconDefault),
+    transform:  hovered ? 'translateX(3px)' : 'translateX(0)',
+    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
   });
 
   const inner = (isActive) => (
@@ -143,6 +146,8 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
           textAlign:  'left',
           whiteSpace: 'nowrap',
           letterSpacing: '0.01em',
+          transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+          opacity:    hovered || isActive ? 1 : 0.9,
         }}>
           {label}
         </span>
