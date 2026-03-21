@@ -197,9 +197,15 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
   );
 };
 
-const Sidebar = ({ isOpen, onClose }) => {
+const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) => {
   const { user, logout } = useAuth();
-  const [collapsed, setCollapsed] = useState(false);
+  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  
+  const collapsed = externalCollapsed ?? internalCollapsed;
+  const setCollapsed = (val) => {
+    setInternalCollapsed(val);
+    onCollapse?.(val);
+  };
 
   useEffect(() => {
     setCollapsed(false);
