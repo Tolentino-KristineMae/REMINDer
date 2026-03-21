@@ -241,24 +241,86 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           width:      W,
           minWidth:   W,
           padding:    '16px 12px',
-          background: C.bg,
+          background: `
+            radial-gradient(ellipse at 20% 20%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(21, 128, 61, 0.1) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(34, 197, 94, 0.05) 0%, transparent 70%),
+            ${C.bg}
+          `,
           borderRight:`1px solid ${C.border}`,
           boxShadow:  '4px 0 24px rgba(0,0,0,0.3)',
           transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
           overflow:   'hidden',
           boxSizing:  'border-box',
+          position:   'relative',
         }}
       >
+        {/* Decorative Background Shapes */}
         <div style={{
-          display:        'flex',
-          flexDirection:  collapsed ? 'column' : 'row',
-          alignItems:     'center',
-          justifyContent: collapsed ? 'center' : 'space-between',
+          position:   'absolute',
+          top:        '-50%',
+          right:      '-30%',
+          width:      '80%',
+          height:     '80%',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(34, 197, 94, 0.08) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{
+          position:   'absolute',
+          bottom:     '-40%',
+          left:       '-20%',
+          width:      '60%',
+          height:     '60%',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(21, 128, 61, 0.1) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        {/* Subtle Grid Pattern */}
+        <div style={{
+          position:   'absolute',
+          inset:      0,
+          backgroundImage: `
+            linear-gradient(rgba(34, 197, 94, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(34, 197, 94, 0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '30px 30px',
+          pointerEvents: 'none',
+          opacity:    0.5,
+        }} />
+        {/* Logo Header Card */}
+        <div style={{
           marginBottom:   '28px',
-          padding:        '4px 4px 0',
-          gap:            collapsed ? '12px' : '0',
+          padding:        collapsed ? '16px 8px' : '16px',
+          background:     collapsed 
+            ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(21, 128, 61, 0.1) 100%)'
+            : 'linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(21, 128, 61, 0.08) 100%)',
+          borderRadius:  '16px',
+          border:         '1px solid rgba(34, 197, 94, 0.2)',
+          backdropFilter: 'blur(10px)',
+          position:       'relative',
+          zIndex:         1,
+          overflow:       'hidden',
         }}>
-          <Logo size={collapsed ? 'sm' : 'lg'} dark />
+          <div style={{
+            position:   'absolute',
+            top:        '-50%',
+            right:      '-50%',
+            width:      '100%',
+            height:     '100%',
+            background: 'radial-gradient(circle, rgba(34, 197, 94, 0.15) 0%, transparent 60%)',
+            pointerEvents: 'none',
+          }} />
+          <div style={{
+            display:        'flex',
+            flexDirection:  collapsed ? 'column' : 'row',
+            alignItems:     'center',
+            justifyContent: collapsed ? 'center' : 'space-between',
+            gap:            collapsed ? '12px' : '0',
+            position:       'relative',
+            zIndex:         1,
+          }}>
+            <Logo size={collapsed ? 'sm' : 'lg'} dark />
 
           {!collapsed && (
             <button
@@ -283,6 +345,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
               <ChevronLeft size={15} strokeWidth={2.5} />
             </button>
           )}
+          </div>
         </div>
 
         {/* Separator Line */}
@@ -291,7 +354,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
             height: '1px',
             background: 'linear-gradient(to right, transparent, #22c55e, transparent)',
             marginBottom: '16px',
-            opacity: 0.3
+            opacity: 0.2
           }} 
         />
 
@@ -334,15 +397,24 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
         <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
 
           {!collapsed ? (
-            <p style={{
-              fontSize:      '10px',
-              fontWeight:    600,
-              color:         C.textMuted,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin:        '0 0 6px 8px',
-              fontFamily:   C.fontFamily,
-            }}>Menu</p>
+            <div style={{
+              display:        'flex',
+              alignItems:     'center',
+              gap:            '8px',
+              marginBottom:   '8px',
+            }}>
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)' }} />
+              <p style={{
+                fontSize:      '10px',
+                fontWeight:    700,
+                color:         C.textMuted,
+                textTransform: 'uppercase',
+                letterSpacing: '0.12em',
+                fontFamily:   C.fontFamily,
+                padding:       '0 8px',
+              }}>Menu</p>
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)' }} />
+            </div>
           ) : <div style={{ height: 8 }} />}
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '20px' }}>
@@ -352,17 +424,26 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           </nav>
 
           {!collapsed ? (
-            <p style={{
-              fontSize:      '10px',
-              fontWeight:    600,
-              color:         C.textMuted,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin:        '0 0 6px 8px',
-              fontFamily:   C.fontFamily,
-            }}>General</p>
+            <div style={{
+              display:        'flex',
+              alignItems:     'center',
+              gap:            '8px',
+              marginBottom:   '8px',
+            }}>
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)' }} />
+              <p style={{
+                fontSize:      '10px',
+                fontWeight:    700,
+                color:         C.textMuted,
+                textTransform: 'uppercase',
+                letterSpacing: '0.12em',
+                fontFamily:   C.fontFamily,
+                padding:       '0 8px',
+              }}>General</p>
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)' }} />
+            </div>
           ) : (
-            <div style={{ height: '1px', background: C.border, margin: '4px 8px 12px' }} />
+            <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)', margin: '4px 8px 12px' }} />
           )}
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -380,27 +461,37 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           </nav>
         </div>
 
-        <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '12px', marginTop: '12px' }}>
+        {/* User Profile Card */}
+        <div style={{ 
+          borderTop: '1px solid rgba(34, 197, 94, 0.15)', 
+          paddingTop: '12px', 
+          marginTop: '12px',
+          background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, transparent 100%)',
+          padding: '12px',
+          borderRadius: '16px',
+          margin: '12px',
+          marginTop: 'auto',
+        }}>
           {collapsed ? (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <img
                 src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
-                style={{ width: 34, height: 34, borderRadius: '50%', border: `2px solid ${C.border}` }}
+                style={{ width: 38, height: 38, borderRadius: '50%', border: '2px solid rgba(34, 197, 94, 0.3)', boxShadow: '0 0 15px rgba(34, 197, 94, 0.2)' }}
                 alt="Avatar"
               />
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px' }}>
               <img
                 src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
-                style={{ width: 34, height: 34, borderRadius: '50%', border: `2px solid ${C.border}`, flexShrink: 0 }}
+                style={{ width: 38, height: 38, borderRadius: '50%', border: '2px solid rgba(34, 197, 94, 0.3)', flexShrink: 0, boxShadow: '0 0 15px rgba(34, 197, 94, 0.2)' }}
                 alt="Avatar"
               />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: '11px', fontWeight: 700, color: C.text, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: C.fontFamily }}>
+                <p style={{ fontSize: '12px', fontWeight: 700, color: C.text, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: C.fontFamily }}>
                   {user?.name || 'Admin'}
                 </p>
-                <p style={{ fontSize: '9px', color: C.textMuted, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: C.fontFamily }}>
+                <p style={{ fontSize: '10px', color: C.textMuted, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: C.fontFamily }}>
                   {user?.email}
                 </p>
               </div>
