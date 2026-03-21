@@ -57,6 +57,7 @@ class BillController extends Controller
         $request->validate([
             'proof' => 'required|file|max:5120',
             'details' => 'nullable|string',
+            'paid_by' => 'nullable|string|max:255',
         ]);
 
         $proofPath = null;
@@ -71,6 +72,10 @@ class BillController extends Controller
 
         if ($request->has('details')) {
             $proofData['details'] = $request->details;
+        }
+
+        if ($request->has('paid_by')) {
+            $proofData['paid_by'] = $request->paid_by;
         }
 
         ProofOfPayment::create($proofData);

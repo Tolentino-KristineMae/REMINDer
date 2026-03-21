@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProofOfPayment extends Model
 {
-    protected $fillable = ['bill_id', 'file_path', 'details'];
+    protected $fillable = ['bill_id', 'file_path', 'details', 'paid_by'];
 
     public function bill(): BelongsTo
     {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import { useAuth } from '../context/AuthContext';
 import { 
     X, 
     CheckCircle, 
@@ -17,6 +18,7 @@ import {
 const SettleBillPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user: currentUser } = useAuth();
     const [bill, setBill] = useState(null);
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
@@ -60,6 +62,43 @@ const SettleBillPage = () => {
         }
     };
 
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorderRef.current = new MediaRecorder(stream);
+            audioChunksRef.current = [];
+
+            mediaRecorderRef.current.ondataavailable = (event) => {
+                audioChunksRef.current.push(event.data);
+            };
+
+            mediaRecorderRef.current.onstop = () => {
+                const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+                setAudioBlob(blob);
+                setAudioURL(URL.createObjectURL(blob));
+                stream.getTracks().forEach(track => track.stop());
+            };
+
+            mediaRecorderRef.current.start();
+            setIsRecording(true);
+        } catch (err) {
+            console.error('Error accessing microphone:', err);
+            setError('Could not access microphone.');
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current && isRecording) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
+    };
+
+    const deleteRecording = () => {
+        setAudioBlob(null);
+        setAudioURL(null);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file) {
@@ -73,9 +112,11 @@ const SettleBillPage = () => {
         const formData = new FormData();
         formData.append('proof', file);
         formData.append('details', details);
+        formData.append('paid_by', currentUser?.name || currentUser?.email || 'Unknown');
 
         console.log('FormData proof:', formData.get('proof'));
         console.log('FormData details:', formData.get('details'));
+        console.log('FormData paid_by:', formData.get('paid_by'));
 
         try {
             await api.post(`/bills/${id}/proof`, formData);
@@ -234,6 +275,25 @@ const SettleBillPage = () => {
                                     placeholder="Type how you paid (e.g. GCash, Bank Transfer, Cash)..."
                                     className="w-full h-36 bg-gray-50 border-2 border-gray-100 rounded-2xl p-6 text-sm font-bold outline-none focus:ring-4 focus:ring-green-500/10 focus:border-green-600 focus:bg-white transition-all resize-none"
                                 />
+                            </div>
+                        </div>
+
+                        {/* Step 3: Paid By */}
+                        <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-green-900/5 overflow-hidden">
+                            <div className="p-6 border-b border-gray-50 flex items-center gap-3">
+                                <div className="w-8 h-8 bg-[#0a1f12] text-white rounded-xl flex items-center justify-center text-sm font-black">3</div>
+                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Paid By</h3>
+                            </div>
+                            <div className="p-8 bg-white">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-700">
+                                        <Users size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Payment submitted by</p>
+                                        <p className="text-sm font-black text-gray-900">{currentUser?.name || currentUser?.email || 'Unknown User'}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
