@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import Logo from './Logo';
 
@@ -250,7 +251,7 @@ const Setup = () => {
                     </form>
 
                     <div className="footer-txt">
-                        Already have an account? <a href="#">Sign in</a>
+                        Already have an account? <Link to="/login">Sign in</Link>
                     </div>
                 </div>
             </div>
