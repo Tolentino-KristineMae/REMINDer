@@ -23,7 +23,7 @@ const PrivateRoute = ({ children }) => {
     return user ? (
         <div className="flex bg-[#f8fafc] min-h-screen relative">
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-            <div className="flex-1 ml-0 lg:ml-56 flex flex-col min-h-screen min-w-0">
+            <div className="flex-1 ml-0 lg:ml-64 flex flex-col min-h-screen min-w-0">
                 <div className="lg:hidden sticky top-0 z-30 bg-[#f8fafc]/80 backdrop-blur border-b border-gray-100">
                     <div className="h-14 px-4 flex items-center justify-between">
                         <button

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
@@ -216,6 +216,10 @@ const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
+  useEffect(() => {
+    setCollapsed(false);
+  }, []);
+
   const W = collapsed ? 72 : 256;
 
   return (
@@ -245,7 +249,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           borderRight:`1px solid ${C.border}`,
           boxShadow:  '2px 0 12px rgba(0,0,0,0.06)',
           transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
-          overflowX:   'visible',
+          overflow:   'hidden',
           boxSizing:  'border-box',
         }}
       >
@@ -309,7 +313,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
         )}
 
-        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'visible' }}>
+        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
 
           {!collapsed ? (
             <p style={{
