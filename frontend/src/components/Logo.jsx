@@ -5,16 +5,34 @@ const Logo = ({ size = 'xl', className }) => {
         lg: {
             icon: 'w-12 h-12 text-lg',
             main: 'text-xl',
-            sub: 'text-[9px]'
+            sub: 'text-[9px]',
+            showFull: true
         },
         xl: {
             icon: 'w-10 h-10 text-xl',
             main: 'text-xl',
-            sub: 'text-[9px]'
+            sub: 'text-[9px]',
+            showFull: true
+        },
+        sm: {
+            icon: 'w-10 h-10 text-xl',
+            main: 'text-xl',
+            sub: 'text-[9px]',
+            showFull: false
         }
     };
 
     const selectedSize = sizes[size] || sizes.xl;
+
+    if (!selectedSize.showFull) {
+        return (
+            <div className={`flex items-center justify-center ${className}`}>
+                <div className={`${selectedSize.icon} bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white font-black shadow-xl shadow-green-600/25 shrink-0`}>
+                    R
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={`flex items-center gap-3 ${className}`}>

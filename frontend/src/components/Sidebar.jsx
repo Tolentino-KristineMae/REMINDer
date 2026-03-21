@@ -196,7 +196,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
-  const W = collapsed ? 72 : 256;
+  const W = collapsed ? 80 : 256;
 
   return (
     <>
