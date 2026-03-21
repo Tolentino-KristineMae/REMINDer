@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import api from '../api/axios';
 import { 
     ChevronLeft, 
@@ -19,6 +19,7 @@ const CalendarPage = () => {
         return new Date(now.getFullYear(), now.getMonth(), 1);
     });
     const [bills, setBills] = useState([]);
+    const billsListRef = useRef(null);
 
     useEffect(() => {
         const fetchBills = async () => {
@@ -32,6 +33,24 @@ const CalendarPage = () => {
 
         fetchBills();
     }, []);
+
+    useEffect(() => {
+        if (billsListRef.current) {
+            const container = billsListRef.current;
+            const firstBill = container.querySelector('[data-bill-id]');
+            if (firstBill) {
+                const containerHeight = container.clientHeight;
+                const elementTop = firstBill.offsetTop;
+                const scrollTo = elementTop - (containerHeight / 2) + (firstBill.clientHeight / 2);
+                container.scrollTo({
+                    top: scrollTo,
+                    behavior: 'smooth'
+                });
+            } else {
+                container.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    }, [currentDate]);
 
     // Helper functions for dates
     const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
@@ -380,13 +399,14 @@ const CalendarPage = () => {
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-1">
+                        <div ref={billsListRef} className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-1">
                             {getBillsForDate(currentDate).length > 0 ? (
                                 getBillsForDate(currentDate).map((bill) => {
                                     const isPaid = bill.status === 'paid';
                                     return (
                                         <div 
                                             key={bill.id} 
+                                            data-bill-id={bill.id}
                                             onClick={() => handleBillClick(bill)}
                                             className="relative group"
                                         >
