@@ -3,7 +3,7 @@ import api from '../api/axios';
 import { 
     Plus, 
     Wallet,
-    Receipt,
+    Banknote,
     Clock,
     AlertCircle,
     TrendingUp,
@@ -96,7 +96,7 @@ const Dashboard = () => {
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                                <Receipt size={22} className="text-orange-100" />
+                                <Banknote size={22} className="text-orange-100" />
                             </div>
                             <span className="text-[10px] font-bold text-orange-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
                                 <AlertCircle size={10} /> Unpaid
