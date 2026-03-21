@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { 
@@ -11,8 +11,7 @@ import {
     Calendar,
     CloudUpload,
     Clock,
-    Users,
-    Trash2
+    Users
 } from 'lucide-react';
 
 const SettleBillPage = () => {
@@ -22,16 +21,10 @@ const SettleBillPage = () => {
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const [details, setDetails] = useState('');
-    const [isRecording, setIsRecording] = useState(false);
-    const [audioBlob, setAudioBlob] = useState(null);
-    const [audioURL, setAudioURL] = useState(null);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState('');
     const [isUploaded, setIsUploaded] = useState(false);
-    
-    const mediaRecorderRef = useRef(null);
-    const audioChunksRef = useRef([]);
 
     useEffect(() => {
         let isMounted = true;
