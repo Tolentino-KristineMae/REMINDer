@@ -3,7 +3,7 @@ import api from '../api/axios';
 import { 
     Plus, 
     Wallet,
-    CreditCard,
+    Banknote,
     Clock,
     AlertCircle,
     TrendingUp,
@@ -45,14 +45,25 @@ const Dashboard = () => {
                 const catResponse = await api.get('/categories');
                 const cats = catResponse.data.categories || catResponse.data || [];
                 
-                // Get bills to count by category
+                // Get bills to count by category (current month only)
                 const billsResponse = await api.get('/bills');
                 const bills = billsResponse.data.bills || billsResponse.data || [];
                 
-                // Count bills per category
+                // Get current month
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+                
+                // Filter bills for current month only
+                const monthlyBills = bills.filter(bill => {
+                    const dueDate = new Date(bill.due_date);
+                    return dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear;
+                });
+                
+                // Count bills per category for current month
                 const categoryCounts = cats.map(cat => ({
                     name: cat.name,
-                    count: bills.filter(b => b.category_id === cat.id || b.category?.id === cat.id).length,
+                    count: monthlyBills.filter(b => b.category_id === cat.id || b.category?.id === cat.id).length,
                     color: cat.color || '#22c55e'
                 })).filter(c => c.count > 0);
                 
@@ -129,7 +140,7 @@ const Dashboard = () => {
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                                <CreditCard size={22} className="text-orange-100" />
+                                <Banknote size={22} className="text-orange-100" />
                             </div>
                             <span className="text-[10px] font-bold text-orange-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
                                 <AlertCircle size={10} /> Unpaid
