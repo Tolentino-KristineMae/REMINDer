@@ -241,53 +241,14 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           width:      W,
           minWidth:   W,
           padding:    '16px 12px',
-          background: `
-            radial-gradient(ellipse at 20% 20%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(21, 128, 61, 0.1) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(34, 197, 94, 0.05) 0%, transparent 70%),
-            ${C.bg}
-          `,
+          background: C.bg,
           borderRight:`1px solid ${C.border}`,
           boxShadow:  '4px 0 24px rgba(0,0,0,0.3)',
           transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
           overflow:   'hidden',
           boxSizing:  'border-box',
-          position:   'relative',
         }}
       >
-        {/* Decorative Background Shapes */}
-        <div style={{
-          position:   'absolute',
-          top:        '-50%',
-          right:      '-30%',
-          width:      '80%',
-          height:     '80%',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(34, 197, 94, 0.08) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{
-          position:   'absolute',
-          bottom:     '-40%',
-          left:       '-20%',
-          width:      '60%',
-          height:     '60%',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(21, 128, 61, 0.1) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        {/* Subtle Grid Pattern */}
-        <div style={{
-          position:   'absolute',
-          inset:      0,
-          backgroundImage: `
-            linear-gradient(rgba(34, 197, 94, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(34, 197, 94, 0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '30px 30px',
-          pointerEvents: 'none',
-          opacity:    0.5,
-        }} />
         {/* Logo Header Card */}
         <div style={{
           marginBottom:   '28px',
@@ -296,29 +257,18 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
             ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(21, 128, 61, 0.1) 100%)'
             : 'linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(21, 128, 61, 0.08) 100%)',
           borderRadius:  '16px',
-          border:         '1px solid rgba(34, 197, 94, 0.2)',
-          backdropFilter: 'blur(10px)',
+          border:         'none',
+          backdropFilter: 'none',
           position:       'relative',
           zIndex:         1,
           overflow:       'hidden',
         }}>
-          <div style={{
-            position:   'absolute',
-            top:        '-50%',
-            right:      '-50%',
-            width:      '100%',
-            height:     '100%',
-            background: 'radial-gradient(circle, rgba(34, 197, 94, 0.15) 0%, transparent 60%)',
-            pointerEvents: 'none',
-          }} />
           <div style={{
             display:        'flex',
             flexDirection:  collapsed ? 'column' : 'row',
             alignItems:     'center',
             justifyContent: collapsed ? 'center' : 'space-between',
             gap:            collapsed ? '12px' : '0',
-            position:       'relative',
-            zIndex:         1,
           }}>
             <Logo size={collapsed ? 'sm' : 'lg'} dark />
 
