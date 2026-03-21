@@ -285,6 +285,15 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           )}
         </div>
 
+        {/* Separator - Logo to Nav */}
+        <div 
+          style={{
+            height: '1px',
+            background: `linear-gradient(to right, transparent, ${C.border}, transparent)`,
+            marginBottom: '16px',
+          }} 
+        />
+
         {collapsed && (
           <button
             onClick={() => setCollapsed(v => !v)}
@@ -309,17 +318,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           </button>
         )}
 
-        {/* Separator Line for collapsed */}
-        {collapsed && (
-          <div 
-            style={{
-              height: '1px',
-              background: 'linear-gradient(to right, transparent, #22c55e, transparent)',
-              marginBottom: '12px',
-              opacity: 0.3
-            }} 
-          />
-        )}
+
 
         <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
 
@@ -367,6 +366,15 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
             />
           </nav>
         </div>
+
+        {/* Separator - Nav to Account */}
+        <div 
+          style={{
+            height: '1px',
+            background: `linear-gradient(to right, transparent, ${C.border}, transparent)`,
+            marginTop: '16px',
+          }} 
+        />
 
         {/* User Profile */}
         <div style={{ marginTop: 'auto', padding: '12px' }}>
