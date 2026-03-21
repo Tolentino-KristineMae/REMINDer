@@ -134,7 +134,7 @@ const PaidBillsPage = () => {
     };
 
     return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-10 flex flex-col relative min-w-0">
+        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col relative min-w-0">
             {/* Image Preview Overlay (Lightbox) */}
             {previewImage && (
                 <div 

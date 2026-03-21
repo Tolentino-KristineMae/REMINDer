@@ -52,14 +52,14 @@ const Dashboard = () => {
 
     if (loading) {
         return (
-            <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-10 flex items-center justify-center">
+            <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex items-center justify-center">
                 <div className="text-center text-sm text-gray-500">Loading dashboard stats...</div>
             </div>
         );
     }
 
     return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-10 relative">
+        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 relative">
             {/* Header */}
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
                 <div></div>

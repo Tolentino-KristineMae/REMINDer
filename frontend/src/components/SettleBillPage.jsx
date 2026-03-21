@@ -229,7 +229,7 @@ const SettleBillPage = () => {
     }
 
     return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-6 lg:p-10 flex flex-col font-sans">
+        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col font-sans">
             {/* Top Navigation */}
             <div className="flex items-center justify-between mb-10">
                 <button 

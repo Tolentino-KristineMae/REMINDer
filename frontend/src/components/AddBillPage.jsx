@@ -89,7 +89,7 @@ const AddBillPage = () => {
     }
 
     return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-6 lg:p-10 relative">
+        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 relative">
             {/* Confirmation Modal */}
             {showConfirmModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">

@@ -34,17 +34,15 @@ const DateTimeDisplay = () => {
     };
 
     return (
-        <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-2xl border border-gray-100 shadow-sm">
-            <div className="flex items-center gap-3">
-                <div className="text-right">
-                    <p className="text-sm font-bold text-gray-800 leading-none">{formatTime(dateTime)}</p>
-                    <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{formatDate(dateTime)}</p>
-                </div>
-                <div className="h-9 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent" />
-                <div>
-                    <p className="text-[9px] font-bold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
-                    <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
-                </div>
+        <div className="flex items-center gap-2">
+            <div className="flex flex-col items-end">
+                <p className="text-lg font-bold text-gray-800 leading-none">{formatTime(dateTime)}</p>
+                <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{formatDate(dateTime)}</p>
+            </div>
+            <div className="h-10 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-1" />
+            <div className="flex flex-col items-start">
+                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
+                <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
             </div>
         </div>
     );
