@@ -90,7 +90,7 @@ const Logo = ({ size = 'xl', className, dark = false }) => {
                     <span style={{ color: textColor }}>IN</span>
                     <span 
                         style={{ 
-                            background: `linear-gradient(to bottom, ${textColor} 50%, ${accentColor} 50%)`,
+                            background: `linear-gradient(to bottom, ${textColor} 30%, ${accentColor} 70%)`,
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'

@@ -96,111 +96,166 @@ const CalendarPage = () => {
             <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
                 {/* Main Calendar Section */}
                 <div className="flex-[3] flex flex-col min-w-0">
-                    {/* Week Header */}
-                    <div className="overflow-x-auto -mx-4 sm:mx-0">
-                        <div className="min-w-[720px] flex justify-between mb-6 px-4 sm:px-2">
-                            {weekDays.map((day, i) => {
-                                const isToday = day.toDateString() === new Date().toDateString();
-                                const isSelected = day.toDateString() === currentDate.toDateString();
-                                const dayBills = getBillsForDate(day);
-                                const hasPending = dayBills.some(b => b.status === 'pending');
-                                const allPaid = dayBills.length > 0 && dayBills.every(b => b.status === 'paid');
-                                
-                                return (
-                                    <div 
-                                        key={i} 
-                                        className={`flex flex-col items-center cursor-pointer transition-all ${isSelected ? 'scale-110' : ''}`}
-                                        onClick={() => {
-                                            setCurrentDate(day);
-                                            setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
-                                        }}
-                                    >
-                                        <span className={`text-2xl sm:text-4xl font-bold mb-1 ${isSelected ? 'text-green-900' : 'text-gray-300'}`}>
-                                            {day.getDate()}
-                                        </span>
-                                        <span className={`text-xs sm:text-sm font-bold ${isSelected ? 'text-green-900' : 'text-gray-400'}`}>
-                                            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.getDay()]}
-                                        </span>
-                                        <div className="flex gap-1 mt-1 min-h-[6px]">
-                                            {isToday && <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>}
-                                            {hasPending && <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>}
-                                            {allPaid && <CheckCircle2 size={8} className="text-green-600" />}
+                    {/* Modern Calendar Container */}
+                    <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
+                        {/* Week Header */}
+                        <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 px-4 py-5">
+                            <div className="min-w-[720px] flex justify-between">
+                                {weekDays.map((day, i) => {
+                                    const isToday = day.toDateString() === new Date().toDateString();
+                                    const isSelected = day.toDateString() === currentDate.toDateString();
+                                    const dayBills = getBillsForDate(day);
+                                    const hasPending = dayBills.some(b => b.status === 'pending');
+                                    const allPaid = dayBills.length > 0 && dayBills.every(b => b.status === 'paid');
+                                    
+                                    return (
+                                        <div 
+                                            key={i} 
+                                            className={`flex flex-col items-center cursor-pointer transition-all duration-300 group`}
+                                            onClick={() => {
+                                                setCurrentDate(day);
+                                                setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
+                                            }}
+                                        >
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 group-hover:text-gray-600 transition-colors">
+                                                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.getDay()]}
+                                            </span>
+                                            <div className={`
+                                                relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center transition-all duration-300
+                                                ${isSelected 
+                                                    ? 'bg-gradient-to-br from-green-500 to-green-600 shadow-lg shadow-green-500/30 scale-110' 
+                                                    : isToday 
+                                                        ? 'bg-gray-100 border-2 border-green-400/50' 
+                                                        : 'hover:bg-gray-50'
+                                                }
+                                            `}>
+                                                <span className={`
+                                                    text-base sm:text-xl font-black transition-all
+                                                    ${isSelected ? 'text-white' : isToday ? 'text-green-600' : 'text-gray-700'}
+                                                `}>
+                                                    {day.getDate()}
+                                                </span>
+                                                {/* Status indicators */}
+                                                {isSelected && (
+                                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center shadow">
+                                                        {hasPending ? (
+                                                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                                                        ) : allPaid ? (
+                                                            <CheckCircle2 size={10} className="text-green-500" />
+                                                        ) : (
+                                                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex gap-1 mt-2">
+                                                {!isSelected && isToday && <div className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-sm shadow-green-500/50"></div>}
+                                                {!isSelected && hasPending && <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>}
+                                                {!isSelected && allPaid && dayBills.length > 0 && <CheckCircle2 size={8} className="text-green-500" />}
+                                            </div>
                                         </div>
-                                        {hasPending && <span className="text-[8px] font-black text-red-600 mt-1 uppercase tracking-tighter bg-red-50 px-1 rounded">Due</span>}
-                                        {allPaid && <span className="text-[8px] font-bold text-green-600 mt-1 uppercase tracking-tighter">Paid</span>}
-                                        <div className="h-8 w-px bg-gradient-to-b from-green-200 via-green-100 to-green-200 mt-2"></div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Simple List View per Day */}
-                    <div className="flex-1 min-h-0 overflow-x-auto -mx-4 sm:mx-0">
-                        <div className="min-w-[720px] flex min-h-0">
-                            {weekDays.map((day, dayIndex) => {
-                                const dayBills = getBillsForDate(day);
-                                return (
-                                    <div 
-                                        key={dayIndex} 
-                                        className={`flex-1 border-r border-green-100/30 last:border-r-0 px-2 pt-2 pb-8 flex flex-col gap-3 min-w-0 relative ${day.toDateString() === currentDate.toDateString() ? 'bg-green-50/30' : ''}`}
-                                    >
-                                        <div className="absolute top-0 bottom-8 -right-px w-px bg-gradient-to-b from-transparent via-green-200/50 to-transparent"></div>
-                                        <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
-                                            {dayBills.length > 0 ? (
-                                                dayBills.map((bill) => {
-                                                    const isPaid = bill.status === 'paid';
-                                                    return (
-                                                        <div 
-                                                            key={bill.id}
-                                                            onClick={() => handleBillClick(bill)}
-                                                            className={`
-                                                                relative rounded-xl p-3 border shadow-sm transition-all hover:scale-[1.02] cursor-pointer shrink-0
+                        {/* Day Columns */}
+                        <div className="flex-1 min-h-0">
+                            <div className="min-w-[720px] flex min-h-[400px]">
+                                {weekDays.map((day, dayIndex) => {
+                                    const dayBills = getBillsForDate(day);
+                                    const isSelected = day.toDateString() === currentDate.toDateString();
+                                    const isToday = day.toDateString() === new Date().toDateString();
+                                    
+                                    return (
+                                        <div 
+                                            key={dayIndex} 
+                                            className={`
+                                                flex-1 border-r border-gray-100 last:border-r-0 px-3 py-4 flex flex-col gap-3 min-w-0 relative transition-all duration-300
+                                                ${isSelected ? 'bg-green-50/50' : isToday ? 'bg-blue-50/20' : 'bg-white'}
+                                            `}
+                                        >
+                                            {/* Column separator */}
+                                            <div className="absolute top-0 bottom-0 -right-px w-px bg-gradient-to-b from-transparent via-gray-200 to-transparent"></div>
+                                            
+                                            {/* Date label */}
+                                            <div className="text-center mb-2">
+                                                <span className={`
+                                                    text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-full
+                                                    ${isSelected ? 'bg-green-100 text-green-700' : isToday ? 'bg-blue-100 text-blue-600' : 'text-gray-400 bg-gray-50'}
+                                                `}>
+                                                    {day.getDate()}
+                                                </span>
+                                            </div>
+
+                                            {/* Bills list */}
+                                            <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
+                                                {dayBills.length > 0 ? (
+                                                    dayBills.map((bill) => {
+                                                        const isPaid = bill.status === 'paid';
+                                                        return (
+                                                            <div 
+                                                                key={bill.id}
+                                                                onClick={() => handleBillClick(bill)}
+                                                                className={`
+                                                                    relative rounded-2xl p-4 transition-all duration-300 cursor-pointer group hover:scale-[1.02] hover:shadow-lg
                                                                     ${isPaid 
-                                                                        ? 'bg-gray-50 border-gray-200 opacity-80' 
-                                                                        : 'bg-white border-red-100 shadow-red-100/50 border-l-4 border-l-red-500'
+                                                                        ? 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200' 
+                                                                        : 'bg-white border border-gray-200 hover:border-green-300 hover:shadow-green-100/50'
                                                                     }
                                                                 `}
-                                                        >
-                                                            <div className="flex justify-between items-start mb-2">
-                                                                <div className="flex flex-col gap-1">
+                                                            >
+                                                                {/* Status bar */}
+                                                                <div className={`
+                                                                    absolute top-0 left-0 right-0 h-1 rounded-t-2xl
+                                                                    ${isPaid ? 'bg-gradient-to-r from-gray-300 to-gray-400' : 'bg-gradient-to-r from-red-400 to-red-500'}
+                                                                `}></div>
+                                                                
+                                                                <div className="flex justify-between items-start mb-3 mt-1">
                                                                     {isPaid ? (
-                                                                        <span className="flex items-center gap-1 text-[8px] font-bold text-green-600 uppercase tracking-wider">
-                                                                            <CheckCircle2 size={9} /> Paid
+                                                                        <span className="flex items-center gap-1.5 text-[9px] font-bold text-green-600 uppercase tracking-wider bg-green-50 px-2 py-1 rounded-full">
+                                                                            <CheckCircle2 size={10} /> Paid
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="flex items-center gap-1 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-widest animate-pulse shadow-md shadow-red-100">
-                                                                            <AlertCircle size={9} /> DUE
+                                                                        <span className="flex items-center gap-1 bg-red-500 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
+                                                                            <AlertCircle size={10} /> DUE
                                                                         </span>
                                                                     )}
+                                                                    <button className="text-gray-300 hover:text-gray-500 transition-colors">
+                                                                        <MoreVertical size={14} />
+                                                                    </button>
                                                                 </div>
-                                                                <MoreVertical size={12} className="text-gray-400" />
-                                                            </div>
 
-                                                            <h4 className={`font-bold text-[11px] mb-1 leading-tight line-clamp-2 ${isPaid ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
-                                                                {bill.details}
-                                                            </h4>
-                                                            
-                                                            <div className="flex flex-col gap-0.5 mt-2">
-                                                                <p className={`text-[9px] font-bold truncate ${isPaid ? 'text-gray-400' : 'text-gray-600'}`}>
-                                                                    {bill.category?.name}
-                                                                </p>
-                                                                <p className={`text-[10px] font-black ${isPaid ? 'text-gray-400' : 'text-green-700'}`}>
-                                                                    {new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(bill.amount)}
-                                                                </p>
+                                                                <h4 className={`font-bold text-sm mb-2 leading-tight line-clamp-2 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                                                                    {bill.details}
+                                                                </h4>
+                                                                
+                                                                <div className="flex flex-col gap-2 mt-3">
+                                                                    <div className="flex items-center justify-between">
+                                                                        <p className={`text-[10px] font-bold truncate ${isPaid ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                                            {bill.category?.name}
+                                                                        </p>
+                                                                    </div>
+                                                                    <p className={`text-lg font-black tracking-tight ${isPaid ? 'text-gray-400' : 'text-green-600'}`}>
+                                                                        ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
+                                                                    </p>
+                                                                </div>
                                                             </div>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <div className="flex-1 flex flex-col items-center justify-center py-8">
+                                                        <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-2">
+                                                            <CalendarIcon size={20} className="text-gray-300" />
                                                         </div>
-                                                    );
-                                                })
-                                            ) : (
-                                                <div className="flex-1 flex items-center justify-center">
-                                                    <p className="text-[8px] font-bold text-gray-300 uppercase tracking-widest -rotate-90 whitespace-nowrap">No Bills</p>
-                                                </div>
-                                            )}
+                                                        <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">No Bills</p>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
