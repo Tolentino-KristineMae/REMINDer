@@ -258,7 +258,7 @@ const Login = () => {
                         <Logo size="lg" />
                     </div>
 
-                    <div className="login-card-title">Admin Sign In</div>
+                    <div className="login-card-title">Sign In</div>
                     <div className="login-card-sub">Enter your credentials to access the console</div>
 
                     {error && <div className="alert alert-err">✕ {error}</div>}
@@ -273,7 +273,7 @@ const Login = () => {
                             <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="inp" placeholder="••••••••" required disabled={loading} />
                         </div>
                         <button type="submit" className="btn" disabled={loading}>
-                            {loading ? <><div className="spinner"></div>Signing in...</> : 'Access Admin Portal'}
+                            {loading ? <><div className="spinner"></div>Signing in...</> : 'Log In'}
                         </button>
                     </form>
 
