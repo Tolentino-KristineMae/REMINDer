@@ -179,13 +179,17 @@ const SettleBillPage = () => {
                 return;
             }
 
-            const proofErr = err?.response?.data?.errors?.proof?.[0];
-            const detailsErr = err?.response?.data?.errors?.details?.[0];
-            const genericMsg = err?.response?.data?.message;
-
-            const errorMessage = proofErr || detailsErr || genericMsg || 'Failed to upload proof. Please try again.';
-            console.error('Upload error response:', err?.response?.data);
-            console.error('Validation error details:', err?.response?.data);
+            const responseData = err?.response?.data;
+            const proofErr = responseData?.errors?.proof?.[0];
+            const detailsErr = responseData?.errors?.details?.[0];
+            const genericMsg = responseData?.message;
+            
+            console.error('Upload error response:', JSON.stringify(responseData, null, 2));
+            
+            let errorMessage = proofErr || detailsErr || genericMsg;
+            if (!errorMessage) {
+                errorMessage = 'Failed to upload proof. Please try again.';
+            }
             setError(errorMessage);
         } finally {
             setLoading(false);
