@@ -98,7 +98,64 @@ class BillController extends Controller
             return response()->json([
                 'message' => 'Proof uploaded successfully',
                 'bill' => $bill->load(['category', 'personInCharge', 'proofOfPayments'])
-            ]);
+            ]);public function uploadProof(Request $request, Bill $bill)
+{
+    \Illuminate\Support\Facades\Log::info('uploadProof called', [
+        'bill_id' => $bill->id,
+        'has_file' => $request->hasFile('proof'),
+        'all_files' => $request->allFiles(),
+        'content_type' => $request->header('Content-Type'),
+    ]);
+
+    $validated = $request->validate([
+        'proof' => 'required|mimes:jpeg,png,gif,webp|max:5120',
+        'details' => 'nullable|string',
+        'paid_by' => 'nullable|string|max:255',
+    ]);
+
+    try {
+        $proofUrl = null;
+
+        if ($request->hasFile('proof')) {
+            // Direktang gamitin ang 's3' disk (Supabase)
+            $proofPath = $request->file('proof')->store('proofs', 's3');
+
+            // Kumuha ng public URL
+            $proofUrl = Storage::disk('s3')->url($proofPath);
+        }
+
+        $proofData = [
+            'bill_id' => $bill->id,
+            'file_path' => $proofUrl,
+        ];
+
+        if ($request->has('details')) {
+            $proofData['details'] = $request->details;
+        }
+
+        if ($request->has('paid_by')) {
+            $proofData['paid_by'] = $request->paid_by;
+        }
+
+        ProofOfPayment::create($proofData);
+
+        $bill->update(['status' => 'paid']);
+
+        return response()->json([
+            'message' => 'Proof uploaded successfully',
+            'bill' => $bill->load(['category', 'personInCharge', 'proofOfPayments'])
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Upload failed: ' . $e->getMessage(),
+            'debug' => [
+                'file_received' => $request->hasFile('proof'),
+                'file_name' => $request->file('proof')?->getClientOriginalName(),
+                'file_size' => $request->file('proof')?->getSize(),
+            ]
+        ], 500);
+    }
+}
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Upload failed: ' . $e->getMessage(),
