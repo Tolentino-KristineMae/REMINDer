@@ -119,7 +119,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
 
   const inner = (isActive) => (
     <>
-      {isActive && !isLogout && (
+      {(isActive || hovered) && !isLogout && (
         <span style={{
           position:     'absolute',
           left:         '-12px',
