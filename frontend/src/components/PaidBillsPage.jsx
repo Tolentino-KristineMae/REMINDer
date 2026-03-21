@@ -164,22 +164,15 @@ const PaidBillsPage = () => {
                 className="hidden"
             />
             
-            {/* Header */}
-            {/* Title & Stats */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
-                <div>
-                    <h1 className="text-2xl font-black text-green-950 mb-1 tracking-tight">Settlements</h1>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Submit and view your payment proof records</p>
+            {/* Stats */}
+            <div className="flex flex-col sm:flex-row gap-2.5 mb-6">
+                <div className="bg-white px-3.5 py-1.5 rounded-xl border border-green-100 shadow-sm flex flex-col items-end w-full sm:w-auto">
+                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-tighter">Settled Amount</span>
+                    <span className="text-base font-black text-green-900 leading-none mt-0.5">{formatCurrency(settledBills.reduce((acc, b) => acc + parseFloat(b.amount), 0))}</span>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2.5">
-                    <div className="bg-white px-3.5 py-1.5 rounded-xl border border-green-100 shadow-sm flex flex-col items-end w-full sm:w-auto">
-                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-tighter">Settled Amount</span>
-                        <span className="text-base font-black text-green-900 leading-none mt-0.5">{formatCurrency(settledBills.reduce((acc, b) => acc + parseFloat(b.amount), 0))}</span>
-                    </div>
-                    <div className="bg-red-50 px-3.5 py-1.5 rounded-xl border border-red-100 shadow-sm flex flex-col items-end w-full sm:w-auto">
-                        <span className="text-[8px] font-black text-red-400 uppercase tracking-tighter">Awaiting Proof</span>
-                        <span className="text-base font-black text-red-600 leading-none mt-0.5">{formatCurrency(pendingBills.reduce((acc, b) => acc + parseFloat(b.amount), 0))}</span>
-                    </div>
+                <div className="bg-red-50 px-3.5 py-1.5 rounded-xl border border-red-100 shadow-sm flex flex-col items-end w-full sm:w-auto">
+                    <span className="text-[8px] font-black text-red-400 uppercase tracking-tighter">Awaiting Proof</span>
+                    <span className="text-base font-black text-red-600 leading-none mt-0.5">{formatCurrency(pendingBills.reduce((acc, b) => acc + parseFloat(b.amount), 0))}</span>
                 </div>
             </div>
 

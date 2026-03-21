@@ -169,7 +169,7 @@ const AddBillPage = () => {
                 </div>
             )}
 
-            {/* Top Navigation */}
+            {/* Back Button */}
             <div className="flex items-center justify-between mb-6 px-4 w-full">
                 <button 
                     onClick={() => navigate(-1)}
@@ -182,10 +182,6 @@ const AddBillPage = () => {
                 </button>
 
                 <div className="flex items-center gap-4">
-                    <div className="text-right">
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none mb-1.5">Add New Bill</p>
-                        <p className="text-sm font-black text-gray-900 leading-none">REMINDer Bill Management</p>
-                    </div>
                     <div className="w-11 h-11 bg-[#0a1f12] rounded-full flex items-center justify-center text-[#22c55e] shadow-lg">
                         <Plus size={22} className="stroke-[2.5]" />
                     </div>

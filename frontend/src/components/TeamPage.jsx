@@ -50,32 +50,26 @@ const TeamPage = () => {
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col">
 
-            {/* Title & Actions */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
-                <div>
-                    <h1 className="text-2xl font-black text-green-950 mb-1 tracking-tight">Team Management</h1>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Manage your people in-charge and their performance</p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="bg-white p-1 rounded-xl border border-green-100 shadow-sm flex items-center">
-                        <button 
-                            onClick={() => setViewMode('grid')}
-                            className={`p-1.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white' : 'text-gray-400 hover:bg-green-50'}`}
-                        >
-                            <LayoutGrid size={16} />
-                        </button>
-                        <button 
-                            onClick={() => setViewMode('list')}
-                            className={`p-1.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-green-900 text-white' : 'text-gray-400 hover:bg-green-50'}`}
-                        >
-                            <LayoutList size={16} />
-                        </button>
-                    </div>
-                    <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-green-900 text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-green-800 transition-all shadow-lg shadow-green-900/20">
-                        <UserPlus size={16} />
-                        Add Member
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+                <div className="bg-white p-1 rounded-xl border border-green-100 shadow-sm flex items-center">
+                    <button 
+                        onClick={() => setViewMode('grid')}
+                        className={`p-1.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white' : 'text-gray-400 hover:bg-green-50'}`}
+                    >
+                        <LayoutGrid size={16} />
+                    </button>
+                    <button 
+                        onClick={() => setViewMode('list')}
+                        className={`p-1.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-green-900 text-white' : 'text-gray-400 hover:bg-green-50'}`}
+                    >
+                        <LayoutList size={16} />
                     </button>
                 </div>
+                <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-green-900 text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-green-800 transition-all shadow-lg shadow-green-900/20">
+                    <UserPlus size={16} />
+                    Add Member
+                </button>
             </div>
 
             {/* Grid View */}

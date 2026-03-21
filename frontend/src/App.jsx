@@ -14,6 +14,16 @@ import SettleBillPage from './components/SettleBillPage';
 import DeploymentStatus from './components/DeploymentStatus';
 import { Menu } from 'lucide-react';
 
+const PageHeader = ({ title, subtitle }) => (
+    <div className="flex items-center justify-between w-full">
+        <div className="flex flex-col">
+            <h1 className="text-xl font-black text-gray-900 leading-none">{title}</h1>
+            {subtitle && <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{subtitle}</p>}
+        </div>
+        <DateTimeDisplay />
+    </div>
+);
+
 const DateTimeDisplay = () => {
     const [dateTime, setDateTime] = useState(new Date());
 
@@ -48,7 +58,7 @@ const DateTimeDisplay = () => {
     );
 };
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
     const { user, loading } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -75,8 +85,8 @@ const PrivateRoute = ({ children }) => {
                     </div>
                 </div>
                 <div className="hidden lg:sticky lg:top-0 lg:z-30 lg:bg-[#f8fafc]/80 lg:backdrop-blur lg:border-b lg:border-gray-100 lg:block">
-                    <div className="h-14 px-6 flex items-center justify-end">
-                        <DateTimeDisplay />
+                    <div className="h-14 px-6">
+                        <PageHeader title={pageTitle} subtitle={pageSubtitle} />
                     </div>
                 </div>
                 {children}
@@ -97,7 +107,7 @@ const App = () => {
                         <Route 
                             path="/" 
                             element={
-                                <PrivateRoute>
+                                <PrivateRoute pageTitle="Dashboard" pageSubtitle="Manage and prioritize your bills with ease">
                                     <Dashboard />
                                 </PrivateRoute>
                             } 
@@ -105,7 +115,7 @@ const App = () => {
                         <Route 
                             path="/add-bill" 
                             element={
-                                <PrivateRoute>
+                                <PrivateRoute pageTitle="Add Bill" pageSubtitle="Create a new bill entry">
                                     <AddBillPage />
                                 </PrivateRoute>
                             } 
@@ -113,7 +123,7 @@ const App = () => {
                         <Route 
                             path="/calendar" 
                             element={
-                                <PrivateRoute>
+                                <PrivateRoute pageTitle="Calendar" pageSubtitle="Track your bill due dates and payment schedule">
                                     <CalendarPage />
                                 </PrivateRoute>
                             } 
@@ -121,7 +131,7 @@ const App = () => {
                         <Route 
                             path="/paid-bills" 
                             element={
-                                <PrivateRoute>
+                                <PrivateRoute pageTitle="Settlements" pageSubtitle="Submit and view your payment proof records">
                                     <PaidBillsPage />
                                 </PrivateRoute>
                             } 
@@ -129,7 +139,7 @@ const App = () => {
                         <Route 
                             path="/team" 
                             element={
-                                <PrivateRoute>
+                                <PrivateRoute pageTitle="PIC" pageSubtitle="Manage your people in-charge and their performance">
                                     <TeamPage />
                                 </PrivateRoute>
                             } 
@@ -137,7 +147,7 @@ const App = () => {
                         <Route 
                             path="/settle/:id" 
                             element={
-                                <PrivateRoute>
+                                <PrivateRoute pageTitle="Settle Bill" pageSubtitle="Submit payment proof">
                                     <SettleBillPage />
                                 </PrivateRoute>
                             } 

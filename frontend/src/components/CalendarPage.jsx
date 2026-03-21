@@ -93,17 +93,11 @@ const CalendarPage = () => {
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col">
 
-            {/* Title & Actions */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
-                <div>
-                    <h1 className="text-2xl font-black text-green-950 mb-1 tracking-tight">Calendar Overview</h1>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Track your bill due dates and payment schedule</p>
-                </div>
-                <div className="flex items-center gap-3">
-                    <div className="bg-white px-3.5 py-1.5 rounded-xl border border-green-100 shadow-sm flex flex-col items-end">
-                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-tighter">Current Month</span>
-                        <span className="text-base font-black text-green-900 leading-none mt-0.5">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
-                    </div>
+            {/* Month Display */}
+            <div className="flex items-center gap-3 mb-6">
+                <div className="bg-white px-3.5 py-1.5 rounded-xl border border-green-100 shadow-sm flex flex-col items-end">
+                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-tighter">Current Month</span>
+                    <span className="text-base font-black text-green-900 leading-none mt-0.5">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
                 </div>
             </div>
 

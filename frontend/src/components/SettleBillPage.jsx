@@ -230,7 +230,7 @@ const SettleBillPage = () => {
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col font-sans">
-            {/* Top Navigation */}
+            {/* Back Button */}
             <div className="flex items-center justify-between mb-6">
                 <button 
                     onClick={() => navigate(-1)}
@@ -242,14 +242,8 @@ const SettleBillPage = () => {
                     <span className="font-bold text-xs uppercase tracking-widest">Go Back</span>
                 </button>
 
-                <div className="flex items-center gap-4">
-                    <div className="text-right">
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none mb-1.5">Submit Proof</p>
-                        <p className="text-sm font-black text-gray-900 leading-none">REMINDer Verification</p>
-                    </div>
-                    <div className="w-11 h-11 bg-[#0a1f12] rounded-full flex items-center justify-center text-[#22c55e] shadow-lg">
-                        <CheckCircle2 size={22} className="stroke-[2.5]" />
-                    </div>
+                <div className="w-11 h-11 bg-[#0a1f12] rounded-full flex items-center justify-center text-[#22c55e] shadow-lg">
+                    <CheckCircle2 size={22} className="stroke-[2.5]" />
                 </div>
             </div>
 
