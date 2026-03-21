@@ -109,8 +109,8 @@ const CalendarPage = () => {
             <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
                 {/* Main Calendar Section */}
                 <div className="flex-[3] flex flex-col min-w-0">
-                    {/* Elegant Calendar Container */}
-                    <div className="bg-white rounded-[2rem] shadow-2xl shadow-gray-200/40 border border-white/80 relative flex flex-col flex-1 overflow-hidden">
+                    {/* Elegant Calendar Container with Professional Borders */}
+                    <div className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 relative flex flex-col flex-1 overflow-hidden">
                         {/* Decorative header gradient - Unified in flow to prevent overlap */}
                         <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 shrink-0"></div>
                         
@@ -134,51 +134,53 @@ const CalendarPage = () => {
                                                 setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
                                             }}
                                             className={`
-                                                flex-1 min-w-[140px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/60 last:border-r-0 px-2 py-3 sm:py-5 flex flex-col gap-3 relative transition-all duration-500 scroll-mx-4 cursor-pointer group
-                                                ${isSelected ? 'bg-gradient-to-b from-green-50 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50 to-white' : 'bg-white hover:bg-gray-50/50'}
+                                                flex-1 min-w-[140px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/80 last:border-r-0 px-2.5 py-4 sm:py-6 flex flex-col gap-4 relative transition-all duration-500 scroll-mx-4 cursor-pointer group
+                                                ${isSelected ? 'bg-gradient-to-b from-green-50 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50 to-white' : 'bg-white hover:bg-gray-50/30'}
                                             `}
                                         >
-                                            {/* Elegant column divider */}
-                                            <div className="absolute top-4 bottom-4 -right-px w-px bg-gradient-to-b from-transparent via-gray-200/50 to-transparent"></div>
+                                            {/* Professional Column Divider */}
+                                            <div className="absolute top-8 bottom-8 -right-px w-[1px] bg-gradient-to-b from-transparent via-gray-200/60 to-transparent"></div>
                                             
                                             {/* Date badge - Sticky Header for Day */}
-                                            <div className={`sticky top-0 z-20 pb-4 mb-2 flex flex-col items-center gap-3 ${
+                                            <div className={`sticky top-0 z-20 pb-5 mb-3 flex flex-col items-center gap-4 ${
                                                 isSelected ? 'bg-green-50' : isToday ? 'bg-emerald-50' : 'bg-white'
                                             }`}>
-                                                <span className={`text-[11px] font-extrabold uppercase tracking-[0.2em] pt-3 transition-all duration-300 ${
-                                                    isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-500'
+                                                <span className={`text-[11px] font-black uppercase tracking-[0.25em] pt-4 transition-all duration-300 ${
+                                                    isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-400'
                                                 }`}>
                                                     {dayName}
                                                 </span>
                                                 <div className={`
-                                                    relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-sm
+                                                    relative w-12 h-12 sm:w-15 sm:h-15 rounded-[1.25rem] flex items-center justify-center transition-all duration-500 shadow-sm
                                                     ${isSelected 
-                                                        ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30 scale-110 ring-4 ring-green-500/10' 
+                                                        ? 'bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white shadow-xl shadow-green-500/30 scale-110 ring-4 ring-green-500/10' 
                                                         : isToday 
                                                             ? 'bg-gradient-to-br from-emerald-50 to-white border-2 border-emerald-200/60 text-emerald-600' 
-                                                            : 'text-gray-400 bg-gray-50 border border-gray-100 group-hover:bg-white group-hover:scale-105'
+                                                            : 'text-gray-400 bg-gray-50 border border-gray-100 group-hover:bg-white group-hover:scale-105 group-hover:border-gray-200'
                                                     }
                                                 `}>
-                                                    <span className="text-xl sm:text-2xl font-black tracking-tight">
+                                                    <span className="text-xl sm:text-2xl font-black tracking-tighter">
                                                         {day.getDate()}
                                                     </span>
                                                     
                                                     {/* Status indicator badge */}
                                                     {(hasPending || allPaid) && (
-                                                        <div className={`absolute -top-1.5 -right-1.5 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ${hasPending ? 'ring-red-500/20' : 'ring-green-500/20'}`}>
+                                                        <div className={`absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ${hasPending ? 'ring-red-500/20' : 'ring-green-500/20'}`}>
                                                             {hasPending ? (
-                                                                <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></div>
+                                                                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>
                                                             ) : (
-                                                                <CheckCircle2 size={12} className="text-green-500" />
+                                                                <CheckCircle2 size={14} className="text-green-500" />
                                                             )}
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="absolute bottom-0 left-2 right-2 h-px bg-gradient-to-r from-transparent via-gray-100 to-transparent"></div>
+                                                
+                                                {/* Professional Horizontal Separator */}
+                                                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gray-100/80 to-transparent"></div>
                                             </div>
 
                                             {/* Bills with organized elegant cards */}
-                                            <div className="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar pr-0.5">
+                                            <div className="flex-1 flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-0.5 pt-2">
                                                 {dayBills.length > 0 ? (
                                                     dayBills.map((bill) => {
                                                         const isPaid = bill.status === 'paid';
