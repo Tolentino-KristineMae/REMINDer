@@ -61,7 +61,25 @@ const PaidBillsPage = () => {
         return 'http://localhost:8000';
     })();
 
-    const buildStorageUrl = (path) => `${STORAGE_BASE_URL.replace(/\/$/, '')}/storage/${path}`;
+    const buildStorageUrl = (path) => {
+        if (!path) return '';
+        // If the path is already a full URL, use it directly
+        if (path.startsWith('http://') || path.startsWith('https://')) {
+            return path;
+        }
+
+        const baseUrl = STORAGE_BASE_URL.replace(/\/$/, '');
+        const cleanPath = path.replace(/^\/+/, '');
+
+        // If using Supabase storage (the base URL contains supabase.co)
+        // or if the path already starts with the storage folder name
+        if (baseUrl.includes('supabase.co')) {
+            return `${baseUrl}/${cleanPath}`;
+        }
+
+        // Default to Laravel's public storage path
+        return `${baseUrl}/storage/${cleanPath}`;
+    };
 
     useEffect(() => {
         fetchPaidBills();
