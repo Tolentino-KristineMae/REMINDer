@@ -23,10 +23,10 @@ const Logo = ({ size = 'xl', className }) => {
             </div>
             <div>
                 <div className={`${selectedSize.main} font-black tracking-tighter leading-none`}>
-                    <span className="text-gray-900">REM</span>
-                    <span className="text-green-600">INDer</span>
+                    <span className="text-white">REM</span>
+                    <span className="text-green-300">INDer</span>
                 </div>
-                <p className={`${selectedSize.sub} font-bold text-gray-400 uppercase tracking-widest`}>System</p>
+                <p className={`${selectedSize.sub} font-bold text-white/50 uppercase tracking-widest`}>System</p>
             </div>
         </div>
     );
