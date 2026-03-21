@@ -109,9 +109,12 @@ const SettleBillPage = () => {
             }
 
             const proofErr = err?.response?.data?.errors?.proof?.[0];
+            const detailsErr = err?.response?.data?.errors?.details?.[0];
             const genericMsg = err?.response?.data?.message;
 
-            setError(proofErr || genericMsg || 'Failed to upload proof. Please try again.');
+            const errorMessage = proofErr || detailsErr || genericMsg || 'Failed to upload proof. Please try again.';
+            console.error('Validation error details:', err?.response?.data);
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -179,9 +182,11 @@ const SettleBillPage = () => {
                                 <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Upload Receipt</h3>
                             </div>
                             <div className="p-8">
-                                <label className="relative group cursor-pointer block">
+                                <label htmlFor="proof" className="relative group cursor-pointer block">
                                     <input 
                                         type="file" 
+                                        name="proof"
+                                        id="proof"
                                         className="hidden" 
                                         onChange={handleFileChange}
                                         accept="image/*"
@@ -221,6 +226,8 @@ const SettleBillPage = () => {
                             </div>
                             <div className="p-8">
                                 <textarea 
+                                    name="details"
+                                    id="details"
                                     value={details}
                                     onChange={(e) => setDetails(e.target.value)}
                                     placeholder="Type how you paid (e.g. GCash, Bank Transfer, Cash)..."

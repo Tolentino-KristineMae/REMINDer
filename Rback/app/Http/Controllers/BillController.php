@@ -64,11 +64,16 @@ class BillController extends Controller
             $proofPath = $request->file('proof')->store('proofs', 'public');
         }
 
-        ProofOfPayment::create([
+        $proofData = [
             'bill_id' => $bill->id,
             'file_path' => $proofPath,
-            'details' => $request->details,
-        ]);
+        ];
+
+        if ($request->has('details')) {
+            $proofData['details'] = $request->details;
+        }
+
+        ProofOfPayment::create($proofData);
 
         $bill->update(['status' => 'paid']);
 
