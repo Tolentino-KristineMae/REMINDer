@@ -21,12 +21,12 @@ const PrivateRoute = ({ children }) => {
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-green-950 text-white font-bold text-2xl">Loading...</div>;
     
-    const sidebarWidth = sidebarCollapsed ? 'w-[72px]' : 'w-64';
+    const sidebarMargin = sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-64';
     
     return user ? (
         <div className="flex bg-[#f8fafc] min-h-screen relative">
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} collapsed={sidebarCollapsed} onCollapse={setSidebarCollapsed} />
-            <div className={`flex-1 ml-0 lg:ml-0 ${sidebarWidth} flex flex-col min-h-screen min-w-0 transition-all duration-200`}>
+            <div className={`flex-1 ml-0 ${sidebarMargin} flex flex-col min-h-screen min-w-0 transition-all duration-200`}>
                 <div className="lg:hidden sticky top-0 z-30 bg-[#f8fafc]/80 backdrop-blur border-b border-gray-100">
                     <div className="h-14 px-4 flex items-center justify-between">
                         <button
