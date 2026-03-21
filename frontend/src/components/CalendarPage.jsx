@@ -21,7 +21,6 @@ const CalendarPage = () => {
     const [bills, setBills] = useState([]);
     const scrollContainerRef = useRef(null);
     const dayRefs = useRef([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBills = async () => {
@@ -35,27 +34,6 @@ const CalendarPage = () => {
 
         fetchBills();
     }, []);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (billsListRef.current) {
-                const container = billsListRef.current;
-                const firstBill = container.querySelector('[data-bill-id]');
-                if (firstBill) {
-                    const containerHeight = container.clientHeight;
-                    const elementTop = firstBill.offsetTop;
-                    const scrollTo = elementTop - (containerHeight / 2) + (firstBill.clientHeight / 2);
-                    container.scrollTo({
-                        top: scrollTo,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    container.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }
-        }, 100);
-        return () => clearTimeout(timer);
-    }, [currentDate]);
 
     // Helper functions for dates
     const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
