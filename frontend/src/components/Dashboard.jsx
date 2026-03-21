@@ -51,8 +51,9 @@ const Dashboard = () => {
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-PH', {
             style: 'currency',
-            currency: 'PHP'
-        }).format(amount);
+            currency: 'PHP',
+            currencyDisplay: 'symbol'
+        }).format(amount).replace('PHP', '₱');
     };
 
     if (loading) {
@@ -67,7 +68,7 @@ const Dashboard = () => {
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 relative">
 
             {/* Stats Grid - Organized Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5 mb-6">
                 {/* Card 1: Total Paid - Green Theme (Success/Positive) */}
                 <div className="bg-gradient-to-br from-emerald-500 to-green-700 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300">
                     <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
