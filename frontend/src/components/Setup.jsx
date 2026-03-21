@@ -88,13 +88,11 @@ const Setup = () => {
                 .card {
                     position: relative; z-index: 10;
                     width: 100%; max-width: 420px;
-                    background: rgba(255,255,255,.1);
-                    backdrop-filter: blur(28px) saturate(180%);
-                    -webkit-backdrop-filter: blur(28px) saturate(180%);
-                    border: 1px solid rgba(255,255,255,.18);
+                    background: #ffffff;
+                    border: 1px solid rgba(0,0,0,.05);
                     border-radius: 28px;
                     padding: 44px 40px 40px;
-                    box-shadow: 0 8px 64px rgba(0,20,0,.28), 0 1px 0 rgba(255,255,255,.12) inset;
+                    box-shadow: 0 20px 50px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.8) inset;
                     animation: cardIn .7s cubic-bezier(.22,1,.36,1) both;
                 }
                 @keyframes cardIn { from{opacity:0;transform:translateY(32px) scale(.97);} to{opacity:1;transform:translateY(0) scale(1);} }
@@ -102,12 +100,12 @@ const Setup = () => {
                 .card-title {
                     font-family: 'Syne', sans-serif;
                     font-size: 26px; font-weight: 700;
-                    color: white; text-align: center;
+                    color: #111827; text-align: center;
                     letter-spacing: -.5px; margin-bottom: 6px;
                     animation: fadeUp .6s .15s cubic-bezier(.22,1,.36,1) both;
                 }
                 .card-sub {
-                    font-size: 14px; color: rgba(255,255,255,.5);
+                    font-size: 14px; color: #6b7280;
                     text-align: center; margin-bottom: 32px;
                     animation: fadeUp .6s .2s cubic-bezier(.22,1,.36,1) both;
                 }
@@ -120,22 +118,22 @@ const Setup = () => {
 
                 .lbl {
                     display: block; font-size: 11px; font-weight: 600;
-                    color: rgba(255,255,255,.5); letter-spacing: .1em;
+                    color: #4b5563; letter-spacing: .1em;
                     text-transform: uppercase; margin-bottom: 7px; padding-left: 2px;
                 }
                 .inp {
                     width: 100%; padding: 13px 16px;
-                    background: rgba(255,255,255,.08);
-                    border: 1.5px solid rgba(255,255,255,.12);
-                    border-radius: 14px; color: white;
+                    background: #f9fafb;
+                    border: 1.5px solid #e5e7eb;
+                    border-radius: 14px; color: #111827;
                     font-size: 14px; font-family: 'DM Sans', sans-serif;
                     outline: none; transition: all .25s ease;
                 }
-                .inp::placeholder { color: rgba(255,255,255,.25); }
+                .inp::placeholder { color: #9ca3af; }
                 .inp:focus {
-                    background: rgba(255,255,255,.14);
-                    border-color: rgba(74,222,128,.65);
-                    box-shadow: 0 0 0 3px rgba(34,197,94,.15);
+                    background: #ffffff;
+                    border-color: #22c55e;
+                    box-shadow: 0 0 0 4px rgba(34,197,94,.1);
                 }
 
                 .btn {
@@ -144,24 +142,24 @@ const Setup = () => {
                     border: none; border-radius: 14px; color: white;
                     font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
                     cursor: pointer; letter-spacing: .02em;
-                    box-shadow: 0 6px 24px rgba(34,197,94,.38), 0 1px 0 rgba(255,255,255,.15) inset;
+                    box-shadow: 0 6px 24px rgba(34,197,94,.3), 0 1px 0 rgba(255,255,255,.15) inset;
                     transition: all .22s cubic-bezier(.22,1,.36,1);
                     animation: fadeUp .6s .42s cubic-bezier(.22,1,.36,1) both;
                 }
-                .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(34,197,94,.55); }
+                .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(34,197,94,.4); }
                 .btn:active { transform: translateY(0); }
 
                 .alert { padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-bottom: 20px; animation: fadeUp .4s cubic-bezier(.22,1,.36,1) both; }
-                .alert-ok  { background: rgba(52,211,153,.15); border: 1px solid rgba(52,211,153,.3); color: #6ee7b7; }
-                .alert-err { background: rgba(248,113,113,.15); border: 1px solid rgba(248,113,113,.3); color: #fca5a5; }
+                .alert-ok  { background: #ecfdf5; border: 1px solid #d1fae5; color: #059669; }
+                .alert-err { background: #fef2f2; border: 1px solid #fee2e2; color: #ef4444; }
 
                 .footer-txt {
                     text-align: center; font-size: 13px;
-                    color: rgba(255,255,255,.4); margin-top: 22px;
+                    color: #6b7280; margin-top: 22px;
                     animation: fadeUp .6s .5s cubic-bezier(.22,1,.36,1) both;
                 }
-                .footer-txt a { color: #4ade80; font-weight: 600; text-decoration: none; }
-                .footer-txt a:hover { color: #86efac; }
+                .footer-txt a { color: #16a34a; font-weight: 600; text-decoration: none; }
+                .footer-txt a:hover { color: #15803d; }
 
                 /* Responsive Styles */
                 @media (max-width: 480px) {
