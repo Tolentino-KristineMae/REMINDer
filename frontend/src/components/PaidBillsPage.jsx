@@ -165,14 +165,8 @@ const PaidBillsPage = () => {
             />
             
             {/* Header */}
-            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-                <div></div>
-                <div className="flex items-center justify-end gap-2">
-                </div>
-            </header>
-
             {/* Title & Stats */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
                 <div>
                     <h1 className="text-2xl font-black text-green-950 mb-1 tracking-tight">Settlements</h1>
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Submit and view your payment proof records</p>

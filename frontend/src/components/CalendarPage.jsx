@@ -92,15 +92,9 @@ const CalendarPage = () => {
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col">
-            {/* Header */}
-            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-                <div></div>
-                <div className="flex items-center justify-end gap-2">
-                </div>
-            </header>
 
             {/* Title & Actions */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
                 <div>
                     <h1 className="text-2xl font-black text-green-950 mb-1 tracking-tight">Calendar Overview</h1>
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Track your bill due dates and payment schedule</p>
@@ -118,7 +112,7 @@ const CalendarPage = () => {
                 <div className="flex-[3] flex flex-col min-w-0">
                     {/* Week Header */}
                     <div className="overflow-x-auto -mx-4 sm:mx-0">
-                        <div className="min-w-[720px] flex justify-between mb-8 px-4 sm:px-2">
+                        <div className="min-w-[720px] flex justify-between mb-6 px-4 sm:px-2">
                             {weekDays.map((day, i) => {
                                 const isToday = day.toDateString() === new Date().toDateString();
                                 const isSelected = day.toDateString() === currentDate.toDateString();

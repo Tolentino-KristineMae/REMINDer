@@ -231,7 +231,7 @@ const SettleBillPage = () => {
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col font-sans">
             {/* Top Navigation */}
-            <div className="flex items-center justify-between mb-10">
+            <div className="flex items-center justify-between mb-6">
                 <button 
                     onClick={() => navigate(-1)}
                     className="flex items-center gap-4 text-gray-500 hover:text-gray-700 transition-all group"

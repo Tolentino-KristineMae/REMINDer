@@ -60,15 +60,9 @@ const Dashboard = () => {
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 relative">
-            {/* Header */}
-            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-                <div></div>
-                <div className="flex items-center justify-end gap-2">
-                </div>
-            </header>
 
             {/* Title & Actions */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
                 <div>
                     <h1 className="text-2xl font-black text-green-950 mb-1 tracking-tight">Admin Dashboard</h1>
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Manage and prioritize your bills with ease.</p>
@@ -85,7 +79,7 @@ const Dashboard = () => {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
                 {[
                     { label: 'Total Amount Paid', value: formatCurrency(stats.total_paid_amount), color: 'bg-green-900', text: 'text-white', sub: 'All time' },
                     { label: 'Total Amount Unpaid', value: formatCurrency(stats.total_unpaid_amount), color: 'bg-white', text: 'text-red-600', sub: 'Pending & Overdue' },
@@ -108,7 +102,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-9 space-y-6 min-w-0">
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm min-h-[400px] flex flex-col">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                             <h3 className="text-xl font-bold text-gray-900">Bill Analytics</h3>
                             <div className="flex gap-4">
                                 <div className="flex items-center gap-2 text-xs text-gray-400 font-bold"><div className="w-2.5 h-2.5 rounded-full bg-green-900"></div> Paid</div>
@@ -131,7 +125,7 @@ const Dashboard = () => {
 
                 <div className="lg:col-span-3 space-y-6">
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm text-center h-full flex flex-col justify-center min-h-[400px]">
-                        <h3 className="text-lg font-bold text-gray-900 mb-8 text-left">Settlement Progress</h3>
+                        <h3 className="text-lg font-bold text-gray-900 mb-6 text-left">Settlement Progress</h3>
                         <div className="relative inline-flex items-center justify-center mb-6">
                             <svg className="w-32 h-32 transform -rotate-90">
                                 <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-gray-100" />

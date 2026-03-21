@@ -170,7 +170,7 @@ const AddBillPage = () => {
             )}
 
             {/* Top Navigation */}
-            <div className="flex items-center justify-between mb-10 px-4 w-full">
+            <div className="flex items-center justify-between mb-6 px-4 w-full">
                 <button 
                     onClick={() => navigate(-1)}
                     className="flex items-center gap-4 text-gray-500 hover:text-gray-700 transition-all group"
