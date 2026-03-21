@@ -94,9 +94,9 @@ const Dashboard = () => {
                 <div className="flex gap-2">
                     <button 
                         onClick={() => navigate('/add-bill')}
-                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-xl font-black text-xs hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 uppercase tracking-widest active:scale-95"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-green-900 text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-green-800 transition-all shadow-lg shadow-green-900/20"
                     >
-                        <Plus size={18} className="stroke-[3]" />
+                        <Plus size={16} />
                         Add Bill
                     </button>
                 </div>
