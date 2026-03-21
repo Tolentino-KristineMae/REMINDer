@@ -95,9 +95,8 @@ const CalendarPage = () => {
 
             {/* Month Display */}
             <div className="flex items-center gap-3 mb-6">
-                <div className="bg-white px-3.5 py-1.5 rounded-xl border border-green-100 shadow-sm flex flex-col items-end">
-                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-tighter">Current Month</span>
-                    <span className="text-base font-black text-green-900 leading-none mt-0.5">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
+                <div className="bg-white px-4 py-2 rounded-xl border border-green-100 shadow-sm">
+                    <span className="text-base font-black text-green-900 leading-none">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
                 </div>
             </div>
 
@@ -136,7 +135,7 @@ const CalendarPage = () => {
                                         </div>
                                         {hasPending && <span className="text-[8px] font-black text-red-600 mt-1 uppercase tracking-tighter bg-red-50 px-1 rounded">Due</span>}
                                         {allPaid && <span className="text-[8px] font-bold text-green-600 mt-1 uppercase tracking-tighter">Paid</span>}
-                                        <div className="h-8 w-[1px] bg-green-100 mt-2"></div>
+                                        <div className="h-8 w-px bg-gradient-to-b from-green-200 via-green-100 to-green-200 mt-2"></div>
                                     </div>
                                 );
                             })}
@@ -151,8 +150,9 @@ const CalendarPage = () => {
                                 return (
                                     <div 
                                         key={dayIndex} 
-                                        className={`flex-1 border-l border-green-100/50 px-2 pt-2 pb-8 flex flex-col gap-3 min-w-0 ${day.toDateString() === currentDate.toDateString() ? 'bg-green-50/20' : ''}`}
+                                        className={`flex-1 border-r border-green-100/30 last:border-r-0 px-2 pt-2 pb-8 flex flex-col gap-3 min-w-0 relative ${day.toDateString() === currentDate.toDateString() ? 'bg-green-50/30' : ''}`}
                                     >
+                                        <div className="absolute top-0 bottom-8 -right-px w-px bg-gradient-to-b from-transparent via-green-200/50 to-transparent"></div>
                                         <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
                                             {dayBills.length > 0 ? (
                                                 dayBills.map((bill) => {
