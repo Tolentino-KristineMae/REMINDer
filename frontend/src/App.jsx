@@ -62,7 +62,7 @@ const DateTimeDisplay = () => {
             <div className="h-10 w-px bg-gray-200" />
             {/* Logo */}
             <div className="flex flex-col items-start">
-                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
+                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDear</p>
                 <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
             </div>
         </div>
@@ -105,7 +105,7 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
                             </div>
                             <div className="h-10 w-px bg-gray-200 mx-1" />
                             <div className="flex flex-col items-start">
-                                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
+                                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDear</p>
                                 <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
                             </div>
                         </div>

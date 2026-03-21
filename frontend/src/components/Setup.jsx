@@ -229,7 +229,7 @@ const Setup = () => {
                     </div>
 
                     <div className="card-title">Account Creation</div>
-                    <div className="card-sub">Create your REMINDer account</div>
+                    <div className="card-sub">Create your REMINDear account</div>
 
                     {message && <div className="alert alert-ok">✓ {message}</div>}
                     {error   && <div className="alert alert-err">✕ {error}</div>}

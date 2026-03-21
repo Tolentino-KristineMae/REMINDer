@@ -51,7 +51,7 @@ const Logo = ({ size = 'xl', className, dark = false }) => {
             </defs>
             <circle cx="20" cy="20" r="18" fill="url(#logoGrad)" />
             
-            {/* Bell Body - representing REMINDER */}
+            {/* Bell Body - representing REMINDear */}
             <path 
                 d="M20 8C18.5 8 17.2 8.6 16.3 9.5L16 9.8V14C16 16.2 14.2 18 12 18H12.5C12.5 19.1 12.7 20.1 13 21L12 22H28L27 21C27.3 20.1 27.5 19.1 27.5 18H28C25.8 18 24 16.2 24 14V9.8L23.7 9.5C22.8 8.6 21.5 8 20 8Z" 
                 fill="white" 
