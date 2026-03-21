@@ -9,8 +9,8 @@ import {
   HelpCircle,
   LogOut,
   CheckCircle2,
-  ArrowLeftToLine,
-  ArrowRightToLine,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
@@ -117,7 +117,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
 
   const inner = (isActive) => (
     <>
-      {isActive && !isLogout && (
+      {(isActive || hovered) && !isLogout && (
         <span style={{
           position:     'absolute',
           left:         '-12px',
@@ -126,7 +126,8 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
           width:        '4px',
           height:       '55%',
           borderRadius: '0 4px 4px 0',
-          background:   C.activeBorder,
+          background:   isActive ? C.activeBorder : '#c8c8c8',
+          transition:   'background 0.15s',
         }} />
       )}
 
@@ -196,7 +197,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
-  const W = collapsed ? 80 : 256;
+  const W = collapsed ? 72 : 256;
 
   return (
     <>
@@ -218,16 +219,15 @@ const Sidebar = ({ isOpen, onClose }) => {
           lg:translate-x-0
         `}
         style={{
-          width:          W,
-          minWidth:       W,
-          padding:        '16px 12px',
-          background:     C.bg,
-          backdropFilter: 'blur(20px)',
-          borderRight:    `1px solid ${C.border}`,
-          boxShadow:      '2px 0 12px rgba(0,0,0,0.06)',
-          transition:     'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
-          overflow:       'hidden',
-          boxSizing:      'border-box',
+          width:      W,
+          minWidth:   W,
+          padding:    '16px 12px',
+          background: C.bg,
+          borderRight:`1px solid ${C.border}`,
+          boxShadow:  '2px 0 12px rgba(0,0,0,0.06)',
+          transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
+          overflow:   'hidden',
+          boxSizing:  'border-box',
         }}
       >
         <div style={{
@@ -261,7 +261,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 transition:     'background 0.15s',
               }}
             >
-              <ArrowLeftToLine size={16} strokeWidth={2.5} />
+              <ChevronLeft size={15} strokeWidth={2.5} />
             </button>
           )}
         </div>
@@ -286,7 +286,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               transition:     'background 0.15s',
             }}
           >
-            <ArrowRightToLine size={16} strokeWidth={2.5} />
+            <ChevronRight size={15} strokeWidth={2.5} />
           </button>
         )}
 
