@@ -68,16 +68,14 @@ class BillController extends Controller
         ]);
 
         try {
-            $proofPath = null;
+            $proofUrl = null;
             $disk = config('filesystems.default', 'public');
             
             if ($request->hasFile('proof')) {
-                // If the disk is local/public, we store in 'proofs' folder
-                // If the disk is s3/supabase, we store in the bucket directly (which is already 'proofs')
-               $proofPath = $request->file('proof')->store('proofs', $disk);
-
-// Convert path to full public URL
-$proofUrl = Storage::disk($disk)->url($proofPath); $proofPath = $request->file('proof')->store('proofs', $disk);
+                // Store the file and get the path
+                $proofPath = $request->file('proof')->store('proofs', $disk);
+                // Get the full public URL
+                $proofUrl = Storage::disk($disk)->url($proofPath);
             }
 
             $proofData = [
