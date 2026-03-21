@@ -54,38 +54,56 @@ class BillController extends Controller
 
     public function uploadProof(Request $request, Bill $bill)
     {
-        $request->validate([
-            'proof' => 'required|file|max:5120',
+        \Illuminate\Support\Facades\Log::info('uploadProof called', [
+            'bill_id' => $bill->id,
+            'has_file' => $request->hasFile('proof'),
+            'all_files' => $request->allFiles(),
+            'content_type' => $request->header('Content-Type'),
+        ]);
+
+        $validated = $request->validate([
+            'proof' => 'required|mimes:jpeg,png,gif,webp|max:5120',
             'details' => 'nullable|string',
             'paid_by' => 'nullable|string|max:255',
         ]);
 
-        $proofPath = null;
-        if ($request->hasFile('proof')) {
-            $proofPath = $request->file('proof')->store('proofs', 'public');
+        try {
+            $proofPath = null;
+            if ($request->hasFile('proof')) {
+                $proofPath = $request->file('proof')->store('proofs', 'public');
+            }
+
+            $proofData = [
+                'bill_id' => $bill->id,
+                'file_path' => $proofPath,
+            ];
+
+            if ($request->has('details')) {
+                $proofData['details'] = $request->details;
+            }
+
+            if ($request->has('paid_by')) {
+                $proofData['paid_by'] = $request->paid_by;
+            }
+
+            ProofOfPayment::create($proofData);
+
+            $bill->update(['status' => 'paid']);
+
+            return response()->json([
+                'message' => 'Proof uploaded successfully',
+                'bill' => $bill->load(['category', 'personInCharge', 'proofOfPayments'])
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Upload failed: ' . $e->getMessage(),
+                'debug' => [
+                    'file_received' => $request->hasFile('proof'),
+                    'file_name' => $request->file('proof')?->getClientOriginalName(),
+                    'file_size' => $request->file('proof')?->getSize(),
+                ]
+            ], 500);
         }
-
-        $proofData = [
-            'bill_id' => $bill->id,
-            'file_path' => $proofPath,
-        ];
-
-        if ($request->has('details')) {
-            $proofData['details'] = $request->details;
-        }
-
-        if ($request->has('paid_by')) {
-            $proofData['paid_by'] = $request->paid_by;
-        }
-
-        ProofOfPayment::create($proofData);
-
-        $bill->update(['status' => 'paid']);
-
-        return response()->json([
-            'message' => 'Proof uploaded successfully',
-            'bill' => $bill->load(['category', 'personInCharge', 'proofOfPayments'])
-        ]);
     }
 
     public function destroy(Bill $bill)

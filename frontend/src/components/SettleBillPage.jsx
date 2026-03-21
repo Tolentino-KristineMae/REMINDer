@@ -149,16 +149,25 @@ const SettleBillPage = () => {
         console.log('FormData paid_by:', formData.get('paid_by'));
 
         try {
-            await api.post(`/bills/${id}/proof`, formData);
+            console.log('Sending request to:', `/bills/${id}/proof`);
+            console.log('FormData contents:');
+            for (let [key, value] of formData.entries()) {
+                console.log(`  ${key}:`, value instanceof File ? `${value.name} (${value.size} bytes, ${value.type})` : value);
+            }
+            const response = await api.post(`/bills/${id}/proof`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log('Upload success:', response.data);
             setIsUploaded(true);
             setTimeout(() => {
                 navigate('/paid-bills');
             }, 2000);
         } catch (err) {
-            // Show the exact Laravel validation message if possible.
-            // Axios error shape: err.response.data = { message, errors, ... } on 422.
-            console.error('uploadProof failed:', err?.response?.status);
-            console.error('Full response:', err?.response?.data);
+            console.error('Upload failed with status:', err?.response?.status);
+            console.error('Full error response:', err?.response);
+            console.error('Error data:', err?.response?.data);
             console.error('Request:', err?.request);
 
             // Network-layer failures (no HTTP response) come in as "undefined response" in Axios.
@@ -180,16 +189,13 @@ const SettleBillPage = () => {
             }
 
             const responseData = err?.response?.data;
+            console.error('Upload error response:', JSON.stringify(responseData, null, 2));
+            
             const proofErr = responseData?.errors?.proof?.[0];
             const detailsErr = responseData?.errors?.details?.[0];
             const genericMsg = responseData?.message;
             
-            console.error('Upload error response:', JSON.stringify(responseData, null, 2));
-            
-            let errorMessage = proofErr || detailsErr || genericMsg;
-            if (!errorMessage) {
-                errorMessage = 'Failed to upload proof. Please try again.';
-            }
+            let errorMessage = proofErr || detailsErr || genericMsg || 'Failed to upload proof. Please try again.';
             setError(errorMessage);
         } finally {
             setLoading(false);
