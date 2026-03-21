@@ -92,7 +92,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
     justifyContent: collapsed ? 'center' : 'flex-start',
     width:          '100%',
     padding:        collapsed ? '10px 0' : '10px 12px',
-    borderRadius:   isActive ? '12px' : '0px',
+    borderRadius:   '12px',
     border:         'none',
     cursor:         'pointer',
     transition:     'all 0.2s ease',
