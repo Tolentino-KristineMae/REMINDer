@@ -38,32 +38,33 @@ const PaidBillsPage = () => {
 
     const STORAGE_BASE_URL = (() => {
         const a = import.meta.env.VITE_STORAGE_BASE_URL?.trim();
-        if (a) {
-            return a.replace(/\/+$/, '');
+        if (a) return a.replace(/\/+$/, '');
+        
+        const b = import.meta.env.VITE_SUPABASE_URL?.trim();
+        if (b) return b.replace(/\/+$/, '');
+
+        // Hardcoded project ID from your previous logs
+        const supabaseId = 'onkhvozgxedcsubgvrsf';
+        if (!import.meta.env.DEV) {
+            return `https://${supabaseId}.supabase.co`;
         }
-        const b = import.meta.env.VITE_BACKEND_BASE_URL?.trim();
-        if (b) {
-            return b.replace(/\/+$/, '');
-        }
+        
+        const c = import.meta.env.VITE_BACKEND_BASE_URL?.trim();
+        if (c) return c.replace(/\/+$/, '');
+        
         const api = import.meta.env.VITE_API_BASE_URL?.trim();
         if (api) {
             const origin = api.replace(/\/api\/?$/i, '').replace(/\/+$/, '');
-            if (origin) {
-                return origin;
-            }
+            if (origin) return origin;
         }
-        if (import.meta.env.DEV) {
-            return 'http://localhost:8000';
-        }
-        if (typeof window !== 'undefined') {
-            return window.location.origin;
-        }
+        
         return 'http://localhost:8000';
     })();
 
     const buildStorageUrl = (path) => {
         if (!path) return '';
-        // If the path is already a full URL, use it directly
+        
+        // 1. If the path is already a full URL (starts with http), use it as-is
         if (path.startsWith('http://') || path.startsWith('https://')) {
             return path;
         }
@@ -71,13 +72,20 @@ const PaidBillsPage = () => {
         const baseUrl = STORAGE_BASE_URL.replace(/\/$/, '');
         const cleanPath = path.replace(/^\/+/, '');
 
-        // If using Supabase storage (the base URL contains supabase.co)
-        // or if the path already starts with the storage folder name
+        // 2. Handle Supabase Public Object Storage
         if (baseUrl.includes('supabase.co')) {
+            // Supabase public storage follows this pattern:
+            // https://[PROJECT_ID].supabase.co/storage/v1/object/public/[BUCKET_NAME]/[FILE_PATH]
+            
+            // If the base URL doesn't already have the storage API path, add it
+            if (!baseUrl.includes('/storage/v1/object/public/')) {
+                return `${baseUrl}/storage/v1/object/public/${cleanPath}`;
+            }
+            
             return `${baseUrl}/${cleanPath}`;
         }
 
-        // Default to Laravel's public storage path
+        // 3. Fallback to Laravel's standard storage path
         return `${baseUrl}/storage/${cleanPath}`;
     };
 
