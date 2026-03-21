@@ -138,13 +138,13 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
         <span style={{
           position:     'absolute',
           left:         '-12px',
-          top:          '50%',
-          transform:    'translateY(-50%)',
-          width:        '4px',
-          height:       '55%',
+          top:          '8px',
+          bottom:       '8px',
+          width:        '2.5px',
           borderRadius: '0 4px 4px 0',
-          background:   isActive ? C.activeBorder : '#c8c8c8',
-          transition:   'background 0.15s',
+          background:   isActive ? C.activeBorder : '#ffffff',
+          opacity:      isActive ? 1 : 0.7,
+          transition:   'all 0.2s ease',
         }} />
       )}
 
