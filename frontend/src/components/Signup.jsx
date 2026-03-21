@@ -48,36 +48,36 @@ const Signup = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Full Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 transition-all outline-none text-gray-900 font-medium"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none"
                                 placeholder="Enter your full name"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Email</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 transition-all outline-none text-gray-900 font-medium"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none"
                                 placeholder="Enter your email"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Password</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 transition-all outline-none text-gray-900 font-medium"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none"
                                 placeholder="Min. 8 characters"
                                 required
                             />
@@ -85,18 +85,18 @@ const Signup = () => {
 
                         <div className="flex items-start">
                             <input type="checkbox" className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded mt-1" required />
-                            <label className="ml-2 block text-sm text-gray-600 font-medium">I agree to the <a href="#" className="text-green-600 font-bold hover:underline">Terms of Service</a> and <a href="#" className="text-green-600 font-bold hover:underline">Privacy Policy</a></label>
+                            <label className="ml-2 block text-sm text-gray-700">I agree to the <a href="#" className="text-green-600 font-semibold">Terms of Service</a> and <a href="#" className="text-green-600 font-semibold">Privacy Policy</a></label>
                         </div>
 
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:shadow-xl hover:shadow-green-500/20 hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-lg shadow-green-200"
+                            className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-all shadow-lg shadow-green-200"
                         >
                             Create Account
                         </button>
 
-                        <p className="text-center text-sm text-gray-500 mt-8 font-medium">
-                            Already have an account? <Link to="/login" className="font-bold text-green-600 hover:text-green-500 hover:underline">Sign In</Link>
+                        <p className="text-center text-sm text-gray-600 mt-8">
+                            Already have an account? <Link to="/login" className="font-bold text-green-600 hover:text-green-500">Sign In</Link>
                         </p>
                     </form>
                 </div>

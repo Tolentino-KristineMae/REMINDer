@@ -19,8 +19,7 @@ const CalendarPage = () => {
         return new Date(now.getFullYear(), now.getMonth(), 1);
     });
     const [bills, setBills] = useState([]);
-    const scrollContainerRef = useRef(null);
-    const dayRefs = useRef([]);
+    const billsListRef = useRef(null);
 
     useEffect(() => {
         const fetchBills = async () => {
@@ -34,6 +33,27 @@ const CalendarPage = () => {
 
         fetchBills();
     }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (billsListRef.current) {
+                const container = billsListRef.current;
+                const firstBill = container.querySelector('[data-bill-id]');
+                if (firstBill) {
+                    const containerHeight = container.clientHeight;
+                    const elementTop = firstBill.offsetTop;
+                    const scrollTo = elementTop - (containerHeight / 2) + (firstBill.clientHeight / 2);
+                    container.scrollTo({
+                        top: scrollTo,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    container.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [currentDate]);
 
     // Helper functions for dates
     const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
@@ -56,28 +76,6 @@ const CalendarPage = () => {
     };
 
     const weekDays = getWeekDays(currentDate);
-
-    // Auto-scroll to selected date horizontally without affecting vertical page scroll
-    useEffect(() => {
-        const selectedIndex = weekDays.findIndex(day => day.toDateString() === currentDate.toDateString());
-        if (selectedIndex !== -1 && dayRefs.current[selectedIndex] && scrollContainerRef.current) {
-            const container = scrollContainerRef.current;
-            const element = dayRefs.current[selectedIndex];
-            
-            // Calculate horizontal offset only
-            const containerWidth = container.clientWidth;
-            const elementLeft = element.offsetLeft;
-            const elementWidth = element.clientWidth;
-            
-            // Center the element horizontally in the container
-            const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
-            
-            container.scrollTo({
-                left: scrollTo,
-                behavior: 'smooth'
-            });
-        }
-    }, [currentDate, weekDays]);
 
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -114,83 +112,117 @@ const CalendarPage = () => {
     };
 
     return (
-        <div className="flex-1 h-[calc(100vh-73px)] lg:h-[calc(100vh-80px)] bg-[#f8fafc] p-3 sm:p-4 lg:p-6 flex flex-col overflow-hidden">
+        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col">
 
-            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 min-h-0 overflow-y-auto lg:overflow-hidden custom-scrollbar">
+            <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
                 {/* Main Calendar Section */}
-                <div className="flex-[3] flex flex-col min-w-0 min-h-[500px] lg:min-h-0">
-                    {/* Elegant Calendar Container with Professional Borders */}
-                    <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 relative flex flex-col flex-1 overflow-hidden">
-                        {/* Decorative header gradient - Unified in flow to prevent overlap */}
-                        <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 shrink-0"></div>
+                <div className="flex-[3] flex flex-col min-w-0">
+                    {/* Elegant Calendar Container */}
+                    <div className="bg-white rounded-[2rem] shadow-2xl shadow-gray-200/40 border border-white/80 relative flex flex-col">
+                        {/* Decorative header gradient */}
+                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
                         
-                        {/* Unified Day Columns & Header */}
-                        <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden custom-scrollbar" ref={scrollContainerRef}>
-                            <div className="min-w-[840px] sm:min-w-[980px] lg:min-w-[1120px] flex h-full">
-                                {weekDays.map((day, dayIndex) => {
-                                    const dayBills = getBillsForDate(day);
-                                    const isSelected = day.toDateString() === currentDate.toDateString();
+                        {/* Week Header */}
+                        <div className="bg-gradient-to-b from-white to-gray-50/30 px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-100/50 overflow-x-auto">
+                            <div className="min-w-[720px] flex justify-between items-end">
+                                {weekDays.map((day, i) => {
                                     const isToday = day.toDateString() === new Date().toDateString();
+                                    const isSelected = day.toDateString() === currentDate.toDateString();
+                                    const dayBills = getBillsForDate(day);
                                     const hasPending = dayBills.some(b => b.status === 'pending');
                                     const allPaid = dayBills.length > 0 && dayBills.every(b => b.status === 'paid');
                                     const dayName = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][day.getDay()];
                                     
                                     return (
                                         <div 
-                                            key={dayIndex} 
-                                            ref={el => dayRefs.current[dayIndex] = el}
+                                            key={i} 
+                                            className={`flex flex-col items-center cursor-pointer transition-all duration-500 group`}
                                             onClick={() => {
                                                 setCurrentDate(day);
                                                 setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
                                             }}
+                                        >
+                                            <span className={`text-[11px] font-extrabold uppercase tracking-[0.2em] mb-4 transition-all duration-300 ${
+                                                isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-500'
+                                            }`}>
+                                                {dayName}
+                                            </span>
+                                            <div className={`
+                                                relative w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center transition-all duration-500
+                                                ${isSelected 
+                                                    ? 'bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 shadow-xl shadow-green-500/25 scale-110 ring-4 ring-green-500/10' 
+                                                    : isToday 
+                                                        ? 'bg-gradient-to-br from-emerald-50 to-white border-2 border-emerald-200/60 shadow-lg shadow-emerald-500/10' 
+                                                        : 'hover:bg-gray-50 hover:scale-105'
+                                                }
+                                            `}>
+                                                <span className={`
+                                                    text-xl sm:text-2xl font-black tracking-tight transition-all duration-300
+                                                    ${isSelected ? 'text-white drop-shadow-sm' : isToday ? 'text-emerald-600' : 'text-gray-600'}
+                                                `}>
+                                                    {day.getDate()}
+                                                </span>
+                                                {/* Elegant status indicator */}
+                                                {isSelected && (
+                                                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ring-green-500/20">
+                                                        {hasPending ? (
+                                                            <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>
+                                                        ) : allPaid ? (
+                                                            <CheckCircle2 size={12} className="text-green-500" />
+                                                        ) : (
+                                                            <div className="w-2.5 h-2.5 bg-blue-400 rounded-full shadow-sm shadow-blue-500/50"></div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {/* Subtle dots for status */}
+                                            <div className="flex gap-1.5 mt-4">
+                                                {!isSelected && isToday && <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-sm shadow-emerald-500/50"></div>}
+                                                {!isSelected && hasPending && <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>}
+                                                {!isSelected && allPaid && dayBills.length > 0 && <CheckCircle2 size={10} className="text-emerald-400" />}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Day Columns - Refined */}
+                        <div className="flex-1 min-h-0 overflow-auto">
+                            <div className="min-w-[720px] flex">
+                                {weekDays.map((day, dayIndex) => {
+                                    const dayBills = getBillsForDate(day);
+                                    const isSelected = day.toDateString() === currentDate.toDateString();
+                                    const isToday = day.toDateString() === new Date().toDateString();
+                                    
+                                    return (
+                                        <div 
+                                            key={dayIndex} 
                                             className={`
-                                                flex-1 min-w-[120px] sm:min-w-[140px] md:min-w-[160px] border-r border-gray-100/80 last:border-r-0 px-2 sm:px-3 py-3 sm:py-6 flex flex-col gap-3 sm:gap-4 relative transition-all duration-500 scroll-mx-4 cursor-pointer group
-                                                ${isSelected ? 'bg-gradient-to-b from-green-50 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50 to-white' : 'bg-white hover:bg-gray-50/30'}
+                                                flex-1 min-w-[120px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/60 last:border-r-0 px-1.5 sm:px-3 py-2 sm:py-4 flex flex-col gap-2 sm:gap-3 relative transition-all duration-500 overflow-hidden
+                                                ${isSelected ? 'bg-gradient-to-b from-green-50/80 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50/30 to-white' : 'bg-white'}
                                             `}
                                         >
-                                            {/* Professional Column Divider */}
-                                            <div className="absolute top-8 bottom-8 -right-px w-[1px] bg-gradient-to-b from-transparent via-gray-200/60 to-transparent"></div>
+                                            {/* Elegant column divider */}
+                                            <div className="absolute top-4 bottom-4 -right-px w-px bg-gradient-to-b from-transparent via-gray-200/50 to-transparent"></div>
                                             
-                                            {/* Date badge - Sticky Header for Day */}
-                                            <div className={`sticky top-0 z-20 pb-4 sm:pb-5 mb-2 sm:mb-3 flex flex-col items-center gap-3 sm:gap-4 ${
-                                                isSelected ? 'bg-green-50' : isToday ? 'bg-emerald-50' : 'bg-white'
-                                            }`}>
-                                                <span className={`text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] pt-3 sm:pt-4 transition-all duration-300 ${
-                                                    isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-400'
-                                                }`}>
-                                                    {dayName}
-                                                </span>
-                                                <div className={`
-                                                    relative w-10 h-10 sm:w-12 sm:h-12 md:w-15 md:h-15 rounded-xl sm:rounded-[1.25rem] flex items-center justify-center transition-all duration-500 shadow-sm
+                                            {/* Date badge */}
+                                            <div className="text-center shrink-0">
+                                                <span className={`
+                                                    inline-block text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all duration-300
                                                     ${isSelected 
-                                                        ? 'bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30 scale-110 ring-4 ring-green-500/10' 
+                                                        ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/20' 
                                                         : isToday 
-                                                            ? 'bg-gradient-to-br from-emerald-50 to-white border-2 border-emerald-200/60 text-emerald-600' 
-                                                            : 'text-gray-400 bg-gray-50 border border-gray-100 group-hover:bg-white group-hover:scale-105 group-hover:border-gray-200'
+                                                            ? 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-600 border border-emerald-200/50' 
+                                                            : 'text-gray-400 bg-gray-50 border border-gray-100'
                                                     }
                                                 `}>
-                                                    <span className="text-lg sm:text-xl md:text-2xl font-black tracking-tighter">
-                                                        {day.getDate()}
-                                                    </span>
-                                                    
-                                                    {/* Status indicator badge */}
-                                                    {(hasPending || allPaid) && (
-                                                        <div className={`absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ${hasPending ? 'ring-red-500/20' : 'ring-green-500/20'}`}>
-                                                            {hasPending ? (
-                                                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>
-                                                            ) : (
-                                                                <CheckCircle2 size={12} className="text-green-500 sm:size-14" />
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                
-                                                {/* Professional Horizontal Separator */}
-                                                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gray-100/80 to-transparent"></div>
+                                                    {day.getDate()}
+                                                </span>
                                             </div>
 
                                             {/* Bills with organized elegant cards */}
-                                            <div className="flex-1 flex flex-col gap-3 sm:gap-4 overflow-y-auto custom-scrollbar pr-0.5 pt-1 sm:pt-2">
+                                            <div className="flex-1 flex flex-col gap-2 overflow-y-auto">
                                                 {dayBills.length > 0 ? (
                                                     dayBills.map((bill) => {
                                                         const isPaid = bill.status === 'paid';
@@ -350,91 +382,106 @@ const CalendarPage = () => {
                         </div>
                     </div>
 
-                    {/* Sidebar Bills List - Due & Overdue Only */}
+                    {/* Sidebar Bills List - Elegant & Organized */}
                     <div className="bg-white rounded-[1.5rem] p-5 border border-gray-100 shadow-lg shadow-gray-200/30 flex-1 flex flex-col min-h-0">
                         <div className="flex justify-between items-center mb-5 shrink-0">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-red-50 to-orange-50 rounded-xl flex items-center justify-center shadow-sm">
-                                    <AlertCircle size={20} className="text-red-500" />
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg flex items-center justify-center">
+                                    <FileText size={16} className="text-emerald-600" />
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-gray-800 text-sm">Due & Overdue</h3>
-                                    <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest">Action Required</p>
-                                </div>
-                            </div>
-                            <div className="bg-red-50 px-2.5 py-1 rounded-lg border border-red-100">
-                                <span className="text-[10px] font-black text-red-600">
-                                    {bills.filter(b => b.status === 'pending').length}
-                                </span>
+                                <h3 className="font-bold text-gray-800 text-sm">Bills for {monthNames[currentDate.getMonth()].slice(0, 3)} {currentDate.getDate()}</h3>
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-1">
-                            {bills.filter(b => b.status === 'pending').length > 0 ? (
-                                bills
-                                    .filter(b => b.status === 'pending')
-                                    .sort((a, b) => new Date(a.due_date) - new Date(b.due_date))
-                                    .map((bill) => {
-                                        const isOverdue = new Date(bill.due_date) < new Date().setHours(0, 0, 0, 0);
-                                        return (
-                                            <div 
-                                                key={bill.id} 
-                                                onClick={() => handleBillClick(bill)}
-                                                className="group relative bg-white rounded-2xl border border-gray-100 p-4 hover:border-red-200 hover:shadow-xl hover:shadow-red-900/5 transition-all duration-300 cursor-pointer hover:-translate-y-0.5"
-                                            >
-                                                {/* Overdue accent */}
-                                                <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${isOverdue ? 'bg-red-500' : 'bg-orange-400'}`}></div>
+                        <div ref={billsListRef} className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-1">
+                            {getBillsForDate(currentDate).length > 0 ? (
+                                getBillsForDate(currentDate).map((bill) => {
+                                    const isPaid = bill.status === 'paid';
+                                    return (
+                                        <div 
+                                            key={bill.id} 
+                                            data-bill-id={bill.id}
+                                            onClick={() => handleBillClick(bill)}
+                                            className="relative group"
+                                        >
+                                            <div className={`
+                                                p-4 rounded-2xl border transition-all duration-300 relative overflow-hidden
+                                                ${isPaid 
+                                                    ? 'bg-gray-50/50 border-gray-100 opacity-70' 
+                                                    : 'bg-white border border-gray-100 group-hover:border-emerald-200 group-hover:shadow-xl group-hover:shadow-emerald-900/5 cursor-pointer shadow-sm hover:-translate-y-0.5'}
+                                            `}>
+                                                {/* Status accent bar */}
+                                                <div className={`
+                                                    absolute top-0 left-0 right-0 h-1
+                                                    ${isPaid ? 'bg-gradient-to-r from-gray-300 to-gray-400' : 'bg-gradient-to-r from-red-400 to-red-500'}
+                                                `}></div>
                                                 
-                                                <div className="flex justify-between items-start mb-3">
-                                                    <div className="flex flex-col gap-0.5">
-                                                        <span className={`text-[9px] font-black uppercase tracking-widest ${isOverdue ? 'text-red-500' : 'text-orange-500'}`}>
-                                                            {isOverdue ? 'Overdue' : 'Due Soon'}
+                                                {/* Status badge */}
+                                                <div className="mt-2 mb-3">
+                                                    {!isPaid ? (
+                                                        <span className="inline-flex items-center gap-1.5 text-[9px] font-black bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
+                                                            <AlertCircle size={10} className="stroke-[3]" />
+                                                            Unpaid
                                                         </span>
-                                                        <h4 className="font-bold text-gray-800 text-[13px] leading-tight line-clamp-2">
-                                                            {bill.details}
-                                                        </h4>
-                                                    </div>
-                                                    <div className="text-right shrink-0">
-                                                        <p className="text-lg font-black text-gray-900 tracking-tight">
-                                                            ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
-                                                        </p>
-                                                    </div>
+                                                    ) : (
+                                                        <span className="inline-flex items-center gap-1.5 text-[9px] font-bold bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-full uppercase tracking-widest border border-emerald-100">
+                                                            <CheckCircle2 size={10} />
+                                                            Paid
+                                                        </span>
+                                                    )}
                                                 </div>
 
-                                                <div className="flex items-center justify-between pt-3 border-t border-gray-50">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="px-2 py-0.5 rounded-md bg-gray-50 border border-gray-100 text-[9px] font-bold text-gray-500 uppercase">
-                                                            {bill.category?.name || 'Bill'}
+                                                {/* Bill title */}
+                                                <div className="relative z-10">
+                                                    <h4 className={`font-bold text-[13px] leading-snug tracking-tight mb-3 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                                                        {bill.details}
+                                                    </h4>
+                                                    
+                                                    {/* Organized info row */}
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex flex-col gap-1">
+                                                            <div className="flex items-center gap-2">
+                                                                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                                                                    {bill.category?.name || 'Bill'}
+                                                                </p>
+                                                                <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
+                                                                <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
+                                                                    {bill.person_in_charge?.name || 'No PIC'}
+                                                                </p>
+                                                            </div>
+                                                            <p className={`text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'}`}>
+                                                                ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
+                                                            </p>
                                                         </div>
-                                                        <span className="text-[10px] font-bold text-emerald-600 uppercase">
-                                                            {new Date(bill.due_date).toLocaleDateString('en-PH', { month: 'short', day: 'numeric' })}
-                                                        </span>
-                                                    </div>
-                                                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shadow-sm">
-                                                        <ChevronRight size={16} />
+
+                                                        {/* Action button */}
+                                                        <div className={`rounded-xl flex items-center justify-center text-white transition-all duration-300 shadow-lg ${
+                                                            isPaid 
+                                                            ? 'w-10 h-10 bg-gray-300 shadow-gray-300/10' 
+                                                            : 'px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-emerald-500/20 group-hover:scale-105 active:scale-95 cursor-pointer'
+                                                        }`}>
+                                                            {isPaid ? (
+                                                                <CheckCircle2 size={18} />
+                                                            ) : (
+                                                                <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+                                                                    Settle
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        );
-                                    })
+                                        </div>
+                                    );
+                                })
                             ) : (
-                                <div className="flex flex-col items-center justify-center py-12 text-center">
-                                    <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mb-4">
-                                        <CheckCircle2 size={32} className="text-emerald-500" />
+                                <div className="flex flex-col items-center justify-center py-8">
+                                    <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-3">
+                                        <CalendarIcon size={28} className="text-gray-300" />
                                     </div>
-                                    <h4 className="font-bold text-gray-800 text-sm mb-1">All Caught Up!</h4>
-                                    <p className="text-[11px] text-gray-400 font-medium">No pending or overdue bills.</p>
+                                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">No Bills This Day</p>
                                 </div>
                             )}
-                        </div>
-
-                        <div className="pt-5 mt-auto">
-                            <button 
-                                onClick={() => navigate('/add-bill')}
-                                className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-green-500/20 hover:shadow-green-500/40 hover:-translate-y-1 transition-all duration-300"
-                            >
-                                + Add New Bill
-                            </button>
                         </div>
                     </div>
                 </div>

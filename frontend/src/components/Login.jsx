@@ -91,11 +91,13 @@ const Login = () => {
                 .login-card {
                     position: relative; z-index: 10;
                     width: 100%; max-width: 420px;
-                    background: #ffffff;
-                    border: 1px solid rgba(0,0,0,.05);
+                    background: rgba(255,255,255,.1);
+                    backdrop-filter: blur(28px) saturate(180%);
+                    -webkit-backdrop-filter: blur(28px) saturate(180%);
+                    border: 1px solid rgba(255,255,255,.18);
                     border-radius: 28px;
                     padding: 44px 40px 40px;
-                    box-shadow: 0 20px 50px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.8) inset;
+                    box-shadow: 0 8px 64px rgba(0,20,0,.28), 0 1px 0 rgba(255,255,255,.12) inset;
                     animation: cardIn .7s cubic-bezier(.22,1,.36,1) both;
                 }
                 @keyframes cardIn { from{opacity:0;transform:translateY(32px) scale(.97);} to{opacity:1;transform:translateY(0) scale(1);} }
@@ -103,12 +105,12 @@ const Login = () => {
                 .login-card-title {
                     font-family: 'Syne', sans-serif;
                     font-size: 24px; font-weight: 700;
-                    color: #111827; text-align: center;
+                    color: white; text-align: center;
                     letter-spacing: -.5px; margin-bottom: 4px;
                     animation: fadeUp .6s .15s cubic-bezier(.22,1,.36,1) both;
                 }
                 .login-card-sub {
-                    font-size: 14px; color: #6b7280;
+                    font-size: 14px; color: rgba(255,255,255,.5);
                     text-align: center; margin-bottom: 28px;
                     animation: fadeUp .6s .2s cubic-bezier(.22,1,.36,1) both;
                 }
@@ -120,22 +122,22 @@ const Login = () => {
 
                 .lbl {
                     display: block; font-size: 11px; font-weight: 600;
-                    color: #4b5563; letter-spacing: .1em;
+                    color: rgba(255,255,255,.5); letter-spacing: .1em;
                     text-transform: uppercase; margin-bottom: 7px; padding-left: 2px;
                 }
                 .inp {
                     width: 100%; padding: 13px 16px;
-                    background: #f9fafb;
-                    border: 1.5px solid #e5e7eb;
-                    border-radius: 14px; color: #111827;
+                    background: rgba(255,255,255,.08);
+                    border: 1.5px solid rgba(255,255,255,.12);
+                    border-radius: 14px; color: white;
                     font-size: 14px; font-family: 'DM Sans', sans-serif;
                     outline: none; transition: all .25s ease;
                 }
-                .inp::placeholder { color: #9ca3af; }
+                .inp::placeholder { color: rgba(255,255,255,.25); }
                 .inp:focus {
-                    background: #ffffff;
-                    border-color: #22c55e;
-                    box-shadow: 0 0 0 4px rgba(34,197,94,.1);
+                    background: rgba(255,255,255,.14);
+                    border-color: rgba(74,222,128,.65);
+                    box-shadow: 0 0 0 3px rgba(34,197,94,.15);
                 }
 
                 .btn {
@@ -144,7 +146,7 @@ const Login = () => {
                     border: none; border-radius: 14px; color: white;
                     font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
                     cursor: pointer; letter-spacing: .02em;
-                    box-shadow: 0 6px 24px rgba(34,197,94,.3), 0 1px 0 rgba(255,255,255,.15) inset;
+                    box-shadow: 0 6px 24px rgba(34,197,94,.38), 0 1px 0 rgba(255,255,255,.15) inset;
                     transition: all .22s cubic-bezier(.22,1,.36,1);
                     animation: fadeUp .6s .35s cubic-bezier(.22,1,.36,1) both;
                     display: flex;
@@ -152,7 +154,7 @@ const Login = () => {
                     justify-content: center;
                     gap: 10px;
                 }
-                .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(34,197,94,.4); }
+                .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(34,197,94,.55); }
                 .btn:active:not(:disabled) { transform: translateY(0); }
                 .btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
@@ -166,31 +168,31 @@ const Login = () => {
                 @keyframes spin { to { transform: rotate(360deg); } }
 
                 .alert { padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-bottom: 20px; animation: fadeUp .4s cubic-bezier(.22,1,.36,1) both; }
-                .alert-err { background: #fef2f2; border: 1px solid #fee2e2; color: #ef4444; }
+                .alert-err { background: rgba(248,113,113,.15); border: 1px solid rgba(248,113,113,.3); color: #fca5a5; }
 
                 .footer-txt {
                     text-align: center; font-size: 13px;
-                    color: #6b7280; margin-top: 22px;
+                    color: rgba(255,255,255,.4); margin-top: 22px;
                     animation: fadeUp .6s .4s cubic-bezier(.22,1,.36,1) both;
                 }
-                .footer-txt a { color: #16a34a; font-weight: 600; text-decoration: none; }
-                .footer-txt a:hover { color: #15803d; }
+                .footer-txt a { color: #4ade80; font-weight: 600; text-decoration: none; }
+                .footer-txt a:hover { color: #86efac; }
 
                 .info-box {
                     margin-top: 24px;
                     padding: 20px;
-                    background: #f8fafc;
-                    border: 1px solid #e2e8f0;
+                    background: rgba(255,255,255,.05);
+                    border: 1px solid rgba(255,255,255,.1);
                     border-radius: 16px;
                     animation: fadeUp .6s .45s cubic-bezier(.22,1,.36,1) both;
                 }
                 .info-title {
                     font-family: 'Syne', sans-serif;
                     font-size: 14px; font-weight: 700;
-                    color: #1e293b; margin-bottom: 8px;
+                    color: white; margin-bottom: 8px;
                 }
                 .info-desc {
-                    font-size: 11px; color: #64748b;
+                    font-size: 11px; color: rgba(255,255,255,.45);
                     line-height: 1.5; margin-bottom: 14px;
                 }
                 .info-item {
@@ -199,13 +201,13 @@ const Login = () => {
                 }
                 .info-dot {
                     width: 6px; height: 6px;
-                    background: #22c55e;
+                    background: #4ade80;
                     border-radius: 50%;
-                    box-shadow: 0 0 8px rgba(34,197,94,.3);
+                    box-shadow: 0 0 8px rgba(74,222,128,.5);
                 }
                 .info-label {
                     font-size: 11px; font-weight: 600;
-                    color: #475569;
+                    color: rgba(255,255,255,.7);
                 }
 
                 @media (max-width: 480px) {
