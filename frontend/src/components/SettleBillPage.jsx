@@ -80,17 +80,24 @@ const SettleBillPage = () => {
         setFile(selectedFile);
         setError('');
         
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setPreview(reader.result);
-        };
-        reader.onerror = () => {
-            setError('Failed to read file');
-        };
-        reader.readAsDataURL(selectedFile);
+        // Use URL.createObjectURL for faster and more reliable preview
+        if (preview) {
+            URL.revokeObjectURL(preview);
+        }
+        const objectUrl = URL.createObjectURL(selectedFile);
+        setPreview(objectUrl);
         
         e.target.value = '';
     };
+
+    // Clean up object URL when component unmounts
+    useEffect(() => {
+        return () => {
+            if (preview && typeof preview === 'string' && preview.startsWith('blob:')) {
+                URL.revokeObjectURL(preview);
+            }
+        };
+    }, [preview]);
 
     const startRecording = async () => {
         try {
@@ -266,19 +273,26 @@ const SettleBillPage = () => {
                                         className="hidden" 
                                         onChange={handleFileChange}
                                         accept="image/*"
-                                        capture="environment"
                                     />
                                     <div className={`
-                                        aspect-[16/7] rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center gap-4
-                                        ${preview ? 'border-green-600 bg-green-50/50' : 'border-gray-200 bg-gray-50 group-hover:border-green-600 group-hover:bg-green-50/50'}
+                                        aspect-[16/9] rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center gap-4 relative overflow-hidden
+                                        ${preview ? 'border-green-600 bg-white shadow-inner' : 'border-gray-200 bg-gray-50 group-hover:border-green-600 group-hover:bg-green-50/50'}
                                     `}>
                                         {preview ? (
-                                            <div className="relative w-full h-full p-2">
-                                                <img src={preview} alt="Preview" className="w-full h-full object-contain rounded-xl" />
-                                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-xl">
-                                                    <p className="text-white font-bold text-xs uppercase tracking-widest">Change Image</p>
+                                            <>
+                                                <img src={preview} alt="Preview" className="absolute inset-0 w-full h-full object-contain p-2 z-10" />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center z-20 backdrop-blur-[2px]">
+                                                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-2 border border-white/30">
+                                                        <CloudUpload size={24} className="text-white" />
+                                                    </div>
+                                                    <p className="text-white font-black text-xs uppercase tracking-widest">Change Image</p>
                                                 </div>
-                                            </div>
+                                                {/* Always visible indicator that an image is loaded */}
+                                                <div className="absolute bottom-3 right-3 z-30 bg-green-600 text-white px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg border border-white/20">
+                                                    <CheckCircle2 size={12} className="stroke-[3]" />
+                                                    <span className="text-[10px] font-black uppercase tracking-wider">Ready to Upload</span>
+                                                </div>
+                                            </>
                                         ) : (
                                             <>
                                                 <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-green-600 group-hover:scale-110 transition-transform">
