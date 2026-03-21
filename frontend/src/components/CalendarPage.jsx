@@ -96,12 +96,12 @@ const CalendarPage = () => {
                 {/* Main Calendar Section */}
                 <div className="flex-[3] flex flex-col min-w-0">
                     {/* Elegant Calendar Container */}
-                    <div className="bg-white rounded-[2rem] shadow-2xl shadow-gray-200/40 border border-white/80 overflow-hidden relative">
+                    <div className="bg-white rounded-[2rem] shadow-2xl shadow-gray-200/40 border border-white/80 relative flex flex-col">
                         {/* Decorative header gradient */}
                         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
                         
                         {/* Week Header */}
-                        <div className="bg-gradient-to-b from-white to-gray-50/30 px-6 py-6 border-b border-gray-100/50">
+                        <div className="bg-gradient-to-b from-white to-gray-50/30 px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-100/50 overflow-x-auto">
                             <div className="min-w-[720px] flex justify-between items-end">
                                 {weekDays.map((day, i) => {
                                     const isToday = day.toDateString() === new Date().toDateString();
@@ -166,8 +166,8 @@ const CalendarPage = () => {
                         </div>
 
                         {/* Day Columns - Refined */}
-                        <div className="flex-1 min-h-0">
-                            <div className="min-w-[720px] flex min-h-[420px]">
+                        <div className="flex-1 min-h-0 overflow-auto">
+                            <div className="min-w-[720px] flex">
                                 {weekDays.map((day, dayIndex) => {
                                     const dayBills = getBillsForDate(day);
                                     const isSelected = day.toDateString() === currentDate.toDateString();
@@ -177,7 +177,7 @@ const CalendarPage = () => {
                                         <div 
                                             key={dayIndex} 
                                             className={`
-                                                flex-1 border-r border-gray-100/60 last:border-r-0 px-4 py-5 flex flex-col gap-4 min-w-0 relative transition-all duration-500
+                                                flex-1 min-w-[140px] sm:min-w-[160px] border-r border-gray-100/60 last:border-r-0 px-2 sm:px-3 py-3 sm:py-4 flex flex-col gap-2 sm:gap-3 relative transition-all duration-500
                                                 ${isSelected ? 'bg-gradient-to-b from-green-50/80 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50/30 to-white' : 'bg-white'}
                                             `}
                                         >
@@ -185,9 +185,9 @@ const CalendarPage = () => {
                                             <div className="absolute top-4 bottom-4 -right-px w-px bg-gradient-to-b from-transparent via-gray-200/50 to-transparent"></div>
                                             
                                             {/* Date badge */}
-                                            <div className="text-center">
+                                            <div className="text-center shrink-0">
                                                 <span className={`
-                                                    inline-block text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1.5 rounded-full transition-all duration-300
+                                                    inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] px-2 sm:px-3 py-1 rounded-full transition-all duration-300
                                                     ${isSelected 
                                                         ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/20' 
                                                         : isToday 
@@ -200,7 +200,7 @@ const CalendarPage = () => {
                                             </div>
 
                                             {/* Bills with organized elegant cards */}
-                                            <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
+                                            <div className="flex-1 flex flex-col gap-2 overflow-y-auto">
                                                 {dayBills.length > 0 ? (
                                                     dayBills.map((bill) => {
                                                         const isPaid = bill.status === 'paid';
@@ -209,7 +209,7 @@ const CalendarPage = () => {
                                                                 key={bill.id}
                                                                 onClick={() => handleBillClick(bill)}
                                                                 className={`
-                                                                    relative rounded-2xl p-4 transition-all duration-300 cursor-pointer group hover:shadow-xl hover:-translate-y-0.5
+                                                                    relative rounded-xl p-3 sm:p-3.5 transition-all duration-300 cursor-pointer group hover:shadow-lg hover:-translate-y-0.5 w-full
                                                                     ${isPaid 
                                                                         ? 'bg-gradient-to-br from-gray-50 to-white border border-gray-100/50' 
                                                                         : 'bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-emerald-100/50'
@@ -218,45 +218,45 @@ const CalendarPage = () => {
                                                             >
                                                                 {/* Elegant status accent bar */}
                                                                 <div className={`
-                                                                    absolute top-0 left-0 right-0 h-1.5 rounded-t-2xl
+                                                                    absolute top-0 left-0 right-0 h-1 rounded-t-xl
                                                                     ${isPaid ? 'bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300' : 'bg-gradient-to-r from-red-400 via-red-500 to-red-400'}
                                                                 `}></div>
                                                                 
                                                                 {/* Status badge */}
-                                                                <div className="mt-2 mb-3">
+                                                                <div className="mt-1.5 mb-2">
                                                                     {isPaid ? (
-                                                                        <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
-                                                                            <CheckCircle2 size={10} /> Paid
+                                                                        <span className="inline-flex items-center gap-1 text-[8px] sm:text-[9px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                                                                            <CheckCircle2 size={9} /> Paid
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/25">
-                                                                            <AlertCircle size={10} /> DUE
+                                                                        <span className="inline-flex items-center gap-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md">
+                                                                            <AlertCircle size={9} /> DUE
                                                                         </span>
                                                                     )}
                                                                 </div>
 
-                                                                {/* Bill details */}
-                                                                <h4 className={`font-bold text-[13px] mb-3 leading-snug line-clamp-2 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                                                                {/* Bill details - full width */}
+                                                                <h4 className={`font-bold text-[11px] sm:text-[12px] mb-2 leading-snug ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'} break-words`}>
                                                                     {bill.details}
                                                                 </h4>
                                                                 
                                                                 {/* Organized info section */}
-                                                                <div className="flex items-center justify-between">
-                                                                    <div className="flex flex-col gap-1">
-                                                                        <p className={`text-[10px] font-semibold truncate ${isPaid ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                                <div className="flex items-end justify-between gap-2">
+                                                                    <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                                                                        <p className={`text-[9px] sm:text-[10px] font-semibold ${isPaid ? 'text-gray-400' : 'text-gray-500'} truncate`}>
                                                                             {bill.category?.name}
                                                                         </p>
-                                                                        <p className={`text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'}`}>
+                                                                        <p className={`text-base sm:text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'} whitespace-nowrap`}>
                                                                             ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
                                                                         </p>
                                                                     </div>
                                                                     
                                                                     {/* Category icon */}
-                                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isPaid ? 'bg-gray-100' : 'bg-emerald-50'}`}>
+                                                                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center shrink-0 ${isPaid ? 'bg-gray-100' : 'bg-emerald-50'}`}>
                                                                         {isPaid ? (
-                                                                            <CheckCircle2 size={20} className="text-gray-400" />
+                                                                            <CheckCircle2 size={16} className="text-gray-400" />
                                                                         ) : (
-                                                                            <FileText size={20} className="text-emerald-500" />
+                                                                            <FileText size={16} className="text-emerald-500" />
                                                                         )}
                                                                     </div>
                                                                 </div>
@@ -264,11 +264,11 @@ const CalendarPage = () => {
                                                         );
                                                     })
                                                 ) : (
-                                                    <div className="flex-1 flex flex-col items-center justify-center py-6">
-                                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-3 shadow-inner">
-                                                            <CalendarIcon size={24} className="text-gray-300" />
+                                                    <div className="flex-1 flex flex-col items-center justify-center py-4">
+                                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-2 shadow-inner">
+                                                            <CalendarIcon size={18} className="text-gray-300" />
                                                         </div>
-                                                        <p className="text-[11px] font-semibold text-gray-300 uppercase tracking-widest">No Bills</p>
+                                                        <p className="text-[10px] sm:text-[11px] font-semibold text-gray-300 uppercase tracking-widest">No Bills</p>
                                                     </div>
                                                 )}
                                             </div>
