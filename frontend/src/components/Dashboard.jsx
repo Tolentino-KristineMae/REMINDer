@@ -3,7 +3,7 @@ import api from '../api/axios';
 import { 
     Plus, 
     Wallet,
-    Banknote,
+    Receipt,
     Clock,
     AlertCircle,
     TrendingUp,
@@ -140,7 +140,7 @@ const Dashboard = () => {
                     <div className="relative z-10">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                                <Banknote size={22} className="text-orange-100" />
+                                <Receipt size={22} className="text-orange-100" />
                             </div>
                             <span className="text-[10px] font-bold text-orange-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
                                 <AlertCircle size={10} /> Unpaid
@@ -207,8 +207,8 @@ const Dashboard = () => {
                                     <TrendingUp size={20} className="text-white" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-900">Bill Analytics</h3>
-                                    <p className="text-xs text-gray-400 font-medium">Categories overview</p>
+                                    <h3 className="text-lg font-bold text-gray-900">Categories Analytics</h3>
+                                    <p className="text-xs text-gray-400 font-medium">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
                                 </div>
                             </div>
                         </div>
@@ -263,64 +263,123 @@ const Dashboard = () => {
 
                 <div className="lg:col-span-3 space-y-6">
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/50 h-full flex flex-col">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center">
-                                <CheckCircle2 size={20} className="text-white" />
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-bold text-gray-900">Settlement</h3>
-                                <p className="text-xs text-gray-400 font-medium">Progress overview</p>
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-700 rounded-xl flex items-center justify-center">
+                                    <CheckCircle2 size={20} className="text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-gray-900">Settlement</h3>
+                                    <p className="text-xs text-gray-400 font-medium">Payment status</p>
+                                </div>
                             </div>
                         </div>
                         
-                        <div className="flex-1 flex flex-col items-center justify-center">
-                            <div className="relative w-40 h-40 mb-6">
+                        <div className="flex-1 flex flex-col">
+                            {/* Circular Progress */}
+                            <div className="relative w-36 h-36 mx-auto mb-6">
                                 <svg className="w-full h-full transform -rotate-90">
                                     <defs>
-                                        <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <linearGradient id="settleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                                             <stop offset="0%" stopColor="#22c55e" />
-                                            <stop offset="100%" stopColor="#15803d" />
+                                            <stop offset="100%" stopColor="#10b981" />
                                         </linearGradient>
                                     </defs>
-                                    <circle cx="80" cy="80" r="70" stroke="#f3f4f6" strokeWidth="12" fill="none" />
+                                    {/* Background circles */}
+                                    <circle cx="72" cy="72" r="60" stroke="#f3f4f6" strokeWidth="10" fill="none" />
+                                    <circle cx="72" cy="72" r="45" stroke="#fef3c7" strokeWidth="10" fill="none" />
+                                    <circle cx="72" cy="72" r="30" stroke="#fee2e2" strokeWidth="10" fill="none" />
+                                    {/* Progress indicator */}
                                     <circle 
-                                        cx="80" cy="80" r="70" 
-                                        stroke="url(#progressGrad)" 
-                                        strokeWidth="12" 
+                                        cx="72" cy="72" r="60" 
+                                        stroke="url(#settleGrad)" 
+                                        strokeWidth="10" 
                                         fill="none" 
                                         strokeLinecap="round"
-                                        strokeDasharray={439.8} 
-                                        strokeDashoffset={439.8 * (1 - (stats.paid / (stats.total || 1)))} 
+                                        strokeDasharray={377} 
+                                        strokeDashoffset={377 * (1 - (stats.paid / (stats.total || 1)))} 
                                         className="transition-all duration-1000 ease-out drop-shadow-lg" 
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span className="text-4xl font-black text-gray-900">{Math.round((stats.paid / (stats.total || 1)) * 100)}%</span>
-                                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Complete</span>
+                                    <span className="text-3xl font-black text-gray-900">{Math.round((stats.paid / (stats.total || 1)) * 100)}%</span>
+                                    <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Settled</span>
                                 </div>
                             </div>
                             
-                            <div className="w-full space-y-3">
-                                <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
-                                    <div className="flex items-center gap-2">
-                                        <CheckCircle2 size={16} className="text-green-600" />
-                                        <span className="text-xs font-bold text-gray-600">Settled</span>
-                                    </div>
-                                    <span className="text-sm font-black text-green-700">{stats.paid}</span>
+                            {/* Legend */}
+                            <div className="flex justify-center gap-4 mb-6">
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                                    <span className="text-[10px] font-semibold text-gray-500">Paid</span>
                                 </div>
-                                <div className="flex items-center justify-between p-3 bg-amber-50 rounded-xl">
-                                    <div className="flex items-center gap-2">
-                                        <Clock size={16} className="text-amber-600" />
-                                        <span className="text-xs font-bold text-gray-600">Pending</span>
-                                    </div>
-                                    <span className="text-sm font-black text-amber-700">{stats.pending}</span>
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-3 h-3 rounded-full bg-amber-300" />
+                                    <span className="text-[10px] font-semibold text-gray-500">Pending</span>
                                 </div>
-                                <div className="flex items-center justify-between p-3 bg-red-50 rounded-xl">
-                                    <div className="flex items-center gap-2">
-                                        <AlertCircle size={16} className="text-red-600" />
-                                        <span className="text-xs font-bold text-gray-600">Overdue</span>
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-3 h-3 rounded-full bg-red-300" />
+                                    <span className="text-[10px] font-semibold text-gray-500">Overdue</span>
+                                </div>
+                            </div>
+                            
+                            {/* Status Cards */}
+                            <div className="space-y-2.5 mt-auto">
+                                {/* Paid */}
+                                <div className="group p-3.5 bg-gradient-to-r from-green-50 to-green-100/50 rounded-xl border border-green-100 hover:shadow-md hover:shadow-green-500/10 transition-all">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                                                <CheckCircle2 size={16} className="text-white" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-700">Paid</p>
+                                                <p className="text-[9px] text-gray-400 font-medium">Settled bills</p>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-lg font-black text-green-600">{stats.paid}</p>
+                                            <p className="text-[9px] text-green-500 font-semibold">{stats.total > 0 ? Math.round((stats.paid / stats.total) * 100) : 0}%</p>
+                                        </div>
                                     </div>
-                                    <span className="text-sm font-black text-red-700">{stats.overdue}</span>
+                                </div>
+                                
+                                {/* Pending */}
+                                <div className="group p-3.5 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-xl border border-amber-100 hover:shadow-md hover:shadow-amber-500/10 transition-all">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 bg-amber-400 rounded-lg flex items-center justify-center">
+                                                <Clock size={16} className="text-white" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-700">Pending</p>
+                                                <p className="text-[9px] text-gray-400 font-medium">Awaiting payment</p>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-lg font-black text-amber-600">{stats.pending}</p>
+                                            <p className="text-[9px] text-amber-500 font-semibold">{stats.total > 0 ? Math.round((stats.pending / stats.total) * 100) : 0}%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Overdue */}
+                                <div className="group p-3.5 bg-gradient-to-r from-red-50 to-red-100/50 rounded-xl border border-red-100 hover:shadow-md hover:shadow-red-500/10 transition-all">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 bg-red-400 rounded-lg flex items-center justify-center">
+                                                <AlertCircle size={16} className="text-white" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-700">Overdue</p>
+                                                <p className="text-[9px] text-gray-400 font-medium">Past due date</p>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-lg font-black text-red-500">{stats.overdue}</p>
+                                            <p className="text-[9px] text-red-400 font-semibold">{stats.total > 0 ? Math.round((stats.overdue / stats.total) * 100) : 0}%</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
