@@ -183,7 +183,7 @@ const CalendarPage = () => {
                                         key={dayIndex} 
                                         className={`flex-1 border-l border-green-100/50 px-2 pt-2 pb-8 flex flex-col gap-3 min-w-0 ${day.toDateString() === currentDate.toDateString() ? 'bg-green-50/20' : ''}`}
                                     >
-                                        <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3 min-h-0">
+                                        <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
                                             {dayBills.length > 0 ? (
                                                 dayBills.map((bill) => {
                                                     const isPaid = bill.status === 'paid';
@@ -230,8 +230,8 @@ const CalendarPage = () => {
                                                     );
                                                 })
                                             ) : (
-                                                <div className="h-full flex items-center justify-center opacity-10 select-none pointer-events-none">
-                                                    <p className="text-[9px] font-bold uppercase tracking-widest -rotate-90">No Bills</p>
+                                                <div className="flex-1 flex items-center justify-center">
+                                                    <p className="text-[8px] font-bold text-gray-300 uppercase tracking-widest -rotate-90 whitespace-nowrap">No Bills</p>
                                                 </div>
                                             )}
                                         </div>
