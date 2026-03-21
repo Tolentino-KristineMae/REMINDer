@@ -269,15 +269,6 @@ const CalendarPage = () => {
                                                                             ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
                                                                         </p>
                                                                     </div>
-                                                                    
-                                                                    {/* Category icon */}
-                                                                    <div className={`w-7 h-7 sm:w-9 sm:h-9 rounded-md sm:rounded-lg flex items-center justify-center shrink-0 ${isPaid ? 'bg-gray-100' : 'bg-emerald-50'}`}>
-                                                                        {isPaid ? (
-                                                                            <CheckCircle2 size={14} className="sm:size-16 text-gray-400" />
-                                                                        ) : (
-                                                                            <FileText size={14} className="sm:size-16 text-emerald-500" />
-                                                                        )}
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         );
