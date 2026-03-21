@@ -161,6 +161,44 @@ const Setup = () => {
                 }
                 .footer-txt a { color: #4ade80; font-weight: 600; text-decoration: none; }
                 .footer-txt a:hover { color: #86efac; }
+
+                /* Responsive Styles */
+                @media (max-width: 480px) {
+                    .remind-root {
+                        padding: 1rem;
+                    }
+                    .card {
+                        padding: 28px 20px 24px;
+                        border-radius: 20px;
+                    }
+                    .card-title {
+                        font-size: 22px;
+                    }
+                    .blob, .worm {
+                        display: none;
+                    }
+                    .dot {
+                        display: none;
+                    }
+                }
+
+                @media (min-width: 481px) and (max-width: 768px) {
+                    .remind-root {
+                        padding: 1.5rem;
+                    }
+                    .card {
+                        padding: 36px 28px 28px;
+                    }
+                    .blob.b3, .blob.b4 {
+                        display: none;
+                    }
+                }
+
+                @media (min-width: 769px) and (max-width: 1024px) {
+                    .card {
+                        max-width: 380px;
+                    }
+                }
             `}</style>
 
             <div className="remind-root">

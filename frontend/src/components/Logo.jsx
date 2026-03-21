@@ -3,12 +3,12 @@ import React from 'react';
 const Logo = ({ size = 'xl', className }) => {
     const sizes = {
         lg: {
-            icon: 'w-14 h-14 text-xl',
-            main: 'text-2xl',
-            sub: 'text-[10px]'
+            icon: 'w-12 h-12 text-lg',
+            main: 'text-xl',
+            sub: 'text-[9px]'
         },
         xl: {
-            icon: 'w-10 h-10 text-2xl',
+            icon: 'w-10 h-10 text-xl',
             main: 'text-xl',
             sub: 'text-[9px]'
         }
