@@ -132,9 +132,9 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
     transition: 'transform 0.15s',
   });
 
-  const inner = (isActive, hovered) => (
+  const inner = (isActive) => (
     <>
-      {(isActive || hovered) && !isLogout && (
+      {isActive && !isLogout && (
         <span style={{
           position:     'absolute',
           left:         '-12px',
@@ -142,8 +142,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
           bottom:       '8px',
           width:        '2.5px',
           borderRadius: '0 4px 4px 0',
-          background:   isActive ? C.activeBorder : '#ffffff',
-          opacity:      isActive ? 1 : 0.7,
+          background:   C.activeBorder,
           transition:   'all 0.2s ease',
         }} />
       )}
@@ -191,7 +190,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
           onMouseLeave={() => setHovered(false)}
           style={baseStyle(false)}
         >
-          {inner(false, hovered)}
+          {inner(false)}
         </button>
       </div>
     );
@@ -207,7 +206,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
         onMouseLeave={() => setHovered(false)}
         style={({ isActive }) => baseStyle(isActive)}
       >
-        {({ isActive }) => inner(isActive, hovered)}
+        {({ isActive }) => inner(isActive)}
       </NavLink>
     </div>
   );
