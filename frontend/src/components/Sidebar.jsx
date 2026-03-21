@@ -241,31 +241,14 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           width:      W,
           minWidth:   W,
           padding:    '16px 12px',
-          background: `
-            radial-gradient(ellipse at 20% 20%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(21, 128, 61, 0.1) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(34, 197, 94, 0.05) 0%, transparent 70%),
-            ${C.bg}
-          `,
+          background: C.bg,
           borderRight:`1px solid ${C.border}`,
           boxShadow:  '4px 0 24px rgba(0,0,0,0.3)',
           transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
           overflow:   'hidden',
           boxSizing:  'border-box',
-          position:   'relative',
         }}
       >
-        {/* Grid Pattern */}
-        <div style={{
-          position:   'absolute',
-          inset:      0,
-          backgroundImage: `
-            linear-gradient(rgba(34, 197, 94, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(34, 197, 94, 0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '30px 30px',
-          pointerEvents: 'none',
-        }} />
         {/* Logo Header */}
         <div style={{
           display:        'flex',
@@ -274,8 +257,6 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           justifyContent: collapsed ? 'center' : 'space-between',
           marginBottom:   '20px',
           gap:            collapsed ? '12px' : '0',
-          position:       'relative',
-          zIndex:         1,
         }}>
           <Logo size={collapsed ? 'sm' : 'lg'} dark />
 
@@ -339,7 +320,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
 
 
 
-        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', position: 'relative', zIndex: 1 }}>
+        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
 
           {!collapsed && (
             <p style={{
@@ -396,7 +377,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
         />
 
         {/* User Profile */}
-        <div style={{ marginTop: 'auto', padding: '12px', position: 'relative', zIndex: 1 }}>
+        <div style={{ marginTop: 'auto', padding: '12px' }}>
           {collapsed ? (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <img
