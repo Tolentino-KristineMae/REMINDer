@@ -199,16 +199,20 @@ const Dashboard = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Categories Analytics Card */}
                 <div className="lg:col-span-9 space-y-6 min-w-0">
-                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/50 min-h-[420px] flex flex-col">
-                        <div className="flex items-center justify-between mb-6">
+                    <div className="bg-white p-6 rounded-2xl border-2 border-indigo-100 shadow-lg shadow-indigo-100/30 min-h-[420px] flex flex-col relative overflow-hidden">
+                        {/* Decorative corner accent */}
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-bl-full -mr-8 -mt-8" />
+                        
+                        <div className="flex items-center justify-between mb-6 relative z-10">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-700 rounded-xl flex items-center justify-center">
+                                <div className="w-11 h-11 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
                                     <TrendingUp size={20} className="text-white" />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-gray-900">Categories Analytics</h3>
-                                    <p className="text-xs text-gray-400 font-medium">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
+                                    <p className="text-xs text-indigo-500 font-semibold">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
                                 </div>
                             </div>
                         </div>
@@ -261,16 +265,20 @@ const Dashboard = () => {
                     </div>
                 </div>
 
+                {/* Settlement Card */}
                 <div className="lg:col-span-3 space-y-6">
-                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/50 h-full flex flex-col">
-                        <div className="flex items-center justify-between mb-6">
+                    <div className="bg-white p-6 rounded-2xl border-2 border-emerald-100 shadow-lg shadow-emerald-100/30 h-full flex flex-col relative overflow-hidden">
+                        {/* Decorative corner accent */}
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-8 -mt-8" />
+                        
+                        <div className="flex items-center justify-between mb-6 relative z-10">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-700 rounded-xl flex items-center justify-center">
+                                <div className="w-11 h-11 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/25">
                                     <CheckCircle2 size={20} className="text-white" />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-gray-900">Settlement</h3>
-                                    <p className="text-xs text-gray-400 font-medium">Payment status</p>
+                                    <p className="text-xs text-emerald-600 font-semibold">Payment status</p>
                                 </div>
                             </div>
                         </div>
