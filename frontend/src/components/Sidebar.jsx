@@ -246,7 +246,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           borderRight:`1px solid ${C.border}`,
           boxShadow:  '2px 0 12px rgba(0,0,0,0.06)',
           transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
-          overflow:   'hidden',
+          overflowX:   'visible',
           boxSizing:  'border-box',
         }}
       >
@@ -310,7 +310,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
         )}
 
-        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'visible' }}>
 
           {!collapsed ? (
             <p style={{
