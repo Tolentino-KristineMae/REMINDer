@@ -232,20 +232,48 @@ const Sidebar = ({ isOpen, onClose }) => {
       >
         <div style={{
           display:        'flex',
+          flexDirection:  collapsed ? 'column' : 'row',
           alignItems:     'center',
           justifyContent: collapsed ? 'center' : 'space-between',
           marginBottom:   '28px',
           padding:        '4px 4px 0',
+          gap:            collapsed ? '12px' : '0',
         }}>
           <Logo size={collapsed ? 'sm' : 'lg'} />
 
+          {!collapsed && (
+            <button
+              onClick={() => setCollapsed(v => !v)}
+              title="Collapse"
+              style={{
+                width:          28,
+                height:         28,
+                flexShrink:     0,
+                border:         `1px solid ${C.toggleBorder}`,
+                borderRadius:   '8px',
+                background:     C.toggle,
+                color:          C.iconDefault,
+                cursor:         'pointer',
+                display:        'flex',
+                alignItems:     'center',
+                justifyContent: 'center',
+                marginLeft:     '8px',
+                transition:     'background 0.15s',
+              }}
+            >
+              <PanelLeftClose size={16} strokeWidth={2.5} />
+            </button>
+          )}
+        </div>
+
+        {collapsed && (
           <button
             onClick={() => setCollapsed(v => !v)}
-            title={collapsed ? 'Expand' : 'Collapse'}
+            title="Expand"
             style={{
-              width:          28,
-              height:         28,
-              flexShrink:     0,
+              width:          32,
+              height:         32,
+              alignSelf:      'center',
               border:         `1px solid ${C.toggleBorder}`,
               borderRadius:   '8px',
               background:     C.toggle,
@@ -254,15 +282,13 @@ const Sidebar = ({ isOpen, onClose }) => {
               display:        'flex',
               alignItems:     'center',
               justifyContent: 'center',
-              marginLeft:     collapsed ? 0 : '8px',
+              marginBottom:   '16px',
               transition:     'background 0.15s',
             }}
           >
-            {collapsed
-              ? <PanelLeftOpen size={16} strokeWidth={2.5} />
-              : <PanelLeftClose size={16} strokeWidth={2.5} />}
+            <PanelLeftOpen size={16} strokeWidth={2.5} />
           </button>
-        </div>
+        )}
 
         <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
 
