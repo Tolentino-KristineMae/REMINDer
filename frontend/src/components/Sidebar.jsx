@@ -16,22 +16,22 @@ import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
 
 const C = {
-  bg:           '#f6f6f6',
-  border:       '#e8e8e8',
-  text:         '#2d2d2d',
-  textMuted:    '#a0a0a0',
-  textActive:   '#16a34a',
-  iconDefault:  '#7a7a7a',
-  iconActive:   '#16a34a',
-  activeBg:     '#edfaf3',
-  activeBorder: '#16a34a',
-  hoverBg:      '#eeeeee',
-  badgeBg:      '#dcfce7',
-  badgeText:    '#15803d',
-  logoutHover:  '#fff1f2',
-  logoutText:   '#ef4444',
-  toggle:       '#e2e2e2',
-  toggleBorder: '#d4d4d4',
+  bg:           '#052e16',
+  border:       '#14532d',
+  text:         '#dcfce7',
+  textMuted:    '#86efac',
+  textActive:   '#22c55e',
+  iconDefault:  '#86efac',
+  iconActive:   '#22c55e',
+  activeBg:     '#166534',
+  activeBorder: '#22c55e',
+  hoverBg:      '#14532d',
+  badgeBg:      '#22c55e',
+  badgeText:    '#052e16',
+  logoutHover:  '#7f1d1d',
+  logoutText:   '#fca5a5',
+  toggle:       '#166534',
+  toggleBorder: '#22c55e',
   fontFamily:   "'Plus Jakarta Sans', sans-serif",
 };
 
@@ -238,7 +238,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           padding:    '16px 12px',
           background: C.bg,
           borderRight:`1px solid ${C.border}`,
-          boxShadow:  '2px 0 12px rgba(0,0,0,0.06)',
+          boxShadow:  '4px 0 24px rgba(0,0,0,0.3)',
           transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
           overflow:   'hidden',
           boxSizing:  'border-box',
@@ -253,7 +253,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           padding:        '4px 4px 0',
           gap:            collapsed ? '12px' : '0',
         }}>
-          <Logo size={collapsed ? 'sm' : 'lg'} />
+          <Logo size={collapsed ? 'sm' : 'lg'} dark />
 
           {!collapsed && (
             <button
