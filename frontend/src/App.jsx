@@ -53,15 +53,13 @@ const DateTimeDisplay = () => {
 
     return (
         <div className="flex items-center gap-4">
-            {/* Time Card */}
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 px-4 py-2 rounded-xl border border-gray-200 shadow-sm">
-                <div className="flex flex-col items-end">
-                    <p className="text-lg font-bold text-gray-800 leading-none tracking-tight">{formatTime(dateTime)}</p>
-                    <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{formatDate(dateTime)}</p>
-                </div>
+            {/* Time Display */}
+            <div className="flex flex-col items-end">
+                <p className="text-lg font-bold text-gray-800 leading-none tracking-tight">{formatTime(dateTime)}</p>
+                <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{formatDate(dateTime)}</p>
             </div>
             {/* Divider */}
-            <div className="h-10 w-px bg-gradient-to-b from-transparent via-green-400/50 to-transparent" />
+            <div className="h-10 w-px bg-gray-200" />
             {/* Logo */}
             <div className="flex flex-col items-start">
                 <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
