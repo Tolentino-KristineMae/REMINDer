@@ -28,10 +28,19 @@ const SettleBillPage = () => {
     const [error, setError] = useState('');
     const [isUploaded, setIsUploaded] = useState(false);
 
+    const resetForm = () => {
+        setFile(null);
+        setPreview(null);
+        setDetails('');
+        setError('');
+        setIsUploaded(false);
+    };
+
     useEffect(() => {
         let isMounted = true;
 
         const fetchBillDetails = async () => {
+            resetForm();
             try {
                 const response = await api.get(`/bills/${id}`);
                 if (isMounted) setBill(response.data);
@@ -51,15 +60,36 @@ const SettleBillPage = () => {
     }, [id]);
 
     const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            setFile(selectedFile);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreview(reader.result);
-            };
-            reader.readAsDataURL(selectedFile);
+        const files = e.target.files;
+        if (!files || files.length === 0) {
+            return;
         }
+        
+        const selectedFile = files[0];
+        
+        if (!selectedFile.type.startsWith('image/')) {
+            setError('Please select an image file');
+            return;
+        }
+        
+        if (selectedFile.size > 5 * 1024 * 1024) {
+            setError('File size must be less than 5MB');
+            return;
+        }
+        
+        setFile(selectedFile);
+        setError('');
+        
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreview(reader.result);
+        };
+        reader.onerror = () => {
+            setError('Failed to read file');
+        };
+        reader.readAsDataURL(selectedFile);
+        
+        e.target.value = '';
     };
 
     const startRecording = async () => {
@@ -232,6 +262,7 @@ const SettleBillPage = () => {
                                         className="hidden" 
                                         onChange={handleFileChange}
                                         accept="image/*"
+                                        capture="environment"
                                     />
                                     <div className={`
                                         aspect-[16/7] rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center gap-4
