@@ -93,7 +93,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
     width:          '100%',
     padding:        collapsed ? '10px 0' : '10px 12px',
     borderRadius:   '12px',
-    border:         isActive ? `1px solid ${C.activeBorder}` : (hovered ? `1px solid ${C.hoverBorder}` : '1px solid transparent'),
+    border:         isActive ? `1px solid ${C.activeBorder}` : '1px solid transparent',
     cursor:         'pointer',
     transition:     'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
     textDecoration: 'none',
