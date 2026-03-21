@@ -30,8 +30,8 @@ const C = {
   badgeText:    '#052e16',
   logoutHover:  '#7f1d1d',
   logoutText:   '#fca5a5',
-  toggle:       '#166534',
-  toggleBorder: '#22c55e',
+  toggle:       '#ffffff',
+  toggleBorder: '#ffffff',
   fontFamily:   "'Plus Jakarta Sans', sans-serif",
 };
 
@@ -266,7 +266,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
                 border:         `1px solid ${C.toggleBorder}`,
                 borderRadius:   '8px',
                 background:     C.toggle,
-                color:          C.iconDefault,
+                color:          '#166534',
                 cursor:         'pointer',
                 display:        'flex',
                 alignItems:     'center',
@@ -291,7 +291,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
               border:         `1px solid ${C.toggleBorder}`,
               borderRadius:   '8px',
               background:     C.toggle,
-              color:          C.iconDefault,
+              color:          '#166534',
               cursor:         'pointer',
               display:        'flex',
               alignItems:     'center',
