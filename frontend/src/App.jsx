@@ -90,16 +90,12 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
         <div className="flex bg-[#f8fafc] min-h-screen relative">
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} collapsed={sidebarCollapsed} onCollapse={setSidebarCollapsed} />
             <div className={`flex-1 ml-0 ${sidebarMargin} flex flex-col min-h-screen min-w-0 transition-all duration-200`}>
-                <div className="lg:hidden sticky top-0 z-30">
-                    {/* Header Background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white via-white to-green-50/50" />
-                    {/* Decorative Line */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-green-500 to-transparent" />
-                    <div className="relative px-4 py-3 flex items-center justify-between">
+                <div className="lg:hidden sticky top-0 z-30 bg-white border-b border-gray-100">
+                    <div className="px-4 py-3 flex items-center justify-between">
                         <button
                             type="button"
                             onClick={() => setSidebarOpen(true)}
-                            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-200 shadow-sm text-gray-600 hover:bg-gray-50 hover:border-green-300 transition-all"
+                            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-200 shadow-sm text-gray-600 hover:bg-gray-50"
                             aria-label="Open menu"
                         >
                             <Menu size={18} className="stroke-[2.5]" />
@@ -109,7 +105,7 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
                                 <p className="text-lg font-bold text-gray-800 leading-none">{dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
                                 <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{dateTime.getDate()} {dateTime.toLocaleString('en-US', { month: 'short' })} {dateTime.getFullYear()}</p>
                             </div>
-                            <div className="h-10 w-px bg-gradient-to-b from-transparent via-green-400 to-transparent mx-1" />
+                            <div className="h-10 w-px bg-gray-200 mx-1" />
                             <div className="flex flex-col items-start">
                                 <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
                                 <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
@@ -117,13 +113,8 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
                         </div>
                     </div>
                 </div>
-                <div className="hidden lg:sticky lg:top-0 lg:z-30">
-                    {/* Header Background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white via-white to-green-50/30" />
-                    {/* Decorative Lines */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-green-400 via-50% to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-green-500/20 via-green-500 to-green-500/20 max-w-[200px] mx-auto" />
-                    <div className="relative px-6 py-4">
+                <div className="hidden lg:block sticky top-0 z-30 bg-white border-b border-gray-100">
+                    <div className="px-6 py-4">
                         <PageHeader title={pageTitle} subtitle={pageSubtitle} />
                     </div>
                 </div>
