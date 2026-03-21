@@ -5,8 +5,6 @@ import {
     ChevronRight, 
     Calendar as CalendarIcon,
     Clock,
-    MoreVertical,
-    Plus,
     CheckCircle2,
     AlertCircle,
     FileText
@@ -201,7 +199,7 @@ const CalendarPage = () => {
                                                 </span>
                                             </div>
 
-                                            {/* Bills with elegant cards */}
+                                            {/* Bills with organized elegant cards */}
                                             <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
                                                 {dayBills.length > 0 ? (
                                                     dayBills.map((bill) => {
@@ -218,38 +216,49 @@ const CalendarPage = () => {
                                                                     }
                                                                 `}
                                                             >
-                                                                {/* Elegant status accent */}
+                                                                {/* Elegant status accent bar */}
                                                                 <div className={`
                                                                     absolute top-0 left-0 right-0 h-1.5 rounded-t-2xl
                                                                     ${isPaid ? 'bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300' : 'bg-gradient-to-r from-red-400 via-red-500 to-red-400'}
                                                                 `}></div>
                                                                 
-                                                                <div className="flex justify-between items-start mb-3 mt-2">
+                                                                {/* Status badge */}
+                                                                <div className="mt-2 mb-3">
                                                                     {isPaid ? (
-                                                                        <span className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2.5 py-1.5 rounded-full border border-emerald-100">
-                                                                            <CheckCircle2 size={11} /> Paid
+                                                                        <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                                                                            <CheckCircle2 size={10} /> Paid
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="flex items-center gap-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/25">
-                                                                            <AlertCircle size={11} /> DUE
+                                                                        <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/25">
+                                                                            <AlertCircle size={10} /> DUE
                                                                         </span>
                                                                     )}
-                                                                    <button className="text-gray-300 hover:text-gray-500 transition-colors">
-                                                                        <MoreVertical size={14} />
-                                                                    </button>
                                                                 </div>
 
-                                                                <h4 className={`font-bold text-[13px] mb-2 leading-snug line-clamp-2 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                                                                {/* Bill details */}
+                                                                <h4 className={`font-bold text-[13px] mb-3 leading-snug line-clamp-2 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                                                                     {bill.details}
                                                                 </h4>
                                                                 
-                                                                <div className="flex flex-col gap-2 mt-3">
-                                                                    <p className={`text-[11px] font-semibold truncate ${isPaid ? 'text-gray-400' : 'text-gray-500'}`}>
-                                                                        {bill.category?.name}
-                                                                    </p>
-                                                                    <p className={`text-xl font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'}`}>
-                                                                        ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
-                                                                    </p>
+                                                                {/* Organized info section */}
+                                                                <div className="flex items-center justify-between">
+                                                                    <div className="flex flex-col gap-1">
+                                                                        <p className={`text-[10px] font-semibold truncate ${isPaid ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                                            {bill.category?.name}
+                                                                        </p>
+                                                                        <p className={`text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'}`}>
+                                                                            ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
+                                                                        </p>
+                                                                    </div>
+                                                                    
+                                                                    {/* Category icon */}
+                                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isPaid ? 'bg-gray-100' : 'bg-emerald-50'}`}>
+                                                                        {isPaid ? (
+                                                                            <CheckCircle2 size={20} className="text-gray-400" />
+                                                                        ) : (
+                                                                            <FileText size={20} className="text-emerald-500" />
+                                                                        )}
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         );
@@ -286,14 +295,12 @@ const CalendarPage = () => {
                                 </div>
                                 <h3 className="font-bold text-sm">Overview</h3>
                             </div>
-                            <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
-                                <MoreVertical size={16} />
-                            </button>
                         </div>
 
                         <div className="mb-5 relative z-10">
+                            {/* Month & Year Display */}
                             <div className="flex justify-between items-center mb-4">
-                                <h4 className="text-xs font-semibold text-emerald-200">Activity</h4>
+                                <h4 className="text-xs font-semibold text-emerald-200">Calendar</h4>
                                 <div className="flex items-center gap-2 bg-white/5 rounded-lg p-1">
                                     <button 
                                         onClick={handlePrevMonth}
@@ -301,8 +308,8 @@ const CalendarPage = () => {
                                     >
                                         <ChevronLeft size={14} />
                                     </button>
-                                    <span className="text-[10px] font-bold uppercase tracking-wider px-2">
-                                        {monthNames[viewDate.getMonth()].slice(0, 3)}
+                                    <span className="text-[10px] font-bold uppercase tracking-wider px-1 min-w-[60px] text-center">
+                                        {monthNames[viewDate.getMonth()].slice(0, 3)} {viewDate.getFullYear().toString().slice(-2)}
                                     </span>
                                     <button 
                                         onClick={handleNextMonth}
@@ -353,23 +360,23 @@ const CalendarPage = () => {
                         <div className="flex flex-col gap-2 text-[10px] font-semibold text-emerald-200/80 relative z-10 pt-3 border-t border-white/10">
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-emerald-300 rounded-sm"></div>
-                                <span>Activity</span>
+                                <span>Has Bills</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                                <span>Due Payment</span>
+                                <span>Unpaid</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Sidebar Bills List - Elegant */}
+                    {/* Sidebar Bills List - Elegant & Organized */}
                     <div className="bg-white rounded-[1.5rem] p-5 border border-gray-100 shadow-lg shadow-gray-200/30 flex-1 flex flex-col min-h-0">
                         <div className="flex justify-between items-center mb-5 shrink-0">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg flex items-center justify-center">
                                     <FileText size={16} className="text-emerald-600" />
                                 </div>
-                                <h3 className="font-bold text-gray-800 text-sm">Details</h3>
+                                <h3 className="font-bold text-gray-800 text-sm">Bills for {monthNames[currentDate.getMonth()].slice(0, 3)} {currentDate.getDate()}</h3>
                             </div>
                         </div>
 
@@ -389,37 +396,36 @@ const CalendarPage = () => {
                                                     ? 'bg-gray-50/50 border-gray-100 opacity-70' 
                                                     : 'bg-white border border-gray-100 group-hover:border-emerald-200 group-hover:shadow-xl group-hover:shadow-emerald-900/5 cursor-pointer shadow-sm hover:-translate-y-0.5'}
                                             `}>
-                                                {/* Status accent */}
+                                                {/* Status accent bar */}
                                                 <div className={`
                                                     absolute top-0 left-0 right-0 h-1
                                                     ${isPaid ? 'bg-gradient-to-r from-gray-300 to-gray-400' : 'bg-gradient-to-r from-red-400 to-red-500'}
                                                 `}></div>
                                                 
-                                                <div className="flex justify-between items-start mb-3 mt-2 relative z-10">
+                                                {/* Status badge */}
+                                                <div className="mt-2 mb-3">
                                                     {!isPaid ? (
-                                                        <span className="flex items-center gap-1.5 text-[9px] font-black bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
+                                                        <span className="inline-flex items-center gap-1.5 text-[9px] font-black bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
                                                             <AlertCircle size={10} className="stroke-[3]" />
-                                                            Due
+                                                            Unpaid
                                                         </span>
                                                     ) : (
-                                                        <span className="flex items-center gap-1.5 text-[9px] font-bold bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-full uppercase tracking-widest border border-emerald-100">
+                                                        <span className="inline-flex items-center gap-1.5 text-[9px] font-bold bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-full uppercase tracking-widest border border-emerald-100">
                                                             <CheckCircle2 size={10} />
                                                             Paid
                                                         </span>
                                                     )}
-                                                    
-                                                    <button className="text-gray-300 hover:text-gray-500 transition-colors">
-                                                        <MoreVertical size={14} />
-                                                    </button>
                                                 </div>
 
-                                                <div className="space-y-3 relative z-10">
-                                                    <h4 className={`font-bold text-[13px] leading-snug tracking-tight ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                                                {/* Bill title */}
+                                                <div className="relative z-10">
+                                                    <h4 className={`font-bold text-[13px] leading-snug tracking-tight mb-3 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                                                         {bill.details}
                                                     </h4>
                                                     
-                                                    <div className="flex items-end justify-between">
-                                                        <div className="space-y-1">
+                                                    {/* Organized info row */}
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex flex-col gap-1">
                                                             <div className="flex items-center gap-2">
                                                                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
                                                                     {bill.category?.name || 'Bill'}
@@ -434,6 +440,7 @@ const CalendarPage = () => {
                                                             </p>
                                                         </div>
 
+                                                        {/* Action button */}
                                                         <div className={`rounded-xl flex items-center justify-center text-white transition-all duration-300 shadow-lg ${
                                                             isPaid 
                                                             ? 'w-10 h-10 bg-gray-300 shadow-gray-300/10' 
@@ -454,8 +461,11 @@ const CalendarPage = () => {
                                     );
                                 })
                             ) : (
-                                <div className="text-center py-6 opacity-40">
-                                    <p className="text-[10px] font-bold">No Records</p>
+                                <div className="flex flex-col items-center justify-center py-8">
+                                    <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-3">
+                                        <CalendarIcon size={28} className="text-gray-300" />
+                                    </div>
+                                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">No Bills This Day</p>
                                 </div>
                             )}
                         </div>
