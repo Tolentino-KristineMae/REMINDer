@@ -358,50 +358,88 @@ const CalendarPage = () => {
                         </div>
                     </div>
 
-                    {/* Sidebar Summary - Replaces Duplicate Bills List */}
-                    <div className="bg-white rounded-[1.5rem] p-6 border border-gray-100 shadow-lg shadow-gray-200/30 flex flex-col gap-6">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl flex items-center justify-center shadow-sm">
-                                <FileText size={20} className="text-emerald-600" />
+                    {/* Sidebar Bills List - Due & Overdue Only */}
+                    <div className="bg-white rounded-[1.5rem] p-5 border border-gray-100 shadow-lg shadow-gray-200/30 flex-1 flex flex-col min-h-0">
+                        <div className="flex justify-between items-center mb-5 shrink-0">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gradient-to-br from-red-50 to-orange-50 rounded-xl flex items-center justify-center shadow-sm">
+                                    <AlertCircle size={20} className="text-red-500" />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-gray-800 text-sm">Due & Overdue</h3>
+                                    <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest">Action Required</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="font-bold text-gray-800 text-sm">Quick Stats</h3>
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Selected Week</p>
+                            <div className="bg-red-50 px-2.5 py-1 rounded-lg border border-red-100">
+                                <span className="text-[10px] font-black text-red-600">
+                                    {bills.filter(b => b.status === 'pending').length}
+                                </span>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-4">
-                            {(() => {
-                                const weekBills = weekDays.flatMap(day => getBillsForDate(day));
-                                const pendingAmount = weekBills.filter(b => b.status === 'pending').reduce((sum, b) => sum + Number(b.amount), 0);
-                                const paidAmount = weekBills.filter(b => b.status === 'paid').reduce((sum, b) => sum + Number(b.amount), 0);
-                                const pendingCount = weekBills.filter(b => b.status === 'pending').length;
-                                
-                                return (
-                                    <>
-                                        <div className="bg-gradient-to-br from-red-50 to-white p-4 rounded-2xl border border-red-100/50 shadow-sm">
-                                            <p className="text-[9px] font-black text-red-400 uppercase tracking-[0.15em] mb-1">Total Pending</p>
-                                            <div className="flex items-baseline gap-2">
-                                                <span className="text-xl font-black text-red-600">₱{new Intl.NumberFormat('en-PH').format(pendingAmount)}</span>
-                                                <span className="text-[10px] font-bold text-red-400/80">{pendingCount} bills</span>
-                                            </div>
-                                        </div>
+                        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-1">
+                            {bills.filter(b => b.status === 'pending').length > 0 ? (
+                                bills
+                                    .filter(b => b.status === 'pending')
+                                    .sort((a, b) => new Date(a.due_date) - new Date(b.due_date))
+                                    .map((bill) => {
+                                        const isOverdue = new Date(bill.due_date) < new Date().setHours(0, 0, 0, 0);
+                                        return (
+                                            <div 
+                                                key={bill.id} 
+                                                onClick={() => handleBillClick(bill)}
+                                                className="group relative bg-white rounded-2xl border border-gray-100 p-4 hover:border-red-200 hover:shadow-xl hover:shadow-red-900/5 transition-all duration-300 cursor-pointer hover:-translate-y-0.5"
+                                            >
+                                                {/* Overdue accent */}
+                                                <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${isOverdue ? 'bg-red-500' : 'bg-orange-400'}`}></div>
+                                                
+                                                <div className="flex justify-between items-start mb-3">
+                                                    <div className="flex flex-col gap-0.5">
+                                                        <span className={`text-[9px] font-black uppercase tracking-widest ${isOverdue ? 'text-red-500' : 'text-orange-500'}`}>
+                                                            {isOverdue ? 'Overdue' : 'Due Soon'}
+                                                        </span>
+                                                        <h4 className="font-bold text-gray-800 text-[13px] leading-tight line-clamp-2">
+                                                            {bill.details}
+                                                        </h4>
+                                                    </div>
+                                                    <div className="text-right shrink-0">
+                                                        <p className="text-lg font-black text-gray-900 tracking-tight">
+                                                            ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
+                                                        </p>
+                                                    </div>
+                                                </div>
 
-                                        <div className="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-2xl border border-emerald-100/50 shadow-sm">
-                                            <p className="text-[9px] font-black text-emerald-400 uppercase tracking-[0.15em] mb-1">Total Paid</p>
-                                            <div className="flex items-baseline gap-2">
-                                                <span className="text-xl font-black text-emerald-600">₱{new Intl.NumberFormat('en-PH').format(paidAmount)}</span>
+                                                <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="px-2 py-0.5 rounded-md bg-gray-50 border border-gray-100 text-[9px] font-bold text-gray-500 uppercase">
+                                                            {bill.category?.name || 'Bill'}
+                                                        </div>
+                                                        <span className="text-[10px] font-bold text-emerald-600 uppercase">
+                                                            {new Date(bill.due_date).toLocaleDateString('en-PH', { month: 'short', day: 'numeric' })}
+                                                        </span>
+                                                    </div>
+                                                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shadow-sm">
+                                                        <ChevronRight size={16} />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </>
-                                );
-                            })()}
+                                        );
+                                    })
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-12 text-center">
+                                    <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mb-4">
+                                        <CheckCircle2 size={32} className="text-emerald-500" />
+                                    </div>
+                                    <h4 className="font-bold text-gray-800 text-sm mb-1">All Caught Up!</h4>
+                                    <p className="text-[11px] text-gray-400 font-medium">No pending or overdue bills.</p>
+                                </div>
+                            )}
                         </div>
 
-                        <div className="pt-4 border-t border-gray-50">
+                        <div className="pt-5 mt-auto">
                             <button 
                                 onClick={() => navigate('/add-bill')}
-                                className="w-full py-3.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-green-500/20 hover:shadow-green-500/40 hover:-translate-y-0.5 transition-all duration-300"
+                                className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-green-500/20 hover:shadow-green-500/40 hover:-translate-y-1 transition-all duration-300"
                             >
                                 + Add New Bill
                             </button>
