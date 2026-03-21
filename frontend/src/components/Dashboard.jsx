@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { 
     Plus, 
-    ArrowUpRight,
     Wallet,
     Receipt,
     Clock,
     AlertCircle,
     TrendingUp,
-    TrendingDown,
-    DollarSign,
-    CheckCircle2,
-    XCircle
+    CheckCircle2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -70,91 +66,79 @@ const Dashboard = () => {
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 relative">
 
-            {/* Stats Grid */}
+            {/* Stats Grid - Organized Layout */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6">
-                {[
-                    { 
-                        label: 'Total Amount Paid', 
-                        value: formatCurrency(stats.total_paid_amount), 
-                        color: 'from-green-600 to-green-800',
-                        bgPattern: 'bg-green-900',
-                        text: 'text-white',
-                        textMuted: 'text-green-200',
-                        icon: <Wallet size={24} />,
-                        iconBg: 'bg-green-500/20',
-                        sub: 'All time'
-                    },
-                    { 
-                        label: 'Total Amount Unpaid', 
-                        value: formatCurrency(stats.total_unpaid_amount), 
-                        color: 'from-red-50 to-white',
-                        bgPattern: 'bg-white',
-                        text: 'text-red-600',
-                        textMuted: 'text-red-400',
-                        icon: <Receipt size={24} />,
-                        iconBg: 'bg-red-100',
-                        border: 'border-red-100',
-                        sub: 'Pending & Overdue'
-                    },
-                    { 
-                        label: 'Pending Bills', 
-                        value: stats.pending, 
-                        color: 'from-white to-gray-50',
-                        bgPattern: 'bg-white',
-                        text: 'text-gray-900',
-                        textMuted: 'text-gray-500',
-                        icon: <Clock size={24} />,
-                        iconBg: 'bg-amber-100',
-                        border: 'border-gray-100',
-                        sub: 'Action required'
-                    },
-                    { 
-                        label: 'Overdue Bills', 
-                        value: stats.overdue, 
-                        color: 'from-red-50 to-white',
-                        bgPattern: 'bg-white',
-                        text: 'text-red-600',
-                        textMuted: 'text-red-400',
-                        icon: <AlertCircle size={24} />,
-                        iconBg: 'bg-red-100',
-                        border: 'border-red-100',
-                        sub: 'Immediate attention'
-                    }
-                ].map((stat, i) => (
-                    <div key={i} className={`${stat.bgPattern} p-5 rounded-2xl border ${stat.border || 'border-transparent'} relative group hover:scale-[1.02] hover:shadow-xl hover:shadow-green-900/5 transition-all duration-300`}>
-                        {/* Background Decorative Element */}
-                        <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${stat.color} opacity-30 rounded-bl-[100px] -z-10 transition-all duration-300 group-hover:opacity-40`} />
-                        
-                        {/* Icon */}
-                        <div className={`w-12 h-12 ${stat.iconBg} rounded-xl flex items-center justify-center mb-4 ${stat.bgPattern === 'bg-white' ? 'text-gray-700' : 'text-white'}`}>
-                            {stat.icon}
+                {/* Card 1: Total Paid */}
+                <div className="bg-gradient-to-br from-green-700 to-green-900 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-28 h-28 bg-white/5 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-11 h-11 bg-white/15 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                <Wallet size={22} className="text-green-200" />
+                            </div>
+                            <span className="text-[10px] font-bold text-green-200 bg-white/10 px-2 py-1 rounded-full flex items-center gap-1">
+                                <TrendingUp size={10} /> Paid
+                            </span>
                         </div>
-                        
-                        {/* Label */}
-                        <h3 className={`text-xs font-bold uppercase tracking-wider ${stat.textMuted} mb-1`}>{stat.label}</h3>
-                        
-                        {/* Value */}
-                        <p className={`text-2xl font-black ${stat.text} mb-3 tracking-tight`}>{stat.value}</p>
-                        
-                        {/* Sub Badge */}
-                        <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-lg ${
-                            stat.label === 'Total Amount Unpaid' || stat.label === 'Overdue Bills' 
-                                ? 'bg-red-100 text-red-600' 
-                                : stat.bgPattern === 'bg-green-900'
-                                    ? 'bg-green-500/30 text-green-200'
-                                    : 'bg-gray-100 text-gray-600'
-                        }`}>
-                            {stat.label === 'Total Amount Unpaid' || stat.label === 'Overdue Bills' ? (
-                                <XCircle size={12} />
-                            ) : stat.label === 'Total Amount Paid' ? (
-                                <CheckCircle2 size={12} />
-                            ) : (
-                                <Clock size={12} />
-                            )}
-                            {stat.sub}
-                        </span>
+                        <p className="text-[11px] font-semibold text-green-200/80 uppercase tracking-wider mb-1">Total Paid</p>
+                        <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.total_paid_amount)}</p>
+                        <p className="text-[10px] text-green-300/70 mt-2 font-medium">All time earnings</p>
                     </div>
-                ))}
+                </div>
+
+                {/* Card 2: Total Unpaid */}
+                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-lg hover:shadow-red-500/5 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-28 h-28 bg-red-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-11 h-11 bg-red-50 rounded-xl flex items-center justify-center">
+                                <Receipt size={22} className="text-red-500" />
+                            </div>
+                            <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full flex items-center gap-1">
+                                <AlertCircle size={10} /> Unpaid
+                            </span>
+                        </div>
+                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Total Unpaid</p>
+                        <p className="text-2xl font-black text-gray-900 tracking-tight">{formatCurrency(stats.total_unpaid_amount)}</p>
+                        <p className="text-[10px] text-red-500 mt-2 font-medium">Pending & Overdue</p>
+                    </div>
+                </div>
+
+                {/* Card 3: Pending Bills */}
+                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-lg hover:shadow-amber-500/5 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-28 h-28 bg-amber-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center">
+                                <Clock size={22} className="text-amber-500" />
+                            </div>
+                            <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-full flex items-center gap-1">
+                                <Clock size={10} /> Pending
+                            </span>
+                        </div>
+                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Pending Bills</p>
+                        <p className="text-2xl font-black text-gray-900 tracking-tight">{stats.pending}</p>
+                        <p className="text-[10px] text-amber-600 mt-2 font-medium">Requires action</p>
+                    </div>
+                </div>
+
+                {/* Card 4: Overdue Bills */}
+                <div className="bg-white p-5 rounded-2xl border border-red-100 shadow-sm relative overflow-hidden group hover:shadow-lg hover:shadow-red-500/10 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-28 h-28 bg-red-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-11 h-11 bg-red-50 rounded-xl flex items-center justify-center">
+                                <AlertCircle size={22} className="text-red-500" />
+                            </div>
+                            <span className="text-[10px] font-bold text-white bg-red-500 px-2 py-1 rounded-full flex items-center gap-1">
+                                <AlertCircle size={10} /> Overdue
+                            </span>
+                        </div>
+                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Overdue Bills</p>
+                        <p className="text-2xl font-black text-red-600 tracking-tight">{stats.overdue}</p>
+                        <p className="text-[10px] text-red-500 mt-2 font-medium">Immediate attention</p>
+                    </div>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
