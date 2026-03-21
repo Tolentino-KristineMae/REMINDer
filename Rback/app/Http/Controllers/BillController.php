@@ -55,13 +55,8 @@ class BillController extends Controller
     public function uploadProof(Request $request, Bill $bill)
     {
         $request->validate([
-            // Keep the upload permissive: accept receipt file + optional details.
-            // Voice is optional (can be missing).
-            //
-            // Note: Laravel's `max` is in KB.
             'proof' => 'required|file|max:5120',
             'details' => 'nullable|string',
-            'voice_record' => 'nullable|file|max:5120',
         ]);
 
         $proofPath = null;
@@ -69,16 +64,10 @@ class BillController extends Controller
             $proofPath = $request->file('proof')->store('proofs', 'public');
         }
 
-        $voicePath = null;
-        if ($request->hasFile('voice_record')) {
-            $voicePath = $request->file('voice_record')->store('voice_records', 'public');
-        }
-
         ProofOfPayment::create([
             'bill_id' => $bill->id,
             'file_path' => $proofPath,
             'details' => $request->details,
-            'voice_record_path' => $voicePath,
         ]);
 
         $bill->update(['status' => 'paid']);
@@ -97,9 +86,6 @@ class BillController extends Controller
         foreach ($bill->proofOfPayments as $proof) {
             if ($proof->file_path) {
                 $pathsToDelete[] = $proof->file_path;
-            }
-            if ($proof->voice_record_path) {
-                $pathsToDelete[] = $proof->voice_record_path;
             }
         }
 

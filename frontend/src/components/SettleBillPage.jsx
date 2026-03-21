@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { 
     X, 
-    Upload, 
     CheckCircle, 
     ShieldCheck, 
-    Trash2, 
     ChevronLeft,
     AlertCircle,
     CheckCircle2,
@@ -23,16 +21,10 @@ const SettleBillPage = () => {
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const [details, setDetails] = useState('');
-    const [isRecording, setIsRecording] = useState(false);
-    const [audioBlob, setAudioBlob] = useState(null);
-    const [audioURL, setAudioURL] = useState(null);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState('');
     const [isUploaded, setIsUploaded] = useState(false);
-    
-    const mediaRecorderRef = useRef(null);
-    const audioChunksRef = useRef([]);
 
     useEffect(() => {
         let isMounted = true;
@@ -68,43 +60,6 @@ const SettleBillPage = () => {
         }
     };
 
-    const startRecording = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorderRef.current = new MediaRecorder(stream);
-            audioChunksRef.current = [];
-
-            mediaRecorderRef.current.ondataavailable = (event) => {
-                audioChunksRef.current.push(event.data);
-            };
-
-            mediaRecorderRef.current.onstop = () => {
-                const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-                setAudioBlob(blob);
-                setAudioURL(URL.createObjectURL(blob));
-                stream.getTracks().forEach(track => track.stop());
-            };
-
-            mediaRecorderRef.current.start();
-            setIsRecording(true);
-        } catch (err) {
-            console.error('Error accessing microphone:', err);
-            setError('Could not access microphone.');
-        }
-    };
-
-    const stopRecording = () => {
-        if (mediaRecorderRef.current && isRecording) {
-            mediaRecorderRef.current.stop();
-            setIsRecording(false);
-        }
-    };
-
-    const deleteRecording = () => {
-        setAudioBlob(null);
-        setAudioURL(null);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file) {
@@ -118,9 +73,6 @@ const SettleBillPage = () => {
         const formData = new FormData();
         formData.append('proof', file);
         formData.append('details', details);
-        if (audioBlob) {
-            formData.append('voice_record', audioBlob, 'recording.webm');
-        }
 
         console.log('FormData proof:', formData.get('proof'));
         console.log('FormData details:', formData.get('details'));
@@ -157,10 +109,9 @@ const SettleBillPage = () => {
             }
 
             const proofErr = err?.response?.data?.errors?.proof?.[0];
-            const voiceErr = err?.response?.data?.errors?.voice_record?.[0];
             const genericMsg = err?.response?.data?.message;
 
-            setError(proofErr || voiceErr || genericMsg || 'Failed to upload proof. Please try again.');
+            setError(proofErr || genericMsg || 'Failed to upload proof. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -275,49 +226,6 @@ const SettleBillPage = () => {
                                     placeholder="Type how you paid (e.g. GCash, Bank Transfer, Cash)..."
                                     className="w-full h-36 bg-gray-50 border-2 border-gray-100 rounded-2xl p-6 text-sm font-bold outline-none focus:ring-4 focus:ring-green-500/10 focus:border-green-600 focus:bg-white transition-all resize-none"
                                 />
-                            </div>
-                        </div>
-
-                        {/* Step 3: Voice */}
-                        <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-green-900/5 overflow-hidden">
-                            <div className="p-6 border-b border-gray-50 flex items-center gap-3">
-                                <div className="w-8 h-8 bg-[#0a1f12] text-white rounded-xl flex items-center justify-center text-sm font-black">3</div>
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Voice Confirmation</h3>
-                            </div>
-                            <div className="p-8 flex items-center justify-between bg-white">
-                                <div>
-                                    <h4 className="text-sm font-bold text-gray-900">Leave a voice note</h4>
-                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Optional confirmation</p>
-                                </div>
-                                
-                                <div className="flex items-center gap-3">
-                                    {audioURL && (
-                                        <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-2xl border border-gray-100">
-                                            <audio src={audioURL} controls className="h-10 w-48" />
-                                            <button 
-                                                type="button"
-                                                onClick={deleteRecording}
-                                                className="text-red-500 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </div>
-                                    )}
-                                    
-                                    <button
-                                        type="button"
-                                        onClick={isRecording ? stopRecording : startRecording}
-                                        className={`
-                                            flex items-center gap-3 px-6 py-4 rounded-2xl font-bold text-sm transition-all
-                                            ${isRecording 
-                                                ? 'bg-red-500 text-white animate-pulse' 
-                                                : 'bg-green-950 text-white hover:bg-green-900 shadow-xl shadow-green-900/20'}
-                                        `}
-                                    >
-                                        <div className={`w-2.5 h-2.5 rounded-full ${isRecording ? 'bg-white animate-pulse' : 'bg-green-400'}`}></div>
-                                        {isRecording ? 'Recording...' : 'Record'}
-                                    </button>
-                                </div>
                             </div>
                         </div>
 
