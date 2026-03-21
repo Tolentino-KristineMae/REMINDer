@@ -461,16 +461,52 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           </nav>
         </div>
 
+        {/* Professional Separator */}
+        <div style={{ marginTop: 'auto', padding: '0 8px' }}>
+          <div style={{
+            position: 'relative',
+            height: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            {/* Left gradient line */}
+            <div style={{
+              position: 'absolute',
+              left: 0,
+              right: '50%',
+              marginRight: '16px',
+              height: '1px',
+              background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.4), rgba(34, 197, 94, 0.6))',
+            }} />
+            {/* Center decorative element */}
+            <div style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #22c55e, #15803d)',
+              boxShadow: '0 0 10px rgba(34, 197, 94, 0.5)',
+              zIndex: 1,
+            }} />
+            {/* Right gradient line */}
+            <div style={{
+              position: 'absolute',
+              left: '50%',
+              marginLeft: '16px',
+              right: 0,
+              height: '1px',
+              background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.6), rgba(34, 197, 94, 0.4), transparent)',
+            }} />
+          </div>
+        </div>
+
         {/* User Profile Card */}
         <div style={{ 
-          borderTop: '1px solid rgba(34, 197, 94, 0.15)', 
-          paddingTop: '12px', 
-          marginTop: '12px',
           background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, transparent 100%)',
           padding: '12px',
           borderRadius: '16px',
-          margin: '12px',
-          marginTop: 'auto',
+          margin: '0 12px 12px 12px',
+          marginTop: '8px',
         }}>
           {collapsed ? (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
