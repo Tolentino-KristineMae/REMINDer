@@ -57,14 +57,24 @@ const CalendarPage = () => {
 
     const weekDays = getWeekDays(currentDate);
 
-    // Auto-scroll to selected date
+    // Auto-scroll to selected date horizontally without affecting vertical page scroll
     useEffect(() => {
         const selectedIndex = weekDays.findIndex(day => day.toDateString() === currentDate.toDateString());
-        if (selectedIndex !== -1 && dayRefs.current[selectedIndex]) {
-            dayRefs.current[selectedIndex].scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'center'
+        if (selectedIndex !== -1 && dayRefs.current[selectedIndex] && scrollContainerRef.current) {
+            const container = scrollContainerRef.current;
+            const element = dayRefs.current[selectedIndex];
+            
+            // Calculate horizontal offset only
+            const containerWidth = container.clientWidth;
+            const elementLeft = element.offsetLeft;
+            const elementWidth = element.clientWidth;
+            
+            // Center the element horizontally in the container
+            const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
+            
+            container.scrollTo({
+                left: scrollTo,
+                behavior: 'smooth'
             });
         }
     }, [currentDate, weekDays]);
@@ -104,9 +114,9 @@ const CalendarPage = () => {
     };
 
     return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col">
+        <div className="flex-1 h-[calc(100vh-73px)] lg:h-[calc(100vh-80px)] bg-[#f8fafc] p-4 lg:p-6 flex flex-col overflow-hidden">
 
-            <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
+            <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 overflow-hidden">
                 {/* Main Calendar Section */}
                 <div className="flex-[3] flex flex-col min-w-0">
                     {/* Elegant Calendar Container with Professional Borders */}
