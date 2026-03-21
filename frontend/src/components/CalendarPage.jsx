@@ -8,7 +8,8 @@ import {
     MoreVertical,
     Plus,
     CheckCircle2,
-    AlertCircle
+    AlertCircle,
+    FileText
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -96,62 +97,69 @@ const CalendarPage = () => {
             <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
                 {/* Main Calendar Section */}
                 <div className="flex-[3] flex flex-col min-w-0">
-                    {/* Modern Calendar Container */}
-                    <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
+                    {/* Elegant Calendar Container */}
+                    <div className="bg-white rounded-[2rem] shadow-2xl shadow-gray-200/40 border border-white/80 overflow-hidden relative">
+                        {/* Decorative header gradient */}
+                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
+                        
                         {/* Week Header */}
-                        <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 px-4 py-5">
-                            <div className="min-w-[720px] flex justify-between">
+                        <div className="bg-gradient-to-b from-white to-gray-50/30 px-6 py-6 border-b border-gray-100/50">
+                            <div className="min-w-[720px] flex justify-between items-end">
                                 {weekDays.map((day, i) => {
                                     const isToday = day.toDateString() === new Date().toDateString();
                                     const isSelected = day.toDateString() === currentDate.toDateString();
                                     const dayBills = getBillsForDate(day);
                                     const hasPending = dayBills.some(b => b.status === 'pending');
                                     const allPaid = dayBills.length > 0 && dayBills.every(b => b.status === 'paid');
+                                    const dayName = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][day.getDay()];
                                     
                                     return (
                                         <div 
                                             key={i} 
-                                            className={`flex flex-col items-center cursor-pointer transition-all duration-300 group`}
+                                            className={`flex flex-col items-center cursor-pointer transition-all duration-500 group`}
                                             onClick={() => {
                                                 setCurrentDate(day);
                                                 setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
                                             }}
                                         >
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 group-hover:text-gray-600 transition-colors">
-                                                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.getDay()]}
+                                            <span className={`text-[11px] font-extrabold uppercase tracking-[0.2em] mb-4 transition-all duration-300 ${
+                                                isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-500'
+                                            }`}>
+                                                {dayName}
                                             </span>
                                             <div className={`
-                                                relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center transition-all duration-300
+                                                relative w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center transition-all duration-500
                                                 ${isSelected 
-                                                    ? 'bg-gradient-to-br from-green-500 to-green-600 shadow-lg shadow-green-500/30 scale-110' 
+                                                    ? 'bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 shadow-xl shadow-green-500/25 scale-110 ring-4 ring-green-500/10' 
                                                     : isToday 
-                                                        ? 'bg-gray-100 border-2 border-green-400/50' 
-                                                        : 'hover:bg-gray-50'
+                                                        ? 'bg-gradient-to-br from-emerald-50 to-white border-2 border-emerald-200/60 shadow-lg shadow-emerald-500/10' 
+                                                        : 'hover:bg-gray-50 hover:scale-105'
                                                 }
                                             `}>
                                                 <span className={`
-                                                    text-base sm:text-xl font-black transition-all
-                                                    ${isSelected ? 'text-white' : isToday ? 'text-green-600' : 'text-gray-700'}
+                                                    text-xl sm:text-2xl font-black tracking-tight transition-all duration-300
+                                                    ${isSelected ? 'text-white drop-shadow-sm' : isToday ? 'text-emerald-600' : 'text-gray-600'}
                                                 `}>
                                                     {day.getDate()}
                                                 </span>
-                                                {/* Status indicators */}
+                                                {/* Elegant status indicator */}
                                                 {isSelected && (
-                                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center shadow">
+                                                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ring-green-500/20">
                                                         {hasPending ? (
-                                                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                                                            <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>
                                                         ) : allPaid ? (
-                                                            <CheckCircle2 size={10} className="text-green-500" />
+                                                            <CheckCircle2 size={12} className="text-green-500" />
                                                         ) : (
-                                                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                                            <div className="w-2.5 h-2.5 bg-blue-400 rounded-full shadow-sm shadow-blue-500/50"></div>
                                                         )}
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="flex gap-1 mt-2">
-                                                {!isSelected && isToday && <div className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-sm shadow-green-500/50"></div>}
-                                                {!isSelected && hasPending && <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>}
-                                                {!isSelected && allPaid && dayBills.length > 0 && <CheckCircle2 size={8} className="text-green-500" />}
+                                            {/* Subtle dots for status */}
+                                            <div className="flex gap-1.5 mt-4">
+                                                {!isSelected && isToday && <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-sm shadow-emerald-500/50"></div>}
+                                                {!isSelected && hasPending && <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>}
+                                                {!isSelected && allPaid && dayBills.length > 0 && <CheckCircle2 size={10} className="text-emerald-400" />}
                                             </div>
                                         </div>
                                     );
@@ -159,9 +167,9 @@ const CalendarPage = () => {
                             </div>
                         </div>
 
-                        {/* Day Columns */}
+                        {/* Day Columns - Refined */}
                         <div className="flex-1 min-h-0">
-                            <div className="min-w-[720px] flex min-h-[400px]">
+                            <div className="min-w-[720px] flex min-h-[420px]">
                                 {weekDays.map((day, dayIndex) => {
                                     const dayBills = getBillsForDate(day);
                                     const isSelected = day.toDateString() === currentDate.toDateString();
@@ -171,24 +179,29 @@ const CalendarPage = () => {
                                         <div 
                                             key={dayIndex} 
                                             className={`
-                                                flex-1 border-r border-gray-100 last:border-r-0 px-3 py-4 flex flex-col gap-3 min-w-0 relative transition-all duration-300
-                                                ${isSelected ? 'bg-green-50/50' : isToday ? 'bg-blue-50/20' : 'bg-white'}
+                                                flex-1 border-r border-gray-100/60 last:border-r-0 px-4 py-5 flex flex-col gap-4 min-w-0 relative transition-all duration-500
+                                                ${isSelected ? 'bg-gradient-to-b from-green-50/80 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50/30 to-white' : 'bg-white'}
                                             `}
                                         >
-                                            {/* Column separator */}
-                                            <div className="absolute top-0 bottom-0 -right-px w-px bg-gradient-to-b from-transparent via-gray-200 to-transparent"></div>
+                                            {/* Elegant column divider */}
+                                            <div className="absolute top-4 bottom-4 -right-px w-px bg-gradient-to-b from-transparent via-gray-200/50 to-transparent"></div>
                                             
-                                            {/* Date label */}
-                                            <div className="text-center mb-2">
+                                            {/* Date badge */}
+                                            <div className="text-center">
                                                 <span className={`
-                                                    text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-full
-                                                    ${isSelected ? 'bg-green-100 text-green-700' : isToday ? 'bg-blue-100 text-blue-600' : 'text-gray-400 bg-gray-50'}
+                                                    inline-block text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1.5 rounded-full transition-all duration-300
+                                                    ${isSelected 
+                                                        ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/20' 
+                                                        : isToday 
+                                                            ? 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-600 border border-emerald-200/50' 
+                                                            : 'text-gray-400 bg-gray-50 border border-gray-100'
+                                                    }
                                                 `}>
                                                     {day.getDate()}
                                                 </span>
                                             </div>
 
-                                            {/* Bills list */}
+                                            {/* Bills with elegant cards */}
                                             <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
                                                 {dayBills.length > 0 ? (
                                                     dayBills.map((bill) => {
@@ -198,27 +211,27 @@ const CalendarPage = () => {
                                                                 key={bill.id}
                                                                 onClick={() => handleBillClick(bill)}
                                                                 className={`
-                                                                    relative rounded-2xl p-4 transition-all duration-300 cursor-pointer group hover:scale-[1.02] hover:shadow-lg
+                                                                    relative rounded-2xl p-4 transition-all duration-300 cursor-pointer group hover:shadow-xl hover:-translate-y-0.5
                                                                     ${isPaid 
-                                                                        ? 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200' 
-                                                                        : 'bg-white border border-gray-200 hover:border-green-300 hover:shadow-green-100/50'
+                                                                        ? 'bg-gradient-to-br from-gray-50 to-white border border-gray-100/50' 
+                                                                        : 'bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-emerald-100/50'
                                                                     }
                                                                 `}
                                                             >
-                                                                {/* Status bar */}
+                                                                {/* Elegant status accent */}
                                                                 <div className={`
-                                                                    absolute top-0 left-0 right-0 h-1 rounded-t-2xl
-                                                                    ${isPaid ? 'bg-gradient-to-r from-gray-300 to-gray-400' : 'bg-gradient-to-r from-red-400 to-red-500'}
+                                                                    absolute top-0 left-0 right-0 h-1.5 rounded-t-2xl
+                                                                    ${isPaid ? 'bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300' : 'bg-gradient-to-r from-red-400 via-red-500 to-red-400'}
                                                                 `}></div>
                                                                 
-                                                                <div className="flex justify-between items-start mb-3 mt-1">
+                                                                <div className="flex justify-between items-start mb-3 mt-2">
                                                                     {isPaid ? (
-                                                                        <span className="flex items-center gap-1.5 text-[9px] font-bold text-green-600 uppercase tracking-wider bg-green-50 px-2 py-1 rounded-full">
-                                                                            <CheckCircle2 size={10} /> Paid
+                                                                        <span className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2.5 py-1.5 rounded-full border border-emerald-100">
+                                                                            <CheckCircle2 size={11} /> Paid
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="flex items-center gap-1 bg-red-500 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
-                                                                            <AlertCircle size={10} /> DUE
+                                                                        <span className="flex items-center gap-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/25">
+                                                                            <AlertCircle size={11} /> DUE
                                                                         </span>
                                                                     )}
                                                                     <button className="text-gray-300 hover:text-gray-500 transition-colors">
@@ -226,17 +239,15 @@ const CalendarPage = () => {
                                                                     </button>
                                                                 </div>
 
-                                                                <h4 className={`font-bold text-sm mb-2 leading-tight line-clamp-2 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                                                                <h4 className={`font-bold text-[13px] mb-2 leading-snug line-clamp-2 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                                                                     {bill.details}
                                                                 </h4>
                                                                 
                                                                 <div className="flex flex-col gap-2 mt-3">
-                                                                    <div className="flex items-center justify-between">
-                                                                        <p className={`text-[10px] font-bold truncate ${isPaid ? 'text-gray-400' : 'text-gray-500'}`}>
-                                                                            {bill.category?.name}
-                                                                        </p>
-                                                                    </div>
-                                                                    <p className={`text-lg font-black tracking-tight ${isPaid ? 'text-gray-400' : 'text-green-600'}`}>
+                                                                    <p className={`text-[11px] font-semibold truncate ${isPaid ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                                        {bill.category?.name}
+                                                                    </p>
+                                                                    <p className={`text-xl font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'}`}>
                                                                         ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
                                                                     </p>
                                                                 </div>
@@ -244,11 +255,11 @@ const CalendarPage = () => {
                                                         );
                                                     })
                                                 ) : (
-                                                    <div className="flex-1 flex flex-col items-center justify-center py-8">
-                                                        <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-2">
-                                                            <CalendarIcon size={20} className="text-gray-300" />
+                                                    <div className="flex-1 flex flex-col items-center justify-center py-6">
+                                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-3 shadow-inner">
+                                                            <CalendarIcon size={24} className="text-gray-300" />
                                                         </div>
-                                                        <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">No Bills</p>
+                                                        <p className="text-[11px] font-semibold text-gray-300 uppercase tracking-widest">No Bills</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -261,41 +272,50 @@ const CalendarPage = () => {
                 </div>
 
                 {/* Right Sidebar with Small Calendar */}
-                <div className="w-full lg:w-64 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
-                    {/* Small Monthly Calendar */}
-                    <div className="bg-green-900 rounded-2xl p-4 text-white shadow-lg shadow-green-200/50 shrink-0">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="font-bold text-sm">Overview</h3>
-                            <button className="p-1 hover:bg-white/10 rounded">
+                <div className="w-full lg:w-72 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
+                    {/* Small Monthly Calendar - Elegant Dark */}
+                    <div className="bg-gradient-to-br from-gray-900 via-green-900 to-emerald-900 rounded-[1.5rem] p-5 text-white shadow-xl shadow-green-900/20 shrink-0 relative overflow-hidden">
+                        {/* Decorative elements */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-emerald-500/10 rounded-full -ml-12 -mb-12"></div>
+                        
+                        <div className="flex justify-between items-center mb-5 relative z-10">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                                    <CalendarIcon size={16} className="text-emerald-300" />
+                                </div>
+                                <h3 className="font-bold text-sm">Overview</h3>
+                            </div>
+                            <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
                                 <MoreVertical size={16} />
                             </button>
                         </div>
 
-                        <div className="mb-4">
-                            <div className="flex justify-between items-center mb-3">
-                                <h4 className="text-xs font-medium">Activity</h4>
-                                <div className="flex items-center gap-1">
+                        <div className="mb-5 relative z-10">
+                            <div className="flex justify-between items-center mb-4">
+                                <h4 className="text-xs font-semibold text-emerald-200">Activity</h4>
+                                <div className="flex items-center gap-2 bg-white/5 rounded-lg p-1">
                                     <button 
                                         onClick={handlePrevMonth}
-                                        className="p-0.5 hover:bg-white/10 rounded transition-colors"
+                                        className="p-1 hover:bg-white/10 rounded transition-colors"
                                     >
-                                        <ChevronLeft size={12} />
+                                        <ChevronLeft size={14} />
                                     </button>
-                                    <span className="text-[9px] font-bold uppercase tracking-wider">
+                                    <span className="text-[10px] font-bold uppercase tracking-wider px-2">
                                         {monthNames[viewDate.getMonth()].slice(0, 3)}
                                     </span>
                                     <button 
                                         onClick={handleNextMonth}
-                                        className="p-0.5 hover:bg-white/10 rounded transition-colors"
+                                        className="p-1 hover:bg-white/10 rounded transition-colors"
                                     >
-                                        <ChevronRight size={12} />
+                                        <ChevronRight size={14} />
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-7 gap-0.5 text-center">
+                            <div className="grid grid-cols-7 gap-1 text-center">
                                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => (
-                                    <span key={d} className="text-[9px] font-bold opacity-50 mb-1">{d}</span>
+                                    <span key={d} className="text-[9px] font-semibold text-emerald-400/60 mb-2">{d}</span>
                                 ))}
                                 {Array.from({ length: 35 }).map((_, i) => {
                                     const day = i - firstDay + 1;
@@ -313,16 +333,16 @@ const CalendarPage = () => {
                                             key={i} 
                                             onClick={() => isCurrentMonth && handleSelectDate(day)}
                                             className={`
-                                                aspect-square flex flex-col items-center justify-center text-[9px] font-bold rounded transition-all cursor-pointer relative
-                                                ${!isCurrentMonth ? 'opacity-0 pointer-events-none' : 'hover:bg-white/20'}
-                                                ${isSelected ? 'bg-white text-green-900 shadow-md scale-105' : 'text-white/40'}
-                                                ${hasActivity && !isSelected ? 'text-white underline decoration-green-400 decoration-1 underline-offset-1' : ''}
-                                                ${isToday && !isSelected ? 'border border-white/30 text-white' : ''}
+                                                aspect-square flex flex-col items-center justify-center text-[10px] font-semibold rounded-lg transition-all cursor-pointer relative
+                                                ${!isCurrentMonth ? 'opacity-0 pointer-events-none' : 'hover:bg-white/10'}
+                                                ${isSelected ? 'bg-gradient-to-br from-emerald-400 to-green-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'text-white/50'}
+                                                ${hasActivity && !isSelected ? 'text-emerald-300' : ''}
+                                                ${isToday && !isSelected ? 'border border-emerald-400/30 text-emerald-300' : ''}
                                             `}
                                         >
                                             {isCurrentMonth ? day : ''}
                                             {hasPending && !isSelected && (
-                                                <div className="absolute top-0 right-0 w-1 h-1 bg-red-500 rounded-full border-[0.5px] border-white"></div>
+                                                <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-red-400 rounded-full shadow-sm shadow-red-500/50"></div>
                                             )}
                                         </div>
                                     );
@@ -330,25 +350,30 @@ const CalendarPage = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-1 text-[9px] font-bold opacity-80">
-                            <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
+                        <div className="flex flex-col gap-2 text-[10px] font-semibold text-emerald-200/80 relative z-10 pt-3 border-t border-white/10">
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-emerald-300 rounded-sm"></div>
                                 <span>Activity</span>
                             </div>
-                            <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-red-400 rounded-full"></div>
                                 <span>Due Payment</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Sidebar Bills List */}
-                    <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex-1 flex flex-col min-h-0">
-                        <div className="flex justify-between items-center mb-4 shrink-0">
-                            <h3 className="font-bold text-gray-800 text-xs">Details</h3>
+                    {/* Sidebar Bills List - Elegant */}
+                    <div className="bg-white rounded-[1.5rem] p-5 border border-gray-100 shadow-lg shadow-gray-200/30 flex-1 flex flex-col min-h-0">
+                        <div className="flex justify-between items-center mb-5 shrink-0">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg flex items-center justify-center">
+                                    <FileText size={16} className="text-emerald-600" />
+                                </div>
+                                <h3 className="font-bold text-gray-800 text-sm">Details</h3>
+                            </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-3 pr-1">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-1">
                             {getBillsForDate(currentDate).length > 0 ? (
                                 getBillsForDate(currentDate).map((bill) => {
                                     const isPaid = bill.status === 'paid';
@@ -356,61 +381,68 @@ const CalendarPage = () => {
                                         <div 
                                             key={bill.id} 
                                             onClick={() => handleBillClick(bill)}
-                                            className="relative group mb-3 last:mb-0"
+                                            className="relative group"
                                         >
                                             <div className={`
-                                                p-4 rounded-[1.5rem] border transition-all relative overflow-hidden
+                                                p-4 rounded-2xl border transition-all duration-300 relative overflow-hidden
                                                 ${isPaid 
-                                                    ? 'bg-gray-50/50 border-gray-100 opacity-75' 
-                                                    : 'bg-red-50/40 border-red-100 group-hover:bg-red-50 group-hover:border-red-200 group-hover:shadow-xl group-hover:shadow-red-900/5 cursor-pointer shadow-sm'}
+                                                    ? 'bg-gray-50/50 border-gray-100 opacity-70' 
+                                                    : 'bg-white border border-gray-100 group-hover:border-emerald-200 group-hover:shadow-xl group-hover:shadow-emerald-900/5 cursor-pointer shadow-sm hover:-translate-y-0.5'}
                                             `}>
-                                                <div className="flex justify-between items-start mb-3 relative z-10">
+                                                {/* Status accent */}
+                                                <div className={`
+                                                    absolute top-0 left-0 right-0 h-1
+                                                    ${isPaid ? 'bg-gradient-to-r from-gray-300 to-gray-400' : 'bg-gradient-to-r from-red-400 to-red-500'}
+                                                `}></div>
+                                                
+                                                <div className="flex justify-between items-start mb-3 mt-2 relative z-10">
                                                     {!isPaid ? (
-                                                        <span className="flex items-center gap-1.5 text-[8px] font-black bg-red-600 text-white px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
+                                                        <span className="flex items-center gap-1.5 text-[9px] font-black bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
                                                             <AlertCircle size={10} className="stroke-[3]" />
                                                             Due
                                                         </span>
                                                     ) : (
-                                                        <span className="text-[8px] font-black bg-green-50 text-green-600 px-2.5 py-1 rounded-full uppercase tracking-widest border border-green-100">
+                                                        <span className="flex items-center gap-1.5 text-[9px] font-bold bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-full uppercase tracking-widest border border-emerald-100">
+                                                            <CheckCircle2 size={10} />
                                                             Paid
                                                         </span>
                                                     )}
                                                     
-                                                    <button className="text-gray-300 hover:text-gray-600 transition-colors">
+                                                    <button className="text-gray-300 hover:text-gray-500 transition-colors">
                                                         <MoreVertical size={14} />
                                                     </button>
                                                 </div>
 
                                                 <div className="space-y-3 relative z-10">
-                                                    <h4 className={`font-black text-[13px] leading-tight tracking-tight ${isPaid ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
+                                                    <h4 className={`font-bold text-[13px] leading-snug tracking-tight ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                                                         {bill.details}
                                                     </h4>
                                                     
                                                     <div className="flex items-end justify-between">
                                                         <div className="space-y-1">
                                                             <div className="flex items-center gap-2">
-                                                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                                                                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
                                                                     {bill.category?.name || 'Bill'}
                                                                 </p>
                                                                 <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
-                                                                <p className="text-[9px] font-black text-green-600 uppercase tracking-widest">
+                                                                <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
                                                                     {bill.person_in_charge?.name || 'No PIC'}
                                                                 </p>
                                                             </div>
-                                                            <p className={`text-base font-black tracking-tighter ${isPaid ? 'text-gray-400' : 'text-red-600'}`}>
-                                                                {new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(bill.amount)}
+                                                            <p className={`text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'}`}>
+                                                                ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
                                                             </p>
                                                         </div>
 
-                                                        <div className={`rounded-xl flex items-center justify-center text-white transition-all shadow-lg ${
+                                                        <div className={`rounded-xl flex items-center justify-center text-white transition-all duration-300 shadow-lg ${
                                                             isPaid 
-                                                            ? 'w-9 h-9 bg-green-600 shadow-green-600/10' 
-                                                            : 'px-4 py-2 bg-green-600 hover:bg-green-700 shadow-green-600/20 group-hover:scale-105 active:scale-95 cursor-pointer'
+                                                            ? 'w-10 h-10 bg-gray-300 shadow-gray-300/10' 
+                                                            : 'px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-emerald-500/20 group-hover:scale-105 active:scale-95 cursor-pointer'
                                                         }`}>
                                                             {isPaid ? (
                                                                 <CheckCircle2 size={18} />
                                                             ) : (
-                                                                <span className="text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5">
+                                                                <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
                                                                     Settle
                                                                 </span>
                                                             )}
