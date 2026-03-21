@@ -284,109 +284,152 @@ const Dashboard = () => {
                         </div>
                         
                         <div className="flex-1 flex flex-col">
-                            {/* Circular Progress */}
-                            <div className="relative w-36 h-36 mx-auto mb-6">
+                            {/* Modern Circular Progress */}
+                            <div className="relative w-40 h-40 mx-auto mb-6">
                                 <svg className="w-full h-full transform -rotate-90">
                                     <defs>
                                         <linearGradient id="settleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#22c55e" />
-                                            <stop offset="100%" stopColor="#10b981" />
+                                            <stop offset="0%" stopColor="#10b981" />
+                                            <stop offset="100%" stopColor="#059669" />
                                         </linearGradient>
+                                        <filter id="glow">
+                                            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                            <feMerge>
+                                                <feMergeNode in="coloredBlur"/>
+                                                <feMergeNode in="SourceGraphic"/>
+                                            </feMerge>
+                                        </filter>
                                     </defs>
-                                    {/* Background circles */}
-                                    <circle cx="72" cy="72" r="60" stroke="#f3f4f6" strokeWidth="10" fill="none" />
-                                    <circle cx="72" cy="72" r="45" stroke="#fef3c7" strokeWidth="10" fill="none" />
-                                    <circle cx="72" cy="72" r="30" stroke="#fee2e2" strokeWidth="10" fill="none" />
-                                    {/* Progress indicator */}
+                                    {/* Outer glow ring */}
+                                    <circle cx="80" cy="80" r="72" stroke="transparent" strokeWidth="1" fill="none" />
+                                    
+                                    {/* Background track */}
                                     <circle 
-                                        cx="72" cy="72" r="60" 
+                                        cx="80" cy="80" r="68" 
+                                        stroke="#f1f5f9" 
+                                        strokeWidth="12" 
+                                        fill="none" 
+                                    />
+                                    
+                                    {/* Progress ring */}
+                                    <circle 
+                                        cx="80" cy="80" r="68" 
                                         stroke="url(#settleGrad)" 
-                                        strokeWidth="10" 
+                                        strokeWidth="12" 
                                         fill="none" 
                                         strokeLinecap="round"
-                                        strokeDasharray={377} 
-                                        strokeDashoffset={377 * (1 - (stats.paid / (stats.total || 1)))} 
-                                        className="transition-all duration-1000 ease-out drop-shadow-lg" 
+                                        strokeDasharray={427.3} 
+                                        strokeDashoffset={427.3 * (1 - (stats.paid / (stats.total || 1)))} 
+                                        filter="url(#glow)"
+                                        className="transition-all duration-1000 ease-out" 
                                     />
                                 </svg>
+                                
+                                {/* Center content */}
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span className="text-3xl font-black text-gray-900">{Math.round((stats.paid / (stats.total || 1)) * 100)}%</span>
-                                    <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Settled</span>
+                                    <div className="text-center">
+                                        <span className="text-4xl font-black text-gray-900 tracking-tight">{Math.round((stats.paid / (stats.total || 1)) * 100)}</span>
+                                        <span className="text-lg font-bold text-emerald-500">%</span>
+                                    </div>
+                                    <div className="mt-1 px-2 py-0.5 bg-emerald-50 rounded-full">
+                                        <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-wider">Settled</span>
+                                    </div>
                                 </div>
                             </div>
                             
-                            {/* Legend */}
-                            <div className="flex justify-center gap-4 mb-6">
-                                <div className="flex items-center gap-1.5">
-                                    <div className="w-3 h-3 rounded-full bg-green-500" />
-                                    <span className="text-[10px] font-semibold text-gray-500">Paid</span>
+                            {/* Modern Legend */}
+                            <div className="flex justify-center gap-6 mb-6">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-sm" />
+                                    <span className="text-[11px] font-semibold text-gray-600">Paid</span>
                                 </div>
-                                <div className="flex items-center gap-1.5">
-                                    <div className="w-3 h-3 rounded-full bg-amber-300" />
-                                    <span className="text-[10px] font-semibold text-gray-500">Pending</span>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-amber-300 to-amber-400 shadow-sm" />
+                                    <span className="text-[11px] font-semibold text-gray-600">Pending</span>
                                 </div>
-                                <div className="flex items-center gap-1.5">
-                                    <div className="w-3 h-3 rounded-full bg-red-300" />
-                                    <span className="text-[10px] font-semibold text-gray-500">Overdue</span>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-red-300 to-red-400 shadow-sm" />
+                                    <span className="text-[11px] font-semibold text-gray-600">Overdue</span>
                                 </div>
                             </div>
                             
-                            {/* Status Cards */}
-                            <div className="space-y-2.5 mt-auto">
+                            {/* Status Cards - Modern Design */}
+                            <div className="space-y-3 mt-auto">
                                 {/* Paid */}
-                                <div className="group p-3.5 bg-gradient-to-r from-green-50 to-green-100/50 rounded-xl border border-green-100 hover:shadow-md hover:shadow-green-500/10 transition-all">
+                                <div className="group p-4 bg-gradient-to-r from-green-50 to-green-100/30 rounded-2xl border border-green-100 hover:shadow-lg hover:shadow-green-500/15 hover:scale-[1.01] transition-all duration-200">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                                                <CheckCircle2 size={16} className="text-white" />
+                                            <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-md shadow-green-500/20">
+                                                <CheckCircle2 size={18} className="text-white" />
                                             </div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-700">Paid</p>
-                                                <p className="text-[9px] text-gray-400 font-medium">Settled bills</p>
+                                                <p className="text-sm font-bold text-gray-800">Paid</p>
+                                                <p className="text-[10px] text-gray-500 font-medium">Settled bills</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-lg font-black text-green-600">{stats.paid}</p>
-                                            <p className="text-[9px] text-green-500 font-semibold">{stats.total > 0 ? Math.round((stats.paid / stats.total) * 100) : 0}%</p>
+                                            <p className="text-xl font-black text-green-600">{stats.paid}</p>
+                                            <p className="text-[10px] text-green-500 font-bold">{stats.total > 0 ? Math.round((stats.paid / stats.total) * 100) : 0}%</p>
                                         </div>
+                                    </div>
+                                    {/* Progress bar */}
+                                    <div className="mt-3 h-1.5 bg-green-100 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-gradient-to-r from-green-400 to-green-500 rounded-full transition-all duration-700" 
+                                            style={{ width: `${stats.total > 0 ? (stats.paid / stats.total) * 100 : 0}%` }}
+                                        />
                                     </div>
                                 </div>
                                 
                                 {/* Pending */}
-                                <div className="group p-3.5 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-xl border border-amber-100 hover:shadow-md hover:shadow-amber-500/10 transition-all">
+                                <div className="group p-4 bg-gradient-to-r from-amber-50 to-amber-100/30 rounded-2xl border border-amber-100 hover:shadow-lg hover:shadow-amber-500/15 hover:scale-[1.01] transition-all duration-200">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 bg-amber-400 rounded-lg flex items-center justify-center">
-                                                <Clock size={16} className="text-white" />
+                                            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl flex items-center justify-center shadow-md shadow-amber-500/20">
+                                                <Clock size={18} className="text-white" />
                                             </div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-700">Pending</p>
-                                                <p className="text-[9px] text-gray-400 font-medium">Awaiting payment</p>
+                                                <p className="text-sm font-bold text-gray-800">Pending</p>
+                                                <p className="text-[10px] text-gray-500 font-medium">Awaiting payment</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-lg font-black text-amber-600">{stats.pending}</p>
-                                            <p className="text-[9px] text-amber-500 font-semibold">{stats.total > 0 ? Math.round((stats.pending / stats.total) * 100) : 0}%</p>
+                                            <p className="text-xl font-black text-amber-600">{stats.pending}</p>
+                                            <p className="text-[10px] text-amber-500 font-bold">{stats.total > 0 ? Math.round((stats.pending / stats.total) * 100) : 0}%</p>
                                         </div>
+                                    </div>
+                                    {/* Progress bar */}
+                                    <div className="mt-3 h-1.5 bg-amber-100 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-700" 
+                                            style={{ width: `${stats.total > 0 ? (stats.pending / stats.total) * 100 : 0}%` }}
+                                        />
                                     </div>
                                 </div>
                                 
                                 {/* Overdue */}
-                                <div className="group p-3.5 bg-gradient-to-r from-red-50 to-red-100/50 rounded-xl border border-red-100 hover:shadow-md hover:shadow-red-500/10 transition-all">
+                                <div className="group p-4 bg-gradient-to-r from-red-50 to-red-100/30 rounded-2xl border border-red-100 hover:shadow-lg hover:shadow-red-500/15 hover:scale-[1.01] transition-all duration-200">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 bg-red-400 rounded-lg flex items-center justify-center">
-                                                <AlertCircle size={16} className="text-white" />
+                                            <div className="w-10 h-10 bg-gradient-to-br from-red-400 to-red-500 rounded-xl flex items-center justify-center shadow-md shadow-red-500/20">
+                                                <AlertCircle size={18} className="text-white" />
                                             </div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-700">Overdue</p>
-                                                <p className="text-[9px] text-gray-400 font-medium">Past due date</p>
+                                                <p className="text-sm font-bold text-gray-800">Overdue</p>
+                                                <p className="text-[10px] text-gray-500 font-medium">Past due date</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-lg font-black text-red-500">{stats.overdue}</p>
-                                            <p className="text-[9px] text-red-400 font-semibold">{stats.total > 0 ? Math.round((stats.overdue / stats.total) * 100) : 0}%</p>
+                                            <p className="text-xl font-black text-red-500">{stats.overdue}</p>
+                                            <p className="text-[10px] text-red-400 font-bold">{stats.total > 0 ? Math.round((stats.overdue / stats.total) * 100) : 0}%</p>
                                         </div>
+                                    </div>
+                                    {/* Progress bar */}
+                                    <div className="mt-3 h-1.5 bg-red-100 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-gradient-to-r from-red-400 to-red-500 rounded-full transition-all duration-700" 
+                                            style={{ width: `${stats.total > 0 ? (stats.overdue / stats.total) * 100 : 0}%` }}
+                                        />
                                     </div>
                                 </div>
                             </div>
