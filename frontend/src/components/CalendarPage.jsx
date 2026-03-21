@@ -19,6 +19,8 @@ const CalendarPage = () => {
         return new Date(now.getFullYear(), now.getMonth(), 1);
     });
     const [bills, setBills] = useState([]);
+    const scrollContainerRef = useRef(null);
+    const dayRefs = useRef([]);
     const billsListRef = useRef(null);
 
     useEffect(() => {
@@ -77,6 +79,18 @@ const CalendarPage = () => {
 
     const weekDays = getWeekDays(currentDate);
 
+    // Auto-scroll to selected date
+    useEffect(() => {
+        const selectedIndex = weekDays.findIndex(day => day.toDateString() === currentDate.toDateString());
+        if (selectedIndex !== -1 && dayRefs.current[selectedIndex]) {
+            dayRefs.current[selectedIndex].scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    }, [currentDate, weekDays]);
+
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
@@ -124,7 +138,7 @@ const CalendarPage = () => {
                         
                         {/* Week Header */}
                         <div className="bg-gradient-to-b from-white to-gray-50/30 px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-100/50 overflow-x-auto">
-                            <div className="min-w-[720px] flex justify-between items-end">
+                            <div className="min-w-[720px] flex items-end">
                                 {weekDays.map((day, i) => {
                                     const isToday = day.toDateString() === new Date().toDateString();
                                     const isSelected = day.toDateString() === currentDate.toDateString();
@@ -136,7 +150,7 @@ const CalendarPage = () => {
                                     return (
                                         <div 
                                             key={i} 
-                                            className={`flex flex-col items-center cursor-pointer transition-all duration-500 group`}
+                                            className={`flex-1 flex flex-col items-center cursor-pointer transition-all duration-500 group`}
                                             onClick={() => {
                                                 setCurrentDate(day);
                                                 setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
@@ -188,8 +202,8 @@ const CalendarPage = () => {
                         </div>
 
                         {/* Day Columns - Refined */}
-                        <div className="flex-1 min-h-0 overflow-auto">
-                            <div className="min-w-[720px] flex">
+                        <div className="flex-1 min-h-0 overflow-auto custom-scrollbar" ref={scrollContainerRef}>
+                            <div className="min-w-[720px] flex h-full">
                                 {weekDays.map((day, dayIndex) => {
                                     const dayBills = getBillsForDate(day);
                                     const isSelected = day.toDateString() === currentDate.toDateString();
@@ -198,31 +212,34 @@ const CalendarPage = () => {
                                     return (
                                         <div 
                                             key={dayIndex} 
+                                            ref={el => dayRefs.current[dayIndex] = el}
                                             className={`
-                                                flex-1 min-w-[120px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/60 last:border-r-0 px-1.5 sm:px-3 py-2 sm:py-4 flex flex-col gap-2 sm:gap-3 relative transition-all duration-500 overflow-hidden
+                                                flex-1 min-w-[140px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/60 last:border-r-0 px-2 py-3 sm:py-5 flex flex-col gap-3 relative transition-all duration-500 scroll-mx-4
                                                 ${isSelected ? 'bg-gradient-to-b from-green-50/80 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50/30 to-white' : 'bg-white'}
                                             `}
                                         >
                                             {/* Elegant column divider */}
                                             <div className="absolute top-4 bottom-4 -right-px w-px bg-gradient-to-b from-transparent via-gray-200/50 to-transparent"></div>
                                             
-                                            {/* Date badge */}
-                                            <div className="text-center shrink-0">
-                                                <span className={`
-                                                    inline-block text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all duration-300
-                                                    ${isSelected 
-                                                        ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/20' 
-                                                        : isToday 
-                                                            ? 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-600 border border-emerald-200/50' 
-                                                            : 'text-gray-400 bg-gray-50 border border-gray-100'
-                                                    }
-                                                `}>
-                                                    {day.getDate()}
-                                                </span>
+                                            {/* Date badge - Sticky Header for Day */}
+                                            <div className="sticky top-0 z-10 bg-inherit pb-2 mb-1 flex justify-center">
+                                                <div className="flex flex-col items-center gap-1">
+                                                    <span className={`
+                                                        inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 text-[11px] sm:text-[13px] font-black tracking-tight rounded-full transition-all duration-500 shadow-sm
+                                                        ${isSelected 
+                                                            ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30 scale-110 ring-4 ring-green-500/10' 
+                                                            : isToday 
+                                                                ? 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-600 border border-emerald-200/50' 
+                                                                : 'text-gray-400 bg-gray-50 border border-gray-100'
+                                                        }
+                                                    `}>
+                                                        {day.getDate()}
+                                                    </span>
+                                                </div>
                                             </div>
 
                                             {/* Bills with organized elegant cards */}
-                                            <div className="flex-1 flex flex-col gap-2 overflow-y-auto">
+                                            <div className="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar pr-0.5">
                                                 {dayBills.length > 0 ? (
                                                     dayBills.map((bill) => {
                                                         const isPaid = bill.status === 'paid';
