@@ -69,8 +69,12 @@ class BillController extends Controller
 
         try {
             $proofPath = null;
+            $disk = config('filesystems.default', 'public');
+            
             if ($request->hasFile('proof')) {
-                $proofPath = $request->file('proof')->store('proofs', 'public');
+                // If the disk is local/public, we store in 'proofs' folder
+                // If the disk is s3/supabase, we store in the bucket directly (which is already 'proofs')
+                $proofPath = $request->file('proof')->store('proofs', $disk);
             }
 
             $proofData = [
@@ -118,7 +122,8 @@ class BillController extends Controller
         }
 
         if (!empty($pathsToDelete)) {
-            Storage::disk('public')->delete($pathsToDelete);
+            $disk = config('filesystems.default', 'public');
+            Storage::disk($disk)->delete($pathsToDelete);
         }
 
         $bill->delete();
