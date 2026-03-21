@@ -15,7 +15,7 @@ import DeploymentStatus from './components/DeploymentStatus';
 import { Menu } from 'lucide-react';
 
 const PageHeader = ({ title, subtitle }) => (
-    <div className="flex items-center justify-between w-full">
+    <div className="flex items-center justify-between w-full py-3">
         <div className="flex flex-col">
             <h1 className="text-xl font-black text-gray-900 leading-none">{title}</h1>
             {subtitle && <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{subtitle}</p>}
@@ -139,7 +139,7 @@ const App = () => {
                         <Route 
                             path="/team" 
                             element={
-                                <PrivateRoute pageTitle="PIC" pageSubtitle="Manage your people in-charge and their performance">
+                                <PrivateRoute pageTitle="Person In Charge" pageSubtitle="Manage your people in-charge and their performance">
                                     <TeamPage />
                                 </PrivateRoute>
                             } 

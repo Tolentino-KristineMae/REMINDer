@@ -38,8 +38,8 @@ const C = {
 const menuItems = [
   { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
   { icon: <Calendar size={18} />,        label: 'Calendar',   path: '/calendar' },
-  { icon: <CheckCircle2 size={18} />,    label: 'Paid Bills', path: '/paid-bills' },
-  { icon: <Users size={18} />,           label: 'Team',       path: '/team' },
+  { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },
+  { icon: <Users size={18} />,           label: 'Person In Charge', path: '/team' },
   { icon: <BarChart3 size={18} />,       label: 'Analytics',  path: '/analytics' },
 ];
 
