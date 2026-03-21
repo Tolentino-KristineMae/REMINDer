@@ -114,19 +114,19 @@ const CalendarPage = () => {
     };
 
     return (
-        <div className="flex-1 h-[calc(100vh-73px)] lg:h-[calc(100vh-80px)] bg-[#f8fafc] p-4 lg:p-6 flex flex-col overflow-hidden">
+        <div className="flex-1 h-[calc(100vh-73px)] lg:h-[calc(100vh-80px)] bg-[#f8fafc] p-3 sm:p-4 lg:p-6 flex flex-col overflow-hidden">
 
-            <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 overflow-hidden">
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 min-h-0 overflow-y-auto lg:overflow-hidden custom-scrollbar">
                 {/* Main Calendar Section */}
-                <div className="flex-[3] flex flex-col min-w-0">
+                <div className="flex-[3] flex flex-col min-w-0 min-h-[500px] lg:min-h-0">
                     {/* Elegant Calendar Container with Professional Borders */}
-                    <div className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 relative flex flex-col flex-1 overflow-hidden">
+                    <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 relative flex flex-col flex-1 overflow-hidden">
                         {/* Decorative header gradient - Unified in flow to prevent overlap */}
                         <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 shrink-0"></div>
                         
                         {/* Unified Day Columns & Header */}
-                        <div className="flex-1 min-h-0 overflow-auto custom-scrollbar" ref={scrollContainerRef}>
-                            <div className="min-w-[720px] flex h-full">
+                        <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden custom-scrollbar" ref={scrollContainerRef}>
+                            <div className="min-w-[840px] sm:min-w-[980px] lg:min-w-[1120px] flex h-full">
                                 {weekDays.map((day, dayIndex) => {
                                     const dayBills = getBillsForDate(day);
                                     const isSelected = day.toDateString() === currentDate.toDateString();
@@ -144,7 +144,7 @@ const CalendarPage = () => {
                                                 setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
                                             }}
                                             className={`
-                                                flex-1 min-w-[140px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/80 last:border-r-0 px-2.5 py-4 sm:py-6 flex flex-col gap-4 relative transition-all duration-500 scroll-mx-4 cursor-pointer group
+                                                flex-1 min-w-[120px] sm:min-w-[140px] md:min-w-[160px] border-r border-gray-100/80 last:border-r-0 px-2 sm:px-3 py-3 sm:py-6 flex flex-col gap-3 sm:gap-4 relative transition-all duration-500 scroll-mx-4 cursor-pointer group
                                                 ${isSelected ? 'bg-gradient-to-b from-green-50 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50 to-white' : 'bg-white hover:bg-gray-50/30'}
                                             `}
                                         >
@@ -152,34 +152,34 @@ const CalendarPage = () => {
                                             <div className="absolute top-8 bottom-8 -right-px w-[1px] bg-gradient-to-b from-transparent via-gray-200/60 to-transparent"></div>
                                             
                                             {/* Date badge - Sticky Header for Day */}
-                                            <div className={`sticky top-0 z-20 pb-5 mb-3 flex flex-col items-center gap-4 ${
+                                            <div className={`sticky top-0 z-20 pb-4 sm:pb-5 mb-2 sm:mb-3 flex flex-col items-center gap-3 sm:gap-4 ${
                                                 isSelected ? 'bg-green-50' : isToday ? 'bg-emerald-50' : 'bg-white'
                                             }`}>
-                                                <span className={`text-[11px] font-black uppercase tracking-[0.25em] pt-4 transition-all duration-300 ${
+                                                <span className={`text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] pt-3 sm:pt-4 transition-all duration-300 ${
                                                     isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-400'
                                                 }`}>
                                                     {dayName}
                                                 </span>
                                                 <div className={`
-                                                    relative w-12 h-12 sm:w-15 sm:h-15 rounded-[1.25rem] flex items-center justify-center transition-all duration-500 shadow-sm
+                                                    relative w-10 h-10 sm:w-12 sm:h-12 md:w-15 md:h-15 rounded-xl sm:rounded-[1.25rem] flex items-center justify-center transition-all duration-500 shadow-sm
                                                     ${isSelected 
-                                                        ? 'bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white shadow-xl shadow-green-500/30 scale-110 ring-4 ring-green-500/10' 
+                                                        ? 'bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30 scale-110 ring-4 ring-green-500/10' 
                                                         : isToday 
                                                             ? 'bg-gradient-to-br from-emerald-50 to-white border-2 border-emerald-200/60 text-emerald-600' 
                                                             : 'text-gray-400 bg-gray-50 border border-gray-100 group-hover:bg-white group-hover:scale-105 group-hover:border-gray-200'
                                                     }
                                                 `}>
-                                                    <span className="text-xl sm:text-2xl font-black tracking-tighter">
+                                                    <span className="text-lg sm:text-xl md:text-2xl font-black tracking-tighter">
                                                         {day.getDate()}
                                                     </span>
                                                     
                                                     {/* Status indicator badge */}
                                                     {(hasPending || allPaid) && (
-                                                        <div className={`absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ${hasPending ? 'ring-red-500/20' : 'ring-green-500/20'}`}>
+                                                        <div className={`absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ${hasPending ? 'ring-red-500/20' : 'ring-green-500/20'}`}>
                                                             {hasPending ? (
-                                                                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>
+                                                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>
                                                             ) : (
-                                                                <CheckCircle2 size={14} className="text-green-500" />
+                                                                <CheckCircle2 size={12} className="text-green-500 sm:size-14" />
                                                             )}
                                                         </div>
                                                     )}
@@ -190,7 +190,7 @@ const CalendarPage = () => {
                                             </div>
 
                                             {/* Bills with organized elegant cards */}
-                                            <div className="flex-1 flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-0.5 pt-2">
+                                            <div className="flex-1 flex flex-col gap-3 sm:gap-4 overflow-y-auto custom-scrollbar pr-0.5 pt-1 sm:pt-2">
                                                 {dayBills.length > 0 ? (
                                                     dayBills.map((bill) => {
                                                         const isPaid = bill.status === 'paid';
