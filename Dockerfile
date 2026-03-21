@@ -34,15 +34,8 @@ RUN cd frontend && npm run build && cp -R dist/* ../Rback/public/
 
 # (Optional) APP_KEY will be provided via Render Environment Variables at runtime.
 
-# Create storage directories
-RUN mkdir -p /app/Rback/storage/app/public/proofs /app/Rback/storage/app/private /app/Rback/storage/framework/cache /app/Rback/storage/framework/sessions /app/Rback/storage/framework/views /app/Rback/storage/logs
-
-# Create bootstrap cache directory
-RUN mkdir -p /app/Rback/bootstrap/cache
-
 EXPOSE 8000
 
 # Start Laravel. Render will set $PORT.
 # Run migrations on boot so the DB schema is present in production.
-CMD ["sh", "-c", "cd /app/Rback && mkdir -p storage/app/public/proofs storage/app/private storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
-
+CMD ["sh", "-c", "cd /app/Rback && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
