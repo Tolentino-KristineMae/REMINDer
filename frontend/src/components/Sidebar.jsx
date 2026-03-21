@@ -16,22 +16,22 @@ import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
 
 const C = {
-  bg:           '#f6f6f6',
-  border:       '#e8e8e8',
-  text:         '#2d2d2d',
-  textMuted:    '#a0a0a0',
-  textActive:   '#16a34a',
-  iconDefault:  '#7a7a7a',
-  iconActive:   '#16a34a',
-  activeBg:     '#edfaf3',
-  activeBorder: '#16a34a',
-  hoverBg:      '#eeeeee',
-  badgeBg:      '#dcfce7',
-  badgeText:    '#15803d',
-  logoutHover:  '#fff1f2',
-  logoutText:   '#ef4444',
-  toggle:       '#e2e2e2',
-  toggleBorder: '#d4d4d4',
+  bg:           'rgba(21, 128, 61, 0.95)',
+  border:       'rgba(255,255,255,0.1)',
+  text:         '#ffffff',
+  textMuted:    'rgba(255,255,255,0.6)',
+  textActive:   '#ffffff',
+  iconDefault:  'rgba(255,255,255,0.6)',
+  iconActive:   '#ffffff',
+  activeBg:     'rgba(255,255,255,0.2)',
+  activeBorder: '#ffffff',
+  hoverBg:      'rgba(255,255,255,0.1)',
+  badgeBg:      '#4ade80',
+  badgeText:    '#14532d',
+  logoutHover:  'rgba(239, 68, 68, 0.2)',
+  logoutText:   '#fca5a5',
+  toggle:       'rgba(255,255,255,0.1)',
+  toggleBorder: 'rgba(255,255,255,0.2)',
 };
 
 const menuItems = [
@@ -53,7 +53,7 @@ const Tooltip = ({ label }) => (
     left:          'calc(100% + 10px)',
     top:           '50%',
     transform:     'translateY(-50%)',
-    background:    '#1a1a1a',
+    background:    'rgba(0,0,0,0.8)',
     color:         '#fff',
     fontSize:      '12px',
     fontWeight:    600,
@@ -71,7 +71,7 @@ const Tooltip = ({ label }) => (
       top:              '50%',
       transform:        'translateY(-50%)',
       border:           '5px solid transparent',
-      borderRightColor: '#1a1a1a',
+      borderRightColor: 'rgba(0,0,0,0.8)',
     }} />
   </span>
 );
@@ -218,15 +218,16 @@ const Sidebar = ({ isOpen, onClose }) => {
           lg:translate-x-0
         `}
         style={{
-          width:      W,
-          minWidth:   W,
-          padding:    '16px 12px',
-          background: C.bg,
-          borderRight:`1px solid ${C.border}`,
-          boxShadow:  '2px 0 12px rgba(0,0,0,0.06)',
-          transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
-          overflow:   'hidden',
-          boxSizing:  'border-box',
+          width:          W,
+          minWidth:       W,
+          padding:        '16px 12px',
+          background:     C.bg,
+          backdropFilter: 'blur(20px)',
+          borderRight:    `1px solid ${C.border}`,
+          boxShadow:      '2px 0 12px rgba(0,0,0,0.06)',
+          transition:     'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
+          overflow:       'hidden',
+          boxSizing:      'border-box',
         }}
       >
         <div style={{
