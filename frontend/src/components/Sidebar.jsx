@@ -9,8 +9,8 @@ import {
   HelpCircle,
   LogOut,
   CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
@@ -259,8 +259,8 @@ const Sidebar = ({ isOpen, onClose }) => {
             }}
           >
             {collapsed
-              ? <ChevronRight size={15} strokeWidth={2.5} />
-              : <ChevronLeft  size={15} strokeWidth={2.5} />}
+              ? <PanelLeftOpen size={16} strokeWidth={2.5} />
+              : <PanelLeftClose size={16} strokeWidth={2.5} />}
           </button>
         </div>
 
