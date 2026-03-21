@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { 
     Users, 
-    Search, 
-    Bell, 
-    Mail, 
     ChevronLeft, 
     MoreHorizontal,
     Plus,
@@ -22,7 +19,6 @@ import {
 const TeamPage = () => {
     const [people, setPeople] = useState([]);
     const [bills, setBills] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
     useEffect(() => {
@@ -38,10 +34,6 @@ const TeamPage = () => {
 
         fetchTeamData();
     }, []);
-
-    const filteredPeople = people.filter(person => 
-        person.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     const getPersonStats = (personId) => {
         const personBills = bills.filter(b => b.person_in_charge_id === personId);
@@ -59,25 +51,8 @@ const TeamPage = () => {
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-10 flex flex-col">
             {/* Header */}
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-                <div className="relative w-full sm:w-80 group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-green-600 transition-colors" size={16} />
-                    <input 
-                        type="text" 
-                        placeholder="Search team members..." 
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-white border border-gray-100 rounded-xl py-2 pl-10 pr-4 shadow-sm outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-[10px] font-bold"
-                    />
-                </div>
-                
+                <div></div>
                 <div className="flex items-center justify-end gap-2">
-                    <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors relative">
-                        <Mail className="text-gray-400" size={16} />
-                    </button>
-                    <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors relative">
-                        <Bell className="text-gray-400" size={16} />
-                        <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border border-white"></span>
-                    </button>
                 </div>
             </header>
 
@@ -113,7 +88,7 @@ const TeamPage = () => {
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {filteredPeople.map((person) => {
+                        {people.map((person) => {
                             const stats = getPersonStats(person.id);
                             return (
                                 <div key={person.id} className="group bg-white rounded-[2rem] p-6 border border-green-50 shadow-sm hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all flex flex-col items-center text-center relative overflow-hidden">
@@ -182,7 +157,7 @@ const TeamPage = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-green-50">
-                                    {filteredPeople.map((person) => {
+                                    {people.map((person) => {
                                         const stats = getPersonStats(person.id);
                                         return (
                                             <tr key={person.id} className="hover:bg-green-50/10 transition-all group">

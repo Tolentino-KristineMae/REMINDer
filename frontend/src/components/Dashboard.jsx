@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { 
     Plus, 
-    ArrowUpRight, 
-    Search,
-    Bell,
-    Mail
+    ArrowUpRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -65,23 +62,8 @@ const Dashboard = () => {
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-10 relative">
             {/* Header */}
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-                <div className="relative w-full sm:w-80 group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-green-600 transition-colors" size={16} />
-                    <input 
-                        type="text" 
-                        placeholder="Search dashboard..." 
-                        className="w-full bg-white border border-gray-100 rounded-xl py-2 pl-10 pr-4 shadow-sm outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-[10px] font-bold"
-                    />
-                </div>
-                
+                <div></div>
                 <div className="flex items-center justify-end gap-2">
-                    <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors relative">
-                        <Mail className="text-gray-400" size={16} />
-                    </button>
-                    <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors relative">
-                        <Bell className="text-gray-400" size={16} />
-                        <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border border-white"></span>
-                    </button>
                 </div>
             </header>
 

@@ -23,7 +23,7 @@ const DateTimeDisplay = () => {
     }, []);
 
     const formatTime = (date) => {
-        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
     };
 
     const formatDate = (date) => {
@@ -34,15 +34,17 @@ const DateTimeDisplay = () => {
     };
 
     return (
-        <div className="flex items-center gap-3 text-right">
-            <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">REMINDer</p>
-                <p className="text-xs font-black text-gray-900 leading-none">System</p>
-            </div>
-            <div className="h-8 w-px bg-gray-200" />
-            <div className="text-right">
-                <p className="text-xs font-bold text-gray-900 leading-none">{formatTime(dateTime)}</p>
-                <p className="text-[10px] font-medium text-gray-500 leading-none">{formatDate(dateTime)}</p>
+        <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-2xl border border-gray-100 shadow-sm">
+            <div className="flex items-center gap-3">
+                <div className="text-right">
+                    <p className="text-sm font-bold text-gray-800 leading-none">{formatTime(dateTime)}</p>
+                    <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{formatDate(dateTime)}</p>
+                </div>
+                <div className="h-9 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent" />
+                <div>
+                    <p className="text-[9px] font-bold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
+                    <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
+                </div>
             </div>
         </div>
     );

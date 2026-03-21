@@ -2,9 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import api from '../api/axios';
 import { 
     CheckCircle2, 
-    Search, 
-    Bell, 
-    Mail, 
     ChevronLeft, 
     ExternalLink,
     FileText,
@@ -31,7 +28,6 @@ const PaidBillsPage = () => {
     const navigate = useNavigate();
     const audioRef = useRef(null);
     const [bills, setBills] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
     const [playingAudio, setPlayingAudio] = useState(null);
     const [previewImage, setPreviewImage] = useState(null); // For inline image viewer
@@ -104,17 +100,8 @@ const PaidBillsPage = () => {
         }
     }, [playingAudio]);
 
-    const pendingBills = bills.filter(bill => 
-        bill.status === 'pending' && (
-        bill.details.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        bill.category?.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-
-    const settledBills = bills.filter(bill => 
-        bill.status === 'paid' && (
-        bill.details.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        bill.category?.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    const pendingBills = bills.filter(bill => bill.status === 'pending');
+    const settledBills = bills.filter(bill => bill.status === 'paid');
 
     const handleUploadClick = (bill) => {
         navigate(`/settle/${bill.id}`);
@@ -179,25 +166,8 @@ const PaidBillsPage = () => {
             
             {/* Header */}
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-                <div className="relative w-full sm:w-80 group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-green-600 transition-colors" size={16} />
-                    <input 
-                        type="text" 
-                        placeholder="Search settlements..." 
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-white border border-gray-100 rounded-xl py-2 pl-10 pr-4 shadow-sm outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-[10px] font-bold"
-                    />
-                </div>
-                
+                <div></div>
                 <div className="flex items-center justify-end gap-2">
-                    <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors relative">
-                        <Mail className="text-gray-400" size={16} />
-                    </button>
-                    <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors relative">
-                        <Bell className="text-gray-400" size={16} />
-                        <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border border-white"></span>
-                    </button>
                 </div>
             </header>
 
