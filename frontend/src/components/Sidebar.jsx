@@ -12,6 +12,7 @@ import {
     X
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import Logo from './Logo';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const { user, logout } = useAuth();
@@ -65,11 +66,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                     </button>
                 </div>
 
-                <div className="flex items-center gap-3 p-4 mb-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-green-600/30">
-                        R
-                    </div>
-                    <span className="text-xl font-black tracking-tighter" style={{ color: 'white' }}>REMINDer</span>
+                <div className="p-4 mb-4">
+                    <Logo size="lg" />
                 </div>
 
                 <div className="flex-1 space-y-6 overflow-y-auto">
