@@ -249,28 +249,16 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           boxSizing:  'border-box',
         }}
       >
-        {/* Logo Header Card */}
+        {/* Logo Header */}
         <div style={{
-          marginBottom:   '28px',
-          padding:        collapsed ? '16px 8px' : '16px',
-          background:     collapsed 
-            ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(21, 128, 61, 0.1) 100%)'
-            : 'linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(21, 128, 61, 0.08) 100%)',
-          borderRadius:  '16px',
-          border:         'none',
-          backdropFilter: 'none',
-          position:       'relative',
-          zIndex:         1,
-          overflow:       'hidden',
+          display:        'flex',
+          flexDirection:  collapsed ? 'column' : 'row',
+          alignItems:     'center',
+          justifyContent: collapsed ? 'center' : 'space-between',
+          marginBottom:   '20px',
+          gap:            collapsed ? '12px' : '0',
         }}>
-          <div style={{
-            display:        'flex',
-            flexDirection:  collapsed ? 'column' : 'row',
-            alignItems:     'center',
-            justifyContent: collapsed ? 'center' : 'space-between',
-            gap:            collapsed ? '12px' : '0',
-          }}>
-            <Logo size={collapsed ? 'sm' : 'lg'} dark />
+          <Logo size={collapsed ? 'sm' : 'lg'} dark />
 
           {!collapsed && (
             <button
@@ -295,18 +283,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
               <ChevronLeft size={15} strokeWidth={2.5} />
             </button>
           )}
-          </div>
         </div>
-
-        {/* Separator Line */}
-        <div 
-          style={{
-            height: '1px',
-            background: 'linear-gradient(to right, transparent, #22c55e, transparent)',
-            marginBottom: '16px',
-            opacity: 0.2
-          }} 
-        />
 
         {collapsed && (
           <button
@@ -346,26 +323,17 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
 
         <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
 
-          {!collapsed ? (
-            <div style={{
-              display:        'flex',
-              alignItems:     'center',
-              gap:            '8px',
-              marginBottom:   '8px',
-            }}>
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)' }} />
-              <p style={{
-                fontSize:      '10px',
-                fontWeight:    700,
-                color:         C.textMuted,
-                textTransform: 'uppercase',
-                letterSpacing: '0.12em',
-                fontFamily:   C.fontFamily,
-                padding:       '0 8px',
-              }}>Menu</p>
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)' }} />
-            </div>
-          ) : <div style={{ height: 8 }} />}
+          {!collapsed && (
+            <p style={{
+              fontSize:      '10px',
+              fontWeight:    600,
+              color:         C.textMuted,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              margin:        '0 0 8px 8px',
+              fontFamily:   C.fontFamily,
+            }}>Menu</p>
+          )}
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '20px' }}>
             {menuItems.map(item => (
@@ -373,27 +341,16 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
             ))}
           </nav>
 
-          {!collapsed ? (
-            <div style={{
-              display:        'flex',
-              alignItems:     'center',
-              gap:            '8px',
-              marginBottom:   '8px',
-            }}>
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)' }} />
-              <p style={{
-                fontSize:      '10px',
-                fontWeight:    700,
-                color:         C.textMuted,
-                textTransform: 'uppercase',
-                letterSpacing: '0.12em',
-                fontFamily:   C.fontFamily,
-                padding:       '0 8px',
-              }}>General</p>
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)' }} />
-            </div>
-          ) : (
-            <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)', margin: '4px 8px 12px' }} />
+          {!collapsed && (
+            <p style={{
+              fontSize:      '10px',
+              fontWeight:    600,
+              color:         C.textMuted,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              margin:        '0 0 8px 8px',
+              fontFamily:   C.fontFamily,
+            }}>General</p>
           )}
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -411,66 +368,21 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           </nav>
         </div>
 
-        {/* Professional Separator */}
-        <div style={{ marginTop: 'auto', padding: '0 8px' }}>
-          <div style={{
-            position: 'relative',
-            height: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            {/* Left gradient line */}
-            <div style={{
-              position: 'absolute',
-              left: 0,
-              right: '50%',
-              marginRight: '16px',
-              height: '1px',
-              background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.4), rgba(34, 197, 94, 0.6))',
-            }} />
-            {/* Center decorative element */}
-            <div style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #22c55e, #15803d)',
-              boxShadow: '0 0 10px rgba(34, 197, 94, 0.5)',
-              zIndex: 1,
-            }} />
-            {/* Right gradient line */}
-            <div style={{
-              position: 'absolute',
-              left: '50%',
-              marginLeft: '16px',
-              right: 0,
-              height: '1px',
-              background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.6), rgba(34, 197, 94, 0.4), transparent)',
-            }} />
-          </div>
-        </div>
-
-        {/* User Profile Card */}
-        <div style={{ 
-          background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, transparent 100%)',
-          padding: '12px',
-          borderRadius: '16px',
-          margin: '0 12px 12px 12px',
-          marginTop: '8px',
-        }}>
+        {/* User Profile */}
+        <div style={{ marginTop: 'auto', padding: '12px' }}>
           {collapsed ? (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <img
                 src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
-                style={{ width: 38, height: 38, borderRadius: '50%', border: '2px solid rgba(34, 197, 94, 0.3)', boxShadow: '0 0 15px rgba(34, 197, 94, 0.2)' }}
+                style={{ width: 36, height: 36, borderRadius: '50%', border: `2px solid ${C.border}` }}
                 alt="Avatar"
               />
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <img
                 src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
-                style={{ width: 38, height: 38, borderRadius: '50%', border: '2px solid rgba(34, 197, 94, 0.3)', flexShrink: 0, boxShadow: '0 0 15px rgba(34, 197, 94, 0.2)' }}
+                style={{ width: 36, height: 36, borderRadius: '50%', border: `2px solid ${C.border}`, flexShrink: 0 }}
                 alt="Avatar"
               />
               <div style={{ flex: 1, minWidth: 0 }}>
