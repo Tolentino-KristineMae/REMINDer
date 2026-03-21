@@ -79,6 +79,7 @@ const Tooltip = ({ label }) => (
     pointerEvents: 'none',
     zIndex:        9999,
     boxShadow:     '0 4px 14px rgba(0,0,0,0.18)',
+    fontFamily:    "'Plus Jakarta Sans', sans-serif",
   }}>
     {label}
     <span style={{
@@ -171,6 +172,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
           fontWeight:   700,
           padding:      '2px 7px',
           borderRadius: '999px',
+          fontFamily:   C.fontFamily,
         }}>
           {badge}
         </span>
@@ -374,10 +376,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                 alt="Avatar"
               />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: '11px', fontWeight: 700, color: C.text, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: C.text, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: C.fontFamily }}>
                   {user?.name || 'Admin'}
                 </p>
-                <p style={{ fontSize: '9px', color: C.textMuted, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <p style={{ fontSize: '9px', color: C.textMuted, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: C.fontFamily }}>
                   {user?.email}
                 </p>
               </div>

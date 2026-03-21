@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Logo = ({ size = 'xl', className }) => {
+const Logo = ({ size = 'xl', className, dark = false }) => {
     const sizes = {
         lg: {
             icon: 'w-12 h-12 text-lg',
@@ -24,6 +24,10 @@ const Logo = ({ size = 'xl', className }) => {
 
     const selectedSize = sizes[size] || sizes.xl;
 
+    const textColor = dark ? '#ffffff' : '#2d2d2d';
+    const subColor = dark ? 'rgba(255,255,255,0.6)' : '#a0a0a0';
+    const accentColor = dark ? '#86efac' : '#16a34a';
+
     if (!selectedSize.showFull) {
         return (
             <div className={`flex items-center justify-center ${className}`}>
@@ -39,12 +43,12 @@ const Logo = ({ size = 'xl', className }) => {
             <div className={`${selectedSize.icon} bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white font-black shadow-xl shadow-green-600/25 shrink-0`}>
                 R
             </div>
-            <div>
+            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 <div className={`${selectedSize.main} font-black tracking-tighter leading-none`}>
-                    <span className="text-white">REM</span>
-                    <span className="text-green-300">INDer</span>
+                    <span style={{ color: textColor }}>REM</span>
+                    <span style={{ color: accentColor }}>INDer</span>
                 </div>
-                <p className={`${selectedSize.sub} font-bold text-white/50 uppercase tracking-widest`}>System</p>
+                <p className={`${selectedSize.sub} font-bold uppercase tracking-widest`} style={{ color: subColor }}>System</p>
             </div>
         </div>
     );
