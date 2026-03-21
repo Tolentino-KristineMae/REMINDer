@@ -17,8 +17,8 @@ import { Menu } from 'lucide-react';
 const PageHeader = ({ title, subtitle }) => (
     <div className="flex items-center justify-between w-full">
         <div className="flex flex-col">
-            <h1 className="text-xl font-black text-white leading-none">{title}</h1>
-            {subtitle && <p className="text-[10px] text-green-200 font-bold uppercase tracking-widest mt-1">{subtitle}</p>}
+            <h1 className="text-xl font-black text-gray-900 leading-none">{title}</h1>
+            {subtitle && <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">{subtitle}</p>}
         </div>
         <DateTimeDisplay />
     </div>
@@ -46,13 +46,13 @@ const DateTimeDisplay = () => {
     return (
         <div className="flex items-center gap-3">
             <div className="flex flex-col items-end">
-                <p className="text-lg font-bold text-white leading-none">{formatTime(dateTime)}</p>
-                <p className="text-[10px] font-semibold text-green-200 leading-none mt-0.5">{formatDate(dateTime)}</p>
+                <p className="text-lg font-bold text-gray-800 leading-none">{formatTime(dateTime)}</p>
+                <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{formatDate(dateTime)}</p>
             </div>
-            <div className="h-10 w-px bg-gradient-to-b from-transparent via-green-700 to-transparent mx-1" />
+            <div className="h-10 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-1" />
             <div className="flex flex-col items-start">
-                <p className="text-[9px] font-extrabold text-green-300 uppercase tracking-widest leading-none">REMINDer</p>
-                <p className="text-xs font-black text-white leading-none mt-0.5">System</p>
+                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
+                <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
             </div>
         </div>
     );
@@ -77,30 +77,30 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
         <div className="flex bg-[#f8fafc] min-h-screen relative">
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} collapsed={sidebarCollapsed} onCollapse={setSidebarCollapsed} />
             <div className={`flex-1 ml-0 ${sidebarMargin} flex flex-col min-h-screen min-w-0 transition-all duration-200`}>
-                <div className="lg:hidden sticky top-0 z-30 bg-green-950">
+                <div className="lg:hidden sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-gray-100">
                     <div className="px-4 py-3 flex items-center justify-between">
                         <button
                             type="button"
                             onClick={() => setSidebarOpen(true)}
-                            className="w-10 h-10 bg-green-800 rounded-xl flex items-center justify-center border border-green-700 shadow-sm text-white hover:bg-green-700"
+                            className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center border border-gray-100 shadow-sm text-gray-600 hover:bg-gray-100"
                             aria-label="Open menu"
                         >
                             <Menu size={18} className="stroke-[2.5]" />
                         </button>
                         <div className="flex items-center gap-3">
                             <div className="flex flex-col items-end">
-                                <p className="text-lg font-bold text-white leading-none">{dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
-                                <p className="text-[10px] font-semibold text-green-200 leading-none mt-0.5">{dateTime.getDate()} {dateTime.toLocaleString('en-US', { month: 'short' })} {dateTime.getFullYear()}</p>
+                                <p className="text-lg font-bold text-gray-800 leading-none">{dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
+                                <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{dateTime.getDate()} {dateTime.toLocaleString('en-US', { month: 'short' })} {dateTime.getFullYear()}</p>
                             </div>
-                            <div className="h-10 w-px bg-gradient-to-b from-transparent via-green-700 to-transparent mx-1" />
+                            <div className="h-10 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-1" />
                             <div className="flex flex-col items-start">
-                                <p className="text-[9px] font-extrabold text-green-300 uppercase tracking-widest leading-none">REMINDer</p>
-                                <p className="text-xs font-black text-white leading-none mt-0.5">System</p>
+                                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDer</p>
+                                <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="hidden lg:sticky lg:top-0 lg:z-30 lg:bg-green-950 lg:block">
+                <div className="hidden lg:sticky lg:top-0 lg:z-30 lg:bg-white/90 lg:backdrop-blur lg:border-b lg:border-gray-100 lg:block">
                     <div className="px-6 py-4">
                         <PageHeader title={pageTitle} subtitle={pageSubtitle} />
                     </div>
