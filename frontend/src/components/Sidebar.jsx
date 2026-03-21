@@ -280,6 +280,16 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           )}
         </div>
 
+        {/* Separator Line */}
+        <div 
+          style={{
+            height: '1px',
+            background: 'linear-gradient(to right, transparent, #22c55e, transparent)',
+            marginBottom: '16px',
+            opacity: 0.3
+          }} 
+        />
+
         {collapsed && (
           <button
             onClick={() => setCollapsed(v => !v)}
@@ -302,6 +312,18 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           >
             <ChevronRight size={15} strokeWidth={2.5} />
           </button>
+        )}
+
+        {/* Separator Line for collapsed */}
+        {collapsed && (
+          <div 
+            style={{
+              height: '1px',
+              background: 'linear-gradient(to right, transparent, #22c55e, transparent)',
+              marginBottom: '12px',
+              opacity: 0.3
+            }} 
+          />
         )}
 
         <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
