@@ -34,21 +34,6 @@ const C = {
   toggleBorder: '#d4d4d4',
   fontFamily:   "'Plus Jakarta Sans', sans-serif",
 };
-  text:         '#ffffff',
-  textMuted:    'rgba(255,255,255,0.6)',
-  textActive:   '#ffffff',
-  iconDefault:  'rgba(255,255,255,0.6)',
-  iconActive:   '#ffffff',
-  activeBg:     'rgba(255,255,255,0.2)',
-  activeBorder: '#ffffff',
-  hoverBg:      'rgba(255,255,255,0.1)',
-  badgeBg:      '#4ade80',
-  badgeText:    '#14532d',
-  logoutHover:  'rgba(239, 68, 68, 0.2)',
-  logoutText:   '#fca5a5',
-  toggle:       'rgba(255,255,255,0.1)',
-  toggleBorder: 'rgba(255,255,255,0.2)',
-};
 
 const menuItems = [
   { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
