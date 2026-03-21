@@ -16,8 +16,24 @@ import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
 
 const C = {
-  bg:           'rgba(21, 128, 61, 0.95)',
-  border:       'rgba(255,255,255,0.1)',
+  bg:           '#f6f6f6',
+  border:       '#e8e8e8',
+  text:         '#2d2d2d',
+  textMuted:    '#a0a0a0',
+  textActive:   '#16a34a',
+  iconDefault:  '#7a7a7a',
+  iconActive:   '#16a34a',
+  activeBg:     '#edfaf3',
+  activeBorder: '#16a34a',
+  hoverBg:      '#eeeeee',
+  badgeBg:      '#dcfce7',
+  badgeText:    '#15803d',
+  logoutHover:  '#fff1f2',
+  logoutText:   '#ef4444',
+  toggle:       '#e2e2e2',
+  toggleBorder: '#d4d4d4',
+  fontFamily:   "'Plus Jakarta Sans', sans-serif",
+};
   text:         '#ffffff',
   textMuted:    'rgba(255,255,255,0.6)',
   textActive:   '#ffffff',
@@ -137,9 +153,11 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
         <span style={{
           fontSize:   '14px',
           fontWeight: isActive ? 600 : 500,
+          fontFamily: C.fontFamily,
           flex:       1,
           textAlign:  'left',
           whiteSpace: 'nowrap',
+          letterSpacing: '0.01em',
         }}>
           {label}
         </span>
@@ -300,6 +318,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
               margin:        '0 0 6px 8px',
+              fontFamily:   C.fontFamily,
             }}>Menu</p>
           ) : <div style={{ height: 8 }} />}
 
@@ -317,6 +336,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
               margin:        '0 0 6px 8px',
+              fontFamily:   C.fontFamily,
             }}>General</p>
           ) : (
             <div style={{ height: '1px', background: C.border, margin: '4px 8px 12px' }} />
