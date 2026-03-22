@@ -34,13 +34,27 @@ const AddBillPage = () => {
         const fetchFormData = async () => {
             try {
                 const response = await api.get('/bills/dashboard');
-                setCategories(response.data.bills.map(b => b.category).filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i) || []);
-                // Fetching people from the dashboard data
+                // Use a Set to track unique category IDs
+                const uniqueCategoryIds = new Set();
+                const uniqueCategories = [];
+                
+                if (response.data.bills) {
+                    response.data.bills.forEach(b => {
+                        if (b.category && !uniqueCategoryIds.has(b.category.id)) {
+                            uniqueCategoryIds.add(b.category.id);
+                            uniqueCategories.push(b.category);
+                        }
+                    });
+                }
+                
+                setCategories(uniqueCategories);
                 setPeople(response.data.people || []);
                 
                 // Fallback: If categories are empty, fetch from categories endpoint
-                const catRes = await api.get('/categories');
-                setCategories(catRes.data.categories || []);
+                if (uniqueCategories.length === 0) {
+                    const catRes = await api.get('/categories');
+                    setCategories(catRes.data.categories || []);
+                }
             } catch (err) {
                 console.error('Error fetching form data:', err);
             } finally {

@@ -3,13 +3,11 @@ import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
   Calendar,
-  Users,
   LogOut,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Plus,
-  Layers,
   Settings2,
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';

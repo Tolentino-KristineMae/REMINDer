@@ -19,12 +19,11 @@ import {
     Volume2,
     X,
     Trash2,
-    Trash,
     Users
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const PaidBillsPage = () => {
+const SettlementsPage = () => {
     const navigate = useNavigate();
     const audioRef = useRef(null);
     const [bills, setBills] = useState([]);
@@ -69,11 +68,7 @@ const PaidBillsPage = () => {
         return `${STORAGE_BASE_URL.replace(/\/$/, '')}/storage/${path}`;
     };
 
-    useEffect(() => {
-        fetchPaidBills();
-    }, []);
-
-    const fetchPaidBills = async () => {
+    const fetchPaidBills = React.useCallback(async () => {
         try {
             const response = await api.get('/bills/dashboard');
             // Fetch all bills so we can see both paid and pending for settlement
@@ -81,7 +76,11 @@ const PaidBillsPage = () => {
         } catch (err) {
             console.error('Error fetching bills:', err);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchPaidBills();
+    }, [fetchPaidBills]);
 
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-PH', {
@@ -497,4 +496,4 @@ const PaidBillsPage = () => {
     );
 };
 
-export default PaidBillsPage;
+export default SettlementsPage;

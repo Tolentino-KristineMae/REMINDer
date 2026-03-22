@@ -33,7 +33,7 @@ const Management = () => {
     const [newPerson, setNewPerson] = useState({ name: '', email: '', phone: '' });
     const [showAddPerson, setShowAddPerson] = useState(false);
 
-    const fetchData = async () => {
+    const fetchData = React.useCallback(async () => {
         try {
             if (activeTab === 'categories') {
                 const response = await api.get('/categories');
@@ -46,11 +46,11 @@ const Management = () => {
         } catch (err) {
             console.error(`Error fetching ${activeTab}:`, err);
         }
-    };
+    }, [activeTab]);
 
     useEffect(() => {
         fetchData();
-    }, [activeTab]);
+    }, [fetchData]);
 
     // Category Handlers
     const handleAddCategory = async (e) => {
