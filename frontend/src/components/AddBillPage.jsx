@@ -189,13 +189,6 @@ export default function AddBillPage() {
         .font-dm-sans { font-family: 'DM Sans', sans-serif; }
       `}</style>
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
-        <div className="absolute top-8 right-4 sm:right-8 lg:right-12 flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
-          <Sparkles className="w-3.5 h-3.5 text-green-600" />
-          <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
-            New Entry
-          </span>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Left Column - Info Panel */}
           <div className="lg:col-span-4 space-y-6">
@@ -248,6 +241,13 @@ export default function AddBillPage() {
 
           {/* Right Column - Form */}
           <div className="lg:col-span-8">
+            {/* New Entry Badge */}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100 w-fit mb-6">
+              <Sparkles className="w-3.5 h-3.5 text-green-600" />
+              <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
+                New Entry
+              </span>
+            </div>
             <Card className="border-gray-100 shadow-xl shadow-gray-200/20">
               <CardContent className="p-6 sm:p-8 lg:p-10">
                 <form onSubmit={handleSubmit} className="space-y-8">
