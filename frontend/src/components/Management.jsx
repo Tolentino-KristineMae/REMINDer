@@ -96,11 +96,15 @@ const Management = () => {
     }
     if (!window.confirm('Are you sure you want to delete this category?')) return
     try {
-      await api.delete(`/categories/${id}`)
+      console.log('Deleting category:', id)
+      const response = await api.delete(`/categories/${id}`)
+      console.log('Delete response:', response.data)
       fetchData()
       setMessage({ text: 'Category deleted successfully!', type: 'success' })
     } catch (err) {
-      setMessage({ text: err.response?.data?.message || 'Failed to delete category.', type: 'error' })
+      console.error('Delete category error:', err)
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to delete category.'
+      setMessage({ text: errorMsg, type: 'error' })
     }
   }
 
@@ -112,12 +116,16 @@ const Management = () => {
   const handleSaveCategory = async (id) => {
     setLoading(true)
     try {
-      await api.put(`/categories/${id}`, editCategoryData)
+      console.log('Updating category:', id, editCategoryData)
+      const response = await api.put(`/categories/${id}`, editCategoryData)
+      console.log('Update response:', response.data)
       setEditingCategory(null)
       fetchData()
       setMessage({ text: 'Category updated successfully!', type: 'success' })
     } catch (err) {
-      setMessage({ text: err.response?.data?.message || 'Failed to update category.', type: 'error' })
+      console.error('Update category error:', err)
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to update category.'
+      setMessage({ text: errorMsg, type: 'error' })
     } finally {
       setLoading(false)
     }
@@ -151,11 +159,15 @@ const Management = () => {
     }
     if (!window.confirm('Are you sure you want to delete this person?')) return
     try {
-      await api.delete(`/people/${id}`)
+      console.log('Deleting person:', id)
+      const response = await api.delete(`/people/${id}`)
+      console.log('Delete response:', response.data)
       fetchData()
       setMessage({ text: 'Person deleted successfully!', type: 'success' })
     } catch (err) {
-      setMessage({ text: err.response?.data?.message || 'Failed to delete person.', type: 'error' })
+      console.error('Delete person error:', err)
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to delete person.'
+      setMessage({ text: errorMsg, type: 'error' })
     }
   }
 
@@ -167,12 +179,16 @@ const Management = () => {
   const handleSavePerson = async (id) => {
     setLoading(true)
     try {
-      await api.put(`/people/${id}`, editPersonData)
+      console.log('Updating person:', id, editPersonData)
+      const response = await api.put(`/people/${id}`, editPersonData)
+      console.log('Update response:', response.data)
       setEditingPerson(null)
       fetchData()
       setMessage({ text: 'Person updated successfully!', type: 'success' })
     } catch (err) {
-      setMessage({ text: err.response?.data?.message || 'Failed to update person.', type: 'error' })
+      console.error('Update person error:', err)
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to update person.'
+      setMessage({ text: errorMsg, type: 'error' })
     } finally {
       setLoading(false)
     }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PersonInCharge extends Model
 {
     protected $table = 'person_in_charges';
-    protected $fillable = ['name', 'avatar'];
+    protected $fillable = ['name', 'email', 'phone', 'avatar'];
 
     public function bills(): HasMany
     {

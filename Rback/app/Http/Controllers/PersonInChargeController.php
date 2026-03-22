@@ -47,4 +47,21 @@ class PersonInChargeController extends Controller
             'message' => 'Person deleted successfully.'
         ]);
     }
+
+    public function update(Request $request, PersonInCharge $person)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:person_in_charges,email,' . $person->id,
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $person->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone ?? $person->phone,
+        ]);
+
+        return response()->json($person);
+    }
 }

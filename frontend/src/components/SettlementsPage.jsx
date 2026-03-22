@@ -130,6 +130,7 @@ const SettlementsPage = () => {
         setDeleting(true);
         setError('');
         try {
+            console.log('Deleting bill:', billToDelete.id);
             const response = await api.delete(`/bills/${billToDelete.id}`);
             console.log('Delete response:', response.data);
             setBills(prev => prev.filter(b => b.id !== billToDelete.id));
@@ -137,7 +138,7 @@ const SettlementsPage = () => {
             setBillToDelete(null);
         } catch (err) {
             console.error('Delete error:', err);
-            const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Failed to delete transaction. Please try again.';
+            const errorMsg = err.response?.data?.message || err.message || 'Failed to delete transaction. Please try again.';
             setError(errorMsg);
             setIsDeleteModalOpen(false);
         } finally {

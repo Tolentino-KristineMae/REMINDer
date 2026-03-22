@@ -44,4 +44,19 @@ class CategoryController extends Controller
             'message' => 'Category deleted successfully.'
         ]);
     }
+
+    public function update(Request $request, Category $category)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'color' => 'nullable|string|max:7',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'color' => $request->color ?? $category->color,
+        ]);
+
+        return response()->json($category);
+    }
 }
