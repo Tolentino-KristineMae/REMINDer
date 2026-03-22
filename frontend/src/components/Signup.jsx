@@ -102,37 +102,37 @@ const Signup = () => {
                 </div>
 
                 {/* Left Side - Visual */}
-                <div className="hidden lg:block lg:w-[45%] bg-slate-800 p-12 relative overflow-hidden">
-                    <div className="relative z-10 text-white h-full flex flex-col">
-                        <h2 className="text-5xl font-bold mb-6">Join Us!</h2>
-                        <h3 className="text-4xl font-bold mb-8">Master your finances with BillPay</h3>
+                <div className="hidden lg:block lg:w-[45%] bg-slate-50 p-12 relative overflow-hidden border-r border-slate-100">
+                    <div className="relative z-10 h-full flex flex-col">
+                        <h2 className="text-5xl font-bold mb-6 text-slate-900">Join Us!</h2>
+                        <h3 className="text-4xl font-bold mb-8 text-slate-800">Master your finances with BillPay</h3>
                         
                         <div className="space-y-8 flex-grow">
                             <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
-                                    <CheckCircle className="text-blue-300" size={24} />
+                                <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center shrink-0">
+                                    <CheckCircle className="text-blue-600" size={24} />
                                 </div>
                                 <div>
-                                    <h4 className="text-xl font-semibold mb-1 text-white">Bill Reminders</h4>
-                                    <p className="text-slate-300">Never miss a payment again with our smart due date notifications.</p>
+                                    <h4 className="text-xl font-semibold mb-1 text-slate-900">Bill Reminders</h4>
+                                    <p className="text-slate-600">Never miss a payment again with our smart due date notifications.</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
-                                    <ShieldCheck className="text-blue-300" size={24} />
+                                <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center shrink-0">
+                                    <ShieldCheck className="text-blue-600" size={24} />
                                 </div>
                                 <div>
-                                    <h4 className="text-xl font-semibold mb-1 text-white">Secure Proofs</h4>
-                                    <p className="text-slate-300">Safely upload and store your payment receipts for future reference.</p>
+                                    <h4 className="text-xl font-semibold mb-1 text-slate-900">Secure Proofs</h4>
+                                    <p className="text-slate-600">Safely upload and store your payment receipts for future reference.</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
-                                    <Landmark className="text-blue-300" size={24} />
+                                <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center shrink-0">
+                                    <Landmark className="text-blue-600" size={24} />
                                 </div>
                                 <div>
-                                    <h4 className="text-xl font-semibold mb-1 text-white">Expense Tracking</h4>
-                                    <p className="text-slate-300">Analyze your spending patterns across different categories like BPI, Spay, etc.</p>
+                                    <h4 className="text-xl font-semibold mb-1 text-slate-900">Expense Tracking</h4>
+                                    <p className="text-slate-600">Analyze your spending patterns across different categories like BPI, Spay, etc.</p>
                                 </div>
                             </div>
                         </div>
@@ -140,16 +140,16 @@ const Signup = () => {
                         <div className="mt-auto pt-8">
                             <div className="flex -space-x-3 mb-4">
                                 {[1, 2, 3, 4, 5].map(i => (
-                                    <img key={i} src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} className="w-10 h-10 rounded-full border-2 border-slate-600" alt="Avatar" />
+                                    <img key={i} src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} className="w-10 h-10 rounded-full border-2 border-white shadow-sm" alt="Avatar" />
                                 ))}
-                                <div className="w-10 h-10 rounded-full bg-blue-500 border-2 border-slate-600 flex items-center justify-center text-xs font-bold">+10k</div>
+                                <div className="w-10 h-10 rounded-full bg-blue-600 border-2 border-white flex items-center justify-center text-xs font-bold text-white shadow-sm">+10k</div>
                             </div>
-                            <p className="text-slate-300 text-sm font-medium">Trusted by over 10,000+ users worldwide</p>
+                            <p className="text-slate-500 text-sm font-medium">Trusted by over 10,000+ users worldwide</p>
                         </div>
                     </div>
                     {/* Abstract shapes */}
-                    <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/30 rounded-full -ml-48 -mt-48 blur-3xl"></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-slate-700/30 rounded-full -mr-48 -mb-48 blur-3xl"></div>
+                    <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200/20 rounded-full -ml-48 -mt-48 blur-3xl"></div>
+                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-slate-200/30 rounded-full -mr-48 -mb-48 blur-3xl"></div>
                 </div>
             </div>
         </div>

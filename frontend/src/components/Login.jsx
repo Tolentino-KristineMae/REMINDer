@@ -45,7 +45,7 @@ const Login = () => {
                     overflow: hidden;
                     position: relative;
                     padding: 2rem;
-                    background: #1e293b;
+                    background: #f8fafc;
                 }
 
                 .login-root::before {
@@ -53,32 +53,32 @@ const Login = () => {
                     position: absolute;
                     inset: 0;
                     background:
-                        radial-gradient(ellipse 80% 60% at 15% 25%, rgba(59,130,246,0.35) 0%, transparent 60%),
-                        radial-gradient(ellipse 60% 70% at 85% 75%, rgba(30,58,138,0.6) 0%, transparent 60%),
-                        linear-gradient(160deg, #1e3a8a 0%, #0f172a 100%);
+                        radial-gradient(ellipse 80% 60% at 15% 25%, rgba(59,130,246,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 70% at 85% 75%, rgba(148,163,184,0.1) 0%, transparent 60%),
+                        linear-gradient(160deg, #f8fafc 0%, #f1f5f9 100%);
                     z-index: 0;
                 }
 
                 .blob {
                     position: absolute;
                     pointer-events: none;
-                    background: linear-gradient(135deg, #60a5fa, #93c5fd);
-                    filter: blur(1px);
+                    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+                    filter: blur(40px);
                     z-index: 1;
                 }
-                .b1 { width:240px; height:240px; top:4%; left:3%; opacity:.2; border-radius:60% 40% 55% 45%/45% 55% 45% 55%; animation:fA 7s ease-in-out infinite; }
-                .b2 { width:170px; height:170px; bottom:8%; left:10%; opacity:.17; border-radius:40% 60% 45% 55%/55% 45% 60% 40%; animation:fB 9s ease-in-out infinite; background:linear-gradient(135deg,#3b82f6,#93c5fd); }
-                .b3 { width:300px; height:190px; top:12%; right:2%; opacity:.18; border-radius:55% 45% 60% 40%/40% 60% 40% 60%; animation:fC 8s ease-in-out infinite; background:linear-gradient(135deg,#60a5fa,#2563eb); }
-                .b4 { width:140px; height:140px; bottom:18%; right:6%; opacity:.15; border-radius:50% 50% 40% 60%/60% 40% 60% 40%; animation:fA 6s ease-in-out infinite reverse; background:linear-gradient(135deg,#93c5fd,#3b82f6); }
-                .b5 { width:110px; height:110px; top:42%; left:1%; opacity:.13; border-radius:60% 40% 50% 50%/50% 50% 60% 40%; animation:fB 10s ease-in-out infinite; background:linear-gradient(135deg,#dbeafe,#60a5fa); }
-                .b6 { width:85px;  height:85px;  top:62%; right:16%; opacity:.15; border-radius:50% 50% 40% 60%/40% 60% 50% 50%; animation:fC 7.5s ease-in-out infinite reverse; }
+                .b1 { width:240px; height:240px; top:4%; left:3%; opacity:.08; border-radius:60% 40% 55% 45%/45% 55% 45% 55%; animation:fA 7s ease-in-out infinite; }
+                .b2 { width:170px; height:170px; bottom:8%; left:10%; opacity:.06; border-radius:40% 60% 45% 55%/55% 45% 60% 40%; animation:fB 9s ease-in-out infinite; background:linear-gradient(135deg,#3b82f6,#93c5fd); }
+                .b3 { width:300px; height:190px; top:12%; right:2%; opacity:.07; border-radius:55% 45% 60% 40%/40% 60% 40% 60%; animation:fC 8s ease-in-out infinite; background:linear-gradient(135deg,#60a5fa,#2563eb); }
+                .b4 { width:140px; height:140px; bottom:18%; right:6%; opacity:.05; border-radius:50% 50% 40% 60%/60% 40% 60% 40%; animation:fA 6s ease-in-out infinite reverse; background:linear-gradient(135deg,#93c5fd,#3b82f6); }
+                .b5 { width:110px; height:110px; top:42%; left:1%; opacity:.04; border-radius:60% 40% 50% 50%/50% 50% 60% 40%; animation:fB 10s ease-in-out infinite; background:linear-gradient(135deg,#dbeafe,#60a5fa); }
+                .b6 { width:85px;  height:85px;  top:62%; right:16%; opacity:.06; border-radius:50% 50% 40% 60%/40% 60% 50% 50%; animation:fC 7.5s ease-in-out infinite reverse; }
 
-                .worm { position:absolute; pointer-events:none; opacity:.18; z-index:1; }
+                .worm { position:absolute; pointer-events:none; opacity:.06; z-index:1; }
                 .w1 { top:5%;    left:26%;  animation:fA 8s ease-in-out infinite; }
                 .w2 { bottom:6%; right:20%; animation:fB 9s ease-in-out infinite; }
                 .w3 { top:45%;   right:3%;  animation:fC 7s ease-in-out infinite; }
 
-                .dot { position:absolute; border-radius:50%; background:rgba(255,255,255,.45); pointer-events:none; z-index:1; }
+                .dot { position:absolute; border-radius:50%; background:rgba(59,130,246,.2); pointer-events:none; z-index:1; }
                 .d1 { width:5px; height:5px; top:17%; left:38%; animation:fA 5s ease-in-out infinite; }
                 .d2 { width:3px; height:3px; top:73%; left:52%; animation:fB 6s ease-in-out infinite 1s; }
                 .d3 { width:4px; height:4px; top:38%; right:14%; animation:fC 7s ease-in-out infinite .5s; }
@@ -92,12 +92,10 @@ const Login = () => {
                     position: relative; z-index: 10;
                     width: 100%; max-width: 420px;
                     background: #ffffff;
-                    backdrop-filter: blur(28px) saturate(180%);
-                    -webkit-backdrop-filter: blur(28px) saturate(180%);
-                    border: 1px solid rgba(226,232,240,.8);
+                    border: 1px solid #e2e8f0;
                     border-radius: 28px;
                     padding: 44px 40px 40px;
-                    box-shadow: 0 8px 64px rgba(15,23,42,.32), 0 1px 0 rgba(255,255,255,.12) inset;
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.05);
                     animation: cardIn .7s cubic-bezier(.22,1,.36,1) both;
                 }
                 @keyframes cardIn { from{opacity:0;transform:translateY(32px) scale(.97);} to{opacity:1;transform:translateY(0) scale(1);} }
@@ -105,12 +103,12 @@ const Login = () => {
                 .login-card-title {
                     font-family: 'Syne', sans-serif;
                     font-size: 24px; font-weight: 700;
-                    color: #1e293b; text-align: center;
+                    color: #0f172a; text-align: center;
                     letter-spacing: -.5px; margin-bottom: 4px;
                     animation: fadeUp .6s .15s cubic-bezier(.22,1,.36,1) both;
                 }
                 .login-card-sub {
-                    font-size: 14px; color: #64748b;
+                    font-size: 14px; color: #475569;
                     text-align: center; margin-bottom: 28px;
                     animation: fadeUp .6s .2s cubic-bezier(.22,1,.36,1) both;
                 }
