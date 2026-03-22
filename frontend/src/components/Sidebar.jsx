@@ -328,50 +328,54 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           )}
 
           {/* Action Button */}
-          <div style={{ padding: '0 8px', marginBottom: '24px' }}>
+          <div style={{ padding: '0 12px', marginBottom: '24px' }}>
             <button
               onClick={() => navigate('/add-bill')}
               style={{
                 width: '100%',
-                padding: collapsed ? '12px' : '12px 16px',
-                background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                height: '48px',
+                background: '#22c55e',
                 border: 'none',
-                borderRadius: '16px',
+                borderRadius: '14px',
                 color: 'white',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: collapsed ? 'center' : 'flex-start',
+                padding: collapsed ? '0' : '0 16px',
                 gap: '12px',
                 cursor: 'pointer',
-                boxShadow: '0 8px 20px rgba(34, 197, 94, 0.25)',
-                transition: 'all 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
+                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.2)',
+                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                position: 'relative',
+                overflow: 'hidden',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(34, 197, 94, 0.35)';
+                e.currentTarget.style.background = '#16a34a';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(34, 197, 94, 0.3)';
               }}
               onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#22c55e';
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(34, 197, 94, 0.25)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.2)';
               }}
             >
-              <div style={{
-                background: 'rgba(255,255,255,0.2)',
-                borderRadius: '10px',
-                padding: '6px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <Plus size={20} strokeWidth={3} />
-              </div>
+              <Plus 
+                size={collapsed ? 22 : 18} 
+                strokeWidth={3} 
+                style={{ 
+                  transition: 'transform 0.3s ease',
+                  flexShrink: 0
+                }} 
+              />
               {!collapsed && (
                 <span style={{ 
-                  fontSize: '14px', 
-                  fontWeight: 800, 
-                  fontFamily: 'Syne',
-                  letterSpacing: '0.01em' 
-                }}>New Bill</span>
+                  fontSize: '13px', 
+                  fontWeight: 700, 
+                  fontFamily: C.fontFamily,
+                  letterSpacing: '0.02em',
+                  whiteSpace: 'nowrap'
+                }}>New Bill Entry</span>
               )}
             </button>
           </div>
