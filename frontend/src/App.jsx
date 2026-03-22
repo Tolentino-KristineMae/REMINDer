@@ -6,10 +6,9 @@ import Login from './components/Login';
 import Setup from './components/Setup';
 import Dashboard from './components/Dashboard';
 import Sidebar from './components/Sidebar';
-import CategoryPage from './components/CategoryPage';
+import Management from './components/Management';
 import CalendarPage from './components/CalendarPage';
-import PaidBillsPage from './components/PaidBillsPage';
-import TeamPage from './components/TeamPage';
+import SettlementsPage from './components/SettlementsPage';
 import SettleBillPage from './components/SettleBillPage';
 import DeploymentStatus from './components/DeploymentStatus';
 import { Menu } from 'lucide-react';
@@ -140,10 +139,10 @@ const App = () => {
                             } 
                         />
                         <Route 
-                            path="/categories" 
+                            path="/management" 
                             element={
-                                <PrivateRoute pageTitle="Categories" pageSubtitle="Manage your bill categories">
-                                    <CategoryPage />
+                                <PrivateRoute pageTitle="Management" pageSubtitle="Manage categories and team members">
+                                    <Management />
                                 </PrivateRoute>
                             } 
                         />
@@ -159,15 +158,7 @@ const App = () => {
                             path="/paid-bills" 
                             element={
                                 <PrivateRoute pageTitle="Settlements" pageSubtitle="Submit and view your payment proof records">
-                                    <PaidBillsPage />
-                                </PrivateRoute>
-                            } 
-                        />
-                        <Route 
-                            path="/team" 
-                            element={
-                                <PrivateRoute pageTitle="Person In Charge" pageSubtitle="Manage your people in-charge and their performance">
-                                    <TeamPage />
+                                    <SettlementsPage />
                                 </PrivateRoute>
                             } 
                         />

@@ -10,8 +10,9 @@ import {
   ChevronRight,
   Plus,
   Layers,
+  Settings2,
 } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 
 const C = {
@@ -39,10 +40,9 @@ const C = {
 
 const menuItems = [
   { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
-  { icon: <Layers size={18} />,          label: 'Categories', path: '/categories' },
   { icon: <Calendar size={18} />,        label: 'Calendar',   path: '/calendar' },
   { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },
-  { icon: <Users size={18} />,           label: 'Person In Charge', path: '/team' },
+  { icon: <Settings2 size={18} />,       label: 'Management',  path: '/management' },
 ];
 
 const Tooltip = ({ label }) => (
@@ -198,6 +198,7 @@ const NavItem = ({ icon, label, path, badge, collapsed, isLogout, onClose, logou
 
 const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   
   const collapsed = externalCollapsed ?? internalCollapsed;
@@ -327,6 +328,55 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
               fontFamily:   C.fontFamily,
             }}>Menu</p>
           )}
+
+          {/* Action Button */}
+          <div style={{ padding: '0 8px', marginBottom: '24px' }}>
+            <button
+              onClick={() => navigate('/add-bill')}
+              style={{
+                width: '100%',
+                padding: collapsed ? '12px' : '12px 16px',
+                background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                border: 'none',
+                borderRadius: '16px',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: collapsed ? 'center' : 'flex-start',
+                gap: '12px',
+                cursor: 'pointer',
+                boxShadow: '0 8px 20px rgba(34, 197, 94, 0.25)',
+                transition: 'all 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 12px 24px rgba(34, 197, 94, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(34, 197, 94, 0.25)';
+              }}
+            >
+              <div style={{
+                background: 'rgba(255,255,255,0.2)',
+                borderRadius: '10px',
+                padding: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <Plus size={20} strokeWidth={3} />
+              </div>
+              {!collapsed && (
+                <span style={{ 
+                  fontSize: '14px', 
+                  fontWeight: 800, 
+                  fontFamily: 'Syne',
+                  letterSpacing: '0.01em' 
+                }}>New Bill</span>
+              )}
+            </button>
+          </div>
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '20px' }}>
             {menuItems.map(item => (
