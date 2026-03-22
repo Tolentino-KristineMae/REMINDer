@@ -35,6 +35,14 @@ const CalendarPage = () => {
         fetchBills();
     }, []);
 
+    // Initial scroll to current day on mount
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            scrollToDayColumn(currentDate);
+        }, 200);
+        return () => clearTimeout(timer);
+    }, []);
+
     useEffect(() => {
         const timer = setTimeout(() => {
             if (billsListRef.current) {
@@ -97,35 +105,43 @@ const CalendarPage = () => {
         setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
     };
 
+    const scrollToDayColumn = (date) => {
+        const dayIndex = date.getDay(); // 0 = Sunday
+        const containers = document.querySelectorAll('.calendar-scroll-container');
+        
+        containers.forEach(container => {
+            if (container) {
+                const containerWidth = container.clientWidth;
+                const totalWidth = container.scrollWidth;
+                const dayWidth = totalWidth / 7;
+                const targetPosition = dayIndex * dayWidth;
+                const centerOffset = containerWidth / 2 - dayWidth / 2;
+                const scrollTo = targetPosition - centerOffset;
+                
+                container.scrollTo({
+                    left: Math.max(0, Math.min(scrollTo, totalWidth - containerWidth)),
+                    behavior: 'smooth'
+                });
+            }
+        });
+        
+        // Scroll bills list to top
+        if (billsListRef.current) {
+            billsListRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    };
+
     const handleSelectDate = (day) => {
         const newDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
         setCurrentDate(newDate);
         setViewDate(new Date(newDate.getFullYear(), newDate.getMonth(), 1));
         
-        // Scroll main calendar to show selected date column
         setTimeout(() => {
-            const containers = document.querySelectorAll('.calendar-scroll-container');
-            const dayIndex = newDate.getDay(); // 0 = Sunday
-            
-            containers.forEach(container => {
-                if (container) {
-                    const dayWidth = container.scrollWidth / 7;
-                    const scrollTo = Math.max(0, (dayIndex * dayWidth) - (dayWidth / 2));
-                    container.scrollTo({
-                        left: scrollTo,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-            
-            // Scroll bills list to top
-            if (billsListRef.current) {
-                billsListRef.current.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-        }, 100);
+            scrollToDayColumn(newDate);
+        }, 150);
     };
 
     const handleBillClick = (bill) => {
@@ -168,6 +184,7 @@ const CalendarPage = () => {
                                             onClick={() => {
                                                 setCurrentDate(day);
                                                 setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
+                                                setTimeout(() => scrollToDayColumn(day), 150);
                                             }}
                                         >
                                             <span className={`text-[10px] font-bold uppercase tracking-wider mb-4 transition-all duration-300 ${
