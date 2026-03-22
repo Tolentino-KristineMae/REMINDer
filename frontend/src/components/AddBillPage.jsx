@@ -188,7 +188,7 @@ export default function AddBillPage() {
         .font-syne { font-family: 'Syne', sans-serif; }
         .font-dm-sans { font-family: 'DM Sans', sans-serif; }
       `}</style>
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
           <Sparkles className="w-3.5 h-3.5 text-green-600" />
           <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
@@ -196,9 +196,9 @@ export default function AddBillPage() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 gap-6">
-          {/* Full width form */}
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          {/* Left Column - Info Panel */}
+          <div className="lg:col-span-4 space-y-6">
             {/* Hero Card */}
             <Card className="border-gray-100 shadow-xl shadow-gray-200/20">
               <div className="relative">
@@ -246,10 +246,10 @@ export default function AddBillPage() {
             </Card>
           </div>
 
-          {/* Form */}
-          <div>
+          {/* Right Column - Form */}
+          <div className="lg:col-span-8">
             <Card className="border-gray-100 shadow-xl shadow-gray-200/20">
-              <CardContent className="p-6 sm:p-8">
+              <CardContent className="p-6 sm:p-8 lg:p-10">
                 <form onSubmit={handleSubmit} className="space-y-8">
                   {/* Amount & Due Date Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
