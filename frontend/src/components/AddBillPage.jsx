@@ -187,21 +187,16 @@ export default function AddBillPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-end h-16">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
-              <Sparkles className="w-3.5 h-3.5 text-green-600" />
-              <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
-                New Entry
-              </span>
-            </div>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
+        <div className="flex justify-end mb-6">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
+            <Sparkles className="w-3.5 h-3.5 text-green-600" />
+            <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
+              New Entry
+            </span>
           </div>
         </div>
-      </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Left Column - Info Panel */}
           <div className="lg:col-span-4 space-y-6">
