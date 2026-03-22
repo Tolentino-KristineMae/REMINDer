@@ -45,7 +45,7 @@ const Login = () => {
                     overflow: hidden;
                     position: relative;
                     padding: 2rem;
-                    background: #f8fafc;
+                    background: #14532d;
                 }
 
                 .login-root::before {
@@ -53,32 +53,32 @@ const Login = () => {
                     position: absolute;
                     inset: 0;
                     background:
-                        radial-gradient(ellipse 80% 60% at 15% 25%, rgba(59,130,246,0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse 60% 70% at 85% 75%, rgba(148,163,184,0.1) 0%, transparent 60%),
-                        linear-gradient(160deg, #f8fafc 0%, #f1f5f9 100%);
+                        radial-gradient(ellipse 80% 60% at 15% 25%, rgba(34,197,94,0.45) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 70% at 85% 75%, rgba(6,78,59,0.7) 0%, transparent 60%),
+                        linear-gradient(160deg, #15803d 0%, #0f4d27 100%);
                     z-index: 0;
                 }
 
                 .blob {
                     position: absolute;
                     pointer-events: none;
-                    background: linear-gradient(135deg, #3b82f6, #60a5fa);
-                    filter: blur(40px);
+                    background: linear-gradient(135deg, #4ade80, #86efac);
+                    filter: blur(1px);
                     z-index: 1;
                 }
-                .b1 { width:240px; height:240px; top:4%; left:3%; opacity:.08; border-radius:60% 40% 55% 45%/45% 55% 45% 55%; animation:fA 7s ease-in-out infinite; }
-                .b2 { width:170px; height:170px; bottom:8%; left:10%; opacity:.06; border-radius:40% 60% 45% 55%/55% 45% 60% 40%; animation:fB 9s ease-in-out infinite; background:linear-gradient(135deg,#3b82f6,#93c5fd); }
-                .b3 { width:300px; height:190px; top:12%; right:2%; opacity:.07; border-radius:55% 45% 60% 40%/40% 60% 40% 60%; animation:fC 8s ease-in-out infinite; background:linear-gradient(135deg,#60a5fa,#2563eb); }
-                .b4 { width:140px; height:140px; bottom:18%; right:6%; opacity:.05; border-radius:50% 50% 40% 60%/60% 40% 60% 40%; animation:fA 6s ease-in-out infinite reverse; background:linear-gradient(135deg,#93c5fd,#3b82f6); }
-                .b5 { width:110px; height:110px; top:42%; left:1%; opacity:.04; border-radius:60% 40% 50% 50%/50% 50% 60% 40%; animation:fB 10s ease-in-out infinite; background:linear-gradient(135deg,#dbeafe,#60a5fa); }
-                .b6 { width:85px;  height:85px;  top:62%; right:16%; opacity:.06; border-radius:50% 50% 40% 60%/40% 60% 50% 50%; animation:fC 7.5s ease-in-out infinite reverse; }
+                .b1 { width:240px; height:240px; top:4%; left:3%; opacity:.2; border-radius:60% 40% 55% 45%/45% 55% 45% 55%; animation:fA 7s ease-in-out infinite; }
+                .b2 { width:170px; height:170px; bottom:8%; left:10%; opacity:.17; border-radius:40% 60% 45% 55%/55% 45% 60% 40%; animation:fB 9s ease-in-out infinite; background:linear-gradient(135deg,#22c55e,#86efac); }
+                .b3 { width:300px; height:190px; top:12%; right:2%; opacity:.18; border-radius:55% 45% 60% 40%/40% 60% 40% 60%; animation:fC 8s ease-in-out infinite; background:linear-gradient(135deg,#4ade80,#16a34a); }
+                .b4 { width:140px; height:140px; bottom:18%; right:6%; opacity:.15; border-radius:50% 50% 40% 60%/60% 40% 60% 40%; animation:fA 6s ease-in-out infinite reverse; background:linear-gradient(135deg,#86efac,#22c55e); }
+                .b5 { width:110px; height:110px; top:42%; left:1%; opacity:.13; border-radius:60% 40% 50% 50%/50% 50% 60% 40%; animation:fB 10s ease-in-out infinite; background:linear-gradient(135deg,#bbf7d0,#4ade80); }
+                .b6 { width:85px;  height:85px;  top:62%; right:16%; opacity:.15; border-radius:50% 50% 40% 60%/40% 60% 50% 50%; animation:fC 7.5s ease-in-out infinite reverse; }
 
-                .worm { position:absolute; pointer-events:none; opacity:.06; z-index:1; }
+                .worm { position:absolute; pointer-events:none; opacity:.18; z-index:1; }
                 .w1 { top:5%;    left:26%;  animation:fA 8s ease-in-out infinite; }
                 .w2 { bottom:6%; right:20%; animation:fB 9s ease-in-out infinite; }
                 .w3 { top:45%;   right:3%;  animation:fC 7s ease-in-out infinite; }
 
-                .dot { position:absolute; border-radius:50%; background:rgba(59,130,246,.2); pointer-events:none; z-index:1; }
+                .dot { position:absolute; border-radius:50%; background:rgba(255,255,255,.45); pointer-events:none; z-index:1; }
                 .d1 { width:5px; height:5px; top:17%; left:38%; animation:fA 5s ease-in-out infinite; }
                 .d2 { width:3px; height:3px; top:73%; left:52%; animation:fB 6s ease-in-out infinite 1s; }
                 .d3 { width:4px; height:4px; top:38%; right:14%; animation:fC 7s ease-in-out infinite .5s; }
@@ -140,11 +140,11 @@ const Login = () => {
 
                 .btn {
                     width: 100%; padding: 14px; margin-top: 8px;
-                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
                     border: none; border-radius: 14px; color: white;
                     font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
                     cursor: pointer; letter-spacing: .02em;
-                    box-shadow: 0 6px 24px rgba(59,130,246,.38), 0 1px 0 rgba(255,255,255,.15) inset;
+                    box-shadow: 0 6px 24px rgba(34,197,94,.38), 0 1px 0 rgba(255,255,255,.15) inset;
                     transition: all .22s cubic-bezier(.22,1,.36,1);
                     animation: fadeUp .6s .35s cubic-bezier(.22,1,.36,1) both;
                     display: flex;
@@ -152,7 +152,7 @@ const Login = () => {
                     justify-content: center;
                     gap: 10px;
                 }
-                .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(59,130,246,.55); }
+                .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(34,197,94,.55); }
                 .btn:active:not(:disabled) { transform: translateY(0); }
                 .btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
@@ -170,16 +170,16 @@ const Login = () => {
 
                 .footer-txt {
                     text-align: center; font-size: 13px;
-                    color: #64748b; margin-top: 22px;
+                    color: #475569; margin-top: 22px;
                     animation: fadeUp .6s .4s cubic-bezier(.22,1,.36,1) both;
                 }
-                .footer-txt a { color: #3b82f6; font-weight: 600; text-decoration: none; }
-                .footer-txt a:hover { color: #2563eb; }
+                .footer-txt a { color: #22c55e; font-weight: 600; text-decoration: none; }
+                .footer-txt a:hover { color: #16a34a; }
 
                 .info-box {
                     margin-top: 24px;
                     padding: 20px;
-                    background: #f1f5f9;
+                    background: #f8fafc;
                     border: 1px solid #e2e8f0;
                     border-radius: 16px;
                     animation: fadeUp .6s .45s cubic-bezier(.22,1,.36,1) both;
@@ -187,10 +187,10 @@ const Login = () => {
                 .info-title {
                     font-family: 'Syne', sans-serif;
                     font-size: 14px; font-weight: 700;
-                    color: #1e293b; margin-bottom: 8px;
+                    color: #0f172a; margin-bottom: 8px;
                 }
                 .info-desc {
-                    font-size: 11px; color: #64748b;
+                    font-size: 11px; color: #475569;
                     line-height: 1.5; margin-bottom: 14px;
                 }
                 .info-item {
@@ -199,9 +199,9 @@ const Login = () => {
                 }
                 .info-dot {
                     width: 6px; height: 6px;
-                    background: #3b82f6;
+                    background: #22c55e;
                     border-radius: 50%;
-                    box-shadow: 0 0 8px rgba(59,130,246,.5);
+                    box-shadow: 0 0 8px rgba(34,197,94,.5);
                 }
                 .info-label {
                     font-size: 11px; font-weight: 600;
