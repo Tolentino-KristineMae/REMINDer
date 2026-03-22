@@ -168,7 +168,7 @@ export default function AddBillPage() {
 
   if (fetching) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center font-['DM_Sans',_sans-serif]">
         <div className="flex flex-col items-center gap-6">
           <div className="relative">
             <div className="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center">
@@ -186,7 +186,10 @@ export default function AddBillPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="min-h-screen bg-[#f8fafc] font-['DM_Sans',_sans-serif]">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&display=swap');
+      `}</style>
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
         <div className="flex justify-end mb-6">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
@@ -212,7 +215,7 @@ export default function AddBillPage() {
                       <Receipt className="w-6 h-6 text-green-700" />
                     </div>
                     <div>
-                      <h1 className="text-xl font-black text-gray-900 leading-tight">
+                      <h1 className="text-xl font-black text-gray-900 leading-tight font-['Syne',_sans-serif]">
                         Add New Financial Bill
                       </h1>
                       <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-1.5 leading-relaxed">
