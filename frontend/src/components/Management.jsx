@@ -125,15 +125,15 @@ const Management = () => {
   }, [bills])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="mx-auto max-w-7xl px-6 py-8">
+    <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <main className="mx-auto max-w-7xl px-6 py-8" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
         <div className="mb-8 flex items-center gap-2 rounded-2xl bg-white p-1.5 w-fit border border-green-100 shadow-sm">
           <button 
             onClick={() => setActiveTab('categories')}
-            className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
               activeTab === 'categories' 
                 ? 'bg-green-600 text-white shadow-md' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-green-50'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-green-50'
             }`}
           >
             <Layers className="h-4 w-4" />
@@ -141,10 +141,10 @@ const Management = () => {
           </button>
           <button 
             onClick={() => setActiveTab('people')}
-            className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
               activeTab === 'people' 
                 ? 'bg-green-600 text-white shadow-md' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-green-50'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-green-50'
             }`}
           >
             <Users className="h-4 w-4" />
@@ -161,7 +161,7 @@ const Management = () => {
                 <UserPlus className="h-4 w-4 text-green-600" />
               )}
             </div>
-            <h2 className="font-semibold text-foreground">
+            <h2 className="font-bold text-gray-900">
               {activeTab === 'categories' ? 'Add New Category' : 'Add Team Member'}
             </h2>
           </div>
@@ -169,7 +169,7 @@ const Management = () => {
           {activeTab === 'categories' ? (
             <form onSubmit={handleAddCategory} className="flex flex-col gap-4 sm:flex-row sm:items-end">
               <div className="flex-1">
-                <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                <label className="mb-2 block text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Category Name
                 </label>
                 <input
@@ -177,13 +177,13 @@ const Management = () => {
                   value={newCategory.name}
                   onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
                   placeholder="e.g. Utilities, Rent, Insurance..."
-                  className="h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-all"
+                  className="h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-900 placeholder:text-gray-400 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-all"
                   required
                 />
               </div>
 
               <div className="w-full sm:w-40">
-                <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                <label className="mb-2 block text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Theme Color
                 </label>
                 <div className="flex h-11 items-center gap-3 rounded-xl border border-gray-200 bg-white px-4">
@@ -220,7 +220,7 @@ const Management = () => {
           ) : (
             <form onSubmit={handleAddPerson} className="flex flex-col gap-4 sm:flex-row sm:items-end">
               <div className="flex-1">
-                <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                <label className="mb-2 block text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Full Name
                 </label>
                 <input
@@ -234,7 +234,7 @@ const Management = () => {
               </div>
 
               <div className="flex-1">
-                <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                <label className="mb-2 block text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Email Address
                 </label>
                 <input
@@ -283,7 +283,7 @@ const Management = () => {
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <CircleDot className="h-3 w-3 text-green-500" />
-            <h3 className="text-sm font-medium text-muted-foreground">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
               {activeTab === 'categories' ? `${categories.length} Categories` : `${people.length} Team Members`}
             </h3>
           </div>
@@ -340,9 +340,9 @@ const Management = () => {
               <table className="w-full">
                 <thead className="border-b border-green-50 bg-green-50/30">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase">Category</th>
-                    <th className="px-6 py-4 text-center text-xs font-medium text-gray-400 uppercase">Color</th>
-                    <th className="px-6 py-4 text-right text-xs font-medium text-gray-400 uppercase">Actions</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Category</th>
+                    <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Color</th>
+                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-green-50">
@@ -441,11 +441,11 @@ const Management = () => {
                 <table className="min-w-[600px] w-full">
                   <thead className="border-b border-green-50 bg-green-50/30">
                     <tr>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase">Team Member</th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-gray-400 uppercase">Assigned</th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-gray-400 uppercase">Settled</th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-gray-400 uppercase">Performance</th>
-                      <th className="px-6 py-4 text-right text-xs font-medium text-gray-400 uppercase">Actions</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Team Member</th>
+                      <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Assigned</th>
+                      <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Settled</th>
+                      <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Performance</th>
+                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-green-50">
