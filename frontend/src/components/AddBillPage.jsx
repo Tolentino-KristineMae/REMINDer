@@ -106,15 +106,7 @@ const AddBillPage = () => {
 
             <div className="w-full max-w-4xl relative z-10">
                 {/* Header Navigation */}
-                <div className="flex items-center justify-between mb-10">
-                    <button 
-                        onClick={() => navigate(-1)}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-green-600 hover:border-green-100 shadow-sm transition-all group"
-                    >
-                        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Exit to Dashboard</span>
-                    </button>
-
+                <div className="flex items-center justify-end mb-10">
                     <div className="flex items-center gap-3 bg-green-50 px-4 py-2 rounded-2xl border border-green-100/50">
                         <Sparkles size={14} className="text-green-600" />
                         <span className="text-[10px] font-black text-green-700 uppercase tracking-widest">New Entry Mode</span>
@@ -127,9 +119,6 @@ const AddBillPage = () => {
                         <div className="bg-white rounded-[2.5rem] p-8 border border-green-100 shadow-xl shadow-green-900/5 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-[4rem] -z-0"></div>
                             <div className="relative z-10">
-                                <div className="w-14 h-14 bg-green-900 rounded-2xl flex items-center justify-center text-white shadow-lg mb-6">
-                                    <Plus size={28} strokeWidth={2.5} />
-                                </div>
                                 <h1 className="text-2xl font-black text-gray-900 leading-tight mb-3">Add New <br/>Financial Bill</h1>
                                 <p className="text-xs font-medium text-gray-500 leading-relaxed mb-8">
                                     Enter the specifics of your bill to maintain accurate financial tracking.
