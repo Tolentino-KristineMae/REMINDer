@@ -20,7 +20,8 @@ const CalendarPage = () => {
     });
     const [bills, setBills] = useState([]);
     const billsListRef = useRef(null);
-    const calendarScrollRef = useRef(null);
+    const calendarHeaderRef = useRef(null);
+    const calendarBodyRef = useRef(null);
 
     useEffect(() => {
         const fetchBills = async () => {
@@ -107,9 +108,8 @@ const CalendarPage = () => {
 
     const scrollToDayColumn = (date) => {
         const dayIndex = date.getDay(); // 0 = Sunday
-        const containers = document.querySelectorAll('.calendar-scroll-container');
         
-        containers.forEach(container => {
+        [calendarHeaderRef.current, calendarBodyRef.current].forEach(container => {
             if (container) {
                 const containerWidth = container.clientWidth;
                 const totalWidth = container.scrollWidth;
@@ -118,19 +118,13 @@ const CalendarPage = () => {
                 const centerOffset = containerWidth / 2 - dayWidth / 2;
                 const scrollTo = targetPosition - centerOffset;
                 
-                container.scrollTo({
-                    left: Math.max(0, Math.min(scrollTo, totalWidth - containerWidth)),
-                    behavior: 'smooth'
-                });
+                container.scrollLeft = Math.max(0, Math.min(scrollTo, totalWidth - containerWidth));
             }
         });
         
         // Scroll bills list to top
         if (billsListRef.current) {
-            billsListRef.current.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            billsListRef.current.scrollTop = 0;
         }
     };
 
@@ -167,7 +161,7 @@ const CalendarPage = () => {
                         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
                         
                         {/* Week Header */}
-                        <div className="bg-gradient-to-b from-white to-gray-50/30 px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-100/50 overflow-x-auto calendar-scroll-container">
+                        <div ref={calendarHeaderRef} className="bg-gradient-to-b from-white to-gray-50/30 px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-100/50 overflow-x-auto">
                             <div className="min-w-[720px] flex justify-between items-end">
                                 {weekDays.map((day, i) => {
                                     const isToday = day.toDateString() === new Date().toDateString();
@@ -233,7 +227,7 @@ const CalendarPage = () => {
                         </div>
 
                         {/* Day Columns - Refined */}
-                        <div className="flex-1 min-h-0 overflow-auto calendar-scroll-container" ref={calendarScrollRef}>
+                        <div ref={calendarBodyRef} className="flex-1 min-h-0 overflow-auto">
                             <div className="min-w-[720px] flex">
                                 {weekDays.map((day, dayIndex) => {
                                     const dayBills = getBillsForDate(day);
