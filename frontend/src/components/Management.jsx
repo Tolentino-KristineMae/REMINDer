@@ -16,6 +16,7 @@ import {
     ShieldCheck,
     MoreHorizontal
 } from 'lucide-react';
+import BackgroundAuth from './BackgroundAuth';
 
 const Management = () => {
     const [activeTab, setActiveTab] = useState('categories'); // 'categories' or 'people'
@@ -86,7 +87,6 @@ const Management = () => {
         setLoading(true);
         setMessage({ text: '', type: '' });
         try {
-            // Assuming endpoint exists or will be added
             await api.post('/people', newPerson);
             setNewPerson({ name: '', email: '', phone: '' });
             setShowAddPerson(false);
@@ -168,7 +168,7 @@ const Management = () => {
                             {activeTab === 'categories' ? (
                                 <form onSubmit={handleAddCategory} className="flex flex-col md:flex-row gap-5 bg-gray-50/50 p-6 rounded-[2rem] border border-gray-100">
                                     <div className="flex-1 group">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Category Identity</label>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Category Identity</label>
                                         <input
                                             type="text"
                                             value={newCategory.name}
@@ -179,7 +179,7 @@ const Management = () => {
                                         />
                                     </div>
                                     <div className="group">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Theme Color</label>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Theme Color</label>
                                         <div className="flex items-center gap-4 bg-white px-5 py-3 rounded-2xl shadow-sm border-2 border-transparent focus-within:border-green-500 transition-all">
                                             <Palette size={18} className="text-gray-400" />
                                             <input
@@ -209,7 +209,7 @@ const Management = () => {
                                     ) : (
                                         <form onSubmit={handleAddPerson} className="grid grid-cols-1 md:grid-cols-4 gap-5 animate-fade-in">
                                             <div className="group">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Full Name</label>
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Full Name</label>
                                                 <input
                                                     type="text"
                                                     placeholder="e.g. John Doe"
@@ -220,7 +220,7 @@ const Management = () => {
                                                 />
                                             </div>
                                             <div className="group">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Email Address</label>
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Email Address</label>
                                                 <input
                                                     type="email"
                                                     placeholder="e.g. john@example.com"
@@ -231,7 +231,7 @@ const Management = () => {
                                                 />
                                             </div>
                                             <div className="group">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Phone Number</label>
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Phone Number</label>
                                                 <input
                                                     type="tel"
                                                     placeholder="Optional"
@@ -287,185 +287,186 @@ const Management = () => {
 
                 {/* Content Area */}
                 <div className="flex-1 overflow-y-auto custom-scrollbar px-2 pb-8">
-                {activeTab === 'categories' ? (
-                    // Categories Content
-                    viewMode === 'grid' ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                            {categories.map((cat) => (
-                                <div key={cat.id} className="group bg-white rounded-[2rem] p-6 border border-green-50 shadow-sm hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all flex flex-col items-center relative overflow-hidden">
-                                    <div className="w-16 h-16 rounded-2xl mb-4 flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-all" style={{ backgroundColor: cat.color }}>
-                                        <Layers size={24} />
-                                    </div>
-                                    <h4 className="font-black text-gray-900 text-sm text-center mb-1">{cat.name}</h4>
-                                    <div className="flex items-center gap-1.5 mb-6">
-                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.color }}></div>
-                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{cat.color}</span>
-                                    </div>
-                                    <button onClick={() => handleDeleteCategory(cat.id)} className="w-10 h-10 flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="bg-white rounded-[2.5rem] border border-green-100 shadow-sm overflow-hidden">
-                            <table className="w-full">
-                                <thead className="bg-green-50/30 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                    <tr>
-                                        <th className="px-8 py-5 text-left">Category</th>
-                                        <th className="px-8 py-5 text-center">Color Hex</th>
-                                        <th className="px-8 py-5 text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-green-50">
-                                    {categories.map((cat) => (
-                                        <tr key={cat.id} className="hover:bg-green-50/10 transition-all group">
-                                            <td className="px-8 py-5">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm" style={{ backgroundColor: cat.color }}>
-                                                        <Layers size={18} />
-                                                    </div>
-                                                    <span className="font-bold text-gray-900 text-sm">{cat.name}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-8 py-5 text-center">
-                                                <div className="inline-flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
-                                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }}></div>
-                                                    <span className="text-[10px] font-black text-gray-500 uppercase">{cat.color}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-8 py-5 text-right">
-                                                <button onClick={() => handleDeleteCategory(cat.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                                    <Trash2 size={18} />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )
-                ) : (
-                    // People Content
-                    viewMode === 'grid' ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {people.map((person) => {
-                                const stats = getPersonStats(person.id);
-                                return (
-                                    <div key={person.id} className="group bg-white rounded-[2rem] p-6 border border-green-50 shadow-sm hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all flex flex-col items-center text-center relative overflow-hidden">
-                                        <div className="absolute top-0 right-0 w-24 h-24 bg-green-50/50 rounded-bl-[4rem] -z-0 transition-all group-hover:bg-green-50 group-hover:scale-110"></div>
-                                        <div className="relative z-10 w-full flex flex-col items-center">
-                                            <div className="relative mb-4">
-                                                <div className="w-24 h-24 rounded-3xl border-4 border-white shadow-lg overflow-hidden relative">
-                                                    <img src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} className="w-full h-full object-cover" alt={person.name} />
-                                                </div>
-                                                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 border-4 border-white rounded-2xl flex items-center justify-center text-white shadow-md">
-                                                    <ShieldCheck size={14} />
-                                                </div>
-                                            </div>
-                                            <h3 className="font-black text-green-950 text-lg mb-1">{person.name}</h3>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Person In-Charge</p>
-                                            <div className="grid grid-cols-2 w-full gap-4 mb-6">
-                                                <div className="bg-green-50/50 p-3 rounded-2xl border border-green-50">
-                                                    <p className="text-[9px] font-black text-green-900/50 uppercase mb-1">Assigned</p>
-                                                    <p className="text-sm font-black text-green-900">{stats.count}</p>
-                                                </div>
-                                                <div className="bg-green-50/50 p-3 rounded-2xl border border-green-50">
-                                                    <p className="text-[9px] font-black text-green-900/50 uppercase mb-1">Performance</p>
-                                                    <p className="text-sm font-black text-green-900">{stats.performance}%</p>
-                                                </div>
-                                            </div>
-                                            <div className="w-full flex items-center gap-2 mb-6">
-                                                <button className="flex-1 flex items-center justify-center gap-2 bg-green-50 text-green-700 py-2.5 rounded-xl font-bold text-[10px] hover:bg-green-100 transition-all">
-                                                    <MailIcon size={14} /> Message
-                                                </button>
-                                                <button className="w-10 h-10 flex items-center justify-center bg-gray-50 text-gray-400 rounded-xl hover:bg-gray-100 transition-all border border-gray-100">
-                                                    <Phone size={14} />
-                                                </button>
-                                            </div>
-                                            <div className="w-full pt-4 border-t border-green-50 flex items-center justify-between">
-                                                <div className="flex items-center gap-1.5">
-                                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                                                    <span className="text-[9px] font-black text-green-600 uppercase">Online</span>
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <button onClick={() => handleDeletePerson(person.id)} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                    <button className="p-1.5 text-gray-300 hover:text-green-600 transition-all">
-                                                        <MoreHorizontal size={16} />
-                                                    </button>
-                                                </div>
-                                            </div>
+                    {activeTab === 'categories' ? (
+                        // Categories Content
+                        viewMode === 'grid' ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                {categories.map((cat) => (
+                                    <div key={cat.id} className="group bg-white rounded-[2rem] p-6 border border-green-50 shadow-sm hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all flex flex-col items-center relative overflow-hidden">
+                                        <div className="w-16 h-16 rounded-2xl mb-4 flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-all" style={{ backgroundColor: cat.color }}>
+                                            <Layers size={24} />
                                         </div>
+                                        <h4 className="font-black text-gray-900 text-sm text-center mb-1">{cat.name}</h4>
+                                        <div className="flex items-center gap-1.5 mb-6">
+                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.color }}></div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{cat.color}</span>
+                                        </div>
+                                        <button onClick={() => handleDeleteCategory(cat.id)} className="w-10 h-10 flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                                            <Trash2 size={16} />
+                                        </button>
                                     </div>
-                                );
-                            })}
-                        </div>
-                    ) : (
-                        <div className="bg-white rounded-[2rem] border border-green-100 shadow-sm overflow-hidden">
-                            <div className="overflow-x-auto">
-                                <table className="min-w-[900px] w-full">
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="bg-white rounded-[2.5rem] border border-green-100 shadow-sm overflow-hidden">
+                                <table className="w-full">
                                     <thead className="bg-green-50/30 text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                         <tr>
-                                            <th className="px-6 py-4 text-left">Team Member</th>
-                                            <th className="px-6 py-4 text-center">Assigned Bills</th>
-                                            <th className="px-6 py-4 text-center">Settled</th>
-                                            <th className="px-6 py-4 text-center">Total Value</th>
-                                            <th className="px-6 py-4 text-center">Performance</th>
-                                            <th className="px-6 py-4 text-right">Actions</th>
+                                            <th className="px-8 py-5 text-left">Category</th>
+                                            <th className="px-8 py-5 text-center">Color Hex</th>
+                                            <th className="px-8 py-5 text-right">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-green-50">
-                                        {people.map((person) => {
-                                            const stats = getPersonStats(person.id);
-                                            return (
-                                                <tr key={person.id} className="hover:bg-green-50/10 transition-all group">
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center gap-3">
-                                                            <img src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} className="w-10 h-10 rounded-xl border border-green-50 shadow-sm" alt={person.name} />
-                                                            <div>
-                                                                <h4 className="font-bold text-gray-900 text-sm">{person.name}</h4>
-                                                                <p className="text-[10px] font-medium text-gray-400">{person.email}</p>
-                                                            </div>
+                                        {categories.map((cat) => (
+                                            <tr key={cat.id} className="hover:bg-green-50/10 transition-all group">
+                                                <td className="px-8 py-5">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm" style={{ backgroundColor: cat.color }}>
+                                                            <Layers size={18} />
                                                         </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-center">
-                                                        <span className="text-sm font-black text-green-950">{stats.count}</span>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-center">
-                                                        <span className="text-sm font-black text-green-600">{stats.paid}</span>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-center">
-                                                        <span className="text-sm font-black text-green-950">₱{stats.total.toLocaleString()}</span>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-center">
-                                                        <div className="flex flex-col items-center gap-1.5">
-                                                            <div className="w-20 bg-green-50 h-1.5 rounded-full overflow-hidden">
-                                                                <div className="bg-green-500 h-full" style={{ width: `${stats.performance}%` }}></div>
-                                                            </div>
-                                                            <span className="text-[10px] font-black text-green-600">{stats.performance}%</span>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-right">
-                                                        <div className="flex items-center justify-end gap-2">
-                                                            <button onClick={() => handleDeletePerson(person.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                                                <Trash2 size={18} />
-                                                            </button>
-                                                            <button className="p-2 text-gray-300 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all">
-                                                                <MoreHorizontal size={18} />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
+                                                        <span className="font-bold text-gray-900 text-sm">{cat.name}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-8 py-5 text-center">
+                                                    <div className="inline-flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                                                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }}></div>
+                                                        <span className="text-[10px] font-black text-gray-500 uppercase">{cat.color}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-8 py-5 text-right">
+                                                    <button onClick={() => handleDeleteCategory(cat.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                    )
-                )}
+                        )
+                    ) : (
+                        // People Content
+                        viewMode === 'grid' ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {people.map((person) => {
+                                    const stats = getPersonStats(person.id);
+                                    return (
+                                        <div key={person.id} className="group bg-white rounded-[2rem] p-6 border border-green-50 shadow-sm hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all flex flex-col items-center text-center relative overflow-hidden">
+                                            <div className="absolute top-0 right-0 w-24 h-24 bg-green-50/50 rounded-bl-[4rem] -z-0 transition-all group-hover:bg-green-50 group-hover:scale-110"></div>
+                                            <div className="relative z-10 w-full flex flex-col items-center">
+                                                <div className="relative mb-4">
+                                                    <div className="w-24 h-24 rounded-3xl border-4 border-white shadow-lg overflow-hidden relative">
+                                                        <img src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} className="w-full h-full object-cover" alt={person.name} />
+                                                    </div>
+                                                    <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 border-4 border-white rounded-2xl flex items-center justify-center text-white shadow-md">
+                                                        <ShieldCheck size={14} />
+                                                    </div>
+                                                </div>
+                                                <h3 className="font-black text-green-950 text-lg mb-1">{person.name}</h3>
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Person In-Charge</p>
+                                                <div className="grid grid-cols-2 w-full gap-4 mb-6">
+                                                    <div className="bg-green-50/50 p-3 rounded-2xl border border-green-50">
+                                                        <p className="text-[9px] font-black text-green-900/50 uppercase mb-1">Assigned</p>
+                                                        <p className="text-sm font-black text-green-900">{stats.count}</p>
+                                                    </div>
+                                                    <div className="bg-green-50/50 p-3 rounded-2xl border border-green-50">
+                                                        <p className="text-[9px] font-black text-green-900/50 uppercase mb-1">Performance</p>
+                                                        <p className="text-sm font-black text-green-900">{stats.performance}%</p>
+                                                    </div>
+                                                </div>
+                                                <div className="w-full flex items-center gap-2 mb-6">
+                                                    <button className="flex-1 flex items-center justify-center gap-2 bg-green-50 text-green-700 py-2.5 rounded-xl font-bold text-[10px] hover:bg-green-100 transition-all">
+                                                        <MailIcon size={14} /> Message
+                                                    </button>
+                                                    <button className="w-10 h-10 flex items-center justify-center bg-gray-50 text-gray-400 rounded-xl hover:bg-gray-100 transition-all border border-gray-100">
+                                                        <Phone size={14} />
+                                                    </button>
+                                                </div>
+                                                <div className="w-full pt-4 border-t border-green-50 flex items-center justify-between">
+                                                    <div className="flex items-center gap-1.5">
+                                                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                                        <span className="text-[9px] font-black text-green-600 uppercase">Online</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <button onClick={() => handleDeletePerson(person.id)} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                        <button className="p-1.5 text-gray-300 hover:text-green-600 transition-all">
+                                                            <MoreHorizontal size={16} />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="bg-white rounded-[2rem] border border-green-100 shadow-sm overflow-hidden">
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-[900px] w-full">
+                                        <thead className="bg-green-50/30 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                            <tr>
+                                                <th className="px-6 py-4 text-left">Team Member</th>
+                                                <th className="px-6 py-4 text-center">Assigned Bills</th>
+                                                <th className="px-6 py-4 text-center">Settled</th>
+                                                <th className="px-6 py-4 text-center">Total Value</th>
+                                                <th className="px-6 py-4 text-center">Performance</th>
+                                                <th className="px-6 py-4 text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-green-50">
+                                            {people.map((person) => {
+                                                const stats = getPersonStats(person.id);
+                                                return (
+                                                    <tr key={person.id} className="hover:bg-green-50/10 transition-all group">
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex items-center gap-3">
+                                                                <img src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} className="w-10 h-10 rounded-xl border border-green-50 shadow-sm" alt={person.name} />
+                                                                <div>
+                                                                    <h4 className="font-bold text-gray-900 text-sm">{person.name}</h4>
+                                                                    <p className="text-[10px] font-medium text-gray-400">{person.email}</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-center">
+                                                            <span className="text-sm font-black text-green-950">{stats.count}</span>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-center">
+                                                            <span className="text-sm font-black text-green-600">{stats.paid}</span>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-center">
+                                                            <span className="text-sm font-black text-green-950">₱{stats.total.toLocaleString()}</span>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-center">
+                                                            <div className="flex flex-col items-center gap-1.5">
+                                                                <div className="w-20 bg-green-50 h-1.5 rounded-full overflow-hidden">
+                                                                    <div className="bg-green-500 h-full" style={{ width: `${stats.performance}%` }}></div>
+                                                                </div>
+                                                                <span className="text-[10px] font-black text-green-600">{stats.performance}%</span>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-right">
+                                                            <div className="flex items-center justify-end gap-2">
+                                                                <button onClick={() => handleDeletePerson(person.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                                                                    <Trash2 size={18} />
+                                                                </button>
+                                                                <button className="p-2 text-gray-300 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all">
+                                                                    <MoreHorizontal size={18} />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )
+                    )}
+                </div>
             </div>
         </div>
     );
