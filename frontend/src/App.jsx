@@ -6,7 +6,7 @@ import Login from './components/Login';
 import Setup from './components/Setup';
 import Dashboard from './components/Dashboard';
 import Sidebar from './components/Sidebar';
-import AddBillPage from './components/AddBillPage';
+import CategoryPage from './components/CategoryPage';
 import CalendarPage from './components/CalendarPage';
 import PaidBillsPage from './components/PaidBillsPage';
 import TeamPage from './components/TeamPage';
@@ -140,10 +140,10 @@ const App = () => {
                             } 
                         />
                         <Route 
-                            path="/add-bill" 
+                            path="/categories" 
                             element={
-                                <PrivateRoute pageTitle="Add Bill" pageSubtitle="Create a new bill entry">
-                                    <AddBillPage />
+                                <PrivateRoute pageTitle="Categories" pageSubtitle="Manage your bill categories">
+                                    <CategoryPage />
                                 </PrivateRoute>
                             } 
                         />

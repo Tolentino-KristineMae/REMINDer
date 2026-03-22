@@ -3,15 +3,13 @@ import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
   Calendar,
-  BarChart3,
   Users,
-  Settings,
-  HelpCircle,
   LogOut,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Plus,
+  Layers,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Logo from './Logo';
@@ -41,16 +39,10 @@ const C = {
 
 const menuItems = [
   { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
-  { icon: <Plus size={18} />,            label: 'Add Bill',   path: '/add-bill' },
+  { icon: <Layers size={18} />,          label: 'Categories', path: '/categories' },
   { icon: <Calendar size={18} />,        label: 'Calendar',   path: '/calendar' },
   { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },
   { icon: <Users size={18} />,           label: 'Person In Charge', path: '/team' },
-  { icon: <BarChart3 size={18} />,       label: 'Analytics',  path: '/analytics' },
-];
-
-const generalItems = [
-  { icon: <Settings size={18} />,   label: 'Settings', path: '/settings' },
-  { icon: <HelpCircle size={18} />, label: 'Help',     path: '/help' },
 ];
 
 const Tooltip = ({ label }) => (
@@ -338,24 +330,6 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '20px' }}>
             {menuItems.map(item => (
-              <NavItem key={item.label} {...item} collapsed={collapsed} onClose={onClose} />
-            ))}
-          </nav>
-
-          {!collapsed && (
-            <p style={{
-              fontSize:      '10px',
-              fontWeight:    600,
-              color:         C.textMuted,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin:        '0 0 8px 8px',
-              fontFamily:   C.fontFamily,
-            }}>General</p>
-          )}
-
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {generalItems.map(item => (
               <NavItem key={item.label} {...item} collapsed={collapsed} onClose={onClose} />
             ))}
             <NavItem
