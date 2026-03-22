@@ -266,7 +266,8 @@ const SettleBillPage = () => {
                                         className="hidden" 
                                         onChange={handleFileChange}
                                         accept="image/*"
-                                        capture="environment"
+                                        multiple
+                                        aria-label="Upload proof of payment"
                                     />
                                     <div className={`
                                         aspect-[16/7] rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center gap-4
