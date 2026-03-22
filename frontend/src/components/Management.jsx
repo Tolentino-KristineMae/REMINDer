@@ -123,143 +123,170 @@ const Management = () => {
     };
 
     return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col">
-            
-            {/* Tabs & Header */}
-            <div className="bg-white rounded-[2.5rem] p-6 border border-green-100 shadow-sm mb-6 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-green-50/50 rounded-bl-[10rem] -z-0"></div>
-                
-                <div className="relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                        <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 bg-green-900 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-green-900/20">
-                                {activeTab === 'categories' ? <Layers size={28} /> : <Users size={28} />}
-                            </div>
-                            <div>
-                                <h2 className="text-2xl font-black text-gray-900">System Management</h2>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Configure your workspace resources</p>
-                            </div>
-                        </div>
+        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-8 flex flex-col relative overflow-hidden">
+            {/* Background Decorative Elements */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden -z-0">
+                <div className="absolute top-[-5%] right-[-2%] w-[400px] h-[400px] bg-green-50 rounded-full blur-3xl opacity-50"></div>
+                <div className="absolute bottom-[-5%] left-[-2%] w-[350px] h-[350px] bg-emerald-50 rounded-full blur-3xl opacity-50"></div>
+            </div>
 
-                        <div className="flex bg-gray-100 p-1 rounded-2xl w-fit">
-                            <button 
-                                onClick={() => setActiveTab('categories')}
-                                className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${activeTab === 'categories' ? 'bg-white text-green-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                            >
-                                <Layers size={14} /> Categories
-                            </button>
-                            <button 
-                                onClick={() => setActiveTab('people')}
-                                className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${activeTab === 'people' ? 'bg-white text-green-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                            >
-                                <Users size={14} /> People
-                            </button>
-                        </div>
-                    </div>
+            <div className="relative z-10 flex flex-col h-full">
+                {/* Header Section */}
+                <div className="bg-white rounded-[2.5rem] p-8 border border-green-100 shadow-xl shadow-green-900/5 mb-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-green-50/50 rounded-bl-[10rem] -z-0"></div>
+                    
+                    <div className="relative z-10">
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-10">
+                            <div className="flex items-center gap-5">
+                                <div className="w-16 h-16 bg-green-900 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-green-900/20">
+                                    {activeTab === 'categories' ? <Layers size={32} /> : <Users size={32} />}
+                                </div>
+                                <div>
+                                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">System Management</h2>
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Configure your workspace resources & team</p>
+                                </div>
+                            </div>
 
-                    {/* Add Forms */}
-                    {activeTab === 'categories' ? (
-                        <form onSubmit={handleAddCategory} className="flex flex-col md:flex-row gap-4">
-                            <div className="flex-1 relative">
-                                <input
-                                    type="text"
-                                    value={newCategory.name}
-                                    onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                                    placeholder="Category Name (e.g. Internet, Electricity)"
-                                    className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-sm"
-                                    required
-                                />
-                            </div>
-                            <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 px-4 py-2 rounded-2xl">
-                                <Palette size={18} className="text-gray-400" />
-                                <input
-                                    type="color"
-                                    value={newCategory.color}
-                                    onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
-                                    className="w-10 h-10 border-none rounded-lg cursor-pointer bg-transparent"
-                                />
-                                <span className="text-xs font-black text-gray-400 uppercase">{newCategory.color}</span>
-                            </div>
-                            <button type="submit" disabled={loading} className="bg-green-900 text-white px-8 py-4 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-2">
-                                {loading ? 'Adding...' : <><Plus size={18} /> Add Category</>}
-                            </button>
-                        </form>
-                    ) : (
-                        <div className="flex flex-col gap-4">
-                            {!showAddPerson ? (
+                            <div className="flex bg-gray-100/80 p-1.5 rounded-2xl w-fit backdrop-blur-sm border border-gray-200/50">
                                 <button 
-                                    onClick={() => setShowAddPerson(true)}
-                                    className="w-full md:w-fit bg-green-900 text-white px-8 py-4 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center justify-center gap-2"
+                                    onClick={() => setActiveTab('categories')}
+                                    className={`px-8 py-3 rounded-xl text-xs font-black transition-all flex items-center gap-3 ${activeTab === 'categories' ? 'bg-white text-green-900 shadow-lg shadow-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
                                 >
-                                    <UserPlus size={18} /> Add New Person In-Charge
+                                    <Layers size={16} /> Categories
                                 </button>
-                            ) : (
-                                <form onSubmit={handleAddPerson} className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-fade-in">
-                                    <input
-                                        type="text"
-                                        placeholder="Full Name"
-                                        value={newPerson.name}
-                                        onChange={e => setNewPerson({...newPerson, name: e.target.value})}
-                                        className="bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-sm"
-                                        required
-                                    />
-                                    <input
-                                        type="email"
-                                        placeholder="Email Address"
-                                        value={newPerson.email}
-                                        onChange={e => setNewPerson({...newPerson, email: e.target.value})}
-                                        className="bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-sm"
-                                        required
-                                    />
-                                    <input
-                                        type="tel"
-                                        placeholder="Phone Number"
-                                        value={newPerson.phone}
-                                        onChange={e => setNewPerson({...newPerson, phone: e.target.value})}
-                                        className="bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-sm"
-                                    />
-                                    <div className="flex gap-2">
-                                        <button type="submit" disabled={loading} className="flex-1 bg-green-900 text-white rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50">
-                                            Save
-                                        </button>
-                                        <button type="button" onClick={() => setShowAddPerson(false)} className="px-6 bg-gray-100 text-gray-500 rounded-2xl font-black text-sm hover:bg-gray-200 transition-all">
-                                            Cancel
+                                <button 
+                                    onClick={() => setActiveTab('people')}
+                                    className={`px-8 py-3 rounded-xl text-xs font-black transition-all flex items-center gap-3 ${activeTab === 'people' ? 'bg-white text-green-900 shadow-lg shadow-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
+                                >
+                                    <Users size={16} /> Team Members
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Add Forms */}
+                        <div className="animate-fade-in">
+                            {activeTab === 'categories' ? (
+                                <form onSubmit={handleAddCategory} className="flex flex-col md:flex-row gap-5 bg-gray-50/50 p-6 rounded-[2rem] border border-gray-100">
+                                    <div className="flex-1 group">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Category Identity</label>
+                                        <input
+                                            type="text"
+                                            value={newCategory.name}
+                                            onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                                            placeholder="Enter category name..."
+                                            className="w-full bg-white border-2 border-transparent px-6 py-4 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-sm shadow-sm"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="group">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Theme Color</label>
+                                        <div className="flex items-center gap-4 bg-white px-5 py-3 rounded-2xl shadow-sm border-2 border-transparent focus-within:border-green-500 transition-all">
+                                            <Palette size={18} className="text-gray-400" />
+                                            <input
+                                                type="color"
+                                                value={newCategory.color}
+                                                onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
+                                                className="w-10 h-10 border-none rounded-lg cursor-pointer bg-transparent"
+                                            />
+                                            <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter w-16">{newCategory.color}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-end">
+                                        <button type="submit" disabled={loading} className="w-full md:w-auto bg-green-900 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 h-[52px] active:scale-95">
+                                            {loading ? 'Processing...' : <><Plus size={20} strokeWidth={3} /> Add Category</>}
                                         </button>
                                     </div>
                                 </form>
+                            ) : (
+                                <div className="bg-gray-50/50 p-6 rounded-[2rem] border border-gray-100">
+                                    {!showAddPerson ? (
+                                        <button 
+                                            onClick={() => setShowAddPerson(true)}
+                                            className="w-full md:w-fit bg-green-900 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center justify-center gap-3 active:scale-95"
+                                        >
+                                            <UserPlus size={20} strokeWidth={3} /> Add New Team Member
+                                        </button>
+                                    ) : (
+                                        <form onSubmit={handleAddPerson} className="grid grid-cols-1 md:grid-cols-4 gap-5 animate-fade-in">
+                                            <div className="group">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Full Name</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="e.g. John Doe"
+                                                    value={newPerson.name}
+                                                    onChange={e => setNewPerson({...newPerson, name: e.target.value})}
+                                                    className="w-full bg-white border-2 border-transparent px-6 py-4 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-sm shadow-sm"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="group">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Email Address</label>
+                                                <input
+                                                    type="email"
+                                                    placeholder="e.g. john@example.com"
+                                                    value={newPerson.email}
+                                                    onChange={e => setNewPerson({...newPerson, email: e.target.value})}
+                                                    className="w-full bg-white border-2 border-transparent px-6 py-4 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-sm shadow-sm"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="group">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 block">Phone Number</label>
+                                                <input
+                                                    type="tel"
+                                                    placeholder="Optional"
+                                                    value={newPerson.phone}
+                                                    onChange={e => setNewPerson({...newPerson, phone: e.target.value})}
+                                                    className="w-full bg-white border-2 border-transparent px-6 py-4 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-sm shadow-sm"
+                                                />
+                                            </div>
+                                            <div className="flex items-end gap-3">
+                                                <button type="submit" disabled={loading} className="flex-1 bg-green-900 text-white rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 h-[52px] active:scale-95">
+                                                    Save Member
+                                                </button>
+                                                <button type="button" onClick={() => setShowAddPerson(false)} className="px-6 bg-white text-gray-400 border border-gray-200 rounded-2xl font-black text-sm hover:bg-gray-50 transition-all h-[52px]">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+                                    )}
+                                </div>
                             )}
                         </div>
-                    )}
 
-                    {message.text && (
-                        <div className={`mt-4 p-4 rounded-2xl flex items-center gap-3 animate-fade-in ${
-                            message.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'
-                        }`}>
-                            {message.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
-                            <span className="text-xs font-bold">{message.text}</span>
-                        </div>
-                    )}
+                        {message.text && (
+                            <div className={`mt-6 p-5 rounded-2xl flex items-center gap-4 animate-fade-in shadow-sm ${
+                                message.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'
+                            }`}>
+                                <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${message.type === 'success' ? 'bg-green-100' : 'bg-red-100'}`}>
+                                    {message.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+                                </div>
+                                <span className="text-[10px] font-black uppercase tracking-tight">{message.text}</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            {/* View Toggle */}
-            <div className="flex items-center justify-between mb-6 px-2">
-                <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                    Existing {activeTab === 'categories' ? `Categories (${categories.length})` : `People (${people.length})`}
-                </h3>
-                <div className="bg-white p-1 rounded-xl border border-green-100 shadow-sm flex items-center">
-                    <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white' : 'text-gray-400 hover:bg-green-50'}`}>
-                        <LayoutGrid size={16} />
-                    </button>
-                    <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-green-900 text-white' : 'text-gray-400 hover:bg-green-50'}`}>
-                        <LayoutList size={16} />
-                    </button>
+                {/* Content Section Header */}
+                <div className="flex items-center justify-between mb-8 px-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.5)]"></div>
+                        <h3 className="text-[11px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                            Existing {activeTab === 'categories' ? `Categories (${categories.length})` : `Members (${people.length})`}
+                        </h3>
+                    </div>
+                    <div className="bg-white/80 backdrop-blur-sm p-1.5 rounded-2xl border border-green-100 shadow-lg shadow-green-900/5 flex items-center gap-1">
+                        <button onClick={() => setViewMode('grid')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-green-50'}`}>
+                            <LayoutGrid size={18} />
+                        </button>
+                        <button onClick={() => setViewMode('list')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'list' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-green-50'}`}>
+                            <LayoutList size={18} />
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            {/* Content Area */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
+                {/* Content Area */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar px-2 pb-8">
                 {activeTab === 'categories' ? (
                     // Categories Content
                     viewMode === 'grid' ? (
