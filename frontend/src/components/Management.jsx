@@ -169,11 +169,11 @@ const Management = () => {
                                                     value={newCategory.name}
                                                     onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
                                                     placeholder="Enter category name..."
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-[60px]"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-3 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-12"
                                                     required
                                                 />
                                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-200 pointer-events-none group-focus-within/input:text-green-500/20 transition-colors">
-                                                    <Palette size={20} />
+                                                    <Palette size={18} />
                                                 </div>
                                             </div>
                                         </div>
@@ -182,18 +182,21 @@ const Management = () => {
                                             <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/color:text-green-600 transition-colors">
                                                 <Palette size={14} /> Theme Color
                                             </label>
-                                            <div className="flex items-center gap-4 bg-white px-5 py-3 rounded-2xl shadow-sm border-2 border-gray-50 focus-within:border-green-500 transition-all h-[60px]">
-                                                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-gray-100 flex-shrink-0">
+                                            <div className="flex items-center gap-4 bg-white px-5 py-2 rounded-2xl shadow-sm border-2 border-gray-50 focus-within:border-green-500 transition-all h-12">
+                                                <div 
+                                                    className="relative w-8 h-8 rounded-xl shadow-sm border border-gray-100 flex-shrink-0"
+                                                    style={{ backgroundColor: newCategory.color }}
+                                                >
                                                     <input
                                                         type="color"
                                                         value={newCategory.color}
                                                         onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
-                                                        className="absolute -inset-2 w-[150%] h-[150%] cursor-pointer bg-transparent border-none p-0"
+                                                        className="absolute inset-0 w-full h-full cursor-pointer opacity-0"
                                                     />
                                                 </div>
                                                 <div className="flex flex-col min-w-0">
-                                                    <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter truncate">{newCategory.color}</span>
-                                                    <span className="text-[8px] font-bold text-gray-400 uppercase whitespace-nowrap">HEX CODE</span>
+                                                    <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter truncate leading-none">{newCategory.color}</span>
+                                                    <span className="text-[8px] font-bold text-gray-400 uppercase whitespace-nowrap leading-none mt-0.5">HEX CODE</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -201,13 +204,13 @@ const Management = () => {
                                         <button 
                                             type="submit" 
                                             disabled={loading} 
-                                            className="w-full md:w-auto bg-green-900 text-white px-10 h-[60px] rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98] group/btn"
+                                            className="w-full md:w-auto bg-green-900 text-white px-10 h-12 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98] group/btn"
                                         >
                                             {loading ? (
                                                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                                             ) : (
                                                 <>
-                                                    <Plus size={20} strokeWidth={3} className="group-hover/btn:rotate-90 transition-transform duration-300" /> 
+                                                    <Plus size={18} strokeWidth={3} className="group-hover/btn:rotate-90 transition-transform duration-300" /> 
                                                     <span className="uppercase tracking-widest">Add Category</span>
                                                 </>
                                             )}
@@ -230,7 +233,7 @@ const Management = () => {
                                                     value={newPerson.name}
                                                     onChange={(e) => setNewPerson({ ...newPerson, name: e.target.value })}
                                                     placeholder="e.g. John Doe"
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-[60px]"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-3 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-12"
                                                     required
                                                 />
                                             </div>
@@ -246,7 +249,7 @@ const Management = () => {
                                                     value={newPerson.email}
                                                     onChange={(e) => setNewPerson({ ...newPerson, email: e.target.value })}
                                                     placeholder="e.g. john@example.com"
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-[60px]"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-3 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-12"
                                                     required
                                                 />
                                             </div>
@@ -255,13 +258,13 @@ const Management = () => {
                                         <button 
                                             type="submit" 
                                             disabled={loading} 
-                                            className="w-full md:w-auto bg-green-900 text-white px-8 h-[60px] rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98] group/btn whitespace-nowrap"
+                                            className="w-full md:w-auto bg-green-900 text-white px-8 h-12 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98] group/btn whitespace-nowrap"
                                         >
                                             {loading ? (
                                                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                                             ) : (
                                                 <>
-                                                    <UserPlus size={20} strokeWidth={3} className="group-hover/btn:scale-110 transition-transform duration-300" /> 
+                                                    <UserPlus size={18} strokeWidth={3} className="group-hover/btn:scale-110 transition-transform duration-300" /> 
                                                     <span className="uppercase tracking-widest">Save Member</span>
                                                 </>
                                             )}
