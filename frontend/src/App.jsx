@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Setup from './components/Setup';
 import Dashboard from './components/Dashboard';
 import Sidebar from './components/Sidebar';
+import AddBillPage from './components/AddBillPage';
 import Management from './components/Management';
 import CalendarPage from './components/CalendarPage';
 import SettlementsPage from './components/SettlementsPage';
@@ -143,6 +144,14 @@ const App = () => {
                             element={
                                 <PrivateRoute pageTitle="Management" pageSubtitle="Manage categories and team members">
                                     <Management />
+                                </PrivateRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/add-bill" 
+                            element={
+                                <PrivateRoute pageTitle="Add Bill" pageSubtitle="Create a new bill entry">
+                                    <AddBillPage />
                                 </PrivateRoute>
                             } 
                         />

@@ -99,6 +99,17 @@ const Management = () => {
         }
     };
 
+    const handleDeletePerson = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this person?')) return;
+        try {
+            await api.delete(`/people/${id}`);
+            fetchData();
+            setMessage({ text: 'Person deleted successfully!', type: 'success' });
+        } catch (err) {
+            setMessage({ text: err.response?.data?.message || 'Failed to delete person.', type: 'error' });
+        }
+    };
+
     const getPersonStats = (personId) => {
         const personBills = bills.filter(b => b.person_in_charge_id === personId);
         const paidCount = personBills.filter(b => b.status === 'paid').length;
@@ -350,9 +361,14 @@ const Management = () => {
                                                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                                                     <span className="text-[9px] font-black text-green-600 uppercase">Online</span>
                                                 </div>
-                                                <button className="p-1.5 text-gray-300 hover:text-green-600 transition-all">
-                                                    <MoreHorizontal size={16} />
-                                                </button>
+                                                <div className="flex items-center gap-1">
+                                                    <button onClick={() => handleDeletePerson(person.id)} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                    <button className="p-1.5 text-gray-300 hover:text-green-600 transition-all">
+                                                        <MoreHorizontal size={16} />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -405,9 +421,14 @@ const Management = () => {
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-4 text-right">
-                                                        <button className="p-2 text-gray-300 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all">
-                                                            <MoreHorizontal size={18} />
-                                                        </button>
+                                                        <div className="flex items-center justify-end gap-2">
+                                                            <button onClick={() => handleDeletePerson(person.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                                                                <Trash2 size={18} />
+                                                            </button>
+                                                            <button className="p-2 text-gray-300 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all">
+                                                                <MoreHorizontal size={18} />
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             );
