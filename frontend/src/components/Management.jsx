@@ -32,7 +32,6 @@ const Management = () => {
     const [people, setPeople] = useState([]);
     const [bills, setBills] = useState([]);
     const [newPerson, setNewPerson] = useState({ name: '', email: '', phone: '' });
-    const [showAddPerson, setShowAddPerson] = useState(false);
 
     const fetchData = React.useCallback(async () => {
         try {
@@ -89,7 +88,6 @@ const Management = () => {
         try {
             await api.post('/people', newPerson);
             setNewPerson({ name: '', email: '', phone: '' });
-            setShowAddPerson(false);
             fetchData();
             setMessage({ text: 'Person added successfully!', type: 'success' });
         } catch (err) {
@@ -217,59 +215,74 @@ const Management = () => {
                                     </div>
                                 </form>
                             ) : (
-                                <div className="bg-gray-50/50 p-6 rounded-[2rem] border border-gray-100">
-                                    {!showAddPerson ? (
-                                        <button 
-                                            onClick={() => setShowAddPerson(true)}
-                                            className="w-full md:w-fit bg-green-900 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center justify-center gap-3 active:scale-95"
-                                        >
-                                            <UserPlus size={20} strokeWidth={3} /> Add New Team Member
-                                        </button>
-                                    ) : (
-                                        <form onSubmit={handleAddPerson} className="grid grid-cols-1 md:grid-cols-4 gap-5 animate-fade-in">
-                                            <div className="group">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Full Name</label>
+                                <form onSubmit={handleAddPerson} className="bg-gray-50/50 p-8 rounded-[2.5rem] border border-gray-100 shadow-inner relative overflow-hidden group">
+                                    {/* Decorative subtle gradient */}
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-green-100/30 rounded-bl-full -z-0 blur-2xl group-hover:bg-green-200/40 transition-all duration-500"></div>
+                                    
+                                    <div className="relative z-10 flex flex-col md:flex-row gap-6 items-end">
+                                        <div className="flex-[1.5] w-full group/input">
+                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
+                                                <Users size={14} /> Full Name
+                                            </label>
+                                            <div className="relative">
                                                 <input
                                                     type="text"
-                                                    placeholder="e.g. John Doe"
                                                     value={newPerson.name}
-                                                    onChange={e => setNewPerson({...newPerson, name: e.target.value})}
-                                                    className="w-full bg-white border-2 border-transparent px-6 py-4 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-sm shadow-sm"
+                                                    onChange={(e) => setNewPerson({ ...newPerson, name: e.target.value })}
+                                                    placeholder="e.g. John Doe"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300"
                                                     required
                                                 />
                                             </div>
-                                            <div className="group">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Email Address</label>
+                                        </div>
+
+                                        <div className="flex-[1.5] w-full group/input">
+                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
+                                                <MailIcon size={14} /> Email Address
+                                            </label>
+                                            <div className="relative">
                                                 <input
                                                     type="email"
-                                                    placeholder="e.g. john@example.com"
                                                     value={newPerson.email}
-                                                    onChange={e => setNewPerson({...newPerson, email: e.target.value})}
-                                                    className="w-full bg-white border-2 border-transparent px-6 py-4 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-sm shadow-sm"
+                                                    onChange={(e) => setNewPerson({ ...newPerson, email: e.target.value })}
+                                                    placeholder="e.g. john@example.com"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300"
                                                     required
                                                 />
                                             </div>
-                                            <div className="group">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Phone Number</label>
+                                        </div>
+
+                                        <div className="flex-1 w-full group/input">
+                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
+                                                <Phone size={14} /> Phone
+                                            </label>
+                                            <div className="relative">
                                                 <input
                                                     type="tel"
-                                                    placeholder="Optional"
                                                     value={newPerson.phone}
-                                                    onChange={e => setNewPerson({...newPerson, phone: e.target.value})}
-                                                    className="w-full bg-white border-2 border-transparent px-6 py-4 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-sm shadow-sm"
+                                                    onChange={(e) => setNewPerson({ ...newPerson, phone: e.target.value })}
+                                                    placeholder="Optional"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300"
                                                 />
                                             </div>
-                                            <div className="flex items-end gap-3">
-                                                <button type="submit" disabled={loading} className="flex-1 bg-green-900 text-white rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 h-[52px] active:scale-95">
-                                                    Save Member
-                                                </button>
-                                                <button type="button" onClick={() => setShowAddPerson(false)} className="px-6 bg-white text-gray-400 border border-gray-200 rounded-2xl font-black text-sm hover:bg-gray-50 transition-all h-[52px]">
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                        </form>
-                                    )}
-                                </div>
+                                        </div>
+
+                                        <button 
+                                            type="submit" 
+                                            disabled={loading} 
+                                            className="w-full md:w-auto bg-green-900 text-white px-8 h-[60px] rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98] group/btn whitespace-nowrap"
+                                        >
+                                            {loading ? (
+                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                            ) : (
+                                                <>
+                                                    <UserPlus size={20} strokeWidth={3} className="group-hover/btn:scale-110 transition-transform duration-300" /> 
+                                                    <span className="uppercase tracking-widest">Save Member</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                </form>
                             )}
                         </div>
 
