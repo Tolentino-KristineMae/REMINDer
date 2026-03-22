@@ -16,7 +16,10 @@ import {
   ShieldCheck,
   MoreHorizontal,
   TrendingUp,
-  CircleDot
+  CircleDot,
+  Edit2,
+  X,
+  Check
 } from 'lucide-react'
 
 const Management = () => {
@@ -27,10 +30,14 @@ const Management = () => {
 
   const [categories, setCategories] = useState([])
   const [newCategory, setNewCategory] = useState({ name: '', color: '#22c55e' })
+  const [editingCategory, setEditingCategory] = useState(null)
+  const [editCategoryData, setEditCategoryData] = useState({ name: '', color: '' })
 
   const [people, setPeople] = useState([])
   const [bills, setBills] = useState([])
   const [newPerson, setNewPerson] = useState({ name: '', email: '' })
+  const [editingPerson, setEditingPerson] = useState(null)
+  const [editPersonData, setEditPersonData] = useState({ name: '', email: '' })
 
   const fetchData = useCallback(async () => {
     try {
@@ -58,6 +65,14 @@ const Management = () => {
     }
   }, [message])
 
+  const checkCategoryBills = (categoryId) => {
+    return bills.some(bill => bill.category_id === categoryId)
+  }
+
+  const checkPersonBills = (personId) => {
+    return bills.some(bill => bill.person_in_charge_id === personId)
+  }
+
   const handleAddCategory = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -75,6 +90,10 @@ const Management = () => {
   }
 
   const handleDeleteCategory = async (id) => {
+    if (checkCategoryBills(id)) {
+      setMessage({ text: 'Cannot delete category with associated bills.', type: 'error' })
+      return
+    }
     if (!window.confirm('Are you sure you want to delete this category?')) return
     try {
       await api.delete(`/categories/${id}`)
@@ -83,6 +102,30 @@ const Management = () => {
     } catch (err) {
       setMessage({ text: err.response?.data?.message || 'Failed to delete category.', type: 'error' })
     }
+  }
+
+  const handleEditCategory = (cat) => {
+    setEditingCategory(cat.id)
+    setEditCategoryData({ name: cat.name, color: cat.color })
+  }
+
+  const handleSaveCategory = async (id) => {
+    setLoading(true)
+    try {
+      await api.put(`/categories/${id}`, editCategoryData)
+      setEditingCategory(null)
+      fetchData()
+      setMessage({ text: 'Category updated successfully!', type: 'success' })
+    } catch (err) {
+      setMessage({ text: err.response?.data?.message || 'Failed to update category.', type: 'error' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setEditingCategory(null)
+    setEditCategoryData({ name: '', color: '' })
   }
 
   const handleAddPerson = async (e) => {
@@ -102,6 +145,10 @@ const Management = () => {
   }
 
   const handleDeletePerson = async (id) => {
+    if (checkPersonBills(id)) {
+      setMessage({ text: 'Cannot delete person with associated bills.', type: 'error' })
+      return
+    }
     if (!window.confirm('Are you sure you want to delete this person?')) return
     try {
       await api.delete(`/people/${id}`)
@@ -110,6 +157,30 @@ const Management = () => {
     } catch (err) {
       setMessage({ text: err.response?.data?.message || 'Failed to delete person.', type: 'error' })
     }
+  }
+
+  const handleEditPerson = (person) => {
+    setEditingPerson(person.id)
+    setEditPersonData({ name: person.name, email: person.email })
+  }
+
+  const handleSavePerson = async (id) => {
+    setLoading(true)
+    try {
+      await api.put(`/people/${id}`, editPersonData)
+      setEditingPerson(null)
+      fetchData()
+      setMessage({ text: 'Person updated successfully!', type: 'success' })
+    } catch (err) {
+      setMessage({ text: err.response?.data?.message || 'Failed to update person.', type: 'error' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCancelPersonEdit = () => {
+    setEditingPerson(null)
+    setEditPersonData({ name: '', email: '' })
   }
 
   const getPersonStats = useCallback((personId) => {
@@ -162,7 +233,7 @@ const Management = () => {
               )}
             </div>
             <h2 className="font-bold text-gray-900">
-              {activeTab === 'categories' ? 'Add New Category' : 'Add Team Member'}
+              {activeTab === 'categories' ? 'Add New Category' : 'Add Person in Charge'}
             </h2>
           </div>
 
@@ -257,7 +328,7 @@ const Management = () => {
                 ) : (
                   <>
                     <UserPlus className="h-4 w-4" />
-                    Add Member
+                    Add Person
                   </>
                 )}
               </button>
@@ -314,24 +385,80 @@ const Management = () => {
                   className="group relative rounded-2xl border border-green-100 bg-white p-5 transition-all hover:border-green-300 hover:shadow-lg hover:shadow-green-500/5"
                 >
                   <div className="flex items-start justify-between">
-                    <div 
-                      className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-md transition-transform group-hover:scale-105"
-                      style={{ backgroundColor: cat.color }}
-                    >
-                      <Layers className="h-5 w-5" />
+                    {editingCategory === cat.id ? (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl" style={{ backgroundColor: editCategoryData.color }}>
+                        <Layers className="h-5 w-5 text-white" />
+                      </div>
+                    ) : (
+                      <div 
+                        className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-md transition-transform group-hover:scale-105"
+                        style={{ backgroundColor: cat.color }}
+                      >
+                        <Layers className="h-5 w-5" />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-1">
+                      {editingCategory === cat.id ? (
+                        <>
+                          <button 
+                            onClick={() => handleSaveCategory(cat.id)}
+                            disabled={loading}
+                            className="rounded-lg p-2 text-green-600 hover:bg-green-50 transition-all"
+                          >
+                            <Check className="h-4 w-4" />
+                          </button>
+                          <button 
+                            onClick={handleCancelEdit}
+                            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 transition-all"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button 
+                            onClick={() => handleEditCategory(cat)}
+                            className="rounded-lg p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteCategory(cat.id)} 
+                            className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
                     </div>
-                    <button 
-                      onClick={() => handleDeleteCategory(cat.id)} 
-                      className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
                   </div>
-                  <h4 className="mt-4 font-semibold text-gray-900">{cat.name}</h4>
-                  <div className="mt-2 flex items-center gap-2">
-                    <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
-                    <span className="text-xs font-mono text-gray-400 uppercase">{cat.color}</span>
-                  </div>
+                  {editingCategory === cat.id ? (
+                    <div className="mt-4 space-y-3">
+                      <input
+                        type="text"
+                        value={editCategoryData.name}
+                        onChange={(e) => setEditCategoryData({ ...editCategoryData, name: e.target.value })}
+                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                      />
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={editCategoryData.color}
+                          onChange={(e) => setEditCategoryData({ ...editCategoryData, color: e.target.value })}
+                          className="h-8 w-8 rounded cursor-pointer"
+                        />
+                        <span className="text-xs font-mono text-gray-400 uppercase">{editCategoryData.color}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <h4 className="mt-4 font-semibold text-gray-900">{cat.name}</h4>
+                      <div className="mt-2 flex items-center gap-2">
+                        <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
+                        <span className="text-xs font-mono text-gray-400 uppercase">{cat.color}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
@@ -350,28 +477,79 @@ const Management = () => {
                     <tr key={cat.id} className="transition-colors hover:bg-green-50/30">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div 
-                            className="flex h-9 w-9 items-center justify-center rounded-lg text-white shadow-sm"
-                            style={{ backgroundColor: cat.color }}
-                          >
-                            <Layers className="h-4 w-4" />
-                          </div>
-                          <span className="font-medium text-gray-900">{cat.name}</span>
+                          {editingCategory === cat.id ? (
+                            <input
+                              type="text"
+                              value={editCategoryData.name}
+                              onChange={(e) => setEditCategoryData({ ...editCategoryData, name: e.target.value })}
+                              className="flex h-9 w-full items-center rounded-lg border border-gray-200 px-3 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                            />
+                          ) : (
+                            <>
+                              <div 
+                                className="flex h-9 w-9 items-center justify-center rounded-lg text-white shadow-sm"
+                                style={{ backgroundColor: cat.color }}
+                              >
+                                <Layers className="h-4 w-4" />
+                              </div>
+                              <span className="font-medium text-gray-900">{cat.name}</span>
+                            </>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <div className="inline-flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-1.5">
-                          <div className="h-3 w-3 rounded-full" style={{ backgroundColor: cat.color }} />
-                          <span className="text-xs font-mono text-gray-500 uppercase">{cat.color}</span>
-                        </div>
+                        {editingCategory === cat.id ? (
+                          <div className="flex items-center justify-center gap-2">
+                            <input
+                              type="color"
+                              value={editCategoryData.color}
+                              onChange={(e) => setEditCategoryData({ ...editCategoryData, color: e.target.value })}
+                              className="h-8 w-8 rounded cursor-pointer"
+                            />
+                            <span className="text-xs font-mono text-gray-500 uppercase">{editCategoryData.color}</span>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-1.5">
+                            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: cat.color }} />
+                            <span className="text-xs font-mono text-gray-500 uppercase">{cat.color}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button 
-                          onClick={() => handleDeleteCategory(cat.id)} 
-                          className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        <div className="flex items-center justify-end gap-1">
+                          {editingCategory === cat.id ? (
+                            <>
+                              <button 
+                                onClick={() => handleSaveCategory(cat.id)}
+                                disabled={loading}
+                                className="rounded-lg p-2 text-green-600 hover:bg-green-50 transition-all"
+                              >
+                                <Check className="h-4 w-4" />
+                              </button>
+                              <button 
+                                onClick={handleCancelEdit}
+                                className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 transition-all"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button 
+                                onClick={() => handleEditCategory(cat)}
+                                className="rounded-lg p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteCategory(cat.id)} 
+                                className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -401,36 +579,84 @@ const Management = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-1">
-                        <button 
-                          onClick={() => handleDeletePerson(person.id)} 
-                          className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                        <button className="rounded-lg p-2 text-gray-300 hover:text-gray-500 hover:bg-gray-50 transition-all">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </button>
+                        {editingPerson === person.id ? (
+                          <>
+                            <button 
+                              onClick={() => handleSavePerson(person.id)}
+                              disabled={loading}
+                              className="rounded-lg p-2 text-green-600 hover:bg-green-50 transition-all"
+                            >
+                              <Check className="h-4 w-4" />
+                            </button>
+                            <button 
+                              onClick={handleCancelPersonEdit}
+                              className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 transition-all"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button 
+                              onClick={() => handleEditPerson(person)}
+                              className="rounded-lg p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button 
+                              onClick={() => handleDeletePerson(person.id)} 
+                              className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
 
-                    <div className="mt-4">
-                      <h3 className="font-semibold text-gray-900">{person.name}</h3>
-                      <p className="mt-0.5 text-sm text-gray-500">{person.email}</p>
-                    </div>
-
-                    <div className="mt-5 grid grid-cols-2 gap-3">
-                      <div className="rounded-xl bg-gray-50 p-3">
-                        <p className="text-xs text-gray-500">Assigned</p>
-                        <p className="mt-1 text-lg font-bold text-gray-900">{stats.count}</p>
-                      </div>
-                      <div className="rounded-xl bg-green-50 p-3">
-                        <p className="text-xs text-green-600">Performance</p>
-                        <div className="mt-1 flex items-center gap-1">
-                          <p className="text-lg font-bold text-green-600">{stats.performance}%</p>
-                          <TrendingUp className="h-3.5 w-3.5 text-green-600" />
+                    {editingPerson === person.id ? (
+                      <div className="mt-4 space-y-3">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Name</label>
+                          <input
+                            type="text"
+                            value={editPersonData.name}
+                            onChange={(e) => setEditPersonData({ ...editPersonData, name: e.target.value })}
+                            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Email</label>
+                          <input
+                            type="email"
+                            value={editPersonData.email}
+                            onChange={(e) => setEditPersonData({ ...editPersonData, email: e.target.value })}
+                            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                          />
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        <div className="mt-4">
+                          <h3 className="font-semibold text-gray-900">{person.name}</h3>
+                          <p className="mt-0.5 text-sm text-gray-500">{person.email}</p>
+                        </div>
+
+                        <div className="mt-5 grid grid-cols-2 gap-3">
+                          <div className="rounded-xl bg-gray-50 p-3">
+                            <p className="text-xs text-gray-500">Assigned</p>
+                            <p className="mt-1 text-lg font-bold text-gray-900">{stats.count}</p>
+                          </div>
+                          <div className="rounded-xl bg-green-50 p-3">
+                            <p className="text-xs text-green-600">Performance</p>
+                            <div className="mt-1 flex items-center gap-1">
+                              <p className="text-lg font-bold text-green-600">{stats.performance}%</p>
+                              <TrendingUp className="h-3.5 w-3.5 text-green-600" />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )
               })}
@@ -441,7 +667,7 @@ const Management = () => {
                 <table className="min-w-[600px] w-full">
                   <thead className="border-b border-green-50 bg-green-50/30">
                     <tr>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Team Member</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Person in Charge</th>
                       <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Assigned</th>
                       <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Settled</th>
                       <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Performance</th>
@@ -455,15 +681,36 @@ const Management = () => {
                         <tr key={person.id} className="transition-colors hover:bg-green-50/30">
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <img 
-                                src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} 
-                                className="h-9 w-9 rounded-lg border border-gray-100 shadow-sm object-cover" 
-                                alt={person.name} 
-                              />
-                              <div>
-                                <h4 className="font-medium text-gray-900">{person.name}</h4>
-                                <p className="text-xs text-gray-500">{person.email}</p>
-                              </div>
+                              {editingPerson === person.id ? (
+                                <div className="flex flex-col gap-2 flex-1">
+                                  <input
+                                    type="text"
+                                    value={editPersonData.name}
+                                    onChange={(e) => setEditPersonData({ ...editPersonData, name: e.target.value })}
+                                    className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                                    placeholder="Name"
+                                  />
+                                  <input
+                                    type="email"
+                                    value={editPersonData.email}
+                                    onChange={(e) => setEditPersonData({ ...editPersonData, email: e.target.value })}
+                                    className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                                    placeholder="Email"
+                                  />
+                                </div>
+                              ) : (
+                                <>
+                                  <img 
+                                    src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} 
+                                    className="h-9 w-9 rounded-lg border border-gray-100 shadow-sm object-cover" 
+                                    alt={person.name} 
+                                  />
+                                  <div>
+                                    <h4 className="font-medium text-gray-900">{person.name}</h4>
+                                    <p className="text-xs text-gray-500">{person.email}</p>
+                                  </div>
+                                </>
+                              )}
                             </div>
                           </td>
                           <td className="px-6 py-4 text-center">
@@ -480,15 +727,38 @@ const Management = () => {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center justify-end gap-1">
-                              <button 
-                                onClick={() => handleDeletePerson(person.id)} 
-                                className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                              <button className="rounded-lg p-2 text-gray-300 hover:text-gray-500 hover:bg-gray-50 transition-all">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </button>
+                              {editingPerson === person.id ? (
+                                <>
+                                  <button 
+                                    onClick={() => handleSavePerson(person.id)}
+                                    disabled={loading}
+                                    className="rounded-lg p-2 text-green-600 hover:bg-green-50 transition-all"
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </button>
+                                  <button 
+                                    onClick={handleCancelPersonEdit}
+                                    className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 transition-all"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button 
+                                    onClick={() => handleEditPerson(person)}
+                                    className="rounded-lg p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all"
+                                  >
+                                    <Edit2 className="h-4 w-4" />
+                                  </button>
+                                  <button 
+                                    onClick={() => handleDeletePerson(person.id)} 
+                                    className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                </>
+                              )}
                             </div>
                           </td>
                         </tr>
