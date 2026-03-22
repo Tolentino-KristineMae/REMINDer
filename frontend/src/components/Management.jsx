@@ -148,7 +148,7 @@ const Management = () => {
             }`}
           >
             <Users className="h-4 w-4" />
-            Team Members
+            Person in Charge
           </button>
         </div>
 
@@ -284,7 +284,7 @@ const Management = () => {
           <div className="flex items-center gap-2">
             <CircleDot className="h-3 w-3 text-green-500" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
-              {activeTab === 'categories' ? `${categories.length} Categories` : `${people.length} Team Members`}
+              {activeTab === 'categories' ? `${categories.length} Categories` : `${people.length} Person in Charge`}
             </h3>
           </div>
           <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-green-100">
