@@ -38,6 +38,7 @@ const C = {
 
 const menuItems = [
   { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
+  { icon: <Plus size={18} />,            label: 'Add Bill',   path: '/add-bill' },
   { icon: <Calendar size={18} />,        label: 'Calendar',   path: '/calendar' },
   { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },
   { icon: <Settings2 size={18} />,       label: 'Management',  path: '/management' },
@@ -326,59 +327,6 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
               fontFamily:   C.fontFamily,
             }}>Menu</p>
           )}
-
-          {/* Action Button */}
-          <div style={{ padding: '0 12px', marginBottom: '24px' }}>
-            <button
-              onClick={() => navigate('/add-bill')}
-              style={{
-                width: '100%',
-                height: '48px',
-                background: '#22c55e',
-                border: 'none',
-                borderRadius: '14px',
-                color: 'white',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: collapsed ? 'center' : 'flex-start',
-                padding: collapsed ? '0' : '0 16px',
-                gap: '12px',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.2)',
-                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#16a34a';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(34, 197, 94, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#22c55e';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.2)';
-              }}
-            >
-              <Plus 
-                size={collapsed ? 22 : 18} 
-                strokeWidth={3} 
-                style={{ 
-                  transition: 'transform 0.3s ease',
-                  flexShrink: 0
-                }} 
-              />
-              {!collapsed && (
-                <span style={{ 
-                  fontSize: '13px', 
-                  fontWeight: 700, 
-                  fontFamily: C.fontFamily,
-                  letterSpacing: '0.02em',
-                  whiteSpace: 'nowrap'
-                }}>New Bill Entry</span>
-              )}
-            </button>
-          </div>
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '20px' }}>
             {menuItems.map(item => (
