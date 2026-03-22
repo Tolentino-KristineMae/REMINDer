@@ -217,10 +217,10 @@ export default function AddBillPage() {
                       <Receipt className="w-6 h-6 text-green-700" />
                     </div>
                     <div>
-                      <h1 className="text-xl font-black text-gray-900 leading-tight font-syne">
+                      <h1 className="text-xl font-black text-gray-900 leading-tight">
                         Add New Financial Bill
                       </h1>
-                      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-1.5 leading-relaxed font-dm-sans">
+                      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-1.5 leading-relaxed">
                         Track and manage your expenses with precision
                       </p>
                     </div>
@@ -238,17 +238,17 @@ export default function AddBillPage() {
             {/* Quick Stats Card */}
             <Card className="border-gray-100">
               <CardContent className="p-6">
-                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-4 font-dm-sans">
+                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-4">
                   This Month 
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-100">
-                    <p className="text-2xl font-black text-gray-900 font-syne">12</p>
-                    <p className="text-[9px] font-black text-gray-400 uppercase mt-1 font-dm-sans">Bills Added</p>
+                    <p className="text-2xl font-black text-gray-900">12</p>
+                    <p className="text-[9px] font-black text-gray-400 uppercase mt-1">Bills Added</p>
                   </div>
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-100">
-                    <p className="text-2xl font-black text-gray-900 font-syne">98%</p>
-                    <p className="text-[9px] font-black text-gray-400 uppercase mt-1 font-dm-sans">On Time</p>
+                    <p className="text-2xl font-black text-gray-900">98%</p>
+                    <p className="text-[9px] font-black text-gray-400 uppercase mt-1">On Time</p>
                   </div>
                 </div>
               </CardContent>
@@ -381,10 +381,10 @@ export default function AddBillPage() {
 function FeatureItem({ icon: Icon, label }) { 
   return ( 
     <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100 transition-colors hover:bg-white hover:shadow-sm"> 
-      <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm font-dm-sans"> 
+      <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm"> 
         <Icon className="w-4 h-4 text-green-700" /> 
       </div> 
-      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest font-dm-sans">{label}</span> 
+      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{label}</span> 
     </div> 
   ) 
 } 
@@ -395,7 +395,7 @@ function FormField({ label, icon: Icon, focused, children }) {
     <div className="space-y-3"> 
       <label 
         className={cn( 
-          "flex items-center gap-2 text-[10px] font-black uppercase tracking-wider transition-colors pl-1 font-dm-sans", 
+          "flex items-center gap-2 text-[10px] font-black uppercase tracking-wider transition-colors pl-1", 
           focused ? "text-green-600" : "text-gray-400" 
         )} 
       > 
