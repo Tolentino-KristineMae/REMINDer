@@ -129,21 +129,6 @@ const Management = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-600 text-white">
-                <Layers className="h-5 w-5" />
-              </div>
-              <div>
-                <h1 className="text-lg font-semibold text-foreground">Organize your categories and team</h1>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main className="mx-auto max-w-7xl px-6 py-8">
         <div className="mb-8 flex items-center gap-2 rounded-2xl bg-white p-1.5 w-fit border border-green-100 shadow-sm">
           <button 
