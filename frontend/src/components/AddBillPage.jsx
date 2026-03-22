@@ -155,14 +155,17 @@ export default function AddBillPage() {
 
   if (fetching) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] relative overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-        {/* Green loading line at the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 via-green-600 to-green-400 animate-pulse"></div>
-        {/* Header area */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-          <div className="animate-pulse">
-            <div className="h-8 w-48 bg-gray-200 rounded-lg mb-4"></div>
-            <div className="h-4 w-64 bg-gray-100 rounded"></div>
+      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative">
+            <div className="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-green-600 animate-spin" />
+            </div>
+          </div>
+          <div className="text-center">
+            <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">
+              Preparing your workspace
+            </p>
           </div>
         </div>
       </div>
@@ -174,17 +177,9 @@ export default function AddBillPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&display=swap');
         .font-syne { font-family: 'Syne', sans-serif; }
-        .font-dm-sans { font-family: 'DM Sans', sans-serif; }
+        .font-dm-sans { fontFamily: 'DM Sans', sans-serif; }
       `}</style>
-      {/* Green loading line at bottom when submitting */}
-      {loading && (
-        <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-green-400 via-green-600 to-green-400 animate-pulse"></div>
-      )}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
-        {loading && (
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 via-green-600 to-green-400 animate-pulse"></div>
-        )}
-        <div className="flex justify-end mb-6">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
             <Sparkles className="w-3.5 h-3.5 text-green-600" />
             <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">

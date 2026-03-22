@@ -110,6 +110,10 @@ const Dashboard = () => {
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-3 sm:p-4 lg:p-6 relative">
+            {/* Green loading line at top when loading */}
+            {loading && (
+                <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-green-400 via-green-600 to-green-400 animate-pulse"></div>
+            )}
 
             {/* Stats Grid - Organized Layout */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5 mb-4 sm:mb-6">
