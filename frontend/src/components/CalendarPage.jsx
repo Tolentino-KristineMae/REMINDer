@@ -236,7 +236,7 @@ const CalendarPage = () => {
                                                                         ? 'bg-gradient-to-br from-gray-50 to-white border border-gray-100/50' 
                                                                         : 'bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-emerald-100/50'
                                                                     }
-                                                                `
+                                                                `}
                                                             >
                                                                 {/* Elegant status accent bar */}
                                                                 <div className={`
