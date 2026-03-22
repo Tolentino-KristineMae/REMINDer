@@ -138,12 +138,8 @@ const Management = () => {
                     <div className="relative z-10">
                         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-10">
                             <div className="flex items-center gap-5">
-                                <div className="w-16 h-16 bg-green-900 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-green-900/20">
-                                    {activeTab === 'categories' ? <Layers size={32} /> : <Users size={32} />}
-                                </div>
                                 <div>
                                     <h2 className="text-3xl font-black text-gray-900 tracking-tight">Management</h2>
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Configure your workspace resources & team</p>
                                 </div>
                             </div>
 
