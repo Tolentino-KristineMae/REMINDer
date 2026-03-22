@@ -6,6 +6,7 @@ use App\Models\Bill;
 use App\Models\ProofOfPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class BillController extends Controller
 {
@@ -141,16 +142,34 @@ class BillController extends Controller
     {
         $bill->load('proofOfPayments');
 
-        $pathsToDelete = [];
-        foreach ($bill->proofOfPayments as $proof) {
-            if ($proof->file_path) {
-                $pathsToDelete[] = $proof->file_path;
+        // Try to delete files from storage, but continue even if it fails
+        try {
+            foreach ($bill->proofOfPayments as $proof) {
+                if ($proof->file_path) {
+                    // Extract the path from the full URL if needed
+                    $path = $proof->file_path;
+                    if (str_contains($path, 'supabase.co')) {
+                        // For Supabase URLs, try to extract the path after 'proofs/'
+                        if (preg_match('/\/proofs\/(.+)$/', $path, $matches)) {
+                            $path = 'proofs/' . $matches[1];
+                        }
+                    }
+                    try {
+                        \Storage::disk('s3')->delete($path);
+                    } catch (\Exception $e) {
+                        // Supabase storage might have different driver, try public disk
+                        try {
+                            \Storage::disk('public')->delete($path);
+                        } catch (\Exception $e2) {
+                            // Ignore file deletion errors - continue with bill deletion
+                            \Log::warning('Could not delete file: ' . $path . ' - ' . $e2->getMessage());
+                        }
+                    }
+                }
             }
-        }
-
-        if (!empty($pathsToDelete)) {
-            $disk = env('AWS_BUCKET') ? 's3' : config('filesystems.default', 'public');
-            Storage::disk($disk)->delete($pathsToDelete);
+        } catch (\Exception $e) {
+            // Continue even if file deletion fails
+            \Log::warning('File deletion error: ' . $e->getMessage());
         }
 
         $bill->delete();
