@@ -21,7 +21,7 @@ import {
 
 const Management = () => {
   const [activeTab, setActiveTab] = useState('categories')
-  const [viewMode, setViewMode] = useState('grid')
+  const [viewMode, setViewMode] = useState('list')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState({ text: '', type: '' })
 
@@ -153,36 +153,17 @@ const Management = () => {
         </div>
 
         <div className="mb-8 rounded-2xl border border-green-100 bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-50">
-                {activeTab === 'categories' ? (
-                  <Plus className="h-4 w-4 text-green-600" />
-                ) : (
-                  <UserPlus className="h-4 w-4 text-green-600" />
-                )}
-              </div>
-              <h2 className="font-semibold text-foreground">
-                {activeTab === 'categories' ? 'Add New Category' : 'Add Team Member'}
-              </h2>
+          <div className="mb-4 flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-50">
+              {activeTab === 'categories' ? (
+                <Plus className="h-4 w-4 text-green-600" />
+              ) : (
+                <UserPlus className="h-4 w-4 text-green-600" />
+              )}
             </div>
-            
-            <div className="flex items-center gap-1.5 bg-green-50 p-1 rounded-xl border border-green-100">
-              <button 
-                onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-green-900 text-white shadow-md' : 'text-gray-400 hover:bg-green-100'}`}
-                title="List View"
-              >
-                <LayoutList size={14} />
-              </button>
-              <button 
-                onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-md' : 'text-gray-400 hover:bg-green-100'}`}
-                title="Grid View"
-              >
-                <LayoutGrid size={14} />
-              </button>
-            </div>
+            <h2 className="font-semibold text-foreground">
+              {activeTab === 'categories' ? 'Add New Category' : 'Add Team Member'}
+            </h2>
           </div>
 
           {activeTab === 'categories' ? (
@@ -299,11 +280,29 @@ const Management = () => {
           )}
         </div>
 
-        <div className="mb-6 flex items-center gap-2">
-          <CircleDot className="h-3 w-3 text-green-500" />
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {activeTab === 'categories' ? `${categories.length} Categories` : `${people.length} Team Members`}
-          </h3>
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CircleDot className="h-3 w-3 text-green-500" />
+            <h3 className="text-sm font-medium text-muted-foreground">
+              {activeTab === 'categories' ? `${categories.length} Categories` : `${people.length} Team Members`}
+            </h3>
+          </div>
+          <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-green-100">
+            <button 
+              onClick={() => setViewMode('list')}
+              className={`p-1.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-green-900 text-white shadow-md' : 'text-gray-400 hover:bg-green-50'}`}
+              title="List View"
+            >
+              <LayoutList size={14} />
+            </button>
+            <button 
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-md' : 'text-gray-400 hover:bg-green-50'}`}
+              title="Grid View"
+            >
+              <LayoutGrid size={14} />
+            </button>
+          </div>
         </div>
 
         {activeTab === 'categories' ? (
