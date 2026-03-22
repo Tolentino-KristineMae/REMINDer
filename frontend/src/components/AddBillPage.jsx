@@ -189,7 +189,7 @@ export default function AddBillPage() {
         .font-dm-sans { font-family: 'DM Sans', sans-serif; }
       `}</style>
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
+        <div className="absolute top-8 right-4 sm:right-8 lg:right-12 flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
           <Sparkles className="w-3.5 h-3.5 text-green-600" />
           <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
             New Entry
