@@ -128,14 +128,18 @@ const SettlementsPage = () => {
         if (!billToDelete) return;
         
         setDeleting(true);
+        setError('');
         try {
-            await api.delete(`/bills/${billToDelete.id}`);
+            const response = await api.delete(`/bills/${billToDelete.id}`);
+            console.log('Delete response:', response.data);
             setBills(prev => prev.filter(b => b.id !== billToDelete.id));
             setIsDeleteModalOpen(false);
             setBillToDelete(null);
         } catch (err) {
-            console.error('Error deleting bill:', err);
-            setError('Failed to delete transaction. Please try again.');
+            console.error('Delete error:', err);
+            const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Failed to delete transaction. Please try again.';
+            setError(errorMsg);
+            setIsDeleteModalOpen(false);
         } finally {
             setDeleting(false);
         }
@@ -329,8 +333,10 @@ const SettlementsPage = () => {
                                                     </button>
                                                 )}
                                                 <button 
+                                                    type="button"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
+                                                        console.log('Delete clicked for bill:', bill.id);
                                                         confirmDelete(bill);
                                                     }}
                                                     className="w-9 h-9 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100 hover:border-red-500"
@@ -411,8 +417,10 @@ const SettlementsPage = () => {
                                                     <FileText size={12} /> View
                                                 </button>
                                                 <button 
+                                                    type="button"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
+                                                        console.log('Delete clicked for bill:', bill.id);
                                                         confirmDelete(bill);
                                                     }}
                                                     className="w-9 h-9 flex items-center justify-center rounded-lg text-red-400 hover:bg-red-500 hover:text-white transition-all shrink-0"
@@ -437,6 +445,17 @@ const SettlementsPage = () => {
                         )}
                     </div>
                 </div>
+
+                {/* Error Alert */}
+                {error && (
+                    <div className="fixed bottom-6 right-6 bg-red-50 border border-red-100 p-4 rounded-xl shadow-lg flex items-center gap-3 z-50">
+                        <AlertCircle className="text-red-500 shrink-0" size={20} />
+                        <p className="text-sm font-bold text-red-600">{error}</p>
+                        <button onClick={() => setError('')} className="text-red-400 hover:text-red-600 ml-2">
+                            <X size={16} />
+                        </button>
+                    </div>
+                )}
 
                 {/* Delete Dialog */}
                 {isDeleteModalOpen && (
