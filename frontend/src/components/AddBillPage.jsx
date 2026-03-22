@@ -212,10 +212,7 @@ export default function AddBillPage() {
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-900 via-green-800 to-green-700" />
                 
                 <CardContent className="pt-8 pb-6 px-6">
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
-                      <Receipt className="w-6 h-6 text-green-700" />
-                    </div>
+                  <div className="mb-6">
                     <div>
                       <h1 className="text-xl font-black text-gray-900 leading-tight">
                         Add New Financial Bill
