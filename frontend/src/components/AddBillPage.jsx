@@ -177,15 +177,14 @@ export default function AddBillPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&display=swap');
         .font-syne { font-family: 'Syne', sans-serif; }
-        .font-dm-sans { fontFamily: 'DM Sans', sans-serif; }
+        .font-dm-sans { font-family: 'DM Sans', sans-serif; }
       `}</style>
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
-            <Sparkles className="w-3.5 h-3.5 text-green-600" />
-            <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
-              New Entry
-            </span>
-          </div>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
+          <Sparkles className="w-3.5 h-3.5 text-green-600" />
+          <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
+            New Entry
+          </span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
