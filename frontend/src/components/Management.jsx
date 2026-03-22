@@ -20,7 +20,7 @@ import BackgroundAuth from './BackgroundAuth';
 
 const Management = () => {
     const [activeTab, setActiveTab] = useState('categories'); // 'categories' or 'people'
-    const [viewMode, setViewMode] = useState('grid');
+    const [viewMode, setViewMode] = useState('list');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
 
@@ -295,11 +295,11 @@ const Management = () => {
                         </h3>
                     </div>
                     <div className="bg-white/80 backdrop-blur-sm p-1.5 rounded-2xl border border-green-100 shadow-lg shadow-green-900/5 flex items-center gap-1">
-                        <button onClick={() => setViewMode('grid')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-green-50'}`}>
-                            <LayoutGrid size={18} />
-                        </button>
                         <button onClick={() => setViewMode('list')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'list' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-green-50'}`}>
                             <LayoutList size={18} />
+                        </button>
+                        <button onClick={() => setViewMode('grid')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-green-50'}`}>
+                            <LayoutGrid size={18} />
                         </button>
                     </div>
                 </div>
