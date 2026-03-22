@@ -190,15 +190,7 @@ export default function AddBillPage() {
       {/* Top Navigation Bar */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <button 
-              onClick={() => navigate(-1)} 
-              className="flex items-center gap-2 text-gray-500 hover:text-green-900 transition-colors group"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-              <span className="text-sm font-bold">Back</span>
-            </button>
-
+          <div className="flex items-center justify-end h-16">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100">
               <Sparkles className="w-3.5 h-3.5 text-green-600" />
               <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
