@@ -114,26 +114,13 @@ export default function AddBillPage() {
   useEffect(() => {
     const fetchFormData = async () => {
       try {
+        // Fetch categories directly from categories endpoint
+        const catRes = await api.get('/categories');
+        setCategories(catRes.data.categories || []);
+        
+        // Fetch people and bills for other data
         const response = await api.get('/bills/dashboard');
-        const uniqueCategoryIds = new Set();
-        const uniqueCategories = [];
-        
-        if (response.data.bills) {
-          response.data.bills.forEach(b => {
-            if (b.category && !uniqueCategoryIds.has(b.category.id)) {
-              uniqueCategoryIds.add(b.category.id);
-              uniqueCategories.push(b.category);
-            }
-          });
-        }
-        
-        setCategories(uniqueCategories);
         setPeople(response.data.people || []);
-        
-        if (uniqueCategories.length === 0) {
-          const catRes = await api.get('/categories');
-          setCategories(catRes.data.categories || []);
-        }
       } catch (err) {
         console.error('Error fetching form data:', err);
       } finally {
