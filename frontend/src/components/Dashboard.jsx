@@ -60,12 +60,13 @@ const Dashboard = () => {
                     return dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear;
                 });
                 
-                // Count bills per category for current month
+                // Count bills per category for current month - show all categories even with 0 bills
                 const categoryCounts = cats.map(cat => ({
+                    id: cat.id,
                     name: cat.name,
                     count: monthlyBills.filter(b => b.category_id === cat.id || b.category?.id === cat.id).length,
                     color: cat.color || '#22c55e'
-                })).filter(c => c.count > 0);
+                }));
                 
                 setCategories(categoryCounts.length > 0 ? categoryCounts : [
                     { name: 'Utilities', count: 12, color: '#3B82F6' },
@@ -76,14 +77,7 @@ const Dashboard = () => {
                 ]);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
-                // Fallback demo categories
-                setCategories([
-                    { name: 'Utilities', count: 12, color: '#3B82F6' },
-                    { name: 'Rent', count: 3, color: '#8B5CF6' },
-                    { name: 'Internet', count: 2, color: '#06B6D4' },
-                    { name: 'Insurance', count: 4, color: '#F59E0B' },
-                    { name: 'Subscriptions', count: 8, color: '#EC4899' },
-                ]);
+                setCategories([]);
             } finally {
                 setLoading(false);
             }

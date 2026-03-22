@@ -114,11 +114,9 @@ export default function AddBillPage() {
   useEffect(() => {
     const fetchFormData = async () => {
       try {
-        // Fetch categories directly from categories endpoint
         const catRes = await api.get('/categories');
         setCategories(catRes.data.categories || []);
         
-        // Fetch people and bills for other data
         const response = await api.get('/bills/dashboard');
         setPeople(response.data.people || []);
       } catch (err) {
@@ -129,6 +127,17 @@ export default function AddBillPage() {
     };
 
     fetchFormData();
+  }, []);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      api.get('/categories').then(res => {
+        setCategories(res.data.categories || []);
+      });
+    };
+    
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   const handleSubmit = async (e) => {
