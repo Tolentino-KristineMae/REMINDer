@@ -136,13 +136,7 @@ const Management = () => {
                     <div className="absolute top-0 right-0 w-64 h-64 bg-green-50/50 rounded-bl-[10rem] -z-0"></div>
                     
                     <div className="relative z-10">
-                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-10">
-                            <div className="flex items-center gap-5">
-                                <div>
-                                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Management</h2>
-                                </div>
-                            </div>
-
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-start gap-8 mb-10">
                             <div className="flex bg-gray-100/80 p-1.5 rounded-2xl w-fit backdrop-blur-sm border border-gray-200/50">
                                 <button 
                                     onClick={() => setActiveTab('categories')}
@@ -154,7 +148,7 @@ const Management = () => {
                                     onClick={() => setActiveTab('people')}
                                     className={`px-8 py-3 rounded-xl text-xs font-black transition-all flex items-center gap-3 ${activeTab === 'people' ? 'bg-white text-green-900 shadow-lg shadow-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
                                 >
-                                    <Users size={16} /> Team Members
+                                    <Users size={16} /> Person in Charge
                                 </button>
                             </div>
                         </div>
