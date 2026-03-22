@@ -38,20 +38,22 @@ const CalendarPage = () => {
         const timer = setTimeout(() => {
             if (billsListRef.current) {
                 const container = billsListRef.current;
-                const firstBill = container.querySelector('[data-bill-id]');
-                if (firstBill) {
+                const bills = container.querySelectorAll('[data-bill-id]');
+                
+                if (bills.length > 0) {
                     const containerHeight = container.clientHeight;
+                    const containerTop = container.scrollTop;
+                    const firstBill = bills[0];
                     const elementTop = firstBill.offsetTop;
                     const scrollTo = elementTop - (containerHeight / 2) + (firstBill.clientHeight / 2);
+                    
                     container.scrollTo({
-                        top: scrollTo,
+                        top: Math.max(0, scrollTo),
                         behavior: 'smooth'
                     });
-                } else {
-                    container.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             }
-        }, 100);
+        }, 150);
         return () => clearTimeout(timer);
     }, [currentDate]);
 
