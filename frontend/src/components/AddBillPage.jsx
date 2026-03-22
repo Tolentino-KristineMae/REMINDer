@@ -168,7 +168,7 @@ export default function AddBillPage() {
 
   if (fetching) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center font-['DM_Sans',_sans-serif]">
+      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center" style={{ fontFamily: "'DM Sans', sans-serif" }}>
         <div className="flex flex-col items-center gap-6">
           <div className="relative">
             <div className="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center">
@@ -186,9 +186,11 @@ export default function AddBillPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] font-['DM_Sans',_sans-serif]">
+    <div className="min-h-screen bg-[#f8fafc]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&display=swap');
+        .font-syne { font-family: 'Syne', sans-serif; }
+        .font-dm-sans { font-family: 'DM Sans', sans-serif; }
       `}</style>
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
         <div className="flex justify-end mb-6">
@@ -215,10 +217,10 @@ export default function AddBillPage() {
                       <Receipt className="w-6 h-6 text-green-700" />
                     </div>
                     <div>
-                      <h1 className="text-xl font-black text-gray-900 leading-tight font-['Syne',_sans-serif]">
+                      <h1 className="text-xl font-black text-gray-900 leading-tight font-syne">
                         Add New Financial Bill
                       </h1>
-                      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-1.5 leading-relaxed">
+                      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-1.5 leading-relaxed font-dm-sans">
                         Track and manage your expenses with precision
                       </p>
                     </div>
@@ -236,17 +238,17 @@ export default function AddBillPage() {
             {/* Quick Stats Card */}
             <Card className="border-gray-100">
               <CardContent className="p-6">
-                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-4">
+                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-4 font-dm-sans">
                   This Month 
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-100">
-                    <p className="text-2xl font-black text-gray-900">12</p>
-                    <p className="text-[9px] font-black text-gray-400 uppercase mt-1">Bills Added</p>
+                    <p className="text-2xl font-black text-gray-900 font-syne">12</p>
+                    <p className="text-[9px] font-black text-gray-400 uppercase mt-1 font-dm-sans">Bills Added</p>
                   </div>
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-100">
-                    <p className="text-2xl font-black text-gray-900">98%</p>
-                    <p className="text-[9px] font-black text-gray-400 uppercase mt-1">On Time</p>
+                    <p className="text-2xl font-black text-gray-900 font-syne">98%</p>
+                    <p className="text-[9px] font-black text-gray-400 uppercase mt-1 font-dm-sans">On Time</p>
                   </div>
                 </div>
               </CardContent>
@@ -379,10 +381,10 @@ export default function AddBillPage() {
 function FeatureItem({ icon: Icon, label }) { 
   return ( 
     <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100 transition-colors hover:bg-white hover:shadow-sm"> 
-      <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm"> 
+      <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm font-dm-sans"> 
         <Icon className="w-4 h-4 text-green-700" /> 
       </div> 
-      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{label}</span> 
+      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest font-dm-sans">{label}</span> 
     </div> 
   ) 
 } 
@@ -393,7 +395,7 @@ function FormField({ label, icon: Icon, focused, children }) {
     <div className="space-y-3"> 
       <label 
         className={cn( 
-          "flex items-center gap-2 text-[10px] font-black uppercase tracking-wider transition-colors pl-1", 
+          "flex items-center gap-2 text-[10px] font-black uppercase tracking-wider transition-colors pl-1 font-dm-sans", 
           focused ? "text-green-600" : "text-gray-400" 
         )} 
       > 
