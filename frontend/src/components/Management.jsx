@@ -13,11 +13,8 @@ import {
   AlertCircle,
   CheckCircle2,
   UserPlus,
-  Mail as MailIcon,
-  Phone,
   ShieldCheck,
   MoreHorizontal,
-  Sparkles,
   TrendingUp,
   CircleDot
 } from 'lucide-react'
@@ -434,21 +431,6 @@ const Management = () => {
                           <TrendingUp className="h-3.5 w-3.5 text-green-600" />
                         </div>
                       </div>
-                    </div>
-
-                    <div className="mt-4 flex items-center gap-2">
-                      <button className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-50 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100">
-                        <MailIcon className="h-4 w-4" />
-                        Message
-                      </button>
-                      <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600">
-                        <Phone className="h-4 w-4" />
-                      </button>
-                    </div>
-
-                    <div className="mt-4 flex items-center gap-2 border-t border-green-50 pt-4">
-                      <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-                      <span className="text-xs font-medium text-green-600">Online</span>
                     </div>
                   </div>
                 )
