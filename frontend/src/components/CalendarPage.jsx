@@ -112,9 +112,9 @@ const CalendarPage = () => {
     };
 
     return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex flex-col">
+        <div className="flex-1 min-h-screen bg-gray-50 p-4 lg:p-6 flex flex-col" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
 
-            <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
+            <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 {/* Main Calendar Section */}
                 <div className="flex-[3] flex flex-col min-w-0">
                     {/* Elegant Calendar Container */}
@@ -142,7 +142,7 @@ const CalendarPage = () => {
                                                 setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
                                             }}
                                         >
-                                            <span className={`text-[11px] font-extrabold uppercase tracking-[0.2em] mb-4 transition-all duration-300 ${
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider mb-4 transition-all duration-300 ${
                                                 isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-500'
                                             }`}>
                                                 {dayName}
@@ -157,7 +157,7 @@ const CalendarPage = () => {
                                                 }
                                             `}>
                                                 <span className={`
-                                                    text-xl sm:text-2xl font-black tracking-tight transition-all duration-300
+                                                    text-xl sm:text-2xl font-bold tracking-tight transition-all duration-300
                                                     ${isSelected ? 'text-white drop-shadow-sm' : isToday ? 'text-emerald-600' : 'text-gray-600'}
                                                 `}>
                                                     {day.getDate()}
@@ -265,7 +265,7 @@ const CalendarPage = () => {
                                                                 {/* Organized info section */}
                                                                 <div className="flex items-end justify-between gap-1 sm:gap-2">
                                                                     <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                                                                        <p className={`text-[8px] sm:text-[10px] font-semibold ${isPaid ? 'text-gray-400' : 'text-gray-500'} truncate`}>
+                                                                        <p className={`text-[8px] sm:text-[10px] font-bold ${isPaid ? 'text-gray-400' : 'text-gray-500'} truncate`}>
                                                                             {bill.category?.name}
                                                                         </p>
                                                                         <p className={`text-sm sm:text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'} whitespace-nowrap`}>
@@ -281,7 +281,7 @@ const CalendarPage = () => {
                                                         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-2 shadow-inner">
                                                             <CalendarIcon size={18} className="text-gray-300" />
                                                         </div>
-                                                        <p className="text-[10px] sm:text-[11px] font-semibold text-gray-300 uppercase tracking-widest">No Bills</p>
+                                                        <p className="text-[10px] sm:text-[11px] font-bold text-gray-300 uppercase tracking-widest">No Bills</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -306,14 +306,14 @@ const CalendarPage = () => {
                                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
                                     <CalendarIcon size={16} className="text-emerald-300" />
                                 </div>
-                                <h3 className="font-bold text-sm">Overview</h3>
+                                <h3 className="font-bold text-xs uppercase tracking-wider">Overview</h3>
                             </div>
                         </div>
 
                         <div className="mb-5 relative z-10">
                             {/* Month & Year Display */}
                             <div className="flex justify-between items-center mb-4">
-                                <h4 className="text-xs font-semibold text-emerald-200">Calendar</h4>
+                                <h4 className="text-xs font-bold text-emerald-200 uppercase tracking-wider">Calendar</h4>
                                 <div className="flex items-center gap-2 bg-white/5 rounded-lg p-1">
                                     <button 
                                         onClick={handlePrevMonth}
@@ -321,7 +321,7 @@ const CalendarPage = () => {
                                     >
                                         <ChevronLeft size={14} />
                                     </button>
-                                    <span className="text-[10px] font-bold uppercase tracking-wider px-1 min-w-[60px] text-center">
+                                    <span className="text-[10px] font-black uppercase tracking-wider px-1 min-w-[60px] text-center">
                                         {monthNames[viewDate.getMonth()].slice(0, 3)} {viewDate.getFullYear().toString().slice(-2)}
                                     </span>
                                     <button 
@@ -335,7 +335,7 @@ const CalendarPage = () => {
 
                             <div className="grid grid-cols-7 gap-1 text-center">
                                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => (
-                                    <span key={d} className="text-[9px] font-semibold text-emerald-400/60 mb-2">{d}</span>
+                                    <span key={d} className="text-[9px] font-bold text-emerald-400/60 mb-2">{d}</span>
                                 ))}
                                 {Array.from({ length: 35 }).map((_, i) => {
                                     const day = i - firstDay + 1;
@@ -353,7 +353,7 @@ const CalendarPage = () => {
                                             key={i} 
                                             onClick={() => isCurrentMonth && handleSelectDate(day)}
                                             className={`
-                                                aspect-square flex flex-col items-center justify-center text-[10px] font-semibold rounded-lg transition-all cursor-pointer relative
+                                                aspect-square flex flex-col items-center justify-center text-[10px] font-bold rounded-lg transition-all cursor-pointer relative
                                                 ${!isCurrentMonth ? 'opacity-0 pointer-events-none' : 'hover:bg-white/10'}
                                                 ${isSelected ? 'bg-gradient-to-br from-emerald-400 to-green-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'text-white/50'}
                                                 ${hasActivity && !isSelected ? 'text-emerald-300' : ''}
@@ -370,7 +370,7 @@ const CalendarPage = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-2 text-[10px] font-semibold text-emerald-200/80 relative z-10 pt-3 border-t border-white/10">
+                        <div className="flex flex-col gap-2 text-[10px] font-bold text-emerald-200/80 relative z-10 pt-3 border-t border-white/10">
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-emerald-300 rounded-sm"></div>
                                 <span>Has Bills</span>
@@ -389,7 +389,7 @@ const CalendarPage = () => {
                                 <div className="w-8 h-8 bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg flex items-center justify-center">
                                     <FileText size={16} className="text-emerald-600" />
                                 </div>
-                                <h3 className="font-bold text-gray-800 text-sm">Bills for {monthNames[currentDate.getMonth()].slice(0, 3)} {currentDate.getDate()}</h3>
+                                <h3 className="font-bold text-gray-800 text-xs uppercase tracking-wider">Bills for {monthNames[currentDate.getMonth()].slice(0, 3)} {currentDate.getDate()}</h3>
                             </div>
                         </div>
 
@@ -441,7 +441,7 @@ const CalendarPage = () => {
                                                     <div className="flex items-center justify-between">
                                                         <div className="flex flex-col gap-1">
                                                             <div className="flex items-center gap-2">
-                                                                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                                                                     {bill.category?.name || 'Bill'}
                                                                 </p>
                                                                 <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
@@ -479,7 +479,7 @@ const CalendarPage = () => {
                                     <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-3">
                                         <CalendarIcon size={28} className="text-gray-300" />
                                     </div>
-                                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">No Bills This Day</p>
+                                    <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">No Bills This Day</p>
                                 </div>
                             )}
                         </div>
