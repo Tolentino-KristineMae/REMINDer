@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Wallet, ShieldCheck, CreditCard, Landmark, CheckCircle } from 'lucide-react';
+import BackgroundAuth from './BackgroundAuth';
 
 const Signup = () => {
     const [name, setName] = useState('');
@@ -27,19 +28,7 @@ const Signup = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-green-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 z-0">
-                <div className="absolute inset-0" style={{
-                    background: `
-                        radial-gradient(ellipse 80% 60% at 15% 25%, rgba(34,197,94,0.45) 0%, transparent 60%),
-                        radial-gradient(ellipse 60% 70% at 85% 75%, rgba(6,78,59,0.7) 0%, transparent 60%),
-                        linear-gradient(160deg, #15803d 0%, #0f4d27 100%)
-                    `
-                }}></div>
-                {/* Blobs */}
-                <div className="absolute top-[4%] left-[3%] w-[240px] height-[240px] opacity-20 bg-gradient-to-br from-green-400 to-green-300 blur-3xl animate-pulse" style={{ borderRadius: '60% 40% 55% 45%/45% 55% 45% 55%' }}></div>
-                <div className="absolute bottom-[8%] left-[10%] w-[170px] height-[170px] opacity-15 bg-gradient-to-br from-green-500 to-green-300 blur-3xl animate-bounce" style={{ borderRadius: '40% 60% 45% 55%/55% 45% 60% 40%', animationDuration: '9s' }}></div>
-            </div>
+            <BackgroundAuth />
 
             <div className="max-w-4xl w-full flex bg-white rounded-3xl shadow-2xl overflow-hidden flex-row-reverse relative z-10">
                 {/* Right Side - Form */}
