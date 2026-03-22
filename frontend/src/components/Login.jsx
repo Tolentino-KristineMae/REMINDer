@@ -139,18 +139,18 @@ const Login = () => {
                 .info-box {
                     margin-top: 24px;
                     padding: 20px;
-                    background: #f8fafc;
-                    border: 1px solid #e2e8f0;
+                    background: #f0fdf4;
+                    border: 1px solid #dcfce7;
                     border-radius: 16px;
                     animation: fadeUp .6s .45s cubic-bezier(.22,1,.36,1) both;
                 }
                 .info-title {
                     font-family: 'Syne', sans-serif;
                     font-size: 14px; font-weight: 700;
-                    color: #0f172a; margin-bottom: 8px;
+                    color: #166534; margin-bottom: 8px;
                 }
                 .info-desc {
-                    font-size: 11px; color: #475569;
+                    font-size: 11px; color: #15803d;
                     line-height: 1.5; margin-bottom: 14px;
                 }
                 .info-item {
@@ -165,7 +165,7 @@ const Login = () => {
                 }
                 .info-label {
                     font-size: 11px; font-weight: 600;
-                    color: #475569;
+                    color: #15803d;
                 }
 
                 @media (max-width: 480px) {
@@ -223,17 +223,17 @@ const Login = () => {
                     </div>
 
                     <div className="info-box">
-                        <div className="info-title">Admin Console</div>
+                        <div className="info-title">Secure Sign In</div>
                         <div className="info-desc">
-                            Authorized access only. This portal allows for secure bill management, payment tracking, and financial reporting.
+                            Authorized access only. Your login session is protected by multi-layer encryption and secure authentication protocols.
                         </div>
                         <div className="info-item">
                             <div className="info-dot"></div>
-                            <span className="info-label">Secure Encryption</span>
+                            <span className="info-label">End-to-End Encryption</span>
                         </div>
                         <div className="info-item">
                             <div className="info-dot"></div>
-                            <span className="info-label">Audit Logs Enabled</span>
+                            <span className="info-label">Secure Session Logging</span>
                         </div>
                     </div>
                 </div>
