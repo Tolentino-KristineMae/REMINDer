@@ -142,7 +142,7 @@ const Management = () => {
                                     {activeTab === 'categories' ? <Layers size={32} /> : <Users size={32} />}
                                 </div>
                                 <div>
-                                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">System Management</h2>
+                                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Management</h2>
                                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Configure your workspace resources & team</p>
                                 </div>
                             </div>
@@ -166,34 +166,63 @@ const Management = () => {
                         {/* Add Forms */}
                         <div className="animate-fade-in">
                             {activeTab === 'categories' ? (
-                                <form onSubmit={handleAddCategory} className="flex flex-col md:flex-row gap-5 bg-gray-50/50 p-6 rounded-[2rem] border border-gray-100">
-                                    <div className="flex-1 group">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Category Identity</label>
-                                        <input
-                                            type="text"
-                                            value={newCategory.name}
-                                            onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                                            placeholder="Enter category name..."
-                                            className="w-full bg-white border-2 border-transparent px-6 py-4 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-sm shadow-sm"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="group">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Theme Color</label>
-                                        <div className="flex items-center gap-4 bg-white px-5 py-3 rounded-2xl shadow-sm border-2 border-transparent focus-within:border-green-500 transition-all">
-                                            <Palette size={18} className="text-gray-400" />
-                                            <input
-                                                type="color"
-                                                value={newCategory.color}
-                                                onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
-                                                className="w-10 h-10 border-none rounded-lg cursor-pointer bg-transparent"
-                                            />
-                                            <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter w-16">{newCategory.color}</span>
+                                <form onSubmit={handleAddCategory} className="bg-gray-50/50 p-8 rounded-[2.5rem] border border-gray-100 shadow-inner relative overflow-hidden group">
+                                    {/* Decorative subtle gradient */}
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-green-100/30 rounded-bl-full -z-0 blur-2xl group-hover:bg-green-200/40 transition-all duration-500"></div>
+                                    
+                                    <div className="relative z-10 flex flex-col md:flex-row gap-8 items-end">
+                                        <div className="flex-1 w-full group/input">
+                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
+                                                <Layers size={14} /> Category Identity
+                                            </label>
+                                            <div className="relative">
+                                                <input
+                                                    type="text"
+                                                    value={newCategory.name}
+                                                    onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                                                    placeholder="Enter category name..."
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300"
+                                                    required
+                                                />
+                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-200 pointer-events-none group-focus-within/input:text-green-500/20 transition-colors">
+                                                    <Palette size={20} />
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex items-end">
-                                        <button type="submit" disabled={loading} className="w-full md:w-auto bg-green-900 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 h-[52px] active:scale-95">
-                                            {loading ? 'Processing...' : <><Plus size={20} strokeWidth={3} /> Add Category</>}
+
+                                        <div className="w-full md:w-48 group/color">
+                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/color:text-green-600 transition-colors">
+                                                <Palette size={14} /> Theme Color
+                                            </label>
+                                            <div className="flex items-center gap-4 bg-white px-5 py-3 rounded-2xl shadow-sm border-2 border-gray-50 focus-within:border-green-500 transition-all h-[60px]">
+                                                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                                                    <input
+                                                        type="color"
+                                                        value={newCategory.color}
+                                                        onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
+                                                        className="absolute -inset-2 w-[150%] h-[150%] cursor-pointer bg-transparent border-none p-0"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter">{newCategory.color}</span>
+                                                    <span className="text-[8px] font-bold text-gray-400 uppercase">HEX CODE</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button 
+                                            type="submit" 
+                                            disabled={loading} 
+                                            className="w-full md:w-auto bg-green-900 text-white px-10 h-[60px] rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98] group/btn"
+                                        >
+                                            {loading ? (
+                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                            ) : (
+                                                <>
+                                                    <Plus size={20} strokeWidth={3} className="group-hover/btn:rotate-90 transition-transform duration-300" /> 
+                                                    <span className="uppercase tracking-widest">Add Category</span>
+                                                </>
+                                            )}
                                         </button>
                                     </div>
                                 </form>
