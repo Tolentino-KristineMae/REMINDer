@@ -63,29 +63,19 @@ const CalendarPage = () => {
         return date.toISOString().split('T')[0];
     };
 
-    const getMonthDays = (year, month) => {
-        const daysInMonth = getDaysInMonth(year, month);
-        const firstDay = getFirstDayOfMonth(year, month);
+    const getWeekDays = (date) => {
+        const start = new Date(date);
+        start.setDate(date.getDate() - date.getDay());
         const days = [];
-        
-        for (let i = 0; i < firstDay; i++) {
-            const prevDate = new Date(year, month, -firstDay + i + 1);
-            days.push(prevDate);
+        for (let i = 0; i < 7; i++) {
+            const day = new Date(start);
+            day.setDate(start.getDate() + i);
+            days.push(day);
         }
-        
-        for (let i = 1; i <= daysInMonth; i++) {
-            days.push(new Date(year, month, i));
-        }
-        
-        const remaining = 42 - days.length;
-        for (let i = 1; i <= remaining; i++) {
-            days.push(new Date(year, month, daysInMonth + i));
-        }
-        
         return days;
     };
 
-    const monthDays = getMonthDays(viewDate.getFullYear(), viewDate.getMonth());
+    const weekDays = getWeekDays(currentDate);
 
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -133,42 +123,98 @@ const CalendarPage = () => {
                         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
                         
                         {/* Week Header */}
-                        <div className="bg-gradient-to-b from-white to-gray-50/30 px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-100/50">
-                            <div className="flex justify-between items-end">
-                                {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(dayName => (
-                                    <span key={dayName} className="text-[10px] font-bold uppercase tracking-wider text-gray-300">
-                                        {dayName}
-                                    </span>
-                                ))}
+                        <div className="bg-gradient-to-b from-white to-gray-50/30 px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-100/50 overflow-x-auto">
+                            <div className="min-w-[720px] flex justify-between items-end">
+                                {weekDays.map((day, i) => {
+                                    const isToday = day.toDateString() === new Date().toDateString();
+                                    const isSelected = day.toDateString() === currentDate.toDateString();
+                                    const dayBills = getBillsForDate(day);
+                                    const hasPending = dayBills.some(b => b.status === 'pending');
+                                    const allPaid = dayBills.length > 0 && dayBills.every(b => b.status === 'paid');
+                                    const dayName = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][day.getDay()];
+                                    
+                                    return (
+                                        <div 
+                                            key={i} 
+                                            className={`flex flex-col items-center cursor-pointer transition-all duration-500 group`}
+                                            onClick={() => {
+                                                setCurrentDate(day);
+                                                setViewDate(new Date(day.getFullYear(), day.getMonth(), 1));
+                                            }}
+                                        >
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider mb-4 transition-all duration-300 ${
+                                                isSelected ? 'text-green-600' : isToday ? 'text-emerald-500' : 'text-gray-300 group-hover:text-gray-500'
+                                            }`}>
+                                                {dayName}
+                                            </span>
+                                            <div className={`
+                                                relative w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center transition-all duration-500
+                                                ${isSelected 
+                                                    ? 'bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 shadow-xl shadow-green-500/25 scale-110 ring-4 ring-green-500/10' 
+                                                    : isToday 
+                                                        ? 'bg-gradient-to-br from-emerald-50 to-white border-2 border-emerald-200/60 shadow-lg shadow-emerald-500/10' 
+                                                        : 'hover:bg-gray-50 hover:scale-105'
+                                                }
+                                            `}>
+                                                <span className={`
+                                                    text-xl sm:text-2xl font-bold tracking-tight transition-all duration-300
+                                                    ${isSelected ? 'text-white drop-shadow-sm' : isToday ? 'text-emerald-600' : 'text-gray-600'}
+                                                `}>
+                                                    {day.getDate()}
+                                                </span>
+                                                {/* Elegant status indicator */}
+                                                {isSelected && (
+                                                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ring-green-500/20">
+                                                        {hasPending ? (
+                                                            <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>
+                                                        ) : allPaid ? (
+                                                            <CheckCircle2 size={12} className="text-green-500" />
+                                                        ) : (
+                                                            <div className="w-2.5 h-2.5 bg-blue-400 rounded-full shadow-sm shadow-blue-500/50"></div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {/* Subtle dots for status */}
+                                            <div className="flex gap-1.5 mt-4">
+                                                {!isSelected && isToday && <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-sm shadow-emerald-500/50"></div>}
+                                                {!isSelected && hasPending && <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse shadow-sm shadow-red-500/50"></div>}
+                                                {!isSelected && allPaid && dayBills.length > 0 && <CheckCircle2 size={10} className="text-emerald-400" />}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
 
-                        {/* Day Columns - Full Month Grid */}
+                        {/* Day Columns - Refined */}
                         <div className="flex-1 min-h-0 overflow-auto">
-                            <div className="grid grid-cols-7 min-h-full">
-                                {monthDays.map((day, dayIndex) => {
+                            <div className="min-w-[720px] flex">
+                                {weekDays.map((day, dayIndex) => {
                                     const dayBills = getBillsForDate(day);
                                     const isSelected = day.toDateString() === currentDate.toDateString();
                                     const isToday = day.toDateString() === new Date().toDateString();
-                                    const isCurrentMonth = day.getMonth() === viewDate.getMonth();
                                     
                                     return (
                                         <div 
                                             key={dayIndex} 
                                             className={`
-                                                min-h-[120px] sm:min-h-[140px] border-r border-b border-gray-100/60 px-1 sm:px-2 py-2 flex flex-col gap-1 sm:gap-2 relative transition-all duration-300
+                                                flex-1 min-w-[120px] sm:min-w-[160px] md:min-w-[180px] border-r border-gray-100/60 last:border-r-0 px-1.5 sm:px-3 py-2 sm:py-4 flex flex-col gap-2 sm:gap-3 relative transition-all duration-500 overflow-hidden
                                                 ${isSelected ? 'bg-gradient-to-b from-green-50/80 to-white' : isToday ? 'bg-gradient-to-b from-emerald-50/30 to-white' : 'bg-white'}
-                                                ${!isCurrentMonth ? 'bg-gray-50/50' : ''}
                                             `}
                                         >
+                                            {/* Elegant column divider */}
+                                            <div className="absolute top-4 bottom-4 -right-px w-px bg-gradient-to-b from-transparent via-gray-200/50 to-transparent"></div>
+                                            
+                                            {/* Date badge */}
                                             <div className="text-center shrink-0">
                                                 <span className={`
-                                                    inline-block text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] px-1.5 sm:px-2 py-0.5 rounded-full transition-all duration-300
+                                                    inline-block text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all duration-300
                                                     ${isSelected 
                                                         ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/20' 
                                                         : isToday 
                                                             ? 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-600 border border-emerald-200/50' 
-                                                            : isCurrentMonth ? 'text-gray-400 bg-gray-50 border border-gray-100' : 'text-gray-300 bg-gray-100'
+                                                            : 'text-gray-400 bg-gray-50 border border-gray-100'
                                                     }
                                                 `}>
                                                     {day.getDate()}
@@ -185,40 +231,44 @@ const CalendarPage = () => {
                                                                 key={bill.id}
                                                                 onClick={() => handleBillClick(bill)}
                                                                 className={`
-                                                                    relative rounded p-1 transition-all duration-300 cursor-pointer group hover:shadow-md hover:-translate-y-0.5 w-full min-w-0 overflow-hidden
+                                                                    relative rounded-lg sm:rounded-xl p-2 sm:p-3.5 transition-all duration-300 cursor-pointer group hover:shadow-lg hover:-translate-y-0.5 w-full min-w-0 overflow-hidden
                                                                     ${isPaid 
                                                                         ? 'bg-gradient-to-br from-gray-50 to-white border border-gray-100/50' 
                                                                         : 'bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-emerald-100/50'
                                                                     }
-                                                                `}
+                                                                `
                                                             >
+                                                                {/* Elegant status accent bar */}
                                                                 <div className={`
-                                                                    absolute top-0 left-0 right-0 h-0.5
+                                                                    absolute top-0 left-0 right-0 h-0.5 sm:h-1 rounded-t-lg sm:rounded-t-xl
                                                                     ${isPaid ? 'bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300' : 'bg-gradient-to-r from-red-400 via-red-500 to-red-400'}
                                                                 `}></div>
                                                                 
-                                                                <div className="mt-0.5 mb-1">
+                                                                {/* Status badge */}
+                                                                <div className="mt-1 mb-1.5 sm:mt-1.5 sm:mb-2">
                                                                     {isPaid ? (
-                                                                        <span className="inline-flex items-center gap-0.5 text-[5px] sm:text-[7px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-1 py-0.5 rounded-full border border-emerald-100">
-                                                                            <CheckCircle2 size={5} className="sm:size-6" /> Paid
+                                                                        <span className="inline-flex items-center gap-0.5 text-[7px] sm:text-[9px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-emerald-100">
+                                                                            <CheckCircle2 size={8} className="sm:size-9" /> Paid
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="inline-flex items-center gap-0.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-[5px] sm:text-[7px] font-black px-1 py-0.5 rounded-full uppercase tracking-wider shadow-md">
-                                                                            <AlertCircle size={5} className="sm:size-6" /> DUE
+                                                                        <span className="inline-flex items-center gap-0.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-[7px] sm:text-[9px] font-black px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md">
+                                                                            <AlertCircle size={8} className="sm:size-9" /> DUE
                                                                         </span>
                                                                     )}
                                                                 </div>
 
-                                                                <h4 className={`font-bold text-[7px] sm:text-[9px] mb-0.5 leading-tight ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'} break-words line-clamp-2`}>
+                                                                {/* Bill details - full width */}
+                                                                <h4 className={`font-bold text-[10px] sm:text-[12px] mb-1 sm:mb-2 leading-tight ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'} break-words line-clamp-2`}>
                                                                     {bill.details}
                                                                 </h4>
                                                                 
-                                                                <div className="flex items-end justify-between gap-1">
+                                                                {/* Organized info section */}
+                                                                <div className="flex items-end justify-between gap-1 sm:gap-2">
                                                                     <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                                                                        <p className={`text-[5px] sm:text-[7px] font-bold ${isPaid ? 'text-gray-400' : 'text-gray-500'} truncate`}>
+                                                                        <p className={`text-[8px] sm:text-[10px] font-bold ${isPaid ? 'text-gray-400' : 'text-gray-500'} truncate`}>
                                                                             {bill.category?.name}
                                                                         </p>
-                                                                        <p className={`text-[10px] sm:text-sm font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'} whitespace-nowrap`}>
+                                                                        <p className={`text-sm sm:text-lg font-black tracking-tight ${isPaid ? 'text-gray-300' : 'text-emerald-600'} whitespace-nowrap`}>
                                                                             ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
                                                                         </p>
                                                                     </div>
@@ -227,11 +277,11 @@ const CalendarPage = () => {
                                                         );
                                                     })
                                                 ) : (
-                                                    <div className="flex-1 flex flex-col items-center justify-center py-1">
-                                                        <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-0.5 shadow-inner">
-                                                            <CalendarIcon size={8} className="text-gray-300" />
+                                                    <div className="flex-1 flex flex-col items-center justify-center py-4">
+                                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-2 shadow-inner">
+                                                            <CalendarIcon size={18} className="text-gray-300" />
                                                         </div>
-                                                        <p className="text-[6px] sm:text-[8px] font-bold text-gray-300 uppercase tracking-widest">No Bills</p>
+                                                        <p className="text-[10px] sm:text-[11px] font-bold text-gray-300 uppercase tracking-widest">No Bills</p>
                                                     </div>
                                                 )}
                                             </div>
