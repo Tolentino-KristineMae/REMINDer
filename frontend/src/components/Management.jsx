@@ -31,7 +31,7 @@ const Management = () => {
     // People State
     const [people, setPeople] = useState([]);
     const [bills, setBills] = useState([]);
-    const [newPerson, setNewPerson] = useState({ name: '', email: '', phone: '' });
+    const [newPerson, setNewPerson] = useState({ name: '', email: '' });
 
     const fetchData = React.useCallback(async () => {
         try {
@@ -87,7 +87,7 @@ const Management = () => {
         setMessage({ text: '', type: '' });
         try {
             await api.post('/people', newPerson);
-            setNewPerson({ name: '', email: '', phone: '' });
+            setNewPerson({ name: '', email: '' });
             fetchData();
             setMessage({ text: 'Person added successfully!', type: 'success' });
         } catch (err) {
@@ -158,8 +158,8 @@ const Management = () => {
                                     {/* Decorative subtle gradient */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-green-100/30 rounded-bl-full -z-0 blur-2xl group-hover:bg-green-200/40 transition-all duration-500"></div>
                                     
-                                    <div className="relative z-10 flex flex-col md:flex-row gap-8 items-end">
-                                        <div className="flex-1 w-full group/input">
+                                    <div className="relative z-10 flex flex-col md:flex-row gap-6 items-end max-w-5xl">
+                                        <div className="flex-1 w-full group/input max-w-md">
                                             <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
                                                 <Layers size={14} /> Category Identity
                                             </label>
@@ -169,7 +169,7 @@ const Management = () => {
                                                     value={newCategory.name}
                                                     onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
                                                     placeholder="Enter category name..."
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-[60px]"
                                                     required
                                                 />
                                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-200 pointer-events-none group-focus-within/input:text-green-500/20 transition-colors">
@@ -178,12 +178,12 @@ const Management = () => {
                                             </div>
                                         </div>
 
-                                        <div className="w-full md:w-48 group/color">
+                                        <div className="w-full md:w-44 group/color">
                                             <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/color:text-green-600 transition-colors">
                                                 <Palette size={14} /> Theme Color
                                             </label>
                                             <div className="flex items-center gap-4 bg-white px-5 py-3 rounded-2xl shadow-sm border-2 border-gray-50 focus-within:border-green-500 transition-all h-[60px]">
-                                                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                                                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-gray-100 flex-shrink-0">
                                                     <input
                                                         type="color"
                                                         value={newCategory.color}
@@ -191,9 +191,9 @@ const Management = () => {
                                                         className="absolute -inset-2 w-[150%] h-[150%] cursor-pointer bg-transparent border-none p-0"
                                                     />
                                                 </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter">{newCategory.color}</span>
-                                                    <span className="text-[8px] font-bold text-gray-400 uppercase">HEX CODE</span>
+                                                <div className="flex flex-col min-w-0">
+                                                    <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter truncate">{newCategory.color}</span>
+                                                    <span className="text-[8px] font-bold text-gray-400 uppercase whitespace-nowrap">HEX CODE</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -219,8 +219,8 @@ const Management = () => {
                                     {/* Decorative subtle gradient */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-green-100/30 rounded-bl-full -z-0 blur-2xl group-hover:bg-green-200/40 transition-all duration-500"></div>
                                     
-                                    <div className="relative z-10 flex flex-col md:flex-row gap-6 items-end">
-                                        <div className="flex-[1.5] w-full group/input">
+                                    <div className="relative z-10 flex flex-col md:flex-row gap-6 items-end max-w-5xl">
+                                        <div className="flex-1 w-full group/input max-w-md">
                                             <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
                                                 <Users size={14} /> Full Name
                                             </label>
@@ -230,13 +230,13 @@ const Management = () => {
                                                     value={newPerson.name}
                                                     onChange={(e) => setNewPerson({ ...newPerson, name: e.target.value })}
                                                     placeholder="e.g. John Doe"
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-[60px]"
                                                     required
                                                 />
                                             </div>
                                         </div>
 
-                                        <div className="flex-[1.5] w-full group/input">
+                                        <div className="flex-1 w-full group/input max-w-md">
                                             <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
                                                 <MailIcon size={14} /> Email Address
                                             </label>
@@ -246,23 +246,8 @@ const Management = () => {
                                                     value={newPerson.email}
                                                     onChange={(e) => setNewPerson({ ...newPerson, email: e.target.value })}
                                                     placeholder="e.g. john@example.com"
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300"
+                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-[60px]"
                                                     required
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="flex-1 w-full group/input">
-                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
-                                                <Phone size={14} /> Phone
-                                            </label>
-                                            <div className="relative">
-                                                <input
-                                                    type="tel"
-                                                    value={newPerson.phone}
-                                                    onChange={(e) => setNewPerson({ ...newPerson, phone: e.target.value })}
-                                                    placeholder="Optional"
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-4 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300"
                                                 />
                                             </div>
                                         </div>
@@ -437,15 +422,13 @@ const Management = () => {
                         ) : (
                             <div className="bg-white rounded-[2rem] border border-green-100 shadow-sm overflow-hidden">
                                 <div className="overflow-x-auto">
-                                    <table className="min-w-[900px] w-full">
+                                    <table className="min-w-[700px] w-full">
                                         <thead className="bg-green-50/30 text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                             <tr>
-                                                <th className="px-6 py-4 text-left">Team Member</th>
+                                                <th className="px-6 py-4 text-left">Person in Charge</th>
                                                 <th className="px-6 py-4 text-center">Assigned Bills</th>
                                                 <th className="px-6 py-4 text-center">Settled</th>
-                                                <th className="px-6 py-4 text-center">Total Value</th>
-                                                <th className="px-6 py-4 text-center">Performance</th>
-                                                <th className="px-6 py-4 text-right">Actions</th>
+                                                <th className="px-6 py-4 text-center">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-green-50">
@@ -468,19 +451,8 @@ const Management = () => {
                                                         <td className="px-6 py-4 text-center">
                                                             <span className="text-sm font-black text-green-600">{stats.paid}</span>
                                                         </td>
-                                                        <td className="px-6 py-4 text-center">
-                                                            <span className="text-sm font-black text-green-950">₱{stats.total.toLocaleString()}</span>
-                                                        </td>
-                                                        <td className="px-6 py-4 text-center">
-                                                            <div className="flex flex-col items-center gap-1.5">
-                                                                <div className="w-20 bg-green-50 h-1.5 rounded-full overflow-hidden">
-                                                                    <div className="bg-green-500 h-full" style={{ width: `${stats.performance}%` }}></div>
-                                                                </div>
-                                                                <span className="text-[10px] font-black text-green-600">{stats.performance}%</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-6 py-4 text-right">
-                                                            <div className="flex items-center justify-end gap-2">
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex items-center justify-center gap-2">
                                                                 <button onClick={() => handleDeletePerson(person.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
                                                                     <Trash2 size={18} />
                                                                 </button>
