@@ -1,482 +1,539 @@
-import React, { useState, useEffect } from 'react';
-import api from '../api/axios';
+"use client"
+
+import React, { useState, useEffect, useCallback } from 'react'
+import api from '../api/axios'
 import { 
-    Layers, 
-    Users,
-    Plus,
-    Trash2,
-    Palette,
-    LayoutGrid,
-    LayoutList,
-    AlertCircle,
-    CheckCircle2,
-    UserPlus,
-    Mail as MailIcon,
-    Phone,
-    ShieldCheck,
-    MoreHorizontal
-} from 'lucide-react';
-import BackgroundAuth from './BackgroundAuth';
+  Layers, 
+  Users,
+  Plus,
+  Trash2,
+  Palette,
+  LayoutGrid,
+  LayoutList,
+  AlertCircle,
+  CheckCircle2,
+  UserPlus,
+  Mail as MailIcon,
+  Phone,
+  ShieldCheck,
+  MoreHorizontal,
+  Sparkles,
+  TrendingUp,
+  CircleDot
+} from 'lucide-react'
 
 const Management = () => {
-    const [activeTab, setActiveTab] = useState('categories'); // 'categories' or 'people'
-    const [viewMode, setViewMode] = useState('list');
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState({ text: '', type: '' });
+  const [activeTab, setActiveTab] = useState('categories')
+  const [viewMode, setViewMode] = useState('grid')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState({ text: '', type: '' })
 
-    // Categories State
-    const [categories, setCategories] = useState([]);
-    const [newCategory, setNewCategory] = useState({ name: '', color: '#22c55e' });
+  const [categories, setCategories] = useState([])
+  const [newCategory, setNewCategory] = useState({ name: '', color: '#3b82f6' })
 
-    // People State
-    const [people, setPeople] = useState([]);
-    const [bills, setBills] = useState([]);
-    const [newPerson, setNewPerson] = useState({ name: '', email: '' });
+  const [people, setPeople] = useState([])
+  const [bills, setBills] = useState([])
+  const [newPerson, setNewPerson] = useState({ name: '', email: '' })
 
-    const fetchData = React.useCallback(async () => {
-        try {
-            if (activeTab === 'categories') {
-                const response = await api.get('/categories');
-                setCategories(response.data.categories || []);
-            } else {
-                const response = await api.get('/bills/dashboard');
-                setPeople(response.data.people || []);
-                setBills(response.data.bills || []);
-            }
-        } catch (err) {
-            console.error(`Error fetching ${activeTab}:`, err);
-        }
-    }, [activeTab]);
+  const fetchData = useCallback(async () => {
+    try {
+      if (activeTab === 'categories') {
+        const response = await api.get('/categories')
+        setCategories(response.data.categories || [])
+      } else {
+        const response = await api.get('/bills/dashboard')
+        setPeople(response.data.people || [])
+        setBills(response.data.bills || [])
+      }
+    } catch (err) {
+      console.error(`Error fetching ${activeTab}:`, err)
+    }
+  }, [activeTab])
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
-    // Category Handlers
-    const handleAddCategory = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage({ text: '', type: '' });
-        try {
-            await api.post('/categories', newCategory);
-            setNewCategory({ name: '', color: '#22c55e' });
-            fetchData();
-            setMessage({ text: 'Category added successfully!', type: 'success' });
-        } catch (err) {
-            setMessage({ text: err.response?.data?.message || 'Failed to add category.', type: 'error' });
-        } finally {
-            setLoading(false);
-        }
-    };
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => setMessage({ text: '', type: '' }), 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [message])
 
-    const handleDeleteCategory = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this category?')) return;
-        try {
-            await api.delete(`/categories/${id}`);
-            fetchData();
-            setMessage({ text: 'Category deleted successfully!', type: 'success' });
-        } catch (err) {
-            setMessage({ text: err.response?.data?.message || 'Failed to delete category.', type: 'error' });
-        }
-    };
+  const handleAddCategory = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage({ text: '', type: '' })
+    try {
+      await api.post('/categories', newCategory)
+      setNewCategory({ name: '', color: '#3b82f6' })
+      fetchData()
+      setMessage({ text: 'Category added successfully!', type: 'success' })
+    } catch (err) {
+      setMessage({ text: err.response?.data?.message || 'Failed to add category.', type: 'error' })
+    } finally {
+      setLoading(false)
+    }
+  }
 
-    // People Handlers
-    const handleAddPerson = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage({ text: '', type: '' });
-        try {
-            await api.post('/people', newPerson);
-            setNewPerson({ name: '', email: '' });
-            fetchData();
-            setMessage({ text: 'Person added successfully!', type: 'success' });
-        } catch (err) {
-            setMessage({ text: err.response?.data?.message || 'Failed to add person.', type: 'error' });
-        } finally {
-            setLoading(false);
-        }
-    };
+  const handleDeleteCategory = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this category?')) return
+    try {
+      await api.delete(`/categories/${id}`)
+      fetchData()
+      setMessage({ text: 'Category deleted successfully!', type: 'success' })
+    } catch (err) {
+      setMessage({ text: err.response?.data?.message || 'Failed to delete category.', type: 'error' })
+    }
+  }
 
-    const handleDeletePerson = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this person?')) return;
-        try {
-            await api.delete(`/people/${id}`);
-            fetchData();
-            setMessage({ text: 'Person deleted successfully!', type: 'success' });
-        } catch (err) {
-            setMessage({ text: err.response?.data?.message || 'Failed to delete person.', type: 'error' });
-        }
-    };
+  const handleAddPerson = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage({ text: '', type: '' })
+    try {
+      await api.post('/people', newPerson)
+      setNewPerson({ name: '', email: '' })
+      fetchData()
+      setMessage({ text: 'Person added successfully!', type: 'success' })
+    } catch (err) {
+      setMessage({ text: err.response?.data?.message || 'Failed to add person.', type: 'error' })
+    } finally {
+      setLoading(false)
+    }
+  }
 
-    const getPersonStats = (personId) => {
-        const personBills = bills.filter(b => b.person_in_charge_id === personId);
-        const paidCount = personBills.filter(b => b.status === 'paid').length;
-        const totalAmount = personBills.reduce((acc, b) => acc + parseFloat(b.amount), 0);
-        return {
-            count: personBills.length,
-            paid: paidCount,
-            total: totalAmount,
-            performance: personBills.length > 0 ? Math.round((paidCount / personBills.length) * 100) : 0
-        };
-    };
+  const handleDeletePerson = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this person?')) return
+    try {
+      await api.delete(`/people/${id}`)
+      fetchData()
+      setMessage({ text: 'Person deleted successfully!', type: 'success' })
+    } catch (err) {
+      setMessage({ text: err.response?.data?.message || 'Failed to delete person.', type: 'error' })
+    }
+  }
 
-    return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-8 flex flex-col relative overflow-hidden">
-            {/* Background Decorative Elements */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden -z-0">
-                <div className="absolute top-[-5%] right-[-2%] w-[400px] h-[400px] bg-green-50 rounded-full blur-3xl opacity-50"></div>
-                <div className="absolute bottom-[-5%] left-[-2%] w-[350px] h-[350px] bg-emerald-50 rounded-full blur-3xl opacity-50"></div>
+  const getPersonStats = useCallback((personId) => {
+    const personBills = bills.filter(b => b.person_in_charge_id === personId)
+    const paidCount = personBills.filter(b => b.status === 'paid').length
+    const totalAmount = personBills.reduce((acc, b) => acc + parseFloat(b.amount), 0)
+    return {
+      count: personBills.length,
+      paid: paidCount,
+      total: totalAmount,
+      performance: personBills.length > 0 ? Math.round((paidCount / personBills.length) * 100) : 0
+    }
+  }, [bills])
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold text-foreground">Management</h1>
+                <p className="text-xs text-muted-foreground">Organize your categories and team</p>
+              </div>
             </div>
 
-            <div className="relative z-10 flex flex-col h-full">
-                {/* Header Section */}
-                <div className="bg-white rounded-[2.5rem] p-8 border border-green-100 shadow-xl shadow-green-900/5 mb-8 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-green-50/50 rounded-bl-[10rem] -z-0"></div>
-                    
-                    <div className="relative z-10">
-                        <div className="flex flex-col lg:flex-row lg:items-center justify-start gap-8 mb-10">
-                            <div className="flex bg-gray-100/80 p-1.5 rounded-2xl w-fit backdrop-blur-sm border border-gray-200/50">
-                                <button 
-                                    onClick={() => setActiveTab('categories')}
-                                    className={`px-8 py-3 rounded-xl text-xs font-black transition-all flex items-center gap-3 ${activeTab === 'categories' ? 'bg-white text-green-900 shadow-lg shadow-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
-                                >
-                                    <Layers size={16} /> Categories
-                                </button>
-                                <button 
-                                    onClick={() => setActiveTab('people')}
-                                    className={`px-8 py-3 rounded-xl text-xs font-black transition-all flex items-center gap-3 ${activeTab === 'people' ? 'bg-white text-green-900 shadow-lg shadow-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
-                                >
-                                    <Users size={16} /> Person in Charge
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Add Forms */}
-                        <div className="animate-fade-in">
-                            {activeTab === 'categories' ? (
-                                <form onSubmit={handleAddCategory} className="bg-gray-50/50 p-8 rounded-[2.5rem] border border-gray-100 shadow-inner relative overflow-hidden group">
-                                    {/* Decorative subtle gradient */}
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-green-100/30 rounded-bl-full -z-0 blur-2xl group-hover:bg-green-200/40 transition-all duration-500"></div>
-                                    
-                                    <div className="relative z-10 flex flex-col md:flex-row gap-6 items-end max-w-5xl">
-                                        <div className="flex-1 w-full group/input max-w-md">
-                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
-                                                <Layers size={14} /> Category Identity
-                                            </label>
-                                            <div className="relative">
-                                                <input
-                                                    type="text"
-                                                    value={newCategory.name}
-                                                    onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                                                    placeholder="Enter category name..."
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-3 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-12"
-                                                    required
-                                                />
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-200 pointer-events-none group-focus-within/input:text-green-500/20 transition-colors">
-                                                    <Palette size={18} />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="w-full md:w-44 group/color">
-                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/color:text-green-600 transition-colors">
-                                                <Palette size={14} /> Theme Color
-                                            </label>
-                                            <div className="flex items-center gap-4 bg-white px-5 py-2 rounded-2xl shadow-sm border-2 border-gray-50 focus-within:border-green-500 transition-all h-12">
-                                                <div 
-                                                    className="relative w-8 h-8 rounded-xl shadow-sm border border-gray-100 flex-shrink-0"
-                                                    style={{ backgroundColor: newCategory.color }}
-                                                >
-                                                    <input
-                                                        type="color"
-                                                        value={newCategory.color}
-                                                        onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
-                                                        className="absolute inset-0 w-full h-full cursor-pointer opacity-0"
-                                                    />
-                                                </div>
-                                                <div className="flex flex-col min-w-0">
-                                                    <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter truncate leading-none">{newCategory.color}</span>
-                                                    <span className="text-[8px] font-bold text-gray-400 uppercase whitespace-nowrap leading-none mt-0.5">HEX CODE</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button 
-                                            type="submit" 
-                                            disabled={loading} 
-                                            className="w-full md:w-auto bg-green-900 text-white px-10 h-12 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98] group/btn"
-                                        >
-                                            {loading ? (
-                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                            ) : (
-                                                <>
-                                                    <Plus size={18} strokeWidth={3} className="group-hover/btn:rotate-90 transition-transform duration-300" /> 
-                                                    <span className="uppercase tracking-widest">Add Category</span>
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                </form>
-                            ) : (
-                                <form onSubmit={handleAddPerson} className="bg-gray-50/50 p-8 rounded-[2.5rem] border border-gray-100 shadow-inner relative overflow-hidden group">
-                                    {/* Decorative subtle gradient */}
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-green-100/30 rounded-bl-full -z-0 blur-2xl group-hover:bg-green-200/40 transition-all duration-500"></div>
-                                    
-                                    <div className="relative z-10 flex flex-col md:flex-row gap-6 items-end max-w-5xl">
-                                        <div className="flex-1 w-full group/input max-w-md">
-                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
-                                                <Users size={14} /> Full Name
-                                            </label>
-                                            <div className="relative">
-                                                <input
-                                                    type="text"
-                                                    value={newPerson.name}
-                                                    onChange={(e) => setNewPerson({ ...newPerson, name: e.target.value })}
-                                                    placeholder="e.g. John Doe"
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-3 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-12"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="flex-1 w-full group/input max-w-md">
-                                            <label className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-green-600 transition-colors">
-                                                <MailIcon size={14} /> Email Address
-                                            </label>
-                                            <div className="relative">
-                                                <input
-                                                    type="email"
-                                                    value={newPerson.email}
-                                                    onChange={(e) => setNewPerson({ ...newPerson, email: e.target.value })}
-                                                    placeholder="e.g. john@example.com"
-                                                    className="w-full bg-white border-2 border-gray-50 px-6 py-3 rounded-2xl outline-none focus:border-green-500 focus:bg-white transition-all font-bold text-gray-900 shadow-sm placeholder:text-gray-300 h-12"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <button 
-                                            type="submit" 
-                                            disabled={loading} 
-                                            className="w-full md:w-auto bg-green-900 text-white px-8 h-12 rounded-2xl font-black text-sm hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98] group/btn whitespace-nowrap"
-                                        >
-                                            {loading ? (
-                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                            ) : (
-                                                <>
-                                                    <UserPlus size={18} strokeWidth={3} className="group-hover/btn:scale-110 transition-transform duration-300" /> 
-                                                    <span className="uppercase tracking-widest">Save Member</span>
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                </form>
-                            )}
-                        </div>
-
-                        {message.text && (
-                            <div className={`mt-6 p-5 rounded-2xl flex items-center gap-4 animate-fade-in shadow-sm ${
-                                message.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'
-                            }`}>
-                                <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${message.type === 'success' ? 'bg-green-100' : 'bg-red-100'}`}>
-                                    {message.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
-                                </div>
-                                <span className="text-[10px] font-black uppercase tracking-tight">{message.text}</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Content Section Header */}
-                <div className="flex items-center justify-between mb-8 px-4">
-                    <div className="flex items-center gap-3">
-                        <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.5)]"></div>
-                        <h3 className="text-[11px] font-black text-gray-500 uppercase tracking-[0.2em]">
-                            Existing {activeTab === 'categories' ? `Categories (${categories.length})` : `Members (${people.length})`}
-                        </h3>
-                    </div>
-                    <div className="bg-white/80 backdrop-blur-sm p-1.5 rounded-2xl border border-green-100 shadow-lg shadow-green-900/5 flex items-center gap-1">
-                        <button onClick={() => setViewMode('list')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'list' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-green-50'}`}>
-                            <LayoutList size={18} />
-                        </button>
-                        <button onClick={() => setViewMode('grid')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-green-50'}`}>
-                            <LayoutGrid size={18} />
-                        </button>
-                    </div>
-                </div>
-
-                {/* Content Area */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar px-2 pb-8">
-                    {activeTab === 'categories' ? (
-                        // Categories Content
-                        viewMode === 'grid' ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                                {categories.map((cat) => (
-                                    <div key={cat.id} className="group bg-white rounded-[2rem] p-6 border border-green-50 shadow-sm hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all flex flex-col items-center relative overflow-hidden">
-                                        <div className="w-16 h-16 rounded-2xl mb-4 flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-all" style={{ backgroundColor: cat.color }}>
-                                            <Layers size={24} />
-                                        </div>
-                                        <h4 className="font-black text-gray-900 text-sm text-center mb-1">{cat.name}</h4>
-                                        <div className="flex items-center gap-1.5 mb-6">
-                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.color }}></div>
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{cat.color}</span>
-                                        </div>
-                                        <button onClick={() => handleDeleteCategory(cat.id)} className="w-10 h-10 flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="bg-white rounded-[2.5rem] border border-green-100 shadow-sm overflow-hidden">
-                                <table className="w-full">
-                                    <thead className="bg-green-50/30 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                        <tr>
-                                            <th className="px-8 py-5 text-left">Category</th>
-                                            <th className="px-8 py-5 text-center">Color Hex</th>
-                                            <th className="px-8 py-5 text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-green-50">
-                                        {categories.map((cat) => (
-                                            <tr key={cat.id} className="hover:bg-green-50/10 transition-all group">
-                                                <td className="px-8 py-5">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm" style={{ backgroundColor: cat.color }}>
-                                                            <Layers size={18} />
-                                                        </div>
-                                                        <span className="font-bold text-gray-900 text-sm">{cat.name}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-8 py-5 text-center">
-                                                    <div className="inline-flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
-                                                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }}></div>
-                                                        <span className="text-[10px] font-black text-gray-500 uppercase">{cat.color}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-8 py-5 text-right">
-                                                    <button onClick={() => handleDeleteCategory(cat.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                                        <Trash2 size={18} />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )
-                    ) : (
-                        // People Content
-                        viewMode === 'grid' ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {people.map((person) => {
-                                    const stats = getPersonStats(person.id);
-                                    return (
-                                        <div key={person.id} className="group bg-white rounded-[2rem] p-6 border border-green-50 shadow-sm hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all flex flex-col items-center text-center relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 w-24 h-24 bg-green-50/50 rounded-bl-[4rem] -z-0 transition-all group-hover:bg-green-50 group-hover:scale-110"></div>
-                                            <div className="relative z-10 w-full flex flex-col items-center">
-                                                <div className="relative mb-4">
-                                                    <div className="w-24 h-24 rounded-3xl border-4 border-white shadow-lg overflow-hidden relative">
-                                                        <img src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} className="w-full h-full object-cover" alt={person.name} />
-                                                    </div>
-                                                    <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 border-4 border-white rounded-2xl flex items-center justify-center text-white shadow-md">
-                                                        <ShieldCheck size={14} />
-                                                    </div>
-                                                </div>
-                                                <h3 className="font-black text-green-950 text-lg mb-1">{person.name}</h3>
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Person In-Charge</p>
-                                                <div className="grid grid-cols-2 w-full gap-4 mb-6">
-                                                    <div className="bg-green-50/50 p-3 rounded-2xl border border-green-50">
-                                                        <p className="text-[9px] font-black text-green-900/50 uppercase mb-1">Assigned</p>
-                                                        <p className="text-sm font-black text-green-900">{stats.count}</p>
-                                                    </div>
-                                                    <div className="bg-green-50/50 p-3 rounded-2xl border border-green-50">
-                                                        <p className="text-[9px] font-black text-green-900/50 uppercase mb-1">Performance</p>
-                                                        <p className="text-sm font-black text-green-900">{stats.performance}%</p>
-                                                    </div>
-                                                </div>
-                                                <div className="w-full flex items-center gap-2 mb-6">
-                                                    <button className="flex-1 flex items-center justify-center gap-2 bg-green-50 text-green-700 py-2.5 rounded-xl font-bold text-[10px] hover:bg-green-100 transition-all">
-                                                        <MailIcon size={14} /> Message
-                                                    </button>
-                                                    <button className="w-10 h-10 flex items-center justify-center bg-gray-50 text-gray-400 rounded-xl hover:bg-gray-100 transition-all border border-gray-100">
-                                                        <Phone size={14} />
-                                                    </button>
-                                                </div>
-                                                <div className="w-full pt-4 border-t border-green-50 flex items-center justify-between">
-                                                    <div className="flex items-center gap-1.5">
-                                                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                                                        <span className="text-[9px] font-black text-green-600 uppercase">Online</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <button onClick={() => handleDeletePerson(person.id)} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                                            <Trash2 size={16} />
-                                                        </button>
-                                                        <button className="p-1.5 text-gray-300 hover:text-green-600 transition-all">
-                                                            <MoreHorizontal size={16} />
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        ) : (
-                            <div className="bg-white rounded-[2rem] border border-green-100 shadow-sm overflow-hidden">
-                                <div className="overflow-x-auto">
-                                    <table className="min-w-[700px] w-full">
-                                        <thead className="bg-green-50/30 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                            <tr>
-                                                <th className="px-6 py-4 text-left">Person in Charge</th>
-                                                <th className="px-6 py-4 text-center">Assigned Bills</th>
-                                                <th className="px-6 py-4 text-center">Settled</th>
-                                                <th className="px-6 py-4 text-center">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-green-50">
-                                            {people.map((person) => {
-                                                const stats = getPersonStats(person.id);
-                                                return (
-                                                    <tr key={person.id} className="hover:bg-green-50/10 transition-all group">
-                                                        <td className="px-6 py-4">
-                                                            <div className="flex items-center gap-3">
-                                                                <img src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} className="w-10 h-10 rounded-xl border border-green-50 shadow-sm" alt={person.name} />
-                                                                <div>
-                                                                    <h4 className="font-bold text-gray-900 text-sm">{person.name}</h4>
-                                                                    <p className="text-[10px] font-medium text-gray-400">{person.email}</p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-6 py-4 text-center">
-                                                            <span className="text-sm font-black text-green-950">{stats.count}</span>
-                                                        </td>
-                                                        <td className="px-6 py-4 text-center">
-                                                            <span className="text-sm font-black text-green-600">{stats.paid}</span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <div className="flex items-center justify-center gap-2">
-                                                                <button onClick={() => handleDeletePerson(person.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                                                    <Trash2 size={18} />
-                                                                </button>
-                                                                <button className="p-2 text-gray-300 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all">
-                                                                    <MoreHorizontal size={18} />
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        )
-                    )}
-                </div>
+            <div className="flex items-center gap-1 rounded-xl bg-secondary p-1">
+              <button 
+                onClick={() => setViewMode('list')} 
+                className={`rounded-lg p-2 transition-all ${viewMode === 'list' ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                <LayoutList className="h-4 w-4" />
+              </button>
+              <button 
+                onClick={() => setViewMode('grid')} 
+                className={`rounded-lg p-2 transition-all ${viewMode === 'grid' ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
             </div>
+          </div>
         </div>
-    );
-};
+      </header>
 
-export default Management;
+      <main className="mx-auto max-w-7xl px-6 py-8">
+        <div className="mb-8 flex items-center gap-2 rounded-2xl bg-card p-1.5 w-fit border border-border/50 shadow-sm">
+          <button 
+            onClick={() => setActiveTab('categories')}
+            className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium transition-all ${
+              activeTab === 'categories' 
+                ? 'bg-primary text-primary-foreground shadow-md' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+            }`}
+          >
+            <Layers className="h-4 w-4" />
+            Categories
+          </button>
+          <button 
+            onClick={() => setActiveTab('people')}
+            className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium transition-all ${
+              activeTab === 'people' 
+                ? 'bg-primary text-primary-foreground shadow-md' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+            }`}
+          >
+            <Users className="h-4 w-4" />
+            Team Members
+          </button>
+        </div>
+
+        <div className="mb-8 rounded-2xl border border-border/50 bg-card p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              {activeTab === 'categories' ? (
+                <Plus className="h-4 w-4 text-primary" />
+              ) : (
+                <UserPlus className="h-4 w-4 text-primary" />
+              )}
+            </div>
+            <h2 className="font-semibold text-foreground">
+              {activeTab === 'categories' ? 'Add New Category' : 'Add Team Member'}
+            </h2>
+          </div>
+
+          {activeTab === 'categories' ? (
+            <form onSubmit={handleAddCategory} className="flex flex-col gap-4 sm:flex-row sm:items-end">
+              <div className="flex-1">
+                <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                  Category Name
+                </label>
+                <input
+                  type="text"
+                  value={newCategory.name}
+                  onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                  placeholder="e.g. Utilities, Rent, Insurance..."
+                  className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  required
+                />
+              </div>
+
+              <div className="w-full sm:w-40">
+                <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                  Theme Color
+                </label>
+                <div className="flex h-11 items-center gap-3 rounded-xl border border-border bg-background px-4">
+                  <div 
+                    className="relative h-6 w-6 rounded-lg border border-border shadow-sm"
+                    style={{ backgroundColor: newCategory.color }}
+                  >
+                    <input
+                      type="color"
+                      value={newCategory.color}
+                      onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
+                      className="absolute inset-0 cursor-pointer opacity-0"
+                    />
+                  </div>
+                  <span className="text-xs font-mono text-muted-foreground uppercase">{newCategory.color}</span>
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={loading} 
+                className="h-11 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-sm"
+              >
+                {loading ? (
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4" />
+                    Add Category
+                  </>
+                )}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleAddPerson} className="flex flex-col gap-4 sm:flex-row sm:items-end">
+              <div className="flex-1">
+                <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={newPerson.name}
+                  onChange={(e) => setNewPerson({ ...newPerson, name: e.target.value })}
+                  placeholder="e.g. John Doe"
+                  className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  required
+                />
+              </div>
+
+              <div className="flex-1">
+                <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={newPerson.email}
+                  onChange={(e) => setNewPerson({ ...newPerson, email: e.target.value })}
+                  placeholder="e.g. john@example.com"
+                  className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  required
+                />
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={loading} 
+                className="h-11 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-sm"
+              >
+                {loading ? (
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
+                ) : (
+                  <>
+                    <UserPlus className="h-4 w-4" />
+                    Add Member
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+
+          {message.text && (
+            <div className={`mt-4 flex items-center gap-3 rounded-xl p-4 ${
+              message.type === 'success' 
+                ? 'bg-primary/10 text-primary' 
+                : 'bg-destructive/10 text-destructive'
+            }`}>
+              {message.type === 'success' ? (
+                <CheckCircle2 className="h-4 w-4" />
+              ) : (
+                <AlertCircle className="h-4 w-4" />
+              )}
+              <span className="text-sm font-medium">{message.text}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="mb-6 flex items-center gap-2">
+          <CircleDot className="h-3 w-3 text-primary" />
+          <h3 className="text-sm font-medium text-muted-foreground">
+            {activeTab === 'categories' ? `${categories.length} Categories` : `${people.length} Team Members`}
+          </h3>
+        </div>
+
+        {activeTab === 'categories' ? (
+          viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {categories.map((cat) => (
+                <div 
+                  key={cat.id} 
+                  className="group relative rounded-2xl border border-border/50 bg-card p-5 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+                >
+                  <div className="flex items-start justify-between">
+                    <div 
+                      className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-md transition-transform group-hover:scale-105"
+                      style={{ backgroundColor: cat.color }}
+                    >
+                      <Layers className="h-5 w-5" />
+                    </div>
+                    <button 
+                      onClick={() => handleDeleteCategory(cat.id)} 
+                      className="rounded-lg p-2 text-muted-foreground/50 transition-all hover:bg-destructive/10 hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <h4 className="mt-4 font-semibold text-foreground">{cat.name}</h4>
+                  <div className="mt-2 flex items-center gap-2">
+                    <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
+                    <span className="text-xs font-mono text-muted-foreground uppercase">{cat.color}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
+              <table className="w-full">
+                <thead className="border-b border-border/50 bg-secondary/30">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground">Category</th>
+                    <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground">Color</th>
+                    <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/50">
+                  {categories.map((cat) => (
+                    <tr key={cat.id} className="transition-colors hover:bg-secondary/20">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className="flex h-9 w-9 items-center justify-center rounded-lg text-white shadow-sm"
+                            style={{ backgroundColor: cat.color }}
+                          >
+                            <Layers className="h-4 w-4" />
+                          </div>
+                          <span className="font-medium text-foreground">{cat.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <div className="inline-flex items-center gap-2 rounded-lg bg-secondary px-3 py-1.5">
+                          <div className="h-3 w-3 rounded-full" style={{ backgroundColor: cat.color }} />
+                          <span className="text-xs font-mono text-muted-foreground uppercase">{cat.color}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button 
+                          onClick={() => handleDeleteCategory(cat.id)} 
+                          className="rounded-lg p-2 text-muted-foreground/50 transition-all hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        ) : (
+          viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {people.map((person) => {
+                const stats = getPersonStats(person.id)
+                return (
+                  <div 
+                    key={person.id} 
+                    className="group relative rounded-2xl border border-border/50 bg-card p-6 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="relative">
+                        <img 
+                          src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} 
+                          className="h-14 w-14 rounded-xl border-2 border-background shadow-md object-cover" 
+                          alt={person.name} 
+                        />
+                        <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground border-2 border-background">
+                          <ShieldCheck className="h-2.5 w-2.5" />
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button 
+                          onClick={() => handleDeletePerson(person.id)} 
+                          className="rounded-lg p-2 text-muted-foreground/50 transition-all hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                        <button className="rounded-lg p-2 text-muted-foreground/50 transition-all hover:bg-secondary hover:text-foreground">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      <h3 className="font-semibold text-foreground">{person.name}</h3>
+                      <p className="mt-0.5 text-sm text-muted-foreground">{person.email}</p>
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <div className="rounded-xl bg-secondary/50 p-3">
+                        <p className="text-xs text-muted-foreground">Assigned</p>
+                        <p className="mt-1 text-lg font-bold text-foreground">{stats.count}</p>
+                      </div>
+                      <div className="rounded-xl bg-primary/10 p-3">
+                        <p className="text-xs text-primary">Performance</p>
+                        <div className="mt-1 flex items-center gap-1">
+                          <p className="text-lg font-bold text-primary">{stats.performance}%</p>
+                          <TrendingUp className="h-3.5 w-3.5 text-primary" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center gap-2">
+                      <button className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-secondary py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary/80">
+                        <MailIcon className="h-4 w-4" />
+                        Message
+                      </button>
+                      <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+                        <Phone className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <div className="mt-4 flex items-center gap-2 border-t border-border/50 pt-4">
+                      <div className="h-2 w-2 animate-pulse rounded-full bg-primary" />
+                      <span className="text-xs font-medium text-primary">Online</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-[600px] w-full">
+                  <thead className="border-b border-border/50 bg-secondary/30">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground">Team Member</th>
+                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground">Assigned</th>
+                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground">Settled</th>
+                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground">Performance</th>
+                      <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50">
+                    {people.map((person) => {
+                      const stats = getPersonStats(person.id)
+                      return (
+                        <tr key={person.id} className="transition-colors hover:bg-secondary/20">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <img 
+                                src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} 
+                                className="h-9 w-9 rounded-lg border border-border shadow-sm object-cover" 
+                                alt={person.name} 
+                              />
+                              <div>
+                                <h4 className="font-medium text-foreground">{person.name}</h4>
+                                <p className="text-xs text-muted-foreground">{person.email}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="font-semibold text-foreground">{stats.count}</span>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="font-semibold text-primary">{stats.paid}</span>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <div className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1">
+                              <span className="text-sm font-semibold text-primary">{stats.performance}%</span>
+                              <TrendingUp className="h-3 w-3 text-primary" />
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center justify-end gap-1">
+                              <button 
+                                onClick={() => handleDeletePerson(person.id)} 
+                                className="rounded-lg p-2 text-muted-foreground/50 transition-all hover:bg-destructive/10 hover:text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                              <button className="rounded-lg p-2 text-muted-foreground/50 transition-all hover:bg-secondary hover:text-foreground">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )
+        )}
+      </main>
+    </div>
+  )
+}
+
+export default Management
