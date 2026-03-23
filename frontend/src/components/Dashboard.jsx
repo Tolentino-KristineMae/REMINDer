@@ -56,8 +56,12 @@ const Dashboard = () => {
                 
                 // Filter bills for current month only
                 const monthlyBills = bills.filter(bill => {
-                    const dueDate = new Date(bill.due_date.replace(/-/g, '/'));
-                    return dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear;
+                    // Extract YYYY, MM, DD manually to avoid timezone shifts
+                    const parts = bill.due_date.split(' ')[0].split('T')[0].split(/[-/]/);
+                    if (parts.length < 3) return false;
+                    const bYear = parseInt(parts[0]);
+                    const bMonth = parseInt(parts[1]) - 1; // 0-indexed
+                    return bMonth === currentMonth && bYear === currentYear;
                 });
                 
                 // Count bills per category for current month - show all categories even with 0 bills

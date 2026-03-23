@@ -138,7 +138,12 @@ const CalendarPage = () => {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const dateStr = `${year}-${month}-${day}`;
-        return bills.filter(bill => bill.due_date.startsWith(dateStr));
+        
+        return bills.filter(bill => {
+            // Extract only the date part YYYY-MM-DD to avoid timezone shifts
+            const billDatePart = bill.due_date.split(' ')[0].split('T')[0];
+            return billDatePart === dateStr;
+        });
     };
 
     const selectedDayBills = getBillsForDate(currentDate);

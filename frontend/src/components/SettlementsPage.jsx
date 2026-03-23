@@ -211,6 +211,19 @@ const SettlementsPage = () => {
         setEditBillData({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '', status: 'pending' });
     };
 
+    const formatDateLocal = (dateStr) => {
+        if (!dateStr) return '';
+        // Extract YYYY, MM, DD manually to avoid timezone shifts
+        const parts = dateStr.split(' ')[0].split('T')[0].split(/[-/]/);
+        if (parts.length < 3) return dateStr;
+        const [year, month, day] = parts;
+        return new Date(year, month - 1, day).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+        });
+    };
+
     return (
         <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             <main className="max-w-7xl mx-auto px-6 py-8" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -351,7 +364,7 @@ const SettlementsPage = () => {
                                                             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2">
                                                                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 whitespace-nowrap">
                                                                     <Calendar size={12} className="text-red-400" />
-                                                                    Due: {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                    Due: {formatDateLocal(bill.due_date)}
                                                                 </div>
                                                                 <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
                                                                 <span className="text-[10px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
@@ -472,7 +485,7 @@ const SettlementsPage = () => {
                                                                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
                                                                 <p className="text-[10px] font-black text-red-500 flex items-center gap-1">
                                                                     <Calendar size={11} className="text-red-400" />
-                                                                    {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                    {formatDateLocal(bill.due_date)}
                                                                 </p>
                                                             </div>
                                                             <div className="flex items-center gap-2">
@@ -578,7 +591,7 @@ const SettlementsPage = () => {
                                                             <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
                                                             <span className="text-[9px] font-black text-red-500 flex items-center gap-1 whitespace-nowrap">
                                                                 <Calendar size={10} className="text-red-400" /> 
-                                                                {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                {formatDateLocal(bill.due_date)}
                                                             </span>
                                                         </div>
                                                         {bill.proof_of_payments?.[0]?.created_at && (
@@ -702,7 +715,7 @@ const SettlementsPage = () => {
                                                             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
                                                             <p className="text-[10px] font-black text-red-500 flex items-center gap-1">
                                                                 <Calendar size={11} className="text-red-400" />
-                                                                {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                {formatDateLocal(bill.due_date)}
                                                             </p>
                                                         </div>
                                                         {bill.proof_of_payments?.[0]?.created_at && (
