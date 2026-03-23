@@ -13,8 +13,6 @@ const Management = lazy(() => import('./components/Management'));
 const CalendarPage = lazy(() => import('./components/CalendarPage'));
 const SettlementsPage = lazy(() => import('./components/SettlementsPage'));
 const SettleBillPage = lazy(() => import('./components/SettleBillPage'));
-const LandingPage = lazy(() => import('./components/LandingPage'));
-const Profile = lazy(() => import('./components/Profile'));
 
 const LoadingFallback = ({ fullScreen = true }) => {
     const containerClass = fullScreen 
