@@ -438,24 +438,32 @@ const SettlementsPage = () => {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <h4 className="font-black text-green-950 text-sm mb-0.5 truncate leading-tight">{bill.details}</h4>
-                                                    <div className="flex flex-col gap-1">
-                                                    <div className="flex items-center gap-3 flex-wrap">
-                                                        <span className="text-[9px] font-black text-red-400 flex items-center gap-1 uppercase tracking-widest leading-none">
-                                                            <Calendar size={10} className="text-red-400" /> Due: {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
+                                                        <span className="text-[9px] font-black text-red-500 flex items-center gap-1">
+                                                            <Calendar size={10} className="text-red-400" /> 
+                                                            {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                         </span>
                                                         {bill.proof_of_payments?.[0]?.created_at && (
-                                                            <span className="text-[9px] font-black text-green-600 flex items-center gap-1 uppercase tracking-widest leading-none">
-                                                                <CheckCircle2 size={10} /> Paid: {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                            </span>
+                                                            <>
+                                                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Paid:</span>
+                                                                <span className="text-[9px] font-black text-green-600 flex items-center gap-1">
+                                                                    <CheckCircle2 size={10} /> 
+                                                                    {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                </span>
+                                                            </>
                                                         )}
-                                                        <span className="text-[9px] font-black text-gray-400 flex items-center gap-1 uppercase tracking-widest leading-none">
-                                                            <Users size={10} className="text-gray-400" /> {bill.person_in_charge?.name || 'No PIC'}
+                                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
+                                                        <span className="text-[9px] font-black text-blue-600 flex items-center gap-1">
+                                                            <Users size={10} className="text-blue-500" /> 
+                                                            {bill.person_in_charge?.name || 'No PIC'}
                                                         </span>
-                                                        <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full uppercase tracking-widest border border-green-100 leading-none">
+                                                    </div>
+                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
+                                                        <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">
                                                             {bill.category?.name}
-                                                        </span>
-                                                        <span className="text-[9px] font-black text-gray-400 flex items-center gap-1 uppercase tracking-widest leading-none">
-                                                            <Users size={10} className="text-green-600" /> {bill.person_in_charge?.name || 'No PIC'}
                                                         </span>
                                                     </div>
                                                     {bill.proof_of_payments?.[0]?.details && (
@@ -543,20 +551,29 @@ const SettlementsPage = () => {
                                                 <div className="min-w-0 flex-1">
                                                     <h4 className="font-black text-gray-900 text-sm mb-1 truncate">{bill.details}</h4>
                                                     <div className="flex flex-col gap-1">
-                                                        <p className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5">
-                                                            <Calendar size={11} className="text-red-400" />
-                                                            Due: {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                        </p>
-                                                        {bill.proof_of_payments?.[0]?.created_at && (
-                                                            <p className="text-[10px] font-bold text-green-600 flex items-center gap-1.5">
-                                                                <CheckCircle2 size={11} />
-                                                                Paid: {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
+                                                            <p className="text-[10px] font-black text-red-500 flex items-center gap-1">
+                                                                <Calendar size={11} className="text-red-400" />
+                                                                {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                             </p>
+                                                        </div>
+                                                        {bill.proof_of_payments?.[0]?.created_at && (
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Paid:</span>
+                                                                <p className="text-[10px] font-black text-green-600 flex items-center gap-1">
+                                                                    <CheckCircle2 size={11} />
+                                                                    {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                </p>
+                                                            </div>
                                                         )}
-                                                        <p className="text-[10px] font-bold text-gray-500 flex items-center gap-1.5">
-                                                            <Users size={11} />
-                                                            {bill.person_in_charge?.name || 'No PIC'}
-                                                        </p>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
+                                                            <p className="text-[10px] font-black text-blue-600 flex items-center gap-1">
+                                                                <Users size={11} className="text-blue-500" />
+                                                                {bill.person_in_charge?.name || 'No PIC'}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="text-right shrink-0">
