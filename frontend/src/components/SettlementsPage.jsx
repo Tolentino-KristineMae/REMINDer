@@ -308,7 +308,7 @@ const SettlementsPage = () => {
                                             <>
                                                 <div className="flex items-center gap-4 flex-1 relative z-10">
                                                     <div className="w-11 h-11 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
-                                                        <Plus size={20} strokeWidth={2.5} />
+                                                        <Receipt size={20} strokeWidth={2.5} />
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <h4 className="font-black text-gray-900 text-sm mb-1 truncate group-hover:text-red-700 transition-colors">{bill.details}</h4>
