@@ -332,7 +332,7 @@ const SettlementsPage = () => {
                                                         <div className="flex items-center gap-3 flex-wrap">
                                                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400">
                                                                 <Calendar size={12} className="text-red-400" />
-                                                                Due: {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                Due: {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                             </div>
                                                             <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
                                                             <span className="text-[10px] font-black text-blue-600 flex items-center gap-1">
@@ -465,7 +465,7 @@ const SettlementsPage = () => {
                                                         <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
                                                         <span className="text-[9px] font-black text-red-500 flex items-center gap-1">
                                                             <Calendar size={10} className="text-red-400" /> 
-                                                            {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                            {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                         </span>
                                                         {bill.proof_of_payments?.[0]?.created_at && (
                                                             <>
@@ -586,7 +586,7 @@ const SettlementsPage = () => {
                                                             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
                                                             <p className="text-[10px] font-black text-red-500 flex items-center gap-1">
                                                                 <Calendar size={11} className="text-red-400" />
-                                                                {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                             </p>
                                                         </div>
                                                         {bill.proof_of_payments?.[0]?.created_at && (

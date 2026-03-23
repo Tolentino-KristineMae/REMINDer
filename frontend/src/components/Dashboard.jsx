@@ -56,7 +56,7 @@ const Dashboard = () => {
                 
                 // Filter bills for current month only
                 const monthlyBills = bills.filter(bill => {
-                    const dueDate = new Date(bill.due_date);
+                    const dueDate = new Date(bill.due_date.replace(/-/g, '/'));
                     return dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear;
                 });
                 
