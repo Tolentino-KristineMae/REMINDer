@@ -187,9 +187,10 @@ const CalendarPage = () => {
                     </div>
 
                     {/* Week Days Grid */}
-                    <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/40 border border-gray-100 p-4 sm:p-6 flex-1">
-                        <div className="grid grid-cols-7 gap-2 sm:gap-4 h-full">
-                            {weekDays.map((day, i) => {
+                    <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/40 border border-gray-100 p-4 sm:p-6 flex-1 overflow-hidden">
+                        <div className="h-full overflow-x-auto pb-2 scrollbar-hide">
+                            <div className="grid grid-cols-7 gap-2 sm:gap-4 h-full min-w-[700px] sm:min-w-0">
+                                {weekDays.map((day, i) => {
                                 const isToday = day.toDateString() === new Date().toDateString();
                                 const isSelected = day.toDateString() === currentDate.toDateString();
                                 const dayBills = getBillsForDate(day);
@@ -281,6 +282,7 @@ const CalendarPage = () => {
                                     </div>
                                 );
                             })}
+                            </div>
                         </div>
                     </div>
                 </div>

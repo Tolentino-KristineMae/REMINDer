@@ -121,7 +121,7 @@ const Dashboard = () => {
                             </span>
                         </div>
                         <p className="text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-1">Total Paid</p>
-                        <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.total_paid_amount)}</p>
+                        <p className="text-xl sm:text-2xl font-black tracking-tight">{formatCurrency(stats.total_paid_amount)}</p>
                         <div className="flex items-center gap-1 mt-2">
                             <TrendingUp size={12} className="text-emerald-200" />
                             <p className="text-[10px] text-emerald-200 font-medium">All time settled</p>
@@ -144,7 +144,7 @@ const Dashboard = () => {
                             </span>
                         </div>
                         <p className="text-[11px] font-semibold text-orange-100 uppercase tracking-wider mb-1">Total Unpaid</p>
-                        <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.total_unpaid_amount)}</p>
+                        <p className="text-xl sm:text-2xl font-black tracking-tight">{formatCurrency(stats.total_unpaid_amount)}</p>
                         <div className="flex items-center gap-1 mt-2">
                             <Clock size={12} className="text-orange-100" />
                             <p className="text-[10px] text-orange-100 font-medium">Pending & Overdue</p>

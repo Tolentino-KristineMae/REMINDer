@@ -63,7 +63,7 @@ const PageHeader = ({ title, subtitle }) => {
     }, []);
 
     return (
-        <div className="flex items-center justify-between w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-4">
             <div className="flex flex-col">
                 <div className="flex items-center gap-3">
                     <div className="w-1 h-7 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full" />
@@ -76,7 +76,9 @@ const PageHeader = ({ title, subtitle }) => {
                     </div>
                 )}
             </div>
-            <TimeDisplay dateTime={dateTime} />
+            <div className="flex sm:justify-end">
+                <TimeDisplay dateTime={dateTime} />
+            </div>
         </div>
     );
 };

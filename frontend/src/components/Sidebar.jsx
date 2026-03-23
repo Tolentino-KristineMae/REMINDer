@@ -227,18 +227,17 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
       <aside
         className={`
           fixed left-0 top-0 z-50 h-screen flex flex-col
-          transition-transform duration-200 ease-out
+          transition-all duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
         `}
         style={{
-          width:      W,
-          minWidth:   W,
+          width:      collapsed ? 72 : 280,
+          minWidth:   collapsed ? 72 : 280,
           padding:    '16px 12px',
           background: C.bg,
           borderRight:`1px solid ${C.border}`,
           boxShadow:  '4px 0 24px rgba(0,0,0,0.3)',
-          transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
           overflow:   'hidden',
           boxSizing:  'border-box',
         }}

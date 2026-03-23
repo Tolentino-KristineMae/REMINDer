@@ -223,15 +223,15 @@ export default function EditBillPage() {
           </div>
 
           <div className="lg:col-span-8">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 w-fit mb-6">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 w-fit mb-6 mx-auto lg:mx-0">
               <Sparkles className="w-3.5 h-3.5 text-blue-600" />
               <span className="text-[10px] font-black text-blue-700 uppercase tracking-wider">
                 Edit Entry
               </span>
             </div>
             <Card className="border-gray-100 shadow-xl shadow-gray-200/20">
-              <CardContent className="p-6 sm:p-8 lg:p-10">
-                <form onSubmit={handleSubmit} className="space-y-8">
+              <CardContent className="p-4 sm:p-8 lg:p-10">
+                <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <FormField label="Amount" icon={Banknote} focused={focusedField === "amount"}>
                       <div className="relative">

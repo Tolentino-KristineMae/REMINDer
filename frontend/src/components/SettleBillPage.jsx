@@ -270,7 +270,7 @@ const SettleBillPage = () => {
                                         aria-label="Upload proof of payment"
                                     />
                                     <div className={`
-                                        aspect-[16/7] rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center gap-4
+                                        aspect-video sm:aspect-[16/7] rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center gap-4
                                         ${preview ? 'border-green-600 bg-green-50/50' : 'border-gray-200 bg-gray-50 group-hover:border-green-600 group-hover:bg-green-50/50'}
                                     `}>
                                         {preview ? (

@@ -242,15 +242,15 @@ export default function AddBillPage() {
           {/* Right Column - Form */}
           <div className="lg:col-span-8">
             {/* New Entry Badge */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100 w-fit mb-6">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-100 w-fit mb-6 mx-auto lg:mx-0">
               <Sparkles className="w-3.5 h-3.5 text-green-600" />
               <span className="text-[10px] font-black text-green-700 uppercase tracking-wider">
                 New Entry
               </span>
             </div>
             <Card className="border-gray-100 shadow-xl shadow-gray-200/20">
-              <CardContent className="p-6 sm:p-8 lg:p-10">
-                <form onSubmit={handleSubmit} className="space-y-8">
+              <CardContent className="p-4 sm:p-8 lg:p-10">
+                <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
                   {/* Amount & Due Date Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Amount Input */}

@@ -494,8 +494,9 @@ const Management = () => {
             </div>
           ) : (
             <div className="rounded-2xl border border-green-100 bg-white overflow-hidden">
-              <table className="w-full">
-                <thead className="border-b border-green-50 bg-green-50/30">
+              <div className="overflow-x-auto">
+                <table className="min-w-[600px] w-full">
+                  <thead className="border-b border-green-50 bg-green-50/30">
                   <tr>
                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Category</th>
                     <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Color</th>
@@ -586,6 +587,7 @@ const Management = () => {
                 </tbody>
               </table>
             </div>
+          </div>
           )
         ) : (
           viewMode === 'grid' ? (
