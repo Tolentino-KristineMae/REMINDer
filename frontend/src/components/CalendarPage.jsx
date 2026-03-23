@@ -22,6 +22,7 @@ const CalendarPage = () => {
         return new Date(now.getFullYear(), now.getMonth(), diff);
     });
     const [bills, setBills] = useState([]);
+    const [viewDate, setViewDate] = useState(new Date()); // For mini calendar view
 
     const fetchBills = async () => {
         try {
@@ -92,6 +93,38 @@ const CalendarPage = () => {
 
     const handleSelectDay = (day) => {
         setCurrentDate(day);
+        
+        // Update week start to match the selected day
+        const dayOfWeek = day.getDay();
+        const diff = day.getDate() - dayOfWeek;
+        const start = new Date(day.getFullYear(), day.getMonth(), diff);
+        setWeekStart(start);
+    };
+
+    const handlePrevMonth = () => {
+        setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
+    };
+
+    const handleNextMonth = () => {
+        setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
+    };
+
+    const getDaysInMonth = (date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
+        
+        const days = [];
+        // Fill padding
+        for (let i = 0; i < firstDay; i++) {
+            days.push(null);
+        }
+        // Fill days
+        for (let i = 1; i <= lastDate; i++) {
+            days.push(new Date(year, month, i));
+        }
+        return days;
     };
 
     const handleBillClick = (bill) => {
@@ -254,6 +287,68 @@ const CalendarPage = () => {
 
                 {/* Right Sidebar */}
                 <div className="w-full lg:w-80 flex flex-col gap-4">
+                    {/* Mini Month Calendar */}
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/30 p-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">
+                                {monthNames[viewDate.getMonth()]} {viewDate.getFullYear()}
+                            </h3>
+                            <div className="flex gap-1">
+                                <button 
+                                    onClick={handlePrevMonth}
+                                    className="p-1 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-600 transition-colors"
+                                >
+                                    <ChevronLeft size={16} />
+                                </button>
+                                <button 
+                                    onClick={handleNextMonth}
+                                    className="p-1 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-600 transition-colors"
+                                >
+                                    <ChevronRight size={16} />
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-7 gap-1 mb-2">
+                            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+                                <div key={i} className="text-[10px] font-black text-gray-400 text-center py-1">
+                                    {d}
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="grid grid-cols-7 gap-1">
+                            {getDaysInMonth(viewDate).map((day, i) => {
+                                if (!day) return <div key={i} className="h-8" />;
+                                
+                                const isSelected = day.toDateString() === currentDate.toDateString();
+                                const isToday = day.toDateString() === new Date().toDateString();
+                                const hasBills = getBillsForDate(day).length > 0;
+                                
+                                return (
+                                    <button
+                                        key={i}
+                                        onClick={() => handleSelectDay(day)}
+                                        className={`
+                                            h-8 w-full rounded-lg text-[11px] font-bold flex flex-col items-center justify-center relative transition-all
+                                            ${isSelected 
+                                                ? 'bg-green-600 text-white shadow-md shadow-green-600/20' 
+                                                : isToday
+                                                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                                                    : 'text-gray-600 hover:bg-gray-50'
+                                            }
+                                        `}
+                                    >
+                                        {day.getDate()}
+                                        {hasBills && !isSelected && (
+                                            <div className="absolute bottom-1 w-1 h-1 bg-red-400 rounded-full" />
+                                        )}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
                     {/* Selected Day Details */}
                     <div className="bg-white rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/30 flex flex-col overflow-hidden">
                         <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-5 py-4">
