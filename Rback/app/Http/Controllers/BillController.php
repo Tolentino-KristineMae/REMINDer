@@ -45,10 +45,15 @@ class BillController extends Controller
     public function update(Request $request, Bill $bill)
     {
         $request->validate([
-            'status' => 'required|in:pending,paid'
+            'amount' => 'sometimes|numeric',
+            'due_date' => 'sometimes|date',
+            'details' => 'sometimes|string',
+            'category_id' => 'sometimes|exists:categories,id',
+            'person_in_charge_id' => 'sometimes|exists:person_in_charges,id',
+            'status' => 'sometimes|in:pending,paid'
         ]);
 
-        $bill->update($request->only('status'));
+        $bill->update($request->only(['amount', 'due_date', 'details', 'category_id', 'person_in_charge_id', 'status']));
 
         return response()->json($bill->load(['category', 'personInCharge', 'proofOfPayments']));
     }
