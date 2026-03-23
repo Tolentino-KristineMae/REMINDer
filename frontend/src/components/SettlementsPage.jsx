@@ -177,8 +177,25 @@ const SettlementsPage = () => {
     const handleSaveBill = async (id) => {
         setSaving(true);
         try {
-            await api.put(`/bills/${id}`, editBillData);
-            setBills(prev => prev.map(b => b.id === id ? { ...b, ...editBillData } : b));
+            const response = await api.put(`/bills/${id}`, editBillData);
+            const updatedBill = response.data;
+            
+            // Find the original bill to preserve related data
+            const originalBill = bills.find(b => b.id === id);
+            
+            setBills(prev => prev.map(b => {
+                if (b.id === id) {
+                    return {
+                        ...b,
+                        ...updatedBill,
+                        // Preserve the related objects
+                        category: originalBill?.category,
+                        person_in_charge: originalBill?.person_in_charge,
+                        proof_of_payments: originalBill?.proof_of_payments
+                    };
+                }
+                return b;
+            }));
             setEditingBill(null);
         } catch (err) {
             console.error('Update error:', err);
