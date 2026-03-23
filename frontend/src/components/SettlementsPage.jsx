@@ -347,19 +347,19 @@ const SettlementsPage = () => {
                                                             <Receipt size={20} strokeWidth={2.5} />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
-                                                            <h4 className="font-black text-gray-900 text-sm mb-1 truncate group-hover:text-red-700 transition-colors">{bill.details}</h4>
-                                                            <div className="flex items-center gap-3 flex-wrap">
-                                                                <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400">
+                                                            <h4 className="font-black text-gray-900 text-sm mb-1 line-clamp-2 group-hover:text-red-700 transition-colors">{bill.details}</h4>
+                                                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2">
+                                                                <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 whitespace-nowrap">
                                                                     <Calendar size={12} className="text-red-400" />
                                                                     Due: {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                                 </div>
-                                                                <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
-                                                                <span className="text-[10px] font-black text-blue-600 flex items-center gap-1">
+                                                                <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
+                                                                <span className="text-[10px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
                                                                     <Users size={10} className="text-blue-500" />
                                                                     {bill.person_in_charge?.name || 'No PIC'}
                                                                 </span>
-                                                                <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
-                                                                <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50">
+                                                                <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
+                                                                <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50 whitespace-nowrap">
                                                                     {bill.category?.name}
                                                                 </span>
                                                             </div>
@@ -571,46 +571,50 @@ const SettlementsPage = () => {
                                                 <CheckCircle2 size={18} />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <h4 className="font-black text-green-950 text-sm mb-0.5 truncate leading-tight">{bill.details}</h4>
-                                                <div className="flex flex-col gap-1">
-                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
-                                                        <span className="text-[9px] font-black text-red-500 flex items-center gap-1">
-                                                            <Calendar size={10} className="text-red-400" /> 
-                                                            {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                        </span>
+                                                <h4 className="font-black text-green-950 text-sm mb-1.5 line-clamp-2 leading-tight">{bill.details}</h4>
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
+                                                            <span className="text-[9px] font-black text-red-500 flex items-center gap-1 whitespace-nowrap">
+                                                                <Calendar size={10} className="text-red-400" /> 
+                                                                {new Date(bill.due_date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                            </span>
+                                                        </div>
                                                         {bill.proof_of_payments?.[0]?.created_at && (
-                                                            <>
+                                                            <div className="flex items-center gap-1.5">
                                                                 <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Paid:</span>
-                                                                <span className="text-[9px] font-black text-green-600 flex items-center gap-1">
+                                                                <span className="text-[9px] font-black text-green-600 flex items-center gap-1 whitespace-nowrap">
                                                                     <CheckCircle2 size={10} /> 
                                                                     {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                                 </span>
-                                                            </>
+                                                            </div>
                                                         )}
-                                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
-                                                        <span className="text-[9px] font-black text-blue-600 flex items-center gap-1">
-                                                            <Users size={10} className="text-blue-500" /> 
-                                                            {bill.person_in_charge?.name || 'No PIC'}
-                                                        </span>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
+                                                            <span className="text-[9px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
+                                                                <Users size={10} className="text-blue-500" /> 
+                                                                {bill.person_in_charge?.name || 'No PIC'}
+                                                            </span>
+                                                        </div>
                                                         {bill.proof_of_payments?.[0]?.paid_by && (
-                                                            <>
+                                                            <div className="flex items-center gap-1.5">
                                                                 <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Paid By:</span>
-                                                                <span className="text-[9px] font-black text-green-600 flex items-center gap-1">
+                                                                <span className="text-[9px] font-black text-green-600 flex items-center gap-1 whitespace-nowrap">
                                                                     <CheckCircle2 size={10} className="text-green-500" /> 
                                                                     {bill.proof_of_payments[0].paid_by}
                                                                 </span>
-                                                            </>
+                                                            </div>
                                                         )}
                                                     </div>
-                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5">
                                                         <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
-                                                        <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">
+                                                        <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full whitespace-nowrap">
                                                             {bill.category?.name}
                                                         </span>
                                                     </div>
                                                     {bill.proof_of_payments?.[0]?.details && (
-                                                        <p className="text-xs text-gray-400 italic mt-1.5 truncate">&ldquo;{bill.proof_of_payments[0].details}&rdquo;</p>
+                                                        <p className="text-xs text-gray-400 italic mt-1.5 line-clamp-1">&ldquo;{bill.proof_of_payments[0].details}&rdquo;</p>
                                                     )}
                                                 </div>
                                             </div>

@@ -154,24 +154,24 @@ const CalendarPage = () => {
                 <div className="flex-[3] flex flex-col min-w-0">
                     {/* Week Navigator Header */}
                     <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/30 border border-gray-100 p-4 mb-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-between sm:justify-start">
                                 <button 
                                     onClick={handlePrevWeek}
-                                    className="w-10 h-10 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center transition-all hover:scale-105"
+                                    className="w-10 h-10 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center transition-all hover:scale-105 shrink-0"
                                 >
                                     <ChevronLeft size={20} className="text-gray-600" />
                                 </button>
                                 
-                                <div className="text-center min-w-[200px]">
-                                    <h2 className="text-lg font-black text-gray-900 tracking-tight">
+                                <div className="text-center min-w-0 sm:min-w-[200px] flex-1">
+                                    <h2 className="text-sm sm:text-lg font-black text-gray-900 tracking-tight truncate">
                                         {formatWeekRange(weekStart)}
                                     </h2>
                                 </div>
                                 
                                 <button 
                                     onClick={handleNextWeek}
-                                    className="w-10 h-10 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center transition-all hover:scale-105"
+                                    className="w-10 h-10 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center transition-all hover:scale-105 shrink-0"
                                 >
                                     <ChevronRight size={20} className="text-gray-600" />
                                 </button>
@@ -179,7 +179,7 @@ const CalendarPage = () => {
 
                             <button 
                                 onClick={handleToday}
-                                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-green-600/20"
+                                className="w-full sm:w-auto px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-green-600/20 active:scale-95"
                             >
                                 Today
                             </button>

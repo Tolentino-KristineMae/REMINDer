@@ -482,7 +482,7 @@ const Management = () => {
                     </div>
                   ) : (
                     <>
-                      <h4 className="mt-4 font-semibold text-gray-900">{cat.name}</h4>
+                      <h4 className="mt-4 font-semibold text-gray-900 truncate" title={cat.name}>{cat.name}</h4>
                       <div className="mt-2 flex items-center gap-2">
                         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
                         <span className="text-xs font-mono text-gray-400 uppercase">{cat.color}</span>
@@ -677,8 +677,8 @@ const Management = () => {
                     ) : (
                       <>
                         <div className="mt-4">
-                          <h3 className="font-semibold text-gray-900">{person.name}</h3>
-                          <p className="mt-0.5 text-sm text-gray-500">{person.email}</p>
+                          <h3 className="font-semibold text-gray-900 truncate" title={person.name}>{person.name}</h3>
+                          <p className="mt-0.5 text-sm text-gray-500 truncate" title={person.email}>{person.email}</p>
                         </div>
 
                         <div className="mt-5 grid grid-cols-2 gap-3">

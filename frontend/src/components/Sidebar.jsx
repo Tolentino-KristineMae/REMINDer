@@ -199,18 +199,21 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
-  const collapsed = externalCollapsed ?? internalCollapsed;
+  const collapsed = isMobile ? false : (externalCollapsed ?? internalCollapsed);
   const setCollapsed = (val) => {
     setInternalCollapsed(val);
     onCollapse?.(val);
   };
 
-  useEffect(() => {
-    setCollapsed(false);
-  }, []);
-
-  const W = collapsed ? 72 : 256;
+  const W = isMobile ? 280 : (collapsed ? 72 : 256);
 
   return (
     <>
@@ -232,8 +235,8 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           lg:translate-x-0
         `}
         style={{
-          width:      collapsed ? 72 : 280,
-          minWidth:   collapsed ? 72 : 280,
+          width:      collapsed ? 72 : 256,
+          minWidth:   collapsed ? 72 : 256,
           padding:    '16px 12px',
           background: C.bg,
           borderRight:`1px solid ${C.border}`,
