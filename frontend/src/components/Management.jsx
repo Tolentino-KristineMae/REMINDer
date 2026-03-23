@@ -262,7 +262,7 @@ const Management = () => {
           <button
             onClick={handleTestPush}
             disabled={testingPush}
-            className="flex items-center gap-2 rounded-xl bg-white border border-green-200 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-green-700 hover:bg-green-50 transition-all shadow-sm active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-xl bg-amber-400 border border-amber-500 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-amber-950 hover:bg-amber-500 transition-all shadow-md shadow-amber-200 active:scale-95 disabled:opacity-50"
           >
             {testingPush ? (
               <div className="h-3 w-3 animate-spin rounded-full border-2 border-green-600/30 border-t-green-600" />
