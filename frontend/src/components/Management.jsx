@@ -171,7 +171,10 @@ const Management = () => {
     setNewPerson({ first_name: '', last_name: '', email: '' })
 
     try {
-      const response = await api.post('/people', newPerson)
+      const response = await api.post('/people', {
+        ...newPerson,
+        name: `${newPerson.first_name} ${newPerson.last_name}`
+      })
       setPeople(prev => prev.map(p => p.id === tempId ? response.data : p));
       setMessage({ text: 'Person added successfully!', type: 'success' })
     } catch (err) {
@@ -218,7 +221,10 @@ const Management = () => {
     setEditingPerson(null)
 
     try {
-      const response = await api.put(`/people/${id}`, editPersonData)
+      const response = await api.put(`/people/${id}`, {
+        ...editPersonData,
+        name: newName
+      })
       setPeople(prev => prev.map(p => p.id === id ? response.data : p));
       setMessage({ text: 'Person updated successfully!', type: 'success' })
     } catch (err) {

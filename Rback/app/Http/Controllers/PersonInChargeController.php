@@ -25,7 +25,10 @@ class PersonInChargeController extends Controller
             'avatar' => 'nullable|string|max:255',
         ]);
 
-        $person = PersonInCharge::create($request->all());
+        $data = $request->all();
+        $data['name'] = trim($request->first_name . ' ' . $request->last_name);
+
+        $person = PersonInCharge::create($data);
 
         return new PersonInChargeResource($person);
     }
@@ -45,7 +48,14 @@ class PersonInChargeController extends Controller
             'avatar' => 'nullable|string|max:255',
         ]);
 
-        $person->update($request->all());
+        $data = $request->all();
+        if ($request->has('first_name') || $request->has('last_name')) {
+            $firstName = $request->first_name ?? $person->first_name;
+            $lastName = $request->last_name ?? $person->last_name;
+            $data['name'] = trim($firstName . ' ' . $lastName);
+        }
+
+        $person->update($data);
 
         return new PersonInChargeResource($person);
     }
