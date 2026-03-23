@@ -23,7 +23,8 @@ import {
     Clock,
     Receipt,
     Sparkles,
-    TrendingUp
+    TrendingUp,
+    Pencil
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -226,16 +227,39 @@ const SettlementsPage = () => {
                                                 </div>
                                             </div>
                                             
-                                            <button 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleUploadClick(bill);
-                                                }}
-                                                className="w-full sm:w-auto bg-green-600 text-white px-5 py-2.5 rounded-xl font-black text-[10px] hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 uppercase tracking-widest active:scale-95 flex items-center justify-center gap-2"
-                                            >
-                                                Settle Now
-                                                <ArrowUpRight size={14} strokeWidth={3} />
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        navigate(`/edit-bill/${bill.id}`);
+                                                    }}
+                                                    className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all border border-gray-100 hover:border-blue-600"
+                                                    title="Edit"
+                                                >
+                                                    <Pencil size={14} />
+                                                </button>
+                                                <button 
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        confirmDelete(bill);
+                                                    }}
+                                                    className="w-9 h-9 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100 hover:border-red-500"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                                <button 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleUploadClick(bill);
+                                                    }}
+                                                    className="bg-green-600 text-white px-4 py-2.5 rounded-xl font-black text-[10px] hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 uppercase tracking-widest active:scale-95 flex items-center justify-center gap-2"
+                                                >
+                                                    Settle
+                                                    <ArrowUpRight size={14} strokeWidth={3} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
