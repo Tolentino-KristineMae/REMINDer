@@ -459,6 +459,15 @@ const SettlementsPage = () => {
                                                             <Users size={10} className="text-blue-500" /> 
                                                             {bill.person_in_charge?.name || 'No PIC'}
                                                         </span>
+                                                        {bill.proof_of_payments?.[0]?.paid_by && (
+                                                            <>
+                                                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Paid By:</span>
+                                                                <span className="text-[9px] font-black text-green-600 flex items-center gap-1">
+                                                                    <CheckCircle2 size={10} className="text-green-500" /> 
+                                                                    {bill.proof_of_payments[0].paid_by}
+                                                                </span>
+                                                            </>
+                                                        )}
                                                     </div>
                                                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                         <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
@@ -574,6 +583,15 @@ const SettlementsPage = () => {
                                                                 {bill.person_in_charge?.name || 'No PIC'}
                                                             </p>
                                                         </div>
+                                                        {bill.proof_of_payments?.[0]?.paid_by && (
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Paid By:</span>
+                                                                <p className="text-[10px] font-black text-green-600 flex items-center gap-1">
+                                                                    <CheckCircle2 size={11} className="text-green-500" />
+                                                                    {bill.proof_of_payments[0].paid_by}
+                                                                </p>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="text-right shrink-0">
