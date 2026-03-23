@@ -250,11 +250,25 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           display:        'flex',
           flexDirection:  collapsed ? 'column' : 'row',
           alignItems:     'center',
-          justifyContent: collapsed ? 'center' : 'space-between',
+          justifyContent: collapsed ? 'center' : 'flex-start',
           marginBottom:   '20px',
-          gap:            collapsed ? '12px' : '0',
+          gap:            collapsed ? '12px' : '12px',
+          padding:        '0 4px',
         }}>
-          <Logo size={collapsed ? 'sm' : 'lg'} dark />
+          <Logo size={collapsed ? 'sm' : 'md'} dark />
+
+          {!collapsed && (
+            <span style={{
+              fontFamily:   "'Syne', sans-serif",
+              fontSize:     '18px',
+              fontWeight:   800,
+              color:        '#ffffff',
+              letterSpacing: '-0.5px',
+              flex:         1,
+            }}>
+              REMINDear
+            </span>
+          )}
 
           {!collapsed && (
             <button
@@ -272,7 +286,6 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
                 display:        'flex',
                 alignItems:     'center',
                 justifyContent: 'center',
-                marginLeft:     '8px',
                 transition:     'background 0.15s',
               }}
             >

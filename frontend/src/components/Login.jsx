@@ -195,8 +195,17 @@ const Login = () => {
 
                 {/* Card */}
                 <div className="login-card">
-                    <div style={{ display:'flex', justifyContent:'center', marginBottom:'28px', animation:'fadeUp .6s .1s cubic-bezier(.22,1,.36,1) both' }}>
+                    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'12px', marginBottom:'28px', animation:'fadeUp .6s .1s cubic-bezier(.22,1,.36,1) both' }}>
                         <Logo size="lg" />
+                        <span style={{
+                            fontFamily: "'Syne', sans-serif",
+                            fontSize: '28px',
+                            fontWeight: 800,
+                            color: '#0f172a',
+                            letterSpacing: '-1px'
+                        }}>
+                            REMINDear
+                        </span>
                     </div>
 
                     <div className="login-card-title">Sign In</div>
