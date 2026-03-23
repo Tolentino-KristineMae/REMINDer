@@ -383,7 +383,6 @@ const SettlementsPage = () => {
                                                 </button>
                                             </div>
                                         )}
-                                        </div>
                                     </div>
                                 ))}
                             </div>
