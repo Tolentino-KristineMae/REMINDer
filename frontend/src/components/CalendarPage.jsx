@@ -6,7 +6,8 @@ import {
     Calendar as CalendarIcon,
     CheckCircle2,
     AlertCircle,
-    FileText
+    FileText,
+    Users
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -303,7 +304,16 @@ const CalendarPage = () => {
                                                     <h4 className={`font-bold text-sm leading-tight mt-2 ${isPaid ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                                                         {bill.details}
                                                     </h4>
-                                                    <p className="text-[10px] text-gray-400 mt-1">{bill.category?.name}</p>
+                                                    <div className="flex flex-col gap-1 mt-1">
+                                                        <p className="text-[10px] text-gray-500">
+                                                            <span className="font-bold">Charge:</span> {bill.person_in_charge?.name || 'No PIC'}
+                                                        </p>
+                                                        {isPaid && bill.proof_of_payments?.[0]?.paid_by && (
+                                                            <p className="text-[10px] text-green-600">
+                                                                <span className="font-bold">Paid By:</span> {bill.proof_of_payments[0].paid_by}
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                             
