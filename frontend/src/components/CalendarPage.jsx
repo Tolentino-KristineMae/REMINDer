@@ -8,10 +8,11 @@ import {
     AlertCircle,
     FileText
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const CalendarPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [weekStart, setWeekStart] = useState(() => {
         const now = new Date();
@@ -21,16 +22,23 @@ const CalendarPage = () => {
     });
     const [bills, setBills] = useState([]);
 
+    const fetchBills = async () => {
+        try {
+            const response = await api.get('/bills/dashboard');
+            setBills(response.data.bills);
+        } catch (err) {
+            console.error('Error fetching bills:', err);
+        }
+    };
+
     useEffect(() => {
-        const fetchBills = async () => {
-            try {
-                const response = await api.get('/bills/dashboard');
-                setBills(response.data.bills);
-            } catch (err) {
-                console.error('Error fetching bills:', err);
-            }
-        };
         fetchBills();
+    }, []);
+
+    useEffect(() => {
+        const handleFocus = () => fetchBills();
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
     }, []);
 
     const getWeekDays = (startDate) => {

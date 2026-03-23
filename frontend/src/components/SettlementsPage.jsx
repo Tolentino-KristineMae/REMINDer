@@ -43,7 +43,7 @@ const SettlementsPage = () => {
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState('');
     const [editingBill, setEditingBill] = useState(null);
-    const [editBillData, setEditBillData] = useState({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '' });
+    const [editBillData, setEditBillData] = useState({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '', status: 'pending' });
     const [saving, setSaving] = useState(false);
 
     const STORAGE_BASE_URL = (() => {
@@ -91,6 +91,12 @@ const SettlementsPage = () => {
 
     useEffect(() => {
         fetchPaidBills();
+    }, [fetchPaidBills]);
+
+    useEffect(() => {
+        const handleFocus = () => fetchPaidBills();
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
     }, [fetchPaidBills]);
 
     const formatCurrency = (amount) => {
@@ -163,7 +169,8 @@ const SettlementsPage = () => {
             due_date: bill.due_date,
             details: bill.details,
             category_id: bill.category_id || '',
-            person_in_charge_id: bill.person_in_charge_id || ''
+            person_in_charge_id: bill.person_in_charge_id || '',
+            status: bill.status || 'pending'
         });
     };
 
@@ -183,7 +190,7 @@ const SettlementsPage = () => {
 
     const handleCancelEdit = () => {
         setEditingBill(null);
-        setEditBillData({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '' });
+        setEditBillData({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '', status: 'pending' });
     };
 
     return (
