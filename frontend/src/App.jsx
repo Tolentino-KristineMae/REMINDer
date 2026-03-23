@@ -15,62 +15,36 @@ const SettlementsPage = lazy(() => import('./components/SettlementsPage'));
 const SettleBillPage = lazy(() => import('./components/SettleBillPage'));
 const DeploymentStatus = lazy(() => import('./components/DeploymentStatus'));
 
-const LoadingFallback = () => (
-    <div className="min-h-screen flex items-center justify-center bg-green-950">
-        <div className="text-center">
-            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white font-bold text-lg">Loading...</p>
-        </div>
-    </div>
-);
-
-const PageHeader = ({ title, subtitle }) => (
-    <div className="flex items-center justify-between w-full">
-        <div className="flex flex-col">
-            <div className="flex items-center gap-3">
-                <div className="w-1 h-7 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full" />
-                <h1 className="text-xl font-black text-gray-900 leading-none tracking-tight">{title}</h1>
+const LoadingFallback = ({ fullScreen = true }) => {
+    const containerClass = fullScreen 
+        ? "min-h-screen flex items-center justify-center bg-green-950"
+        : "flex items-center justify-center py-12";
+    
+    return (
+        <div className={containerClass}>
+            <div className="text-center">
+                <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-white font-bold text-lg">Loading...</p>
             </div>
-            {subtitle && (
-                <div className="flex items-center gap-3 mt-1.5">
-                    <div className="w-1 h-3 bg-gradient-to-b from-green-400 to-emerald-500 rounded-full opacity-50" />
-                    <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest">{subtitle}</p>
-                </div>
-            )}
         </div>
-        <DateTimeDisplay />
-    </div>
-);
+    );
+};
 
-const DateTimeDisplay = () => {
-    const [dateTime, setDateTime] = useState(new Date());
-
-    useEffect(() => {
-        const timer = setInterval(() => setDateTime(new Date()), 1000);
-        return () => clearInterval(timer);
-    }, []);
-
+const TimeDisplay = ({ dateTime }) => {
     const formatTime = (date) => {
         return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
     };
-
     const formatDate = (date) => {
-        const day = date.getDate();
-        const month = date.toLocaleString('en-US', { month: 'short' });
-        const year = date.getFullYear();
-        return `${day} ${month} ${year}`;
+        return `${date.getDate()} ${date.toLocaleString('en-US', { month: 'short' })} ${date.getFullYear()}`;
     };
 
     return (
-        <div className="flex items-center gap-4">
-            {/* Time Display */}
+        <div className="flex items-center gap-3">
             <div className="flex flex-col items-end">
-                <p className="text-lg font-bold text-gray-800 leading-none tracking-tight">{formatTime(dateTime)}</p>
+                <p className="text-lg font-bold text-gray-800 leading-none">{formatTime(dateTime)}</p>
                 <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{formatDate(dateTime)}</p>
             </div>
-            {/* Divider */}
             <div className="h-10 w-px bg-gray-200" />
-            {/* Logo */}
             <div className="flex flex-col items-start">
                 <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDear</p>
                 <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
@@ -79,18 +53,45 @@ const DateTimeDisplay = () => {
     );
 };
 
+const PageHeader = ({ title, subtitle }) => {
+    const [dateTime, setDateTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => setDateTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    return (
+        <div className="flex items-center justify-between w-full">
+            <div className="flex flex-col">
+                <div className="flex items-center gap-3">
+                    <div className="w-1 h-7 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full" />
+                    <h1 className="text-xl font-black text-gray-900 leading-none tracking-tight">{title}</h1>
+                </div>
+                {subtitle && (
+                    <div className="flex items-center gap-3 mt-1.5">
+                        <div className="w-1 h-3 bg-gradient-to-b from-green-400 to-emerald-500 rounded-full opacity-50" />
+                        <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest">{subtitle}</p>
+                    </div>
+                )}
+            </div>
+            <TimeDisplay dateTime={dateTime} />
+        </div>
+    );
+};
+
 const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
     const { user, loading } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const [mobileTime, setMobileTime] = useState(new Date());
+    const [dateTime, setDateTime] = useState(new Date());
 
     useEffect(() => {
-        const timer = setInterval(() => setMobileTime(new Date()), 1000);
+        const timer = setInterval(() => setDateTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center bg-green-950 text-white font-bold text-2xl">Loading...</div>;
+    if (loading) return <LoadingFallback />;
     
     const sidebarMargin = sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-64';
     
@@ -108,17 +109,7 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
                         >
                             <Menu size={18} className="stroke-[2.5]" />
                         </button>
-                        <div className="flex items-center gap-3">
-                            <div className="flex flex-col items-end">
-                                <p className="text-lg font-bold text-gray-800 leading-none">{mobileTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
-                                <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{mobileTime.getDate()} {mobileTime.toLocaleString('en-US', { month: 'short' })} {mobileTime.getFullYear()}</p>
-                            </div>
-                            <div className="h-10 w-px bg-gray-200 mx-1" />
-                            <div className="flex flex-col items-start">
-                                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDear</p>
-                                <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
-                            </div>
-                        </div>
+                        <TimeDisplay dateTime={dateTime} />
                     </div>
                 </div>
                 <div className="hidden lg:block sticky top-0 z-30 bg-white border-b border-gray-100">
