@@ -9,6 +9,7 @@ const Login = lazy(() => import('./components/Login'));
 const Setup = lazy(() => import('./components/Setup'));
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const AddBillPage = lazy(() => import('./components/AddBillPage'));
+const EditBillPage = lazy(() => import('./components/EditBillPage'));
 const Management = lazy(() => import('./components/Management'));
 const CalendarPage = lazy(() => import('./components/CalendarPage'));
 const SettlementsPage = lazy(() => import('./components/SettlementsPage'));
@@ -178,6 +179,14 @@ const App = () => {
                                 element={
                                     <PrivateRoute pageTitle="Settle Bill" pageSubtitle="Submit payment proof">
                                         <SettleBillPage />
+                                    </PrivateRoute>
+                                } 
+                            />
+                            <Route 
+                                path="/edit-bill/:id" 
+                                element={
+                                    <PrivateRoute pageTitle="Edit Bill" pageSubtitle="Update bill details">
+                                        <EditBillPage />
                                     </PrivateRoute>
                                 } 
                             />
