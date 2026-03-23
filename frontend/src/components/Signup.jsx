@@ -33,11 +33,11 @@ const Signup = () => {
             <div className="max-w-4xl w-full flex bg-white rounded-3xl shadow-2xl overflow-hidden flex-row-reverse relative z-10">
                 {/* Right Side - Form */}
                 <div className="flex-1 p-12 bg-white">
-                    <div className="flex items-center gap-3 mb-12">
-                        <Logo size="lg" />
-                        <span className="text-2xl font-black text-gray-900 tracking-tighter" style={{ fontFamily: "'Syne', sans-serif" }}>
-                            REMINDear
-                        </span>
+                    <div className="flex items-center gap-2 mb-12">
+                        <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                            <Wallet className="text-white" size={24} />
+                        </div>
+                        <span className="text-2xl font-bold text-gray-800">BillPay</span>
                     </div>
 
                     <h2 className="text-4xl font-bold text-gray-900 mb-2">Create Account</h2>
