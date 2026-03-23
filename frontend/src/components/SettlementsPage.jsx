@@ -438,8 +438,8 @@ const SettlementsPage = () => {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <h4 className="font-black text-green-950 text-sm mb-0.5 truncate leading-tight">{bill.details}</h4>
-                                                <div className="flex flex-col gap-1">
-                                                    <div className="flex items-center gap-3">
+                                                    <div className="flex flex-col gap-1">
+                                                    <div className="flex items-center gap-3 flex-wrap">
                                                         <span className="text-[9px] font-black text-red-400 flex items-center gap-1 uppercase tracking-widest leading-none">
                                                             <Calendar size={10} className="text-red-400" /> Due: {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                         </span>
@@ -448,6 +448,9 @@ const SettlementsPage = () => {
                                                                 <CheckCircle2 size={10} /> Paid: {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                             </span>
                                                         )}
+                                                        <span className="text-[9px] font-black text-gray-400 flex items-center gap-1 uppercase tracking-widest leading-none">
+                                                            <Users size={10} className="text-gray-400" /> {bill.person_in_charge?.name || 'No PIC'}
+                                                        </span>
                                                         <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full uppercase tracking-widest border border-green-100 leading-none">
                                                             {bill.category?.name}
                                                         </span>
@@ -550,6 +553,10 @@ const SettlementsPage = () => {
                                                                 Paid: {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                             </p>
                                                         )}
+                                                        <p className="text-[10px] font-bold text-gray-500 flex items-center gap-1.5">
+                                                            <Users size={11} />
+                                                            {bill.person_in_charge?.name || 'No PIC'}
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className="text-right shrink-0">
