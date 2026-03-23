@@ -78,12 +78,22 @@ const Management = () => {
     e.preventDefault()
     setLoading(true)
     setMessage({ text: '', type: '' })
+    
+    const tempId = Date.now();
+    const categoryToAdd = { ...newCategory, id: tempId, is_temp: true };
+    const originalCategories = [...categories];
+    
+    // Optimistic update
+    setCategories(prev => [...prev, categoryToAdd]);
+    setNewCategory({ name: '', color: '#22c55e' })
+
     try {
-      await api.post('/categories', newCategory)
-      setNewCategory({ name: '', color: '#22c55e' })
-      fetchData()
+      const response = await api.post('/categories', newCategory)
+      // Replace temp item with real server data
+      setCategories(prev => prev.map(c => c.id === tempId ? response.data : c));
       setMessage({ text: 'Category added successfully!', type: 'success' })
     } catch (err) {
+      setCategories(originalCategories);
       setMessage({ text: err.response?.data?.message || 'Failed to add category.', type: 'error' })
     } finally {
       setLoading(false)
@@ -96,13 +106,16 @@ const Management = () => {
       return
     }
     if (!window.confirm('Are you sure you want to delete this category?')) return
+    
+    const originalCategories = [...categories];
+    // Optimistic update
+    setCategories(prev => prev.filter(c => c.id !== id));
+
     try {
-      console.log('Deleting category:', id)
-      const response = await api.delete(`/categories/${id}`)
-      console.log('Delete response:', response.data)
-      fetchData()
+      await api.delete(`/categories/${id}`)
       setMessage({ text: 'Category deleted successfully!', type: 'success' })
     } catch (err) {
+      setCategories(originalCategories);
       console.error('Delete category error:', err)
       const errorMsg = err.response?.data?.message || err.message || 'Failed to delete category.'
       setMessage({ text: errorMsg, type: 'error' })
@@ -115,20 +128,20 @@ const Management = () => {
   }
 
   const handleSaveCategory = async (id) => {
-    setLoading(true)
+    const originalCategories = [...categories];
+    // Optimistic update
+    setCategories(prev => prev.map(c => c.id === id ? { ...c, ...editCategoryData } : c));
+    setEditingCategory(null)
+
     try {
-      console.log('Updating category:', id, editCategoryData)
       const response = await api.put(`/categories/${id}`, editCategoryData)
-      console.log('Update response:', response.data)
-      setEditingCategory(null)
-      fetchData()
+      setCategories(prev => prev.map(c => c.id === id ? response.data : c));
       setMessage({ text: 'Category updated successfully!', type: 'success' })
     } catch (err) {
+      setCategories(originalCategories);
       console.error('Update category error:', err)
       const errorMsg = err.response?.data?.message || err.message || 'Failed to update category.'
       setMessage({ text: errorMsg, type: 'error' })
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -141,12 +154,26 @@ const Management = () => {
     e.preventDefault()
     setLoading(true)
     setMessage({ text: '', type: '' })
+    
+    const tempId = Date.now();
+    const personToAdd = { 
+      ...newPerson, 
+      id: tempId, 
+      name: `${newPerson.first_name} ${newPerson.last_name}`,
+      is_temp: true 
+    };
+    const originalPeople = [...people];
+    
+    // Optimistic update
+    setPeople(prev => [...prev, personToAdd]);
+    setNewPerson({ first_name: '', last_name: '', email: '' })
+
     try {
-      await api.post('/people', newPerson)
-      setNewPerson({ first_name: '', last_name: '', email: '' })
-      fetchData()
+      const response = await api.post('/people', newPerson)
+      setPeople(prev => prev.map(p => p.id === tempId ? response.data : p));
       setMessage({ text: 'Person added successfully!', type: 'success' })
     } catch (err) {
+      setPeople(originalPeople);
       setMessage({ text: err.response?.data?.message || 'Failed to add person.', type: 'error' })
     } finally {
       setLoading(false)
@@ -159,13 +186,16 @@ const Management = () => {
       return
     }
     if (!window.confirm('Are you sure you want to delete this person?')) return
+    
+    const originalPeople = [...people];
+    // Optimistic update
+    setPeople(prev => prev.filter(p => p.id !== id));
+
     try {
-      console.log('Deleting person:', id)
-      const response = await api.delete(`/people/${id}`)
-      console.log('Delete response:', response.data)
-      fetchData()
+      await api.delete(`/people/${id}`)
       setMessage({ text: 'Person deleted successfully!', type: 'success' })
     } catch (err) {
+      setPeople(originalPeople);
       console.error('Delete person error:', err)
       const errorMsg = err.response?.data?.message || err.message || 'Failed to delete person.'
       setMessage({ text: errorMsg, type: 'error' })
@@ -178,20 +208,22 @@ const Management = () => {
   }
 
   const handleSavePerson = async (id) => {
-    setLoading(true)
+    const originalPeople = [...people];
+    const newName = `${editPersonData.first_name} ${editPersonData.last_name}`;
+    
+    // Optimistic update
+    setPeople(prev => prev.map(p => p.id === id ? { ...p, ...editPersonData, name: newName } : p));
+    setEditingPerson(null)
+
     try {
-      console.log('Updating person:', id, editPersonData)
       const response = await api.put(`/people/${id}`, editPersonData)
-      console.log('Update response:', response.data)
-      setEditingPerson(null)
-      fetchData()
+      setPeople(prev => prev.map(p => p.id === id ? response.data : p));
       setMessage({ text: 'Person updated successfully!', type: 'success' })
     } catch (err) {
+      setPeople(originalPeople);
       console.error('Update person error:', err)
       const errorMsg = err.response?.data?.message || err.message || 'Failed to update person.'
       setMessage({ text: errorMsg, type: 'error' })
-    } finally {
-      setLoading(false)
     }
   }
 

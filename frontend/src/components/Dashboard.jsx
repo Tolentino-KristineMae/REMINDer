@@ -29,55 +29,25 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get('/bills/stats');
-                const data = response.data;
+                const response = await api.get('/bills/dashboard');
+                const { stats: statsData, categories: categoriesData } = response.data;
+                
                 setStats({
-                    total: data.total || 0,
-                    paid: data.paid || 0,
-                    pending: data.pending || 0,
-                    overdue: data.overdue || 0,
-                    total_amount: data.total_amount || 0,
-                    total_paid_amount: data.total_paid_amount || 0,
-                    total_unpaid_amount: data.total_unpaid_amount || 0,
+                    total: statsData.total || 0,
+                    paid: statsData.paid || 0,
+                    pending: statsData.pending || 0,
+                    overdue: statsData.overdue || 0,
+                    total_amount: statsData.total_amount || 0,
+                    total_paid_amount: statsData.total_paid_amount || 0,
+                    total_unpaid_amount: statsData.total_unpaid_amount || 0,
                 });
                 
-                // Fetch categories
-                const catResponse = await api.get('/categories');
-                const cats = catResponse.data.categories || catResponse.data || [];
-                
-                // Get bills to count by category (current month only)
-                const billsResponse = await api.get('/bills');
-                const bills = billsResponse.data.bills || billsResponse.data || [];
-                
-                // Get current month
-                const now = new Date();
-                const currentMonth = now.getMonth();
-                const currentYear = now.getFullYear();
-                
-                // Filter bills for current month only
-                const monthlyBills = bills.filter(bill => {
-                    // Extract YYYY, MM, DD manually to avoid timezone shifts
-                    const parts = bill.due_date.split(' ')[0].split('T')[0].split(/[-/]/);
-                    if (parts.length < 3) return false;
-                    const bYear = parseInt(parts[0]);
-                    const bMonth = parseInt(parts[1]) - 1; // 0-indexed
-                    return bMonth === currentMonth && bYear === currentYear;
-                });
-                
-                // Count bills per category for current month - show all categories even with 0 bills
-                const categoryCounts = cats.map(cat => ({
-                    id: cat.id,
-                    name: cat.name,
-                    count: monthlyBills.filter(b => b.category_id === cat.id || b.category?.id === cat.id).length,
-                    color: cat.color || '#22c55e'
-                }));
-                
-                setCategories(categoryCounts.length > 0 ? categoryCounts : [
-                    { name: 'Utilities', count: 12, color: '#3B82F6' },
-                    { name: 'Rent', count: 3, color: '#8B5CF6' },
-                    { name: 'Internet', count: 2, color: '#06B6D4' },
-                    { name: 'Insurance', count: 4, color: '#F59E0B' },
-                    { name: 'Subscriptions', count: 8, color: '#EC4899' },
+                setCategories(categoriesData.length > 0 ? categoriesData : [
+                    { name: 'Utilities', count: 0, color: '#3B82F6' },
+                    { name: 'Rent', count: 0, color: '#8B5CF6' },
+                    { name: 'Internet', count: 0, color: '#06B6D4' },
+                    { name: 'Insurance', count: 0, color: '#F59E0B' },
+                    { name: 'Subscriptions', count: 0, color: '#EC4899' },
                 ]);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);

@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // '/bills/dashboard' being treated as '{bill}'.
     Route::get('/bills/create-data', [BillController::class, 'createData']);
     Route::get('/bills/dashboard', [BillController::class, 'dashboardData']);
+    Route::get('/bills/full', [BillController::class, 'fullData']);
     Route::get('/bills/stats', [BillController::class, 'stats']);
     Route::post('/bills/{bill}/proof', [BillController::class, 'uploadProof']);
 

@@ -80,7 +80,7 @@ const SettlementsPage = () => {
 
     const fetchPaidBills = React.useCallback(async () => {
         try {
-            const response = await api.get('/bills/dashboard');
+            const response = await api.get('/bills/full');
             setBills(response.data.bills);
             setPeople(response.data.people || []);
             const catRes = await api.get('/categories');
@@ -144,22 +144,20 @@ const SettlementsPage = () => {
     const handleDelete = async () => {
         if (!billToDelete) return;
         
-        setDeleting(true);
-        setError('');
+        const originalBills = [...bills];
+        // Optimistic update: remove from UI immediately
+        setBills(prev => prev.filter(b => b.id !== billToDelete.id));
+        setIsDeleteModalOpen(false);
+        
         try {
-            console.log('Deleting bill:', billToDelete.id);
-            const response = await api.delete(`/bills/${billToDelete.id}`);
-            console.log('Delete response:', response.data);
-            setBills(prev => prev.filter(b => b.id !== billToDelete.id));
-            setIsDeleteModalOpen(false);
+            await api.delete(`/bills/${billToDelete.id}`);
             setBillToDelete(null);
         } catch (err) {
             console.error('Delete error:', err);
+            // Revert on error
+            setBills(originalBills);
             const errorMsg = err.response?.data?.message || err.message || 'Failed to delete transaction. Please try again.';
             setError(errorMsg);
-            setIsDeleteModalOpen(false);
-        } finally {
-            setDeleting(false);
         }
     };
 
@@ -176,20 +174,34 @@ const SettlementsPage = () => {
     };
 
     const handleSaveBill = async (id) => {
-        setSaving(true);
+        const originalBills = [...bills];
+        const originalBill = bills.find(b => b.id === id);
+        
+        // Optimistic update
+        setBills(prev => prev.map(b => {
+            if (b.id === id) {
+                return {
+                    ...b,
+                    ...editBillData,
+                    // Preserve existing related objects for immediate UI consistency
+                    category: categories.find(c => c.id == editBillData.category_id) || b.category,
+                    person_in_charge: people.find(p => p.id == editBillData.person_in_charge_id) || b.person_in_charge
+                };
+            }
+            return b;
+        }));
+        setEditingBill(null);
+
         try {
             const response = await api.put(`/bills/${id}`, editBillData);
             const updatedBill = response.data;
             
-            // Find the original bill to preserve related data
-            const originalBill = bills.find(b => b.id === id);
-            
+            // Sync with actual server data
             setBills(prev => prev.map(b => {
                 if (b.id === id) {
                     return {
                         ...b,
                         ...updatedBill,
-                        // Preserve the related objects
                         category: originalBill?.category,
                         person_in_charge: originalBill?.person_in_charge,
                         proof_of_payments: originalBill?.proof_of_payments
@@ -197,12 +209,11 @@ const SettlementsPage = () => {
                 }
                 return b;
             }));
-            setEditingBill(null);
         } catch (err) {
             console.error('Update error:', err);
+            // Revert on error
+            setBills(originalBills);
             setError(err.response?.data?.message || 'Failed to update bill');
-        } finally {
-            setSaving(false);
         }
     };
 

@@ -193,7 +193,10 @@ class BillController extends Controller
     public function dashboardData()
     {
         $today = now()->toDateString();
+        $startOfMonth = now()->startOfMonth()->toDateString();
+        $endOfMonth = now()->endOfMonth()->toDateString();
 
+        // 1. Get Global Stats
         $stats = Bill::selectRaw('COUNT(*) as total')
             ->selectRaw("SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid")
             ->selectRaw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending")
@@ -203,33 +206,15 @@ class BillController extends Controller
             ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
             ->first();
 
-        // Calendar / Paid Bills / Team pages expect:
-        // - response.data.people
-        // - response.data.bills (array)
-        // Each bill should also include keys the frontend uses:
-        // - person_in_charge (instead of personInCharge)
-        // - proof_of_payments (instead of proofOfPayments)
-        $people = \App\Models\PersonInCharge::query()->get();
-
-        $bills = Bill::with(['category', 'personInCharge', 'proofOfPayments'])->get();
-
-        $billsPayload = $bills->map(function (Bill $bill) {
-            return [
-                // Base columns used by the frontend
-                'id' => $bill->id,
-                'amount' => $bill->amount,
-                'due_date' => $bill->due_date,
-                'details' => $bill->details,
-                'category_id' => $bill->category_id,
-                'person_in_charge_id' => $bill->person_in_charge_id,
-                'status' => $bill->status,
-
-                // Relations with frontend-expected snake_case keys
-                'category' => $bill->category,
-                'person_in_charge' => $bill->personInCharge,
-                'proof_of_payments' => $bill->proofOfPayments,
-            ];
-        })->values();
+        // 2. Get Categories with counts for the current month
+        $categories = \App\Models\Category::leftJoin('bills', function($join) use ($startOfMonth, $endOfMonth) {
+                $join->on('categories.id', '=', 'bills.category_id')
+                     ->whereBetween('bills.due_date', [$startOfMonth, $endOfMonth]);
+            })
+            ->select('categories.id', 'categories.name', 'categories.color')
+            ->selectRaw('COUNT(bills.id) as count')
+            ->groupBy('categories.id', 'categories.name', 'categories.color')
+            ->get();
 
         return response()->json([
             'stats' => [
@@ -241,6 +226,33 @@ class BillController extends Controller
                 'total_paid_amount' => (float) $stats->total_paid_amount,
                 'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
             ],
+            'categories' => $categories
+        ]);
+    }
+
+    public function fullData()
+    {
+        // Eager load only necessary relations
+        $people = \App\Models\PersonInCharge::select('id', 'name', 'email')->get();
+        $bills = Bill::with(['category:id,name,color', 'personInCharge:id,name', 'proofOfPayments:id,bill_id,created_at,paid_by,details'])
+            ->get();
+
+        $billsPayload = $bills->map(function (Bill $bill) {
+            return [
+                'id' => $bill->id,
+                'amount' => $bill->amount,
+                'due_date' => $bill->due_date,
+                'details' => $bill->details,
+                'category_id' => $bill->category_id,
+                'person_in_charge_id' => $bill->person_in_charge_id,
+                'status' => $bill->status,
+                'category' => $bill->category,
+                'person_in_charge' => $bill->personInCharge,
+                'proof_of_payments' => $bill->proofOfPayments,
+            ];
+        });
+
+        return response()->json([
             'people' => $people,
             'bills' => $billsPayload,
         ]);
