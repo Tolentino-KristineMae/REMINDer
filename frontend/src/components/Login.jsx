@@ -88,7 +88,7 @@ const Login = () => {
                     background: #f8fafc;
                     border: 1.5px solid #e2e8f0;
                     border-radius: 14px; color: #1e293b;
-                    font-size: 14px; font-family: 'DM Sans', sans-serif;
+                    font-size: 16px; font-family: 'DM Sans', sans-serif;
                     outline: none; transition: all .25s ease;
                 }
                 .inp::placeholder { color: #94a3b8; }
