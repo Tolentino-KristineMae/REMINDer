@@ -91,8 +91,9 @@ const Management = () => {
 
     try {
       const response = await api.post('/categories', newCategory)
-      // Replace temp item with real server data
-      setCategories(prev => prev.map(c => c.id === tempId ? response.data : c));
+      // Laravel wraps single resources in a 'data' key
+      const savedCategory = response.data.data || response.data;
+      setCategories(prev => prev.map(c => c.id === tempId ? savedCategory : c));
       setMessage({ text: 'Category added successfully!', type: 'success' })
     } catch (err) {
       setCategories(originalCategories);
@@ -137,7 +138,9 @@ const Management = () => {
 
     try {
       const response = await api.put(`/categories/${id}`, editCategoryData)
-      setCategories(prev => prev.map(c => c.id === id ? response.data : c));
+      // Laravel wraps single resources in a 'data' key
+      const updatedCategory = response.data.data || response.data;
+      setCategories(prev => prev.map(c => c.id === id ? updatedCategory : c));
       setMessage({ text: 'Category updated successfully!', type: 'success' })
     } catch (err) {
       setCategories(originalCategories);
@@ -175,7 +178,9 @@ const Management = () => {
         ...newPerson,
         name: `${newPerson.first_name} ${newPerson.last_name}`
       })
-      setPeople(prev => prev.map(p => p.id === tempId ? response.data : p));
+      // Laravel wraps single resources in a 'data' key
+      const savedPerson = response.data.data || response.data;
+      setPeople(prev => prev.map(p => p.id === tempId ? savedPerson : p));
       setMessage({ text: 'Person added successfully!', type: 'success' })
     } catch (err) {
       setPeople(originalPeople);
@@ -225,7 +230,9 @@ const Management = () => {
         ...editPersonData,
         name: newName
       })
-      setPeople(prev => prev.map(p => p.id === id ? response.data : p));
+      // Laravel wraps single resources in a 'data' key
+      const updatedPerson = response.data.data || response.data;
+      setPeople(prev => prev.map(p => p.id === id ? updatedPerson : p));
       setMessage({ text: 'Person updated successfully!', type: 'success' })
     } catch (err) {
       setPeople(originalPeople);

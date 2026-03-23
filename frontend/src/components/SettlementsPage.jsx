@@ -447,7 +447,7 @@ const SettlementsPage = () => {
 
         try {
             const response = await api.put(`/bills/${id}`, editBillData);
-            const updatedBill = response.data;
+            const updatedBill = response.data.data || response.data;
             
             // Sync with actual server data
             setBills(prev => prev.map(b => {
