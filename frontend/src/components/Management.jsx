@@ -46,9 +46,11 @@ const Management = () => {
         const response = await api.get('/categories')
         setCategories(response.data.categories || [])
       } else {
-        const response = await api.get('/bills/dashboard')
+        const response = await api.get('/people')
         setPeople(response.data.people || [])
-        setBills(response.data.bills || [])
+        // Also fetch bills for PIC stats check
+        const billsRes = await api.get('/bills')
+        setBills(billsRes.data.data || billsRes.data || [])
       }
     } catch (err) {
       console.error(`Error fetching ${activeTab}:`, err)

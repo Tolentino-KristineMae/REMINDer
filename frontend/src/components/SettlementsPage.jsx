@@ -29,6 +29,259 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+const BillItem = React.memo(({ 
+    bill, 
+    editingBill, 
+    editBillData, 
+    setEditBillData, 
+    handleSaveBill, 
+    handleCancelEdit, 
+    handleEditBill, 
+    confirmDelete, 
+    handleUploadClick, 
+    categories, 
+    people, 
+    saving,
+    formatDateLocal,
+    formatCurrency,
+    isPending = true,
+    toggleAudio,
+    playingAudio,
+    handleViewProof
+}) => {
+    if (editingBill === bill.id) {
+        return (
+            <div className="group bg-white border border-gray-100 rounded-2xl p-4 hover:border-red-200 hover:shadow-xl transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative overflow-hidden">
+                <div className="flex-1 relative z-10">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Amount</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                value={editBillData.amount}
+                                onChange={(e) => setEditBillData({ ...editBillData, amount: e.target.value })}
+                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Due Date</label>
+                            <input
+                                type="date"
+                                value={editBillData.due_date}
+                                onChange={(e) => setEditBillData({ ...editBillData, due_date: e.target.value })}
+                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                            />
+                        </div>
+                        <div className="sm:col-span-2">
+                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Details</label>
+                            <input
+                                type="text"
+                                value={editBillData.details}
+                                onChange={(e) => setEditBillData({ ...editBillData, details: e.target.value })}
+                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Category</label>
+                            <select
+                                value={editBillData.category_id}
+                                onChange={(e) => setEditBillData({ ...editBillData, category_id: e.target.value })}
+                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                            >
+                                <option value="">Select category</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Person In Charge</label>
+                            <select
+                                value={editBillData.person_in_charge_id}
+                                onChange={(e) => setEditBillData({ ...editBillData, person_in_charge_id: e.target.value })}
+                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                            >
+                                <option value="">Select person</option>
+                                {people.map(person => (
+                                    <option key={person.id} value={person.id}>{person.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2 mt-3 sm:mt-0">
+                    <button 
+                        type="button"
+                        onClick={() => handleSaveBill(bill.id)}
+                        disabled={saving}
+                        className="w-9 h-9 bg-green-50 text-green-600 rounded-lg flex items-center justify-center hover:bg-green-600 hover:text-white transition-all border border-green-100"
+                    >
+                        <Check size={14} />
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={handleCancelEdit}
+                        className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-gray-500 hover:text-white transition-all border border-gray-100"
+                    >
+                        <X size={14} />
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (isPending) {
+        return (
+            <div className="group bg-white border border-gray-100 rounded-2xl p-4 hover:border-red-200 hover:shadow-xl hover:shadow-red-500/5 transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative overflow-hidden">
+                <div className="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="flex items-center gap-4 flex-1 relative z-10">
+                    <div className="w-11 h-11 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
+                        <Receipt size={20} strokeWidth={2.5} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <h4 className="font-black text-gray-900 text-sm mb-1 line-clamp-2 group-hover:text-red-700 transition-colors">{bill.details}</h4>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2">
+                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 whitespace-nowrap">
+                                <Calendar size={12} className="text-red-400" />
+                                Due: {formatDateLocal(bill.due_date)}
+                            </div>
+                            <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
+                            <span className="text-[10px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
+                                <Users size={10} className="text-blue-500" />
+                                {bill.person_in_charge?.name || 'No PIC'}
+                            </span>
+                            <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
+                            <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50 whitespace-nowrap">
+                                {bill.category?.name}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 relative z-10 w-full sm:w-auto">
+                    <div className="text-left sm:text-right">
+                        <p className="text-base font-black text-red-600 leading-none mb-1.5 tracking-tighter">{formatCurrency(bill.amount)}</p>
+                        <div className="flex items-center justify-start sm:justify-end gap-1.5">
+                            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Amount Due</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-2 relative z-10">
+                    <button 
+                        type="button"
+                        onClick={() => handleEditBill(bill)}
+                        className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all border border-gray-100"
+                    >
+                        <Edit2 size={14} />
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={() => confirmDelete(bill)}
+                        className="w-9 h-9 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100"
+                    >
+                        <Trash2 size={14} />
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={() => handleUploadClick(bill)}
+                        className="bg-green-600 text-white px-4 py-2.5 rounded-xl font-black text-[10px] hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 uppercase tracking-widest active:scale-95 flex items-center justify-center gap-2"
+                    >
+                        Settle
+                        <ArrowUpRight size={14} strokeWidth={3} />
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // Settled Item
+    return (
+        <div className="group bg-white border border-green-50 rounded-[1.25rem] p-3.5 px-4 hover:border-green-500 hover:shadow-lg transition-all flex items-center justify-between">
+            <div className="flex items-center gap-4 flex-1">
+                <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
+                    <CheckCircle2 size={18} />
+                </div>
+                <div className="flex-1 min-w-0">
+                    <h4 className="font-black text-green-950 text-sm mb-1.5 line-clamp-2 leading-tight">{bill.details}</h4>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
+                                <span className="text-[9px] font-black text-red-500 flex items-center gap-1 whitespace-nowrap">
+                                    <Calendar size={10} className="text-red-400" /> 
+                                    {formatDateLocal(bill.due_date)}
+                                </span>
+                            </div>
+                            {bill.proof_of_payments?.[0]?.created_at && (
+                                <div className="flex items-center gap-1.5">
+                                    <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Paid:</span>
+                                    <span className="text-[9px] font-black text-green-600 flex items-center gap-1 whitespace-nowrap">
+                                        <CheckCircle2 size={10} /> 
+                                        {formatDateLocal(bill.proof_of_payments[0].created_at)}
+                                    </span>
+                                </div>
+                            )}
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
+                                <span className="text-[9px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
+                                    <Users size={10} className="text-blue-500" /> 
+                                    {bill.person_in_charge?.name || 'No PIC'}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5">
+                            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
+                            <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                                {bill.category?.name}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex items-center gap-4 shrink-0">
+                <div className="text-right">
+                    <p className="text-base font-black text-green-900">{formatCurrency(bill.amount)}</p>
+                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Paid</p>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                    {bill.proof_of_payments?.[0]?.voice_record_path && (
+                        <button 
+                            onClick={() => toggleAudio(bill.proof_of_payments[0].voice_record_path)}
+                            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all border ${
+                                playingAudio === bill.proof_of_payments[0].voice_record_path 
+                                ? 'bg-red-500 text-white border-red-500' 
+                                : 'bg-gray-50 text-gray-400 border-gray-100 hover:bg-green-600 hover:text-white'
+                            }`}
+                        >
+                            {playingAudio === bill.proof_of_payments[0].voice_record_path ? <Pause size={14} /> : <Volume2 size={14} />}
+                        </button>
+                    )}
+                    {bill.proof_of_payments?.[0]?.file_path && (
+                        <button 
+                            onClick={() => handleViewProof(bill.proof_of_payments[0].file_path)}
+                            className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-green-600 hover:text-white transition-all border border-gray-100"
+                        >
+                            <FileText size={14} />
+                        </button>
+                    )}
+                    <button 
+                        type="button"
+                        onClick={() => confirmDelete(bill)}
+                        className="w-9 h-9 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100"
+                    >
+                        <Trash2 size={14} />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+});
+
 const SettlementsPage = () => {
     const navigate = useNavigate();
     const audioRef = useRef(null);
@@ -299,173 +552,24 @@ const SettlementsPage = () => {
                             {pendingViewMode === 'list' ? (
                                 <div className="flex flex-col gap-3">
                                     {pendingBills.map((bill) => (
-                                        <div 
+                                        <BillItem 
                                             key={bill.id}
-                                            className="group bg-white border border-gray-100 rounded-2xl p-4 hover:border-red-200 hover:shadow-xl hover:shadow-red-500/5 transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative overflow-hidden"
-                                        >
-                                            <div className="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                            
-                                            {editingBill === bill.id ? (
-                                                <div className="flex-1 relative z-10">
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                        <div>
-                                                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Amount</label>
-                                                            <input
-                                                                type="number"
-                                                                step="0.01"
-                                                                value={editBillData.amount}
-                                                                onChange={(e) => setEditBillData({ ...editBillData, amount: e.target.value })}
-                                                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Due Date</label>
-                                                            <input
-                                                                type="date"
-                                                                value={editBillData.due_date}
-                                                                onChange={(e) => setEditBillData({ ...editBillData, due_date: e.target.value })}
-                                                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
-                                                            />
-                                                        </div>
-                                                        <div className="sm:col-span-2">
-                                                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Details</label>
-                                                            <input
-                                                                type="text"
-                                                                value={editBillData.details}
-                                                                onChange={(e) => setEditBillData({ ...editBillData, details: e.target.value })}
-                                                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Category</label>
-                                                            <select
-                                                                value={editBillData.category_id}
-                                                                onChange={(e) => setEditBillData({ ...editBillData, category_id: e.target.value })}
-                                                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
-                                                            >
-                                                                <option value="">Select category</option>
-                                                                {categories.map(cat => (
-                                                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                                                ))}
-                                                            </select>
-                                                        </div>
-                                                        <div>
-                                                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Person In Charge</label>
-                                                            <select
-                                                                value={editBillData.person_in_charge_id}
-                                                                onChange={(e) => setEditBillData({ ...editBillData, person_in_charge_id: e.target.value })}
-                                                                className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
-                                                            >
-                                                                <option value="">Select person</option>
-                                                                {people.map(person => (
-                                                                    <option key={person.id} value={person.id}>{person.name}</option>
-                                                                ))}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <div className="flex items-center gap-4 flex-1 relative z-10">
-                                                        <div className="w-11 h-11 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
-                                                            <Receipt size={20} strokeWidth={2.5} />
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <h4 className="font-black text-gray-900 text-sm mb-1 line-clamp-2 group-hover:text-red-700 transition-colors">{bill.details}</h4>
-                                                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2">
-                                                                <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 whitespace-nowrap">
-                                                                    <Calendar size={12} className="text-red-400" />
-                                                                    Due: {formatDateLocal(bill.due_date)}
-                                                                </div>
-                                                                <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
-                                                                <span className="text-[10px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                                                                    <Users size={10} className="text-blue-500" />
-                                                                    {bill.person_in_charge?.name || 'No PIC'}
-                                                                </span>
-                                                                <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
-                                                                <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50 whitespace-nowrap">
-                                                                    {bill.category?.name}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 relative z-10 w-full sm:w-auto">
-                                                        <div className="text-left sm:text-right">
-                                                            <p className="text-base font-black text-red-600 leading-none mb-1.5 tracking-tighter">{formatCurrency(bill.amount)}</p>
-                                                            <div className="flex items-center justify-start sm:justify-end gap-1.5">
-                                                                <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
-                                                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Amount Due</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            )}
-                                            
-                                            {editingBill === bill.id ? (
-                                                <div className="flex items-center gap-2 mt-3 sm:mt-0">
-                                                    <button 
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleSaveBill(bill.id);
-                                                        }}
-                                                        disabled={saving}
-                                                        className="w-9 h-9 bg-green-50 text-green-600 rounded-lg flex items-center justify-center hover:bg-green-600 hover:text-white transition-all border border-green-100 hover:border-green-600"
-                                                        title="Save"
-                                                    >
-                                                        <Check size={14} />
-                                                    </button>
-                                                    <button 
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleCancelEdit();
-                                                        }}
-                                                        className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-gray-500 hover:text-white transition-all border border-gray-100 hover:border-gray-500"
-                                                        title="Cancel"
-                                                    >
-                                                        <X size={14} />
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center gap-2 relative z-10">
-                                                    <button 
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleEditBill(bill);
-                                                        }}
-                                                        className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all border border-gray-100 hover:border-blue-600"
-                                                        title="Edit"
-                                                    >
-                                                        <Edit2 size={14} />
-                                                    </button>
-                                                    <button 
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            confirmDelete(bill);
-                                                        }}
-                                                        className="w-9 h-9 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100 hover:border-red-500"
-                                                        title="Delete"
-                                                    >
-                                                        <Trash2 size={14} />
-                                                    </button>
-                                                    <button 
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleUploadClick(bill);
-                                                        }}
-                                                        className="bg-green-600 text-white px-4 py-2.5 rounded-xl font-black text-[10px] hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 uppercase tracking-widest active:scale-95 flex items-center justify-center gap-2"
-                                                    >
-                                                        Settle
-                                                        <ArrowUpRight size={14} strokeWidth={3} />
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
+                                            bill={bill}
+                                            editingBill={editingBill}
+                                            editBillData={editBillData}
+                                            setEditBillData={setEditBillData}
+                                            handleSaveBill={handleSaveBill}
+                                            handleCancelEdit={handleCancelEdit}
+                                            handleEditBill={handleEditBill}
+                                            confirmDelete={confirmDelete}
+                                            handleUploadClick={handleUploadClick}
+                                            categories={categories}
+                                            people={people}
+                                            saving={saving}
+                                            formatDateLocal={formatDateLocal}
+                                            formatCurrency={formatCurrency}
+                                            isPending={true}
+                                        />
                                     ))}
                                 </div>
                             ) : (
@@ -586,108 +690,27 @@ const SettlementsPage = () => {
                         {viewMode === 'list' ? (
                             <div className="space-y-3">
                                 {settledBills.map((bill) => (
-                                    <div 
+                                    <BillItem 
                                         key={bill.id}
-                                        className="group bg-white border border-green-50 rounded-[1.25rem] p-3.5 px-4 hover:border-green-500 hover:shadow-lg hover:shadow-green-900/5 transition-all flex items-center justify-between"
-                                    >
-                                        <div className="flex items-center gap-4 flex-1">
-                                            <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
-                                                <CheckCircle2 size={18} />
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="font-black text-green-950 text-sm mb-1.5 line-clamp-2 leading-tight">{bill.details}</h4>
-                                                <div className="flex flex-col gap-2">
-                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                                                        <div className="flex items-center gap-1.5">
-                                                            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
-                                                            <span className="text-[9px] font-black text-red-500 flex items-center gap-1 whitespace-nowrap">
-                                                                <Calendar size={10} className="text-red-400" /> 
-                                                                {formatDateLocal(bill.due_date)}
-                                                            </span>
-                                                        </div>
-                                                        {bill.proof_of_payments?.[0]?.created_at && (
-                                                            <div className="flex items-center gap-1.5">
-                                                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Paid:</span>
-                                                                <span className="text-[9px] font-black text-green-600 flex items-center gap-1 whitespace-nowrap">
-                                                                    <CheckCircle2 size={10} /> 
-                                                                    {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                        <div className="flex items-center gap-1.5">
-                                                            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
-                                                            <span className="text-[9px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                                                                <Users size={10} className="text-blue-500" /> 
-                                                                {bill.person_in_charge?.name || 'No PIC'}
-                                                            </span>
-                                                        </div>
-                                                        {bill.proof_of_payments?.[0]?.paid_by && (
-                                                            <div className="flex items-center gap-1.5">
-                                                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Paid By:</span>
-                                                                <span className="text-[9px] font-black text-green-600 flex items-center gap-1 whitespace-nowrap">
-                                                                    <CheckCircle2 size={10} className="text-green-500" /> 
-                                                                    {bill.proof_of_payments[0].paid_by}
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5">
-                                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
-                                                        <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                                                            {bill.category?.name}
-                                                        </span>
-                                                    </div>
-                                                    {bill.proof_of_payments?.[0]?.details && (
-                                                        <p className="text-xs text-gray-400 italic mt-1.5 line-clamp-1">&ldquo;{bill.proof_of_payments[0].details}&rdquo;</p>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center gap-4 shrink-0">
-                                            <div className="text-right">
-                                                <p className="text-base font-black text-green-900">{formatCurrency(bill.amount)}</p>
-                                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Paid</p>
-                                            </div>
-                                            
-                                            <div className="flex items-center gap-2">
-                                                {bill.proof_of_payments?.[0]?.voice_record_path && (
-                                                    <button 
-                                                        onClick={() => toggleAudio(bill.proof_of_payments[0].voice_record_path)}
-                                                        className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all border ${
-                                                            playingAudio === bill.proof_of_payments[0].voice_record_path 
-                                                            ? 'bg-red-500 text-white border-red-500' 
-                                                            : 'bg-gray-50 text-gray-400 border-gray-100 hover:bg-green-600 hover:text-white hover:border-green-600'
-                                                        }`}
-                                                        title="Play Voice Note"
-                                                    >
-                                                        {playingAudio === bill.proof_of_payments[0].voice_record_path ? <Pause size={14} /> : <Volume2 size={14} />}
-                                                    </button>
-                                                )}
-                                                {bill.proof_of_payments?.[0]?.file_path && (
-                                                    <button 
-                                                        onClick={() => handleViewProof(bill.proof_of_payments[0].file_path)}
-                                                        className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-green-600 hover:text-white transition-all border border-gray-100 hover:border-green-600"
-                                                        title="View Receipt"
-                                                    >
-                                                        <FileText size={14} />
-                                                    </button>
-                                                )}
-                                                <button 
-                                                    type="button"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        console.log('Delete clicked for bill:', bill.id);
-                                                        confirmDelete(bill);
-                                                    }}
-                                                    className="w-9 h-9 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100 hover:border-red-500"
-                                                    title="Delete"
-                                                >
-                                                    <Trash2 size={14} />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        bill={bill}
+                                        editingBill={editingBill}
+                                        editBillData={editBillData}
+                                        setEditBillData={setEditBillData}
+                                        handleSaveBill={handleSaveBill}
+                                        handleCancelEdit={handleCancelEdit}
+                                        handleEditBill={handleEditBill}
+                                        confirmDelete={confirmDelete}
+                                        handleUploadClick={handleUploadClick}
+                                        categories={categories}
+                                        people={people}
+                                        saving={saving}
+                                        formatDateLocal={formatDateLocal}
+                                        formatCurrency={formatCurrency}
+                                        isPending={false}
+                                        toggleAudio={toggleAudio}
+                                        playingAudio={playingAudio}
+                                        handleViewProof={handleViewProof}
+                                    />
                                 ))}
                             </div>
                         ) : (

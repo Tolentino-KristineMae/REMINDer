@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PersonInCharge;
+use App\Http\Resources\PersonInChargeResource;
 use Illuminate\Http\Request;
 
 class PersonInChargeController extends Controller
@@ -10,7 +11,7 @@ class PersonInChargeController extends Controller
     public function index()
     {
         return response()->json([
-            'people' => PersonInCharge::all()
+            'people' => PersonInChargeResource::collection(PersonInCharge::all())
         ]);
     }
 
@@ -19,62 +20,45 @@ class PersonInChargeController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:person_in_charges,email',
-            'phone' => 'nullable|string|max:20',
+            'email' => 'required|email|max:255|unique:person_in_charges',
+            'phone' => 'nullable|string|max:255',
+            'avatar' => 'nullable|string|max:255',
         ]);
 
-        $fullName = $request->first_name . ' ' . $request->last_name;
-        $initials = strtoupper($request->first_name[0] . ($request->last_name[0] ?? ''));
+        $person = PersonInCharge::create($request->all());
 
-        $person = PersonInCharge::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'name' => $fullName,
-            'email' => $request->email ?? null,
-            'phone' => $request->phone ?? null,
-            'avatar' => "https://api.dicebear.com/7.x/initials/svg?seed=" . urlencode($initials),
-        ]);
-
-        return response()->json($person);
+        return new PersonInChargeResource($person);
     }
 
-    public function destroy(PersonInCharge $person)
+    public function show(PersonInCharge $person)
     {
-        // Check if there are any bills associated with this person
-        if ($person->bills()->count() > 0) {
-            return response()->json([
-                'message' => 'Cannot delete person with associated bills.'
-            ], 422);
-        }
-
-        $person->delete();
-
-        return response()->json([
-            'message' => 'Person deleted successfully.'
-        ]);
+        return new PersonInChargeResource($person);
     }
 
     public function update(Request $request, PersonInCharge $person)
     {
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:person_in_charges,email,' . $person->id,
-            'phone' => 'nullable|string|max:20',
+            'first_name' => 'sometimes|string|max:255',
+            'last_name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|max:255|unique:person_in_charges,email,' . $person->id,
+            'phone' => 'nullable|string|max:255',
+            'avatar' => 'nullable|string|max:255',
         ]);
 
-        $fullName = $request->first_name . ' ' . $request->last_name;
-        $initials = strtoupper($request->first_name[0] . ($request->last_name[0] ?? ''));
+        $person->update($request->all());
 
-        $person->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'name' => $fullName,
-            'email' => $request->email ?? null,
-            'phone' => $request->phone ?? $person->phone,
-            'avatar' => "https://api.dicebear.com/7.x/initials/svg?seed=" . urlencode($initials),
-        ]);
+        return new PersonInChargeResource($person);
+    }
 
-        return response()->json($person);
+    public function destroy(PersonInCharge $person)
+    {
+        // Check if person has bills
+        if ($person->bills()->exists()) {
+            return response()->json(['message' => 'Cannot delete person with associated bills'], 422);
+        }
+
+        $person->delete();
+
+        return response()->json(['message' => 'Person deleted successfully']);
     }
 }

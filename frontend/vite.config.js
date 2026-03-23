@@ -79,13 +79,17 @@ Disallow:
   build: {
     outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/index-[hash].js',
+        manualChunks: {
+          'vendor': ['react', 'react-dom', 'react-router-dom', 'lucide-react', 'axios'],
+          'ui-icons': ['lucide-react'],
+        },
       },
     },
-    chunkSizeWarningLimit: 500,
   },
 })

@@ -6,7 +6,6 @@ import Sidebar from './components/Sidebar';
 import { Menu } from 'lucide-react';
 
 const Login = lazy(() => import('./components/Login'));
-const Setup = lazy(() => import('./components/Setup'));
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const AddBillPage = lazy(() => import('./components/AddBillPage'));
 const EditBillPage = lazy(() => import('./components/EditBillPage'));
@@ -14,7 +13,8 @@ const Management = lazy(() => import('./components/Management'));
 const CalendarPage = lazy(() => import('./components/CalendarPage'));
 const SettlementsPage = lazy(() => import('./components/SettlementsPage'));
 const SettleBillPage = lazy(() => import('./components/SettleBillPage'));
-const DeploymentStatus = lazy(() => import('./components/DeploymentStatus'));
+const LandingPage = lazy(() => import('./components/LandingPage'));
+const Profile = lazy(() => import('./components/Profile'));
 
 const LoadingFallback = ({ fullScreen = true }) => {
     const containerClass = fullScreen 
@@ -134,8 +134,6 @@ const App = () => {
                     <Router>
                         <Routes>
                             <Route path="/login" element={<Login />} />
-                            <Route path="/setup" element={<Setup />} />
-                            <Route path="/deployment-status" element={<DeploymentStatus />} />
                             <Route 
                                 path="/" 
                                 element={

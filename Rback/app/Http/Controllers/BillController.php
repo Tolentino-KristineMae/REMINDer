@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use App\Models\ProofOfPayment;
+use App\Http\Resources\BillResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\PersonInChargeResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -12,12 +15,14 @@ class BillController extends Controller
 {
     public function index()
     {
-        return Bill::with(['category', 'personInCharge', 'proofOfPayments'])->get();
+        return BillResource::collection(
+            Bill::with(['category:id,name,color', 'personInCharge:id,name,avatar', 'proofOfPayments'])->get()
+        );
     }
 
     public function show(Bill $bill)
     {
-        return $bill->load(['category', 'personInCharge', 'proofOfPayments']);
+        return new BillResource($bill->load(['category', 'personInCharge', 'proofOfPayments']));
     }
 
     public function store(Request $request)
@@ -39,7 +44,7 @@ class BillController extends Controller
             'status' => 'pending'
         ]);
 
-        return response()->json($bill->load(['category', 'personInCharge']));
+        return new BillResource($bill->load(['category', 'personInCharge']));
     }
 
     public function update(Request $request, Bill $bill)
@@ -55,7 +60,7 @@ class BillController extends Controller
 
         $bill->update($request->only(['amount', 'due_date', 'details', 'category_id', 'person_in_charge_id', 'status']));
 
-        return response()->json($bill->load(['category', 'personInCharge', 'proofOfPayments']));
+        return new BillResource($bill->load(['category', 'personInCharge', 'proofOfPayments']));
     }
 
     public function uploadProof(Request $request, Bill $bill)
@@ -129,7 +134,7 @@ class BillController extends Controller
 
             return response()->json([
                 'message' => 'Proof uploaded successfully',
-                'bill' => $bill->load(['category', 'personInCharge', 'proofOfPayments'])
+                'bill' => new BillResource($bill->load(['category', 'personInCharge', 'proofOfPayments']))
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -185,8 +190,8 @@ class BillController extends Controller
     public function createData()
     {
         return response()->json([
-            'categories' => \App\Models\Category::all(),
-            'people' => \App\Models\PersonInCharge::all(),
+            'categories' => CategoryResource::collection(\App\Models\Category::all()),
+            'people' => PersonInChargeResource::collection(\App\Models\PersonInCharge::all()),
         ]);
     }
 
@@ -226,59 +231,20 @@ class BillController extends Controller
                 'total_paid_amount' => (float) $stats->total_paid_amount,
                 'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
             ],
-            'categories' => $categories
+            'categories' => CategoryResource::collection($categories)
         ]);
     }
 
     public function fullData()
     {
         // Eager load only necessary relations
-        $people = \App\Models\PersonInCharge::select('id', 'name', 'email')->get();
+        $people = \App\Models\PersonInCharge::select('id', 'name', 'email', 'avatar')->get();
         $bills = Bill::with(['category:id,name,color', 'personInCharge:id,name', 'proofOfPayments:id,bill_id,created_at,paid_by,details'])
             ->get();
 
-        $billsPayload = $bills->map(function (Bill $bill) {
-            return [
-                'id' => $bill->id,
-                'amount' => $bill->amount,
-                'due_date' => $bill->due_date,
-                'details' => $bill->details,
-                'category_id' => $bill->category_id,
-                'person_in_charge_id' => $bill->person_in_charge_id,
-                'status' => $bill->status,
-                'category' => $bill->category,
-                'person_in_charge' => $bill->personInCharge,
-                'proof_of_payments' => $bill->proofOfPayments,
-            ];
-        });
-
         return response()->json([
-            'people' => $people,
-            'bills' => $billsPayload,
-        ]);
-    }
-
-    public function stats()
-    {
-        $today = now()->toDateString();
-
-        $stats = Bill::selectRaw('COUNT(*) as total')
-            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid")
-            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending")
-            ->selectRaw("SUM(CASE WHEN status = 'pending' AND due_date < ? THEN 1 ELSE 0 END) as overdue", [$today])
-            ->selectRaw('SUM(amount) as total_amount')
-            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) as total_paid_amount")
-            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
-            ->first();
-
-        return response()->json([
-            'total' => (int) $stats->total,
-            'paid' => (int) $stats->paid,
-            'pending' => (int) $stats->pending,
-            'overdue' => (int) $stats->overdue,
-            'total_amount' => (float) $stats->total_amount,
-            'total_paid_amount' => (float) $stats->total_paid_amount,
-            'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
+            'people' => PersonInChargeResource::collection($people),
+            'bills' => BillResource::collection($bills),
         ]);
     }
 }
