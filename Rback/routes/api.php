@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PersonInChargeController;
+use App\Http\Controllers\PushSubscriptionController;
 
 // So GET /api is handled by the API stack (not the SPA web fallback).
 Route::get('/', function () {
@@ -66,4 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('bills', BillController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('people', PersonInChargeController::class);
+
+    // Push subscriptions
+    Route::post('/push-subscriptions', [PushSubscriptionController::class, 'update']);
+    Route::delete('/push-subscriptions', [PushSubscriptionController::class, 'destroy']);
 });

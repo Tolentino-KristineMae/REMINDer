@@ -9,9 +9,12 @@ import {
   ChevronRight,
   Plus,
   Settings2,
+  Bell,
+  BellOff,
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
+import { subscribeUser, unsubscribeUser } from '../lib/PushNotificationManager';
 
 const C = {
   bg:           '#052e16',
@@ -200,6 +203,32 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
   const navigate = useNavigate();
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+
+  useEffect(() => {
+    const checkNotificationStatus = async () => {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
+        setNotificationsEnabled(!!subscription);
+      }
+    };
+    checkNotificationStatus();
+  }, []);
+
+  const handleToggleNotifications = async () => {
+    try {
+      if (notificationsEnabled) {
+        await unsubscribeUser();
+        setNotificationsEnabled(false);
+      } else {
+        await subscribeUser();
+        setNotificationsEnabled(true);
+      }
+    } catch (error) {
+      console.error('Notification toggle error:', error);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -334,6 +363,47 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
             {menuItems.map(item => (
               <NavItem key={item.label} {...item} collapsed={collapsed} onClose={onClose} />
             ))}
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={handleToggleNotifications}
+                style={{
+                  position:       'relative',
+                  display:        'flex',
+                  alignItems:     'center',
+                  gap:            collapsed ? 0 : '11px',
+                  justifyContent: collapsed ? 'center' : 'flex-start',
+                  width:          '100%',
+                  padding:        collapsed ? '10px 0' : '10px 12px',
+                  borderRadius:   '12px',
+                  border:         'none',
+                  cursor:         'pointer',
+                  transition:     'all 0.2s ease',
+                  background:     'transparent',
+                  color:          notificationsEnabled ? '#4ade80' : C.text,
+                  boxSizing:      'border-box',
+                }}
+              >
+                <span style={{ 
+                  display: 'flex', 
+                  flexShrink: 0,
+                  color: notificationsEnabled ? '#4ade80' : C.iconDefault
+                }}>
+                  {notificationsEnabled ? <Bell size={18} /> : <BellOff size={18} />}
+                </span>
+                {!collapsed && (
+                  <span style={{
+                    fontSize:   '14px',
+                    fontWeight: 500,
+                    fontFamily: C.fontFamily,
+                    flex:       1,
+                    textAlign:  'left',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {notificationsEnabled ? 'Notifications On' : 'Notifications Off'}
+                  </span>
+                )}
+              </button>
+            </div>
             <NavItem
               icon={<LogOut size={18} />}
               label="Logout"
