@@ -24,7 +24,8 @@ import {
     Receipt,
     Sparkles,
     TrendingUp,
-    Pencil
+    Edit2,
+    Check
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,6 +33,8 @@ const SettlementsPage = () => {
     const navigate = useNavigate();
     const audioRef = useRef(null);
     const [bills, setBills] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [people, setPeople] = useState([]);
     const [viewMode, setViewMode] = useState('list');
     const [playingAudio, setPlayingAudio] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
@@ -39,6 +42,9 @@ const SettlementsPage = () => {
     const [billToDelete, setBillToDelete] = useState(null);
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState('');
+    const [editingBill, setEditingBill] = useState(null);
+    const [editBillData, setEditBillData] = useState({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '' });
+    const [saving, setSaving] = useState(false);
 
     const STORAGE_BASE_URL = (() => {
         const a = import.meta.env.VITE_STORAGE_BASE_URL?.trim();
@@ -75,6 +81,9 @@ const SettlementsPage = () => {
         try {
             const response = await api.get('/bills/dashboard');
             setBills(response.data.bills);
+            setPeople(response.data.people || []);
+            const catRes = await api.get('/categories');
+            setCategories(catRes.data.categories || []);
         } catch (err) {
             console.error('Error fetching bills:', err);
         }
@@ -147,6 +156,36 @@ const SettlementsPage = () => {
         }
     };
 
+    const handleEditBill = (bill) => {
+        setEditingBill(bill.id);
+        setEditBillData({
+            amount: bill.amount,
+            due_date: bill.due_date,
+            details: bill.details,
+            category_id: bill.category_id || '',
+            person_in_charge_id: bill.person_in_charge_id || ''
+        });
+    };
+
+    const handleSaveBill = async (id) => {
+        setSaving(true);
+        try {
+            await api.put(`/bills/${id}`, editBillData);
+            setBills(prev => prev.map(b => b.id === id ? { ...b, ...editBillData } : b));
+            setEditingBill(null);
+        } catch (err) {
+            console.error('Update error:', err);
+            setError(err.response?.data?.message || 'Failed to update bill');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingBill(null);
+        setEditBillData({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '' });
+    };
+
     return (
         <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             <main className="max-w-7xl mx-auto px-6 py-8" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -199,44 +238,127 @@ const SettlementsPage = () => {
                                     >
                                         <div className="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                         
-                                        <div className="flex items-center gap-4 flex-1 relative z-10">
-                                            <div className="w-11 h-11 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
-                                                <Plus size={20} strokeWidth={2.5} />
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="font-black text-gray-900 text-sm mb-1 truncate group-hover:text-red-700 transition-colors">{bill.details}</h4>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400">
-                                                        <Calendar size={12} className="text-red-400" />
-                                                        {new Date(bill.due_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                        {editingBill === bill.id ? (
+                                            <div className="flex-1 relative z-10">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                    <div>
+                                                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Amount</label>
+                                                        <input
+                                                            type="number"
+                                                            step="0.01"
+                                                            value={editBillData.amount}
+                                                            onChange={(e) => setEditBillData({ ...editBillData, amount: e.target.value })}
+                                                            className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                                                        />
                                                     </div>
-                                                    <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
-                                                    <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50">
-                                                        {bill.category?.name}
-                                                    </span>
+                                                    <div>
+                                                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Due Date</label>
+                                                        <input
+                                                            type="date"
+                                                            value={editBillData.due_date}
+                                                            onChange={(e) => setEditBillData({ ...editBillData, due_date: e.target.value })}
+                                                            className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                                                        />
+                                                    </div>
+                                                    <div className="sm:col-span-2">
+                                                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Details</label>
+                                                        <input
+                                                            type="text"
+                                                            value={editBillData.details}
+                                                            onChange={(e) => setEditBillData({ ...editBillData, details: e.target.value })}
+                                                            className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Category</label>
+                                                        <select
+                                                            value={editBillData.category_id}
+                                                            onChange={(e) => setEditBillData({ ...editBillData, category_id: e.target.value })}
+                                                            className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                                                        >
+                                                            <option value="">Select category</option>
+                                                            {categories.map(cat => (
+                                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Person In Charge</label>
+                                                        <select
+                                                            value={editBillData.person_in_charge_id}
+                                                            onChange={(e) => setEditBillData({ ...editBillData, person_in_charge_id: e.target.value })}
+                                                            className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm font-bold focus:border-green-500 focus:outline-none"
+                                                        >
+                                                            <option value="">Select person</option>
+                                                            {people.map(person => (
+                                                                <option key={person.id} value={person.id}>{person.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        ) : (
+                                            <>
+                                                <div className="flex items-center gap-4 flex-1 relative z-10">
+                                                    <div className="w-11 h-11 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
+                                                        <Plus size={20} strokeWidth={2.5} />
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className="font-black text-gray-900 text-sm mb-1 truncate group-hover:text-red-700 transition-colors">{bill.details}</h4>
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400">
+                                                                <Calendar size={12} className="text-red-400" />
+                                                                {new Date(bill.due_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                            </div>
+                                                            <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
+                                                            <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50">
+                                                                {bill.category?.name}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 relative z-10 w-full sm:w-auto">
-                                            <div className="text-left sm:text-right">
-                                                <p className="text-base font-black text-red-600 leading-none mb-1.5 tracking-tighter">{formatCurrency(bill.amount)}</p>
-                                                <div className="flex items-center justify-start sm:justify-end gap-1.5">
-                                                    <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
-                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Amount Due</p>
+                                                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 relative z-10 w-full sm:w-auto">
+                                                    <div className="text-left sm:text-right">
+                                                        <p className="text-base font-black text-red-600 leading-none mb-1.5 tracking-tighter">{formatCurrency(bill.amount)}</p>
+                                                        <div className="flex items-center justify-start sm:justify-end gap-1.5">
+                                                            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Amount Due</p>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                            </>
+                                        )}
+                                        
+                                        {editingBill === bill.id ? (
+                                            <div className="flex items-center gap-2 mt-3 sm:mt-0">
+                                                <button 
+                                                    onClick={() => handleSaveBill(bill.id)}
+                                                    disabled={saving}
+                                                    className="w-9 h-9 bg-green-50 text-green-600 rounded-lg flex items-center justify-center hover:bg-green-600 hover:text-white transition-all border border-green-100 hover:border-green-600"
+                                                    title="Save"
+                                                >
+                                                    <Check size={14} />
+                                                </button>
+                                                <button 
+                                                    onClick={handleCancelEdit}
+                                                    className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-gray-500 hover:text-white transition-all border border-gray-100 hover:border-gray-500"
+                                                    title="Cancel"
+                                                >
+                                                    <X size={14} />
+                                                </button>
                                             </div>
-                                            
+                                        ) : (
                                             <div className="flex items-center gap-2">
                                                 <button 
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        navigate(`/edit-bill/${bill.id}`);
+                                                        handleEditBill(bill);
                                                     }}
                                                     className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all border border-gray-100 hover:border-blue-600"
                                                     title="Edit"
                                                 >
-                                                    <Pencil size={14} />
+                                                    <Edit2 size={14} />
                                                 </button>
                                                 <button 
                                                     type="button"
@@ -260,6 +382,7 @@ const SettlementsPage = () => {
                                                     <ArrowUpRight size={14} strokeWidth={3} />
                                                 </button>
                                             </div>
+                                        )}
                                         </div>
                                     </div>
                                 ))}
