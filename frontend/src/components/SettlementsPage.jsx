@@ -312,11 +312,16 @@ const SettlementsPage = () => {
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <h4 className="font-black text-gray-900 text-sm mb-1 truncate group-hover:text-red-700 transition-colors">{bill.details}</h4>
-                                                        <div className="flex items-center gap-3">
+                                                        <div className="flex items-center gap-3 flex-wrap">
                                                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400">
                                                                 <Calendar size={12} className="text-red-400" />
-                                                                {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                Due: {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                             </div>
+                                                            <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
+                                                            <span className="text-[10px] font-black text-blue-600 flex items-center gap-1">
+                                                                <Users size={10} className="text-blue-500" />
+                                                                {bill.person_in_charge?.name || 'No PIC'}
+                                                            </span>
                                                             <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
                                                             <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50">
                                                                 {bill.category?.name}
