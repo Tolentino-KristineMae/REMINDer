@@ -17,16 +17,22 @@ class PersonInChargeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'nullable|email|unique:person_in_charges,email',
             'phone' => 'nullable|string|max:20',
         ]);
 
+        $fullName = $request->first_name . ' ' . $request->last_name;
+        $initials = strtoupper($request->first_name[0] . ($request->last_name[0] ?? ''));
+
         $person = PersonInCharge::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'name' => $fullName,
             'email' => $request->email ?? null,
             'phone' => $request->phone ?? null,
-            'avatar' => "https://api.dicebear.com/7.x/avataaars/svg?seed=" . urlencode($request->name),
+            'avatar' => "https://api.dicebear.com/7.x/initials/svg?seed=" . urlencode($initials),
         ]);
 
         return response()->json($person);
@@ -51,15 +57,22 @@ class PersonInChargeController extends Controller
     public function update(Request $request, PersonInCharge $person)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'nullable|email|unique:person_in_charges,email,' . $person->id,
             'phone' => 'nullable|string|max:20',
         ]);
 
+        $fullName = $request->first_name . ' ' . $request->last_name;
+        $initials = strtoupper($request->first_name[0] . ($request->last_name[0] ?? ''));
+
         $person->update([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'name' => $fullName,
             'email' => $request->email ?? null,
             'phone' => $request->phone ?? $person->phone,
+            'avatar' => "https://api.dicebear.com/7.x/initials/svg?seed=" . urlencode($initials),
         ]);
 
         return response()->json($person);

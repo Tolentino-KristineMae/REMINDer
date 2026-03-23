@@ -5,7 +5,8 @@ import Logo from './Logo';
 import BackgroundAuth from './BackgroundAuth';
 
 const Setup = () => {
-    const [name, setName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -18,7 +19,7 @@ const Setup = () => {
         setError('');
         setMessage('');
         try {
-            const response = await api.post('/create-user', { name, email, password });
+            const response = await api.post('/create-user', { first_name: firstName, last_name: lastName, email, password });
             setMessage('Account created! You can now login.');
         } catch (err) {
             const msg =
@@ -195,8 +196,12 @@ const Setup = () => {
 
                     <form onSubmit={handleSubmit}>
                         <div className="fg">
-                            <label className="lbl">Name</label>
-                            <input type="text" value={name} onChange={e => setName(e.target.value)} className="inp" placeholder="Your name" required />
+                            <label className="lbl">First Name</label>
+                            <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="inp" placeholder="First name" required />
+                        </div>
+                        <div className="fg">
+                            <label className="lbl">Last Name</label>
+                            <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="inp" placeholder="Last name" required />
                         </div>
                         <div className="fg">
                             <label className="lbl">Email</label>

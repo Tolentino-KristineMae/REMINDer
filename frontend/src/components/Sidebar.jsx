@@ -356,19 +356,19 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
         <div style={{ marginTop: 'auto', padding: '12px' }}>
           {collapsed ? (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <img
-                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
-                style={{ width: 36, height: 36, borderRadius: '50%', border: `2px solid ${C.border}` }}
-                alt="Avatar"
-              />
+              <div
+                style={{ width: 36, height: 36, borderRadius: '50%', border: `2px solid ${C.border}`, backgroundColor: '#22c55e', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '12px' }}
+              >
+                {user?.first_name?.[0] || user?.name?.[0]}{(user?.last_name || user?.name?.split(' ').slice(1).join(' '))?.[0]}
+              </div>
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <img
-                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
-                style={{ width: 36, height: 36, borderRadius: '50%', border: `2px solid ${C.border}`, flexShrink: 0 }}
-                alt="Avatar"
-              />
+              <div
+                style={{ width: 36, height: 36, borderRadius: '50%', border: `2px solid ${C.border}`, backgroundColor: '#22c55e', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '12px', flexShrink: 0 }}
+              >
+                {user?.first_name?.[0] || user?.name?.[0]}{(user?.last_name || user?.name?.split(' ').slice(1).join(' '))?.[0]}
+              </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontSize: '12px', fontWeight: 700, color: C.text, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: C.fontFamily }}>
                   {user?.name || 'Admin'}

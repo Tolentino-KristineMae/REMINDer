@@ -35,9 +35,9 @@ const Management = () => {
 
   const [people, setPeople] = useState([])
   const [bills, setBills] = useState([])
-  const [newPerson, setNewPerson] = useState({ name: '', email: '' })
+  const [newPerson, setNewPerson] = useState({ first_name: '', last_name: '', email: '' })
   const [editingPerson, setEditingPerson] = useState(null)
-  const [editPersonData, setEditPersonData] = useState({ name: '', email: '' })
+  const [editPersonData, setEditPersonData] = useState({ first_name: '', last_name: '', email: '' })
 
   const fetchData = useCallback(async () => {
     try {
@@ -142,7 +142,7 @@ const Management = () => {
     setMessage({ text: '', type: '' })
     try {
       await api.post('/people', newPerson)
-      setNewPerson({ name: '', email: '' })
+      setNewPerson({ first_name: '', last_name: '', email: '' })
       fetchData()
       setMessage({ text: 'Person added successfully!', type: 'success' })
     } catch (err) {
@@ -173,7 +173,7 @@ const Management = () => {
 
   const handleEditPerson = (person) => {
     setEditingPerson(person.id)
-    setEditPersonData({ name: person.name, email: person.email })
+    setEditPersonData({ first_name: person.first_name || person.name.split(' ')[0], last_name: person.last_name || person.name.split(' ').slice(1).join(' ') || '', email: person.email })
   }
 
   const handleSavePerson = async (id) => {
@@ -196,7 +196,7 @@ const Management = () => {
 
   const handleCancelPersonEdit = () => {
     setEditingPerson(null)
-    setEditPersonData({ name: '', email: '' })
+    setEditPersonData({ first_name: '', last_name: '', email: '' })
   }
 
   const getPersonStats = useCallback((personId) => {
@@ -308,13 +308,27 @@ const Management = () => {
             <form onSubmit={handleAddPerson} className="flex flex-col gap-4 sm:flex-row sm:items-end">
               <div className="flex-1">
                 <label className="mb-2 block text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  Full Name
+                  First Name
                 </label>
                 <input
                   type="text"
-                  value={newPerson.name}
-                  onChange={(e) => setNewPerson({ ...newPerson, name: e.target.value })}
-                  placeholder="e.g. John Doe"
+                  value={newPerson.first_name}
+                  onChange={(e) => setNewPerson({ ...newPerson, first_name: e.target.value })}
+                  placeholder="e.g. John"
+                  className="h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-all"
+                  required
+                />
+              </div>
+
+              <div className="flex-1">
+                <label className="mb-2 block text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  value={newPerson.last_name}
+                  onChange={(e) => setNewPerson({ ...newPerson, last_name: e.target.value })}
+                  placeholder="e.g. Doe"
                   className="h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-all"
                   required
                 />
@@ -585,11 +599,9 @@ const Management = () => {
                   >
                     <div className="flex items-start justify-between">
                       <div className="relative">
-                        <img 
-                          src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} 
-                          className="h-14 w-14 rounded-xl border-2 border-white shadow-md object-cover" 
-                          alt={person.name} 
-                        />
+                        <div className="h-14 w-14 rounded-xl border-2 border-white shadow-md bg-green-600 text-white flex items-center justify-center font-bold text-lg">
+                          {person.first_name?.[0] || person.name?.[0]}{(person.last_name || person.name?.split(' ').slice(1).join(' '))?.[0]}
+                        </div>
                         <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-white border-2 border-white">
                           <ShieldCheck className="h-2.5 w-2.5" />
                         </div>
@@ -633,11 +645,20 @@ const Management = () => {
                     {editingPerson === person.id ? (
                       <div className="mt-4 space-y-3">
                         <div>
-                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Name</label>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">First Name</label>
                           <input
                             type="text"
-                            value={editPersonData.name}
-                            onChange={(e) => setEditPersonData({ ...editPersonData, name: e.target.value })}
+                            value={editPersonData.first_name}
+                            onChange={(e) => setEditPersonData({ ...editPersonData, first_name: e.target.value })}
+                            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Last Name</label>
+                          <input
+                            type="text"
+                            value={editPersonData.last_name}
+                            onChange={(e) => setEditPersonData({ ...editPersonData, last_name: e.target.value })}
                             className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                           />
                         </div>
@@ -701,10 +722,17 @@ const Management = () => {
                                 <div className="flex flex-col gap-2 flex-1">
                                   <input
                                     type="text"
-                                    value={editPersonData.name}
-                                    onChange={(e) => setEditPersonData({ ...editPersonData, name: e.target.value })}
+                                    value={editPersonData.first_name}
+                                    onChange={(e) => setEditPersonData({ ...editPersonData, first_name: e.target.value })}
                                     className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
-                                    placeholder="Name"
+                                    placeholder="First Name"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={editPersonData.last_name}
+                                    onChange={(e) => setEditPersonData({ ...editPersonData, last_name: e.target.value })}
+                                    className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                                    placeholder="Last Name"
                                   />
                                   <input
                                     type="email"
@@ -716,11 +744,9 @@ const Management = () => {
                                 </div>
                               ) : (
                                 <>
-                                  <img 
-                                    src={person.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} 
-                                    className="h-9 w-9 rounded-lg border border-gray-100 shadow-sm object-cover" 
-                                    alt={person.name} 
-                                  />
+                                  <div className="h-9 w-9 rounded-lg bg-green-600 text-white flex items-center justify-center font-bold text-sm border border-gray-100 shadow-sm">
+                                    {person.first_name?.[0] || person.name?.[0]}{(person.last_name || person.name?.split(' ').slice(1).join(' '))?.[0]}
+                                  </div>
                                   <div>
                                     <h4 className="font-medium text-gray-900">{person.name}</h4>
                                     <p className="text-xs text-gray-500">{person.email}</p>
