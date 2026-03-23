@@ -84,7 +84,12 @@ Disallow:
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/index-[hash].js',
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-lucide': ['lucide-react'],
+        },
       },
     },
+    chunkSizeWarningLimit: 500,
   },
 })

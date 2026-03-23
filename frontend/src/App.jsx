@@ -1,18 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ModalProvider } from './context/ModalContext';
-import Login from './components/Login';
-import Setup from './components/Setup';
-import Dashboard from './components/Dashboard';
 import Sidebar from './components/Sidebar';
-import AddBillPage from './components/AddBillPage';
-import Management from './components/Management';
-import CalendarPage from './components/CalendarPage';
-import SettlementsPage from './components/SettlementsPage';
-import SettleBillPage from './components/SettleBillPage';
-import DeploymentStatus from './components/DeploymentStatus';
 import { Menu } from 'lucide-react';
+
+const Login = lazy(() => import('./components/Login'));
+const Setup = lazy(() => import('./components/Setup'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const AddBillPage = lazy(() => import('./components/AddBillPage'));
+const Management = lazy(() => import('./components/Management'));
+const CalendarPage = lazy(() => import('./components/CalendarPage'));
+const SettlementsPage = lazy(() => import('./components/SettlementsPage'));
+const SettleBillPage = lazy(() => import('./components/SettleBillPage'));
+const DeploymentStatus = lazy(() => import('./components/DeploymentStatus'));
+
+const LoadingFallback = () => (
+    <div className="min-h-screen flex items-center justify-center bg-green-950">
+        <div className="text-center">
+            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-white font-bold text-lg">Loading...</p>
+        </div>
+    </div>
+);
 
 const PageHeader = ({ title, subtitle }) => (
     <div className="flex items-center justify-between w-full">
@@ -73,10 +83,10 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
     const { user, loading } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const [dateTime, setDateTime] = useState(new Date());
+    const [mobileTime, setMobileTime] = useState(new Date());
 
     useEffect(() => {
-        const timer = setInterval(() => setDateTime(new Date()), 1000);
+        const timer = setInterval(() => setMobileTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
 
@@ -100,8 +110,8 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
                         </button>
                         <div className="flex items-center gap-3">
                             <div className="flex flex-col items-end">
-                                <p className="text-lg font-bold text-gray-800 leading-none">{dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
-                                <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{dateTime.getDate()} {dateTime.toLocaleString('en-US', { month: 'short' })} {dateTime.getFullYear()}</p>
+                                <p className="text-lg font-bold text-gray-800 leading-none">{mobileTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
+                                <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{mobileTime.getDate()} {mobileTime.toLocaleString('en-US', { month: 'short' })} {mobileTime.getFullYear()}</p>
                             </div>
                             <div className="h-10 w-px bg-gray-200 mx-1" />
                             <div className="flex flex-col items-start">
@@ -126,63 +136,64 @@ const App = () => {
     return (
         <AuthProvider>
             <ModalProvider>
-                <Router>
-                    <Routes>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/setup" element={<Setup />} />
-                        <Route path="/deployment-status" element={<DeploymentStatus />} />
-                        <Route 
-                            path="/" 
-                            element={
-                                <PrivateRoute pageTitle="Dashboard" pageSubtitle="Manage and prioritize your bills with ease">
-                                    <Dashboard />
-                                </PrivateRoute>
-                            } 
-                        />
-                        <Route 
-                            path="/management" 
-                            element={
-                                <PrivateRoute pageTitle="Management" pageSubtitle="Manage categories and team members">
-                                    <Management />
-                                </PrivateRoute>
-                            } 
-                        />
-                        <Route 
-                            path="/add-bill" 
-                            element={
-                                <PrivateRoute pageTitle="Add Bill" pageSubtitle="Create a new bill entry">
-                                    <AddBillPage />
-                                </PrivateRoute>
-                            } 
-                        />
-                        <Route 
-                            path="/calendar" 
-                            element={
-                                <PrivateRoute pageTitle="Calendar" pageSubtitle="Track your bill due dates and payment schedule">
-                                    <CalendarPage />
-                                </PrivateRoute>
-                            } 
-                        />
-                        <Route 
-                            path="/paid-bills" 
-                            element={
-                                <PrivateRoute pageTitle="Settlements" pageSubtitle="Submit and view your payment proof records">
-                                    <SettlementsPage />
-                                </PrivateRoute>
-                            } 
-                        />
-                        <Route 
-                            path="/settle/:id" 
-                            element={
-                                <PrivateRoute pageTitle="Settle Bill" pageSubtitle="Submit payment proof">
-                                    <SettleBillPage />
-                                </PrivateRoute>
-                            } 
-                        />
-                        {/* Placeholder for other routes */}
-                        <Route path="*" element={<Navigate to="/" />} />
-                    </Routes>
-                </Router>
+                <Suspense fallback={<LoadingFallback />}>
+                    <Router>
+                        <Routes>
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/setup" element={<Setup />} />
+                            <Route path="/deployment-status" element={<DeploymentStatus />} />
+                            <Route 
+                                path="/" 
+                                element={
+                                    <PrivateRoute pageTitle="Dashboard" pageSubtitle="Manage and prioritize your bills with ease">
+                                        <Dashboard />
+                                    </PrivateRoute>
+                                } 
+                            />
+                            <Route 
+                                path="/management" 
+                                element={
+                                    <PrivateRoute pageTitle="Management" pageSubtitle="Manage categories and team members">
+                                        <Management />
+                                    </PrivateRoute>
+                                } 
+                            />
+                            <Route 
+                                path="/add-bill" 
+                                element={
+                                    <PrivateRoute pageTitle="Add Bill" pageSubtitle="Create a new bill entry">
+                                        <AddBillPage />
+                                    </PrivateRoute>
+                                } 
+                            />
+                            <Route 
+                                path="/calendar" 
+                                element={
+                                    <PrivateRoute pageTitle="Calendar" pageSubtitle="Track your bill due dates and payment schedule">
+                                        <CalendarPage />
+                                    </PrivateRoute>
+                                } 
+                            />
+                            <Route 
+                                path="/paid-bills" 
+                                element={
+                                    <PrivateRoute pageTitle="Settlements" pageSubtitle="Submit and view your payment proof records">
+                                        <SettlementsPage />
+                                    </PrivateRoute>
+                                } 
+                            />
+                            <Route 
+                                path="/settle/:id" 
+                                element={
+                                    <PrivateRoute pageTitle="Settle Bill" pageSubtitle="Submit payment proof">
+                                        <SettleBillPage />
+                                    </PrivateRoute>
+                                } 
+                            />
+                            <Route path="*" element={<Navigate to="/" />} />
+                        </Routes>
+                    </Router>
+                </Suspense>
             </ModalProvider>
         </AuthProvider>
     );
