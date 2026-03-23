@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../api/axios';
 
 const VAPID_PUBLIC_KEY = 'BCz3o6KaDp4INPcrrHkJdYk6S8e_12UnGcfknJZ3BhE0F1vgTTMQ1HSRwE6eCvScJjju91oDd_51NPIclg0eeGY';
 
@@ -29,6 +29,8 @@ export const subscribeUser = async () => {
     // Check if user is already subscribed
     const existingSubscription = await registration.pushManager.getSubscription();
     if (existingSubscription) {
+      // Re-send to backend just in case
+      await api.post('/push-subscriptions', existingSubscription.toJSON());
       return existingSubscription;
     }
 
@@ -45,12 +47,7 @@ export const subscribeUser = async () => {
     const subscription = await registration.pushManager.subscribe(subscribeOptions);
     
     // Store subscription on backend
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
-    await axios.post(`${apiBaseUrl}/push-subscriptions`, subscription.toJSON(), {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    await api.post('/push-subscriptions', subscription.toJSON());
 
     console.log('User is subscribed to push notifications');
     return subscription;
@@ -68,12 +65,8 @@ export const unsubscribeUser = async () => {
     if (subscription) {
       await subscription.unsubscribe();
       
-      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
-      await axios.delete(`${apiBaseUrl}/push-subscriptions`, {
-        data: { endpoint: subscription.endpoint },
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+      await api.delete('/push-subscriptions', {
+        data: { endpoint: subscription.endpoint }
       });
       
       console.log('User is unsubscribed');
@@ -82,3 +75,4 @@ export const unsubscribeUser = async () => {
     console.error('Failed to unsubscribe user:', error);
   }
 };
+

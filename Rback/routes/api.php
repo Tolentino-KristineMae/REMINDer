@@ -7,6 +7,7 @@ use App\Http\Controllers\BillController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PersonInChargeController;
 use App\Http\Controllers\PushSubscriptionController;
+use App\Notifications\GenericPushNotification;
 
 // So GET /api is handled by the API stack (not the SPA web fallback).
 Route::get('/', function () {
@@ -71,4 +72,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // Push subscriptions
     Route::post('/push-subscriptions', [PushSubscriptionController::class, 'update']);
     Route::delete('/push-subscriptions', [PushSubscriptionController::class, 'destroy']);
+    
+    // Test Push Notification
+    Route::post('/test-push', function (Request $request) {
+        $user = $request->user();
+        $user->notify(new GenericPushNotification(
+            'REMINDear Test',
+            'Your push notifications are working perfectly! 🔔',
+            '/dashboard'
+        ));
+        return response()->json(['success' => true]);
+    });
 });

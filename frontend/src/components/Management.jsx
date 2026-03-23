@@ -19,7 +19,8 @@ import {
   CircleDot,
   Edit2,
   X,
-  Check
+  Check,
+  BellRing
 } from 'lucide-react'
 
 const Management = () => {
@@ -38,6 +39,7 @@ const Management = () => {
   const [newPerson, setNewPerson] = useState({ first_name: '', last_name: '', email: '' })
   const [editingPerson, setEditingPerson] = useState(null)
   const [editPersonData, setEditPersonData] = useState({ first_name: '', last_name: '', email: '' })
+  const [testingPush, setTestingPush] = useState(false)
 
   const fetchData = useCallback(async () => {
     try {
@@ -199,6 +201,23 @@ const Management = () => {
     setEditPersonData({ first_name: '', last_name: '', email: '' })
   }
 
+  const handleTestPush = async () => {
+    setTestingPush(true)
+    setMessage({ text: '', type: '' })
+    try {
+      await api.post('/test-push')
+      setMessage({ text: 'Test notification sent! Check your device.', type: 'success' })
+    } catch (err) {
+      console.error('Test push error:', err)
+      setMessage({ 
+        text: 'Failed to send test notification. Make sure you have enabled notifications in the sidebar.', 
+        type: 'error' 
+      })
+    } finally {
+      setTestingPush(false)
+    }
+  }
+
   const getPersonStats = useCallback((personId) => {
     const personBills = bills.filter(b => b.person_in_charge_id === personId)
     const paidCount = personBills.filter(b => b.status === 'paid').length
@@ -214,28 +233,43 @@ const Management = () => {
   return (
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <main className="mx-auto max-w-7xl px-6 py-8" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-        <div className="mb-8 flex items-center gap-2 rounded-2xl bg-white p-1.5 w-fit border border-green-100 shadow-sm">
-          <button 
-            onClick={() => setActiveTab('categories')}
-            className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
-              activeTab === 'categories' 
-                ? 'bg-green-600 text-white shadow-md' 
-                : 'text-gray-500 hover:text-gray-700 hover:bg-green-50'
-            }`}
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-2 rounded-2xl bg-white p-1.5 w-fit border border-green-100 shadow-sm">
+            <button 
+              onClick={() => setActiveTab('categories')}
+              className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
+                activeTab === 'categories' 
+                  ? 'bg-green-600 text-white shadow-md' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-green-50'
+              }`}
+            >
+              <Layers className="h-4 w-4" />
+              Categories
+            </button>
+            <button 
+              onClick={() => setActiveTab('people')}
+              className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
+                activeTab === 'people' 
+                  ? 'bg-green-600 text-white shadow-md' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-green-50'
+              }`}
+            >
+              <Users className="h-4 w-4" />
+              Person in Charge
+            </button>
+          </div>
+
+          <button
+            onClick={handleTestPush}
+            disabled={testingPush}
+            className="flex items-center gap-2 rounded-xl bg-white border border-green-200 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-green-700 hover:bg-green-50 transition-all shadow-sm active:scale-95 disabled:opacity-50"
           >
-            <Layers className="h-4 w-4" />
-            Categories
-          </button>
-          <button 
-            onClick={() => setActiveTab('people')}
-            className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
-              activeTab === 'people' 
-                ? 'bg-green-600 text-white shadow-md' 
-                : 'text-gray-500 hover:text-gray-700 hover:bg-green-50'
-            }`}
-          >
-            <Users className="h-4 w-4" />
-            Person in Charge
+            {testingPush ? (
+              <div className="h-3 w-3 animate-spin rounded-full border-2 border-green-600/30 border-t-green-600" />
+            ) : (
+              <BellRing className="h-3.5 w-3.5" />
+            )}
+            Send Test Notification
           </button>
         </div>
 
