@@ -308,7 +308,7 @@ const SettlementsPage = () => {
                                                         <div className="flex items-center gap-3">
                                                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400">
                                                                 <Calendar size={12} className="text-red-400" />
-                                                                {new Date(bill.due_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                                {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                             </div>
                                                             <span className="h-1 w-1 bg-gray-200 rounded-full"></span>
                                                             <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50">
@@ -434,7 +434,7 @@ const SettlementsPage = () => {
                                                 <div className="flex flex-col gap-1">
                                                     <div className="flex items-center gap-3">
                                                         <span className="text-[9px] font-black text-gray-400 flex items-center gap-1 uppercase tracking-widest leading-none">
-                                                            <Calendar size={10} className="text-green-600" /> {new Date(bill.due_date).toLocaleDateString()}
+                                                            <Calendar size={10} className="text-green-600" /> {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                         </span>
                                                         <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full uppercase tracking-widest border border-green-100 leading-none">
                                                             {bill.category?.name}
@@ -529,7 +529,7 @@ const SettlementsPage = () => {
                                                     <h4 className="font-black text-gray-900 text-sm mb-1 truncate">{bill.details}</h4>
                                                     <p className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5">
                                                         <Calendar size={11} className="text-green-600" />
-                                                        {new Date(bill.due_date).toLocaleDateString()}
+                                                        {new Date(bill.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                     </p>
                                                 </div>
                                                 <div className="text-right shrink-0">
