@@ -83,8 +83,10 @@ const Management = () => {
     setLoading(true)
     setMessage({ text: '', type: '' })
     
+    // Capture data to avoid closure issues
+    const categoryData = { ...newCategory };
     const tempId = Date.now();
-    const categoryToAdd = { ...newCategory, id: tempId, is_temp: true };
+    const categoryToAdd = { ...categoryData, id: tempId, is_temp: true };
     const originalCategories = [...categories];
     
     // Optimistic update
@@ -92,13 +94,13 @@ const Management = () => {
     setNewCategory({ name: '', color: '#22c55e' })
 
     try {
-      const response = await api.post('/categories', newCategory)
-      // Laravel wraps single resources in a 'data' key
-      const savedCategory = response.data.data || response.data;
-      setCategories(prev => prev.map(c => c.id === tempId ? savedCategory : c));
+      await api.post('/categories', categoryData)
+      // Refresh all categories and bills to ensure sync with server
+      await fetchData()
       setMessage({ text: 'Category added successfully!', type: 'success' })
     } catch (err) {
       setCategories(originalCategories);
+      console.error('Add category error:', err)
       setMessage({ text: err.response?.data?.message || 'Failed to add category.', type: 'error' })
     } finally {
       setLoading(false)
@@ -118,6 +120,7 @@ const Management = () => {
 
     try {
       await api.delete(`/categories/${id}`)
+      await fetchData() // Refresh for consistency
       setMessage({ text: 'Category deleted successfully!', type: 'success' })
     } catch (err) {
       setCategories(originalCategories);
@@ -139,10 +142,8 @@ const Management = () => {
     setEditingCategory(null)
 
     try {
-      const response = await api.put(`/categories/${id}`, editCategoryData)
-      // Laravel wraps single resources in a 'data' key
-      const updatedCategory = response.data.data || response.data;
-      setCategories(prev => prev.map(c => c.id === id ? updatedCategory : c));
+      await api.put(`/categories/${id}`, editCategoryData)
+      await fetchData() // Refresh for consistency
       setMessage({ text: 'Category updated successfully!', type: 'success' })
     } catch (err) {
       setCategories(originalCategories);
@@ -162,9 +163,11 @@ const Management = () => {
     setLoading(true)
     setMessage({ text: '', type: '' })
     
+    // Capture data to avoid closure issues
+    const personData = { ...newPerson };
     const tempId = Date.now();
     const personToAdd = { 
-      ...newPerson, 
+      ...personData, 
       id: tempId, 
       is_temp: true 
     };
@@ -175,13 +178,13 @@ const Management = () => {
     setNewPerson({ first_name: '', last_name: '', email: '' })
 
     try {
-      const response = await api.post('/people', newPerson)
-      // Laravel wraps single resources in a 'data' key
-      const savedPerson = response.data.data || response.data;
-      setPeople(prev => prev.map(p => p.id === tempId ? savedPerson : p));
+      await api.post('/people', personData)
+      // Refresh all people and bills to ensure sync with server
+      await fetchData()
       setMessage({ text: 'Person added successfully!', type: 'success' })
     } catch (err) {
       setPeople(originalPeople);
+      console.error('Add person error:', err)
       setMessage({ text: err.response?.data?.message || 'Failed to add person.', type: 'error' })
     } finally {
       setLoading(false)
@@ -201,6 +204,7 @@ const Management = () => {
 
     try {
       await api.delete(`/people/${id}`)
+      await fetchData() // Refresh for consistency
       setMessage({ text: 'Person deleted successfully!', type: 'success' })
     } catch (err) {
       setPeople(originalPeople);
@@ -228,10 +232,8 @@ const Management = () => {
     setEditingPerson(null)
 
     try {
-      const response = await api.put(`/people/${id}`, editPersonData)
-      // Laravel wraps single resources in a 'data' key
-      const updatedPerson = response.data.data || response.data;
-      setPeople(prev => prev.map(p => p.id === id ? updatedPerson : p));
+      await api.put(`/people/${id}`, editPersonData)
+      await fetchData() // Refresh for consistency
       setMessage({ text: 'Person updated successfully!', type: 'success' })
     } catch (err) {
       setPeople(originalPeople);
