@@ -24,7 +24,7 @@ Route::get('/status', function () {
 // Hidden route to run migrations - requires MIGRATION_SECRET env var
 Route::post('/migrate', function (Request $request) {
     $secret = $request->header('X-Migration-Secret');
-    $validSecret = env('MIGRATION_SECRET', 'secret123');
+    $validSecret = env('MIGRATION_SECRET', 'your-secret-key-here-change-this');
     
     if ($secret !== $validSecret) {
         return response()->json(['error' => 'Unauthorized'], 401);
@@ -46,13 +46,16 @@ Route::post('/migrate', function (Request $request) {
 // Hidden route to seed database
 Route::post('/seed', function (Request $request) {
     $secret = $request->header('X-Migration-Secret');
-    $validSecret = env('MIGRATION_SECRET', 'secret123');
+    $validSecret = env('MIGRATION_SECRET', 'your-secret-key-here-change-this');
     
     if ($secret !== $validSecret) {
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     
     try {
+        // Clear cache and dump autoload
+        \Artisan::call('cache:clear');
+        \Artisan::call('config:clear');
         \Artisan::call('db:seed', ['--force' => true]);
         return response()->json([
             'success' => true,
