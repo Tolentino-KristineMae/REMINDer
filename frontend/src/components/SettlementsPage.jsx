@@ -232,10 +232,18 @@ const BillItem = React.memo(({
                             </div>
                         </div>
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5">
-                            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
-                            <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                                {bill.category?.name}
-                            </span>
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
+                                <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                                    {bill.category?.name}
+                                </span>
+                            </div>
+                            {bill.proof_of_payments?.[0]?.voice_record_path && (
+                                <div className="flex items-center gap-1.5 bg-red-50 px-2 py-0.5 rounded-full border border-red-100 animate-pulse">
+                                    <Mic size={10} className="text-red-500" />
+                                    <span className="text-[9px] font-black text-red-600 uppercase tracking-tight">Voice Note Attached</span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -777,6 +785,12 @@ const SettlementsPage = () => {
                                                                     <CheckCircle2 size={11} className="text-green-500" />
                                                                     {bill.proof_of_payments[0].paid_by}
                                                                 </p>
+                                                            </div>
+                                                        )}
+                                                        {bill.proof_of_payments?.[0]?.voice_record_path && (
+                                                            <div className="flex items-center gap-2 mt-1 bg-red-50 w-fit px-2.5 py-1 rounded-lg border border-red-100 animate-pulse">
+                                                                <Mic size={12} className="text-red-500" />
+                                                                <span className="text-[10px] font-black text-red-600 uppercase tracking-tight">Audio Proof Attached</span>
                                                             </div>
                                                         )}
                                                     </div>

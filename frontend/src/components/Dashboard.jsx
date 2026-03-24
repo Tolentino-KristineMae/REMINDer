@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { 
     Plus, 
@@ -8,22 +8,12 @@ import {
     AlertCircle,
     TrendingUp,
     CheckCircle2,
-    Calendar,
-    Users,
-    FileText,
-    Volume2,
-    Pause,
-    Play,
-    X,
-    ChevronRight,
-    Sparkles
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { formatCurrency, formatDateLocal } from '../utils/formatters';
+import { formatCurrency } from '../utils/formatters';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const audioRef = useRef(null);
     const [stats, setStats] = useState({
         total: 0,
         paid: 0,
@@ -34,45 +24,7 @@ const Dashboard = () => {
         total_unpaid_amount: 0,
     });
     const [categories, setCategories] = useState([]);
-    const [recentBills, setRecentBills] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [playingAudio, setPlayingAudio] = useState(null);
-    const [previewImage, setPreviewImage] = useState(null);
-
-    const STORAGE_BASE_URL = (() => {
-        const a = import.meta.env.VITE_STORAGE_BASE_URL?.trim();
-        if (a) return a.replace(/\/+$/, '');
-        const b = import.meta.env.VITE_BACKEND_BASE_URL?.trim();
-        if (b) return b.replace(/\/+$/, '');
-        const api = import.meta.env.VITE_API_BASE_URL?.trim();
-        if (api) {
-            const origin = api.replace(/\/api\/?$/i, '').replace(/\/+$/, '');
-            if (origin) return origin;
-        }
-        if (import.meta.env.DEV) return 'http://localhost:8000';
-        if (typeof window !== 'undefined') return window.location.origin;
-        return 'http://localhost:8000';
-    })();
-
-    const buildStorageUrl = (path) => {
-        if (!path) return '';
-        if (path.startsWith('http')) return path;
-        return `${STORAGE_BASE_URL.replace(/\/$/, '')}/storage/${path}`;
-    };
-
-    const toggleAudio = (audioPath) => {
-        const fullUrl = buildStorageUrl(audioPath);
-        if (playingAudio === audioPath) {
-            audioRef.current.pause();
-            setPlayingAudio(null);
-        } else {
-            setPlayingAudio(audioPath);
-            if (audioRef.current) {
-                audioRef.current.src = fullUrl;
-                audioRef.current.play().catch(err => console.error("Playback failed:", err));
-            }
-        }
-    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -91,20 +43,6 @@ const Dashboard = () => {
                 });
                 
                 setCategories(Array.isArray(categoriesData) ? categoriesData : []);
-
-                // Fetch recent paid bills for activity feed
-                const fullRes = await api.get('/bills/full');
-                const allBills = fullRes.data.bills?.data || fullRes.data.bills || [];
-                const paidBills = allBills
-                    .filter(b => b.status === 'paid')
-                    .sort((a, b) => {
-                        const dateA = new Date(a.proof_of_payments?.[0]?.created_at || a.updated_at);
-                        const dateB = new Date(b.proof_of_payments?.[0]?.created_at || b.updated_at);
-                        return dateB - dateA;
-                    })
-                    .slice(0, 5);
-                setRecentBills(paidBills);
-
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
             } finally {
@@ -125,34 +63,6 @@ const Dashboard = () => {
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-3 sm:p-4 lg:p-6 relative">
-            {/* Image Preview Overlay */}
-            {previewImage && (
-                <div 
-                    className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4 sm:p-10 animate-in fade-in duration-300"
-                    onClick={() => setPreviewImage(null)}
-                >
-                    <button 
-                        className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all"
-                        onClick={() => setPreviewImage(null)}
-                    >
-                        <X size={24} />
-                    </button>
-                    <img 
-                        src={previewImage} 
-                        className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl border-2 border-white/10" 
-                        alt="Payment Proof" 
-                        onClick={(e) => e.stopPropagation()}
-                    />
-                </div>
-            )}
-
-            {/* Audio Player */}
-            <audio 
-                ref={audioRef}
-                onEnded={() => setPlayingAudio(null)}
-                className="hidden"
-            />
-
             {/* Stats Grid - Optimized for Mobile */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-3 lg:gap-5 mb-4 sm:mb-6">
                 {/* Card 1: Total Paid - Green Theme (Success/Positive) */}
@@ -499,101 +409,6 @@ const Dashboard = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            {/* Recent Payments Section */}
-            <div className="mt-8 mb-20">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-green-600 border border-green-100">
-                            <Sparkles size={20} />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-black text-gray-900 leading-tight">Recent Payments</h3>
-                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Latest settled bills with proof</p>
-                        </div>
-                    </div>
-                    <button 
-                        onClick={() => navigate('/paid-bills')}
-                        className="text-[10px] font-black text-green-600 uppercase tracking-widest hover:text-green-700 transition-colors flex items-center gap-1.5 group"
-                    >
-                        View All
-                        <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {recentBills.length > 0 ? (
-                        recentBills.map((bill) => (
-                            <div 
-                                key={bill.id}
-                                className="group bg-white border border-green-50 rounded-2xl overflow-hidden hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all flex flex-col"
-                            >
-                                <div className="h-32 bg-gray-50 relative overflow-hidden shrink-0">
-                                    {bill.proof_of_payments?.[0]?.file_path ? (
-                                        <img 
-                                            src={buildStorageUrl(bill.proof_of_payments[0].file_path)} 
-                                            className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                                            alt="Proof"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <FileText className="text-gray-300" size={32} />
-                                        </div>
-                                    )}
-                                    <div className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded text-[9px] font-black text-gray-900 uppercase">
-                                        {bill.category?.name}
-                                    </div>
-                                    <div className="absolute top-2.5 right-2.5 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg">
-                                        <CheckCircle2 size={14} />
-                                    </div>
-                                </div>
-
-                                <div className="p-4 flex-1 flex flex-col">
-                                    <div className="flex justify-between items-start mb-3">
-                                        <div className="min-w-0 flex-1">
-                                            <h4 className="font-black text-gray-900 text-xs mb-1 truncate leading-tight">{bill.details}</h4>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                                                Paid {formatDateLocal(bill.proof_of_payments?.[0]?.created_at || bill.updated_at)}
-                                            </p>
-                                        </div>
-                                        <div className="text-right shrink-0">
-                                            <p className="text-sm font-black text-green-900">{formatCurrency(bill.amount)}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-auto pt-3 border-t border-gray-50 flex items-center gap-2">
-                                        {bill.proof_of_payments?.[0]?.voice_record_path && (
-                                            <button 
-                                                onClick={() => toggleAudio(bill.proof_of_payments[0].voice_record_path)}
-                                                className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[9px] font-black uppercase transition-all ${
-                                                    playingAudio === bill.proof_of_payments[0].voice_record_path 
-                                                    ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' 
-                                                    : 'bg-gray-50 text-gray-600 hover:bg-green-600 hover:text-white'
-                                                }`}
-                                            >
-                                                {playingAudio === bill.proof_of_payments[0].voice_record_path ? <><Pause size={12} /> Stop</> : <><Volume2 size={12} /> Play Voice</>}
-                                            </button>
-                                        )}
-                                        <button 
-                                            onClick={() => setPreviewImage(buildStorageUrl(bill.proof_of_payments?.[0]?.file_path))}
-                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[9px] font-black uppercase bg-gray-50 text-gray-600 hover:bg-green-600 hover:text-white transition-all"
-                                        >
-                                            <FileText size={12} /> View Proof
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="col-span-full py-12 flex flex-col items-center justify-center bg-white rounded-3xl border border-gray-100 border-dashed">
-                            <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-300 mb-4">
-                                <Receipt size={32} />
-                            </div>
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">No recent payments</p>
-                        </div>
-                    )}
                 </div>
             </div>
 
