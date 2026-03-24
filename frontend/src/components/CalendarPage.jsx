@@ -22,6 +22,7 @@ const CalendarPage = () => {
         const diff = now.getDate() - day;
         return new Date(now.getFullYear(), now.getMonth(), diff);
     });
+    const [viewDate, setViewDate] = useState(new Date());
     const [bills, setBills] = useState([]);
 
     const fetchBills = async () => {
@@ -137,12 +138,13 @@ const CalendarPage = () => {
     };
 
     const getBillsForDate = (date) => {
+        const safeBills = Array.isArray(bills) ? bills : [];
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const dateStr = `${year}-${month}-${day}`;
         
-        return (bills || []).filter(bill => {
+        return safeBills.filter(bill => {
             if (!bill.due_date || typeof bill.due_date !== 'string') return false;
             const billDatePart = bill.due_date.split(' ')[0].split('T')[0];
             return billDatePart === dateStr;
