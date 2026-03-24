@@ -57,7 +57,12 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => env('DB_SSLMODE', 'require'), // <-- force SSL for Supabase
+            'sslmode' => env('DB_SSLMODE', 'require'),
+            'options' => [
+                \PDO::ATTR_TIMEOUT => env('DB_TIMEOUT', 30),
+            ],
+            'connect_timeout' => env('DB_CONNECT_TIMEOUT', 30),
+            'prepare_threshold' => 0, // recommended for Supabase pooler (port 6543)
         ],
 
         'sqlsrv' => [
