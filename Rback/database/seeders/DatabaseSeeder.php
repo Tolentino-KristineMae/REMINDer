@@ -16,26 +16,26 @@ class DatabaseSeeder extends Seeder
     {
         // Seed Categories
         $categories = [
-            ['name' => 'BPI', 'icon' => 'CreditCard'],
-            ['name' => 'Landbank', 'icon' => 'Landmark'],
-            ['name' => 'Atome', 'icon' => 'ShoppingBag'],
-            ['name' => 'Spay', 'icon' => 'Wallet'],
-            ['name' => 'Utility', 'icon' => 'Zap'],
-            ['name' => 'Others', 'icon' => 'MoreHorizontal'],
+            ['name' => 'BPI', 'color' => '#3B82F6'],
+            ['name' => 'Landbank', 'color' => '#10B981'],
+            ['name' => 'Atome', 'color' => '#8B5CF6'],
+            ['name' => 'Spay', 'color' => '#F59E0B'],
+            ['name' => 'Utility', 'color' => '#06B6D4'],
+            ['name' => 'Others', 'color' => '#6B7280'],
         ];
 
         foreach ($categories as $category) {
             Category::updateOrCreate(
                 ['name' => $category['name']],
-                ['icon' => $category['icon']]
+                ['color' => $category['color']]
             );
         }
 
         // Seed People in Charge
         $people = [
-            ['name' => 'Kristine Mae Tolentino', 'avatar' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kristine'],
-            ['name' => 'Nixie Jewel B. Para-unda', 'avatar' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nixie'],
-            ['name' => 'Babilyn T. Tolentino', 'avatar' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=Babilyn'],
+            ['first_name' => 'Kristine Mae', 'last_name' => 'Tolentino', 'email' => 'kristine@example.com', 'avatar' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kristine'],
+            ['first_name' => 'Nixie Jewel', 'last_name' => 'Para-unda', 'email' => 'nixie@example.com', 'avatar' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nixie'],
+            ['first_name' => 'Babilyn', 'last_name' => 'Tolentino', 'email' => 'babilyn@example.com', 'avatar' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=Babilyn'],
         ];
 
         foreach ($people as $person) {
