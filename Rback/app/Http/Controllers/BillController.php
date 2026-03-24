@@ -104,10 +104,15 @@ class BillController extends Controller
                 }
 
                 if ($disk === 's3') {
-                    $endpoint = env('AWS_ENDPOINT');
-                    $projectRef = explode('.', parse_url($endpoint, PHP_URL_HOST))[0];
-                    $bucket = env('AWS_BUCKET');
-                    $proofUrl = "https://{$projectRef}.supabase.co/storage/v1/object/public/{$bucket}/{$proofPath}";
+                    // If AWS_URL is set, use it, otherwise construct Supabase public URL
+                    if (env('AWS_URL')) {
+                        $proofUrl = rtrim(env('AWS_URL'), '/') . '/' . $proofPath;
+                    } else {
+                        $endpoint = env('AWS_ENDPOINT');
+                        $projectRef = explode('.', parse_url($endpoint, PHP_URL_HOST))[0];
+                        $bucket = env('AWS_BUCKET');
+                        $proofUrl = "https://{$projectRef}.supabase.co/storage/v1/object/public/{$bucket}/{$proofPath}";
+                    }
                 } else {
                     $proofUrl = Storage::disk($disk)->url($proofPath);
                 }
@@ -123,10 +128,14 @@ class BillController extends Controller
 
                 if ($voicePath) {
                     if ($disk === 's3') {
-                        $endpoint = env('AWS_ENDPOINT');
-                        $projectRef = explode('.', parse_url($endpoint, PHP_URL_HOST))[0];
-                        $bucket = env('AWS_BUCKET');
-                        $voiceUrl = "https://{$projectRef}.supabase.co/storage/v1/object/public/{$bucket}/{$voicePath}";
+                        if (env('AWS_URL')) {
+                            $voiceUrl = rtrim(env('AWS_URL'), '/') . '/' . $voicePath;
+                        } else {
+                            $endpoint = env('AWS_ENDPOINT');
+                            $projectRef = explode('.', parse_url($endpoint, PHP_URL_HOST))[0];
+                            $bucket = env('AWS_BUCKET');
+                            $voiceUrl = "https://{$projectRef}.supabase.co/storage/v1/object/public/{$bucket}/{$voicePath}";
+                        }
                     } else {
                         $voiceUrl = Storage::disk($disk)->url($voicePath);
                     }
