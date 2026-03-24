@@ -46,10 +46,15 @@ const Management = () => {
     try {
       if (activeTab === 'categories') {
         const response = await api.get('/categories')
-        setCategories(response.data.categories || [])
+        // Handle Laravel Resource collection wrapping
+        const cats = response.data.categories?.data || response.data.categories || []
+        setCategories(cats)
       } else {
         const response = await api.get('/people')
-        setPeople(response.data.people || [])
+        // Handle Laravel Resource collection wrapping
+        const ppl = response.data.people?.data || response.data.people || []
+        setPeople(ppl)
+        
         // Also fetch bills for PIC stats check
         const billsRes = await api.get('/bills')
         setBills(billsRes.data.data || billsRes.data || [])

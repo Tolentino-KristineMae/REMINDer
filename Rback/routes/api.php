@@ -30,10 +30,18 @@ Route::post('/migrate', function (Request $request) {
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     
+    $command = $request->input('fresh') ? 'migrate:fresh' : 'migrate';
+    $params = ['--force' => true];
+    
+    if ($request->input('seed')) {
+        $params['--seed'] = true;
+    }
+    
     try {
-        \Artisan::call('migrate', ['--force' => true]);
+        \Artisan::call($command, $params);
         return response()->json([
             'success' => true,
+            'command' => $command,
             'output' => \Artisan::output()
         ]);
     } catch (\Exception $e) {
