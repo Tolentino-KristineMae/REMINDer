@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Plus,
   Settings2,
+  Wallet2,
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
@@ -41,6 +42,7 @@ const menuItems = [
   { icon: <Plus size={18} />,            label: 'Add Bill',   path: '/add-bill' },
   { icon: <Calendar size={18} />,        label: 'Calendar',   path: '/calendar' },
   { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },
+  { icon: <Wallet2 size={18} />,         label: 'Utangs',     path: '/utangs' },
   { icon: <Settings2 size={18} />,       label: 'Management',  path: '/management' },
 ];
 

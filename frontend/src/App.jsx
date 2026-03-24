@@ -63,6 +63,9 @@ const Management = lazy(() => import('./components/Management'));
 const CalendarPage = lazy(() => import('./components/CalendarPage'));
 const SettlementsPage = lazy(() => import('./components/SettlementsPage'));
 const SettleBillPage = lazy(() => import('./components/SettleBillPage'));
+const DebtsPage = lazy(() => import('./components/DebtsPage'));
+const AddDebtPage = lazy(() => import('./components/AddDebtPage'));
+const SettleDebtPage = lazy(() => import('./components/SettleDebtPage'));
 
 const LoadingFallback = ({ fullScreen = true }) => {
     const containerClass = fullScreen 
@@ -237,6 +240,30 @@ const App = () => {
                                     element={
                                         <PrivateRoute pageTitle="Edit Bill" pageSubtitle="Update bill details">
                                             <EditBillPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/utangs" 
+                                    element={
+                                        <PrivateRoute pageTitle="Utangs" pageSubtitle="Manage your personal debts">
+                                            <DebtsPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/add-debt" 
+                                    element={
+                                        <PrivateRoute pageTitle="Add Utang" pageSubtitle="Record a new personal debt">
+                                            <AddDebtPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/settle-debt/:id" 
+                                    element={
+                                        <PrivateRoute pageTitle="Bayad Time" pageSubtitle="Settle your personal debt">
+                                            <SettleDebtPage />
                                         </PrivateRoute>
                                     } 
                                 />

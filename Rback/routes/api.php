@@ -109,6 +109,11 @@ Route::post('/create-user', [AuthController::class, 'createUser']); // Setup end
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    // Debts (Utangs)
+    Route::get('/debts', [App\Http\Controllers\DebtController::class, 'index']);
+    Route::post('/debts', [App\Http\Controllers\DebtController::class, 'store']);
+    Route::post('/debts/{id}/settle', [App\Http\Controllers\DebtController::class, 'settle']);
+    Route::delete('/debts/{id}', [App\Http\Controllers\DebtController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
 
