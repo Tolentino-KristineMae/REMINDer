@@ -16,7 +16,7 @@ class BillController extends Controller
     public function index()
     {
         try {
-            $bills = Bill::with(['category:id,name,color', 'personInCharge:id,first_name,last_name,avatar', 'proofOfPayments'])->get();
+            $bills = Bill::with(['category', 'personInCharge', 'proofOfPayments'])->get();
             return BillResource::collection($bills);
         } catch (\Exception $e) {
             \Log::error('BillController@index error: ' . $e->getMessage());
@@ -26,7 +26,12 @@ class BillController extends Controller
 
     public function show(Bill $bill)
     {
-        return new BillResource($bill->load(['category', 'personInCharge', 'proofOfPayments']));
+        try {
+            return new BillResource($bill->load(['category', 'personInCharge', 'proofOfPayments']));
+        } catch (\Exception $e) {
+            \Log::error('BillController@show error: ' . $e->getMessage());
+            return response()->json(['message' => 'Error loading bill: ' . $e->getMessage()], 500);
+        }
     }
 
     public function store(Request $request)
@@ -201,50 +206,56 @@ class BillController extends Controller
 
     public function dashboardData()
     {
-        $today = now()->toDateString();
-        $startOfMonth = now()->startOfMonth()->toDateString();
-        $endOfMonth = now()->endOfMonth()->toDateString();
+        try {
+            $today = now()->toDateString();
+            $startOfMonth = now()->startOfMonth()->toDateString();
+            $endOfMonth = now()->endOfMonth()->toDateString();
 
-        // 1. Get Global Stats
-        $stats = Bill::selectRaw('COUNT(*) as total')
-            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid")
-            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending")
-            ->selectRaw("SUM(CASE WHEN status = 'pending' AND due_date < ? THEN 1 ELSE 0 END) as overdue", [$today])
-            ->selectRaw('SUM(amount) as total_amount')
-            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) as total_paid_amount")
-            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
-            ->first();
+            // 1. Get Global Stats
+            $stats = Bill::selectRaw('COUNT(*) as total')
+                ->selectRaw("SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid")
+                ->selectRaw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending")
+                ->selectRaw("SUM(CASE WHEN status = 'pending' AND due_date < ? THEN 1 ELSE 0 END) as overdue", [$today])
+                ->selectRaw('SUM(amount) as total_amount')
+                ->selectRaw("SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) as total_paid_amount")
+                ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
+                ->first();
 
-        // 2. Get Categories with counts for the current month
-        $categories = \App\Models\Category::leftJoin('bills', function($join) use ($startOfMonth, $endOfMonth) {
-                $join->on('categories.id', '=', 'bills.category_id')
-                     ->whereBetween('bills.due_date', [$startOfMonth, $endOfMonth]);
-            })
-            ->select('categories.id', 'categories.name', 'categories.color')
-            ->selectRaw('COUNT(bills.id) as count')
-            ->groupBy('categories.id', 'categories.name', 'categories.color')
-            ->get();
+            // 2. Get Categories with counts for the current month
+            $categories = \App\Models\Category::leftJoin('bills', function($join) use ($startOfMonth, $endOfMonth) {
+                    $join->on('categories.id', '=', 'bills.category_id')
+                         ->whereBetween('bills.due_date', [$startOfMonth, $endOfMonth]);
+                })
+                ->select('categories.id', 'categories.name')
+                ->selectRaw('COALESCE(categories.color, ?) as color', ['#22c55e'])
+                ->selectRaw('COUNT(bills.id) as count')
+                ->groupBy('categories.id', 'categories.name', 'categories.color')
+                ->get();
 
-        return response()->json([
-            'stats' => [
-                'total' => (int) $stats->total,
-                'paid' => (int) $stats->paid,
-                'pending' => (int) $stats->pending,
-                'overdue' => (int) $stats->overdue,
-                'total_amount' => (float) $stats->total_amount,
-                'total_paid_amount' => (float) $stats->total_paid_amount,
-                'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
-            ],
-            'categories' => CategoryResource::collection($categories)
-        ]);
+            return response()->json([
+                'stats' => [
+                    'total' => (int) $stats->total,
+                    'paid' => (int) $stats->paid,
+                    'pending' => (int) $stats->pending,
+                    'overdue' => (int) $stats->overdue,
+                    'total_amount' => (float) $stats->total_amount,
+                    'total_paid_amount' => (float) $stats->total_paid_amount,
+                    'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
+                ],
+                'categories' => CategoryResource::collection($categories)
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('BillController@dashboardData error: ' . $e->getMessage());
+            return response()->json(['message' => 'Error loading dashboard: ' . $e->getMessage()], 500);
+        }
     }
 
     public function fullData()
     {
         try {
             // Eager load only necessary relations
-            $people = \App\Models\PersonInCharge::select('id', 'first_name', 'last_name', 'email', 'avatar')->get();
-            $bills = Bill::with(['category:id,name,color', 'personInCharge:id,first_name,last_name', 'proofOfPayments:id,bill_id,created_at,paid_by,details'])
+            $people = \App\Models\PersonInCharge::all();
+            $bills = Bill::with(['category', 'personInCharge', 'proofOfPayments'])
                 ->get();
 
             return response()->json([

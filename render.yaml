@@ -20,3 +20,5 @@ services:
         value: https://reminder-api.onrender.com
       - key: DATABASE_URL
         value: postgresql://postgres:X9fXhUtMu37dUyrM@db.onkhvozgxedcsubgvrsf.supabase.co:5432/postgres?sslmode=require
+      - key: MIGRATION_SECRET
+        value: your-secret-key-here-change-this

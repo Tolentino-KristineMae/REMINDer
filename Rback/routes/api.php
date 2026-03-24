@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\CategoryController;
@@ -18,6 +19,48 @@ Route::get('/', function () {
 
 Route::get('/status', function () {
     return response()->json(['status' => 'ok']);
+});
+
+// Hidden route to run migrations - requires MIGRATION_SECRET env var
+Route::post('/migrate', function (Request $request) {
+    $secret = $request->header('X-Migration-Secret');
+    
+    if ($secret !== env('MIGRATION_SECRET')) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+    
+    try {
+        \Artisan::call('migrate', ['--force' => true]);
+        return response()->json([
+            'success' => true,
+            'output' => \Artisan::output()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage()
+        ], 500);
+    }
+});
+
+// Hidden route to seed database
+Route::post('/seed', function (Request $request) {
+    $secret = $request->header('X-Migration-Secret');
+    
+    if ($secret !== env('MIGRATION_SECRET')) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+    
+    try {
+        \Artisan::call('db:seed', ['--force' => true]);
+        return response()->json([
+            'success' => true,
+            'output' => \Artisan::output()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage()
+        ], 500);
+    }
 });
 
 // Public diagnostics for Render + Vercel + Supabase (Postgres) — no auth.
