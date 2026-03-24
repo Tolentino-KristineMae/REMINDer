@@ -17,12 +17,9 @@ class AuthController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        $fullName = $request->first_name . ' ' . $request->last_name;
-        
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'name' => $fullName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

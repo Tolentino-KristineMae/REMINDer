@@ -23,10 +23,17 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
-        'name',
         'email',
         'password',
     ];
+
+    /**
+     * Get the user's full name.
+     */
+    public function getNameAttribute()
+    {
+        return trim($this->first_name . ' ' . $this->last_name);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
