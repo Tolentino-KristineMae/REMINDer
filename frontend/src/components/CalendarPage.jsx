@@ -29,7 +29,7 @@ const CalendarPage = () => {
         try {
             const response = await api.get('/bills');
             let data = response.data;
-            if (data.data) data = data.data;
+            if (data && data.data) data = data.data;
             setBills(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('Error fetching bills:', err);
@@ -479,7 +479,7 @@ const CalendarPage = () => {
                                 <span className="text-sm font-black text-emerald-400">
                                     {formatCurrency(
                                         weekDays.reduce((acc, d) => 
-                                            acc + getBillsForDate(d).reduce((sum, b) => sum + parseFloat(b.amount), 0), 0
+                                            acc + getBillsForDate(d).reduce((sum, b) => sum + (parseFloat(b.amount) || 0), 0), 0
                                         )
                                     )}
                                 </span>

@@ -333,16 +333,19 @@ const SettlementsPage = () => {
     const fetchPaidBills = React.useCallback(async () => {
         try {
             const response = await api.get('/bills/full');
-            let billsData = response.data.bills;
-            let peopleData = response.data.people;
+            const data = response.data || {};
+            let billsData = data.bills;
+            let peopleData = data.people;
             
             if (billsData?.data) billsData = billsData.data;
             if (peopleData?.data) peopleData = peopleData.data;
             
             setBills(Array.isArray(billsData) ? billsData : []);
             setPeople(Array.isArray(peopleData) ? peopleData : []);
+            
             const catRes = await api.get('/categories');
-            let catData = catRes.data.categories;
+            const catResData = catRes.data || {};
+            let catData = catResData.categories;
             if (catData?.data) catData = catData.data;
             setCategories(Array.isArray(catData) ? catData : []);
         } catch (err) {
@@ -389,8 +392,8 @@ const SettlementsPage = () => {
     const pendingBills = safeBills.filter(bill => bill.status === 'pending');
     const settledBills = safeBills.filter(bill => bill.status === 'paid');
 
-    const totalSettled = settledBills.reduce((acc, b) => acc + parseFloat(b.amount), 0);
-    const totalPending = pendingBills.reduce((acc, b) => acc + parseFloat(b.amount), 0);
+    const totalSettled = settledBills.reduce((acc, b) => acc + (parseFloat(b.amount) || 0), 0);
+    const totalPending = pendingBills.reduce((acc, b) => acc + (parseFloat(b.amount) || 0), 0);
 
     const handleUploadClick = (bill) => {
         navigate(`/settle/${bill.id}`);
