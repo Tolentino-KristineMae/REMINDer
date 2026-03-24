@@ -23,6 +23,8 @@ import {
   BellRing
 } from 'lucide-react'
 
+import { formatCurrency, formatDateLocal } from '../utils/formatters'
+
 const Management = () => {
   const [activeTab, setActiveTab] = useState('categories')
   const [viewMode, setViewMode] = useState('list')
@@ -251,7 +253,7 @@ const Management = () => {
     const safeBills = Array.isArray(bills) ? bills : [];
     const personBills = safeBills.filter(b => b.person_in_charge_id === personId)
     const paidCount = personBills.filter(b => b.status === 'paid').length
-    const totalAmount = personBills.reduce((acc, b) => acc + parseFloat(b.amount), 0)
+    const totalAmount = personBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0)
     return {
       count: personBills.length,
       paid: paidCount,

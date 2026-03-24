@@ -138,6 +138,7 @@ const CalendarPage = () => {
     };
 
     const getBillsForDate = (date) => {
+        if (!date || isNaN(date.getTime())) return [];
         const safeBills = Array.isArray(bills) ? bills : [];
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -145,7 +146,7 @@ const CalendarPage = () => {
         const dateStr = `${year}-${month}-${day}`;
         
         return safeBills.filter(bill => {
-            if (!bill.due_date || typeof bill.due_date !== 'string') return false;
+            if (!bill?.due_date || typeof bill.due_date !== 'string') return false;
             const billDatePart = bill.due_date.split(' ')[0].split('T')[0];
             return billDatePart === dateStr;
         });

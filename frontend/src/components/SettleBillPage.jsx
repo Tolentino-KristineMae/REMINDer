@@ -373,7 +373,7 @@ const SettleBillPage = () => {
                                     <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
                                         <Calendar size={16} />
                                     </div>
-                                    <span className="text-xs uppercase tracking-wider">Due: {new Date(bill?.due_date).toLocaleDateString('en-GB')}</span>
+                                    <span className="text-xs uppercase tracking-wider">Due: {formatDateLocal(bill?.due_date)}</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-gray-300 font-bold">
                                     <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
@@ -393,8 +393,7 @@ const SettleBillPage = () => {
                         <div className="relative z-10 pt-6 border-t border-white/10">
                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Total Amount</p>
                             <div className="flex items-start gap-2">
-                                <span className="text-xl font-bold mt-1">₱</span>
-                                <span className="text-4xl font-bold tracking-tighter">{bill?.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                <span className="text-4xl font-bold tracking-tighter">{formatCurrency(bill?.amount)}</span>
                             </div>
                         </div>
 

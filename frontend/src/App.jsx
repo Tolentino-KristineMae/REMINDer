@@ -1,5 +1,54 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+// Error Boundary to catch lazy loading errors and other runtime crashes
+class ErrorBoundary extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false, errorType: null };
+    }
+
+    static getDerivedStateFromError(error) {
+        // If it's a ChunkLoadError, it means the browser is trying to load an old version of the app
+        if (error.name === 'ChunkLoadError' || error.message.includes('Loading chunk')) {
+            return { hasError: true, errorType: 'chunk' };
+        }
+        return { hasError: true, errorType: 'runtime' };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        console.error('App Error:', error, errorInfo);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            if (this.state.errorType === 'chunk') {
+                // Force a hard reload for chunk errors
+                window.location.reload(true);
+                return null;
+            }
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-green-950 p-6 text-center">
+                    <div className="bg-white rounded-3xl p-8 max-w-md shadow-2xl">
+                        <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <span className="text-3xl">⚠️</span>
+                        </div>
+                        <h2 className="text-2xl font-black text-gray-900 mb-2">Something went wrong</h2>
+                        <p className="text-gray-500 mb-6 text-sm">The application encountered an unexpected error. This usually happens after an update.</p>
+                        <button 
+                            onClick={() => window.location.reload(true)}
+                            className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-green-600/20"
+                        >
+                            Reload Application
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+        return this.props.children;
+    }
+}
+
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ModalProvider } from './context/ModalContext';
 import Sidebar from './components/Sidebar';
@@ -127,75 +176,77 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
 
 const App = () => {
     return (
-        <AuthProvider>
-            <ModalProvider>
-                <Suspense fallback={<LoadingFallback />}>
-                    <Router>
-                        <Routes>
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/setup" element={<Signup />} />
-                            <Route 
-                                path="/" 
-                                element={
-                                    <PrivateRoute pageTitle="Dashboard" pageSubtitle="Manage and prioritize your bills with ease">
-                                        <Dashboard />
-                                    </PrivateRoute>
-                                } 
-                            />
-                            <Route 
-                                path="/management" 
-                                element={
-                                    <PrivateRoute pageTitle="Management" pageSubtitle="Manage categories and team members">
-                                        <Management />
-                                    </PrivateRoute>
-                                } 
-                            />
-                            <Route 
-                                path="/add-bill" 
-                                element={
-                                    <PrivateRoute pageTitle="Add Bill" pageSubtitle="Create a new bill entry">
-                                        <AddBillPage />
-                                    </PrivateRoute>
-                                } 
-                            />
-                            <Route 
-                                path="/calendar" 
-                                element={
-                                    <PrivateRoute pageTitle="Calendar" pageSubtitle="Track your bill due dates and payment schedule">
-                                        <CalendarPage />
-                                    </PrivateRoute>
-                                } 
-                            />
-                            <Route 
-                                path="/paid-bills" 
-                                element={
-                                    <PrivateRoute pageTitle="Settlements" pageSubtitle="Submit and view your payment proof records">
-                                        <SettlementsPage />
-                                    </PrivateRoute>
-                                } 
-                            />
-                            <Route 
-                                path="/settle/:id" 
-                                element={
-                                    <PrivateRoute pageTitle="Settle Bill" pageSubtitle="Submit payment proof">
-                                        <SettleBillPage />
-                                    </PrivateRoute>
-                                } 
-                            />
-                            <Route 
-                                path="/edit-bill/:id" 
-                                element={
-                                    <PrivateRoute pageTitle="Edit Bill" pageSubtitle="Update bill details">
-                                        <EditBillPage />
-                                    </PrivateRoute>
-                                } 
-                            />
-                            <Route path="*" element={<Navigate to="/" />} />
-                        </Routes>
-                    </Router>
-                </Suspense>
-            </ModalProvider>
-        </AuthProvider>
+        <ErrorBoundary>
+            <AuthProvider>
+                <ModalProvider>
+                    <Suspense fallback={<LoadingFallback />}>
+                        <Router>
+                            <Routes>
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/setup" element={<Signup />} />
+                                <Route 
+                                    path="/" 
+                                    element={
+                                        <PrivateRoute pageTitle="Dashboard" pageSubtitle="Manage and prioritize your bills with ease">
+                                            <Dashboard />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/management" 
+                                    element={
+                                        <PrivateRoute pageTitle="Management" pageSubtitle="Manage categories and team members">
+                                            <Management />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/add-bill" 
+                                    element={
+                                        <PrivateRoute pageTitle="Add Bill" pageSubtitle="Create a new bill entry">
+                                            <AddBillPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/calendar" 
+                                    element={
+                                        <PrivateRoute pageTitle="Calendar" pageSubtitle="Track your bill due dates and payment schedule">
+                                            <CalendarPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/paid-bills" 
+                                    element={
+                                        <PrivateRoute pageTitle="Settlements" pageSubtitle="Submit and view your payment proof records">
+                                            <SettlementsPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/settle/:id" 
+                                    element={
+                                        <PrivateRoute pageTitle="Settle Bill" pageSubtitle="Submit payment proof">
+                                            <SettleBillPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/edit-bill/:id" 
+                                    element={
+                                        <PrivateRoute pageTitle="Edit Bill" pageSubtitle="Update bill details">
+                                            <EditBillPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route path="*" element={<Navigate to="/" />} />
+                            </Routes>
+                        </Router>
+                    </Suspense>
+                </ModalProvider>
+            </AuthProvider>
+        </ErrorBoundary>
     );
 };
 

@@ -389,11 +389,11 @@ const SettlementsPage = () => {
     }, [playingAudio]);
 
     const safeBills = Array.isArray(bills) ? bills : [];
-    const pendingBills = safeBills.filter(bill => bill.status === 'pending');
-    const settledBills = safeBills.filter(bill => bill.status === 'paid');
+    const pendingBills = safeBills.filter(bill => bill?.status === 'pending');
+    const settledBills = safeBills.filter(bill => bill?.status === 'paid');
 
-    const totalSettled = settledBills.reduce((acc, b) => acc + (parseFloat(b.amount) || 0), 0);
-    const totalPending = pendingBills.reduce((acc, b) => acc + (parseFloat(b.amount) || 0), 0);
+    const totalSettled = settledBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0);
+    const totalPending = pendingBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0);
 
     const handleUploadClick = (bill) => {
         navigate(`/settle/${bill.id}`);
@@ -754,7 +754,7 @@ const SettlementsPage = () => {
                                                                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Paid:</span>
                                                                 <p className="text-[10px] font-black text-green-600 flex items-center gap-1">
                                                                     <CheckCircle2 size={11} />
-                                                                    {new Date(bill.proof_of_payments[0].created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                    {formatDateLocal(bill.proof_of_payments[0].created_at)}
                                                                 </p>
                                                             </div>
                                                         )}
