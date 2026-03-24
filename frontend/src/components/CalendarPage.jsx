@@ -141,6 +141,7 @@ const CalendarPage = () => {
         const dateStr = `${year}-${month}-${day}`;
         
         return bills.filter(bill => {
+            if (!bill.due_date || typeof bill.due_date !== 'string') return false;
             // Extract only the date part YYYY-MM-DD to avoid timezone shifts
             const billDatePart = bill.due_date.split(' ')[0].split('T')[0];
             return billDatePart === dateStr;
