@@ -393,20 +393,26 @@ const SettlementsPage = () => {
         }).format(amount);
     };
 
-    const toggleAudio = (audioPath) => {
+    const toggleAudio = async (audioPath) => {
         const fullUrl = buildStorageUrl(audioPath);
+        
         if (playingAudio === audioPath) {
-            audioRef.current.pause();
-            setPlayingAudio(null);
-        } else {
-            setPlayingAudio(audioPath);
-            // Directly set src and play to ensure user gesture is captured
             if (audioRef.current) {
-                audioRef.current.src = fullUrl;
-                audioRef.current.play().catch(err => {
-                    console.error("Playback failed:", err);
-                    // Fallback to state-based play if direct play fails
-                });
+                audioRef.current.pause();
+            }
+            setPlayingAudio(null);
+            return;
+        }
+
+        if (audioRef.current) {
+            audioRef.current.src = fullUrl;
+            try {
+                await audioRef.current.play();
+                setPlayingAudio(audioPath);
+            } catch (err) {
+                console.error("Audio playback failed:", err);
+                setError("Could not play audio. The file may be corrupt or unsupported.");
+                setPlayingAudio(null); // Reset state on failure
             }
         }
     };
