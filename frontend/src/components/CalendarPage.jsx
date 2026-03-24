@@ -23,12 +23,12 @@ const CalendarPage = () => {
         return new Date(now.getFullYear(), now.getMonth(), diff);
     });
     const [bills, setBills] = useState([]);
-    const [viewDate, setViewDate] = useState(new Date()); // For mini calendar view
 
     const fetchBills = async () => {
         try {
             const response = await api.get('/bills');
-            const data = response.data.data || response.data;
+            let data = response.data;
+            if (data.data) data = data.data;
             setBills(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('Error fetching bills:', err);
