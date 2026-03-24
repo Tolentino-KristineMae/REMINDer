@@ -13,6 +13,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'color' => $this->color,
+            'count' => $this->when(isset($this->count), (int) $this->count),
         ];
     }
 }

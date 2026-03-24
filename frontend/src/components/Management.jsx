@@ -49,6 +49,10 @@ const Management = () => {
         // Handle Laravel Resource collection wrapping
         const cats = response.data.categories?.data || response.data.categories || []
         setCategories(cats)
+        
+        // Also fetch bills for category stats
+        const billsRes = await api.get('/bills')
+        setBills(billsRes.data.data || billsRes.data || [])
       } else {
         const response = await api.get('/people')
         // Handle Laravel Resource collection wrapping
@@ -271,6 +275,19 @@ const Management = () => {
     setEditPersonData({ first_name: '', last_name: '', email: '' })
   }
 
+  const getCategoryStats = useCallback((categoryId) => {
+    const safeBills = Array.isArray(bills) ? bills : [];
+    const categoryBills = safeBills.filter(b => b.category_id === categoryId)
+    const paidCount = categoryBills.filter(b => b.status === 'paid').length
+    const totalAmount = categoryBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0)
+    return {
+      count: categoryBills.length,
+      paid: paidCount,
+      total: totalAmount,
+      performance: categoryBills.length > 0 ? Math.round((paidCount / categoryBills.length) * 100) : 0
+    }
+  }, [bills])
+
   const getPersonStats = useCallback((personId) => {
     const safeBills = Array.isArray(bills) ? bills : [];
     const personBills = safeBills.filter(b => b.person_in_charge_id === personId)
@@ -482,88 +499,104 @@ const Management = () => {
         {activeTab === 'categories' ? (
           viewMode === 'grid' ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {categories.map((cat) => (
-                <div 
-                  key={cat.id} 
-                  className="group relative rounded-2xl border border-green-100 bg-white p-5 transition-all hover:border-green-300 hover:shadow-lg hover:shadow-green-500/5"
-                >
-                  <div className="flex items-start justify-between">
+              {categories.map((cat) => {
+                const stats = getCategoryStats(cat.id)
+                return (
+                  <div 
+                    key={cat.id} 
+                    className="group relative rounded-2xl border border-green-100 bg-white p-5 transition-all hover:border-green-300 hover:shadow-lg hover:shadow-green-500/5"
+                  >
+                    <div className="flex items-start justify-between">
+                      {editingCategory === cat.id ? (
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl" style={{ backgroundColor: editCategoryData.color }}>
+                          <Layers className="h-5 w-5 text-white" />
+                        </div>
+                      ) : (
+                        <div 
+                          className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-md transition-transform group-hover:scale-105"
+                          style={{ backgroundColor: cat.color }}
+                        >
+                          <Layers className="h-5 w-5" />
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1">
+                        {editingCategory === cat.id ? (
+                          <>
+                            <button 
+                              onClick={() => handleSaveCategory(cat.id)}
+                              disabled={loading}
+                              className="rounded-lg p-2 text-green-600 hover:bg-green-50 transition-all"
+                            >
+                              <Check className="h-4 w-4" />
+                            </button>
+                            <button 
+                              onClick={handleCancelEdit}
+                              className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 transition-all"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button 
+                              onClick={() => handleEditCategory(cat)}
+                              className="rounded-lg p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteCategory(cat.id)} 
+                              className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
                     {editingCategory === cat.id ? (
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl" style={{ backgroundColor: editCategoryData.color }}>
-                        <Layers className="h-5 w-5 text-white" />
+                      <div className="mt-4 space-y-3">
+                        <input
+                          type="text"
+                          value={editCategoryData.name}
+                          onChange={(e) => setEditCategoryData({ ...editCategoryData, name: e.target.value })}
+                          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                        />
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="color"
+                            value={editCategoryData.color}
+                            onChange={(e) => setEditCategoryData({ ...editCategoryData, color: e.target.value })}
+                            className="h-8 w-8 rounded cursor-pointer"
+                          />
+                          <span className="text-xs font-mono text-gray-400 uppercase">{editCategoryData.color}</span>
+                        </div>
                       </div>
                     ) : (
-                      <div 
-                        className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-md transition-transform group-hover:scale-105"
-                        style={{ backgroundColor: cat.color }}
-                      >
-                        <Layers className="h-5 w-5" />
-                      </div>
+                      <>
+                        <h4 className="mt-4 font-semibold text-gray-900 truncate" title={cat.name}>{cat.name}</h4>
+                        <div className="mt-2 flex items-center gap-2">
+                          <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
+                          <span className="text-xs font-mono text-gray-400 uppercase">{cat.color}</span>
+                        </div>
+                        <div className="mt-5 grid grid-cols-2 gap-3">
+                          <div className="rounded-xl bg-gray-50 p-3">
+                            <p className="text-xs text-gray-500">Bills</p>
+                            <p className="mt-1 text-lg font-bold text-gray-900">{stats.count}</p>
+                          </div>
+                          <div className="rounded-xl bg-green-50 p-3">
+                            <p className="text-xs text-green-600">Performance</p>
+                            <div className="mt-1 flex items-center gap-1">
+                              <p className="text-lg font-bold text-green-600">{stats.performance}%</p>
+                              <TrendingUp className="h-3.5 w-3.5 text-green-600" />
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     )}
-                    <div className="flex items-center gap-1">
-                      {editingCategory === cat.id ? (
-                        <>
-                          <button 
-                            onClick={() => handleSaveCategory(cat.id)}
-                            disabled={loading}
-                            className="rounded-lg p-2 text-green-600 hover:bg-green-50 transition-all"
-                          >
-                            <Check className="h-4 w-4" />
-                          </button>
-                          <button 
-                            onClick={handleCancelEdit}
-                            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 transition-all"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button 
-                            onClick={() => handleEditCategory(cat)}
-                            className="rounded-lg p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteCategory(cat.id)} 
-                            className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </>
-                      )}
-                    </div>
                   </div>
-                  {editingCategory === cat.id ? (
-                    <div className="mt-4 space-y-3">
-                      <input
-                        type="text"
-                        value={editCategoryData.name}
-                        onChange={(e) => setEditCategoryData({ ...editCategoryData, name: e.target.value })}
-                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
-                      />
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="color"
-                          value={editCategoryData.color}
-                          onChange={(e) => setEditCategoryData({ ...editCategoryData, color: e.target.value })}
-                          className="h-8 w-8 rounded cursor-pointer"
-                        />
-                        <span className="text-xs font-mono text-gray-400 uppercase">{editCategoryData.color}</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <h4 className="mt-4 font-semibold text-gray-900 truncate" title={cat.name}>{cat.name}</h4>
-                      <div className="mt-2 flex items-center gap-2">
-                        <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
-                        <span className="text-xs font-mono text-gray-400 uppercase">{cat.color}</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
+                )
+              })}
             </div>
           ) : (
             <div className="rounded-2xl border border-green-100 bg-white overflow-hidden">
@@ -573,90 +606,108 @@ const Management = () => {
                   <tr>
                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Category</th>
                     <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Color</th>
+                    <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Bills</th>
+                    <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Settled</th>
+                    <th className="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Performance</th>
                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-green-50">
-                  {categories.map((cat) => (
-                    <tr key={cat.id} className="transition-colors hover:bg-green-50/30">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          {editingCategory === cat.id ? (
-                            <input
-                              type="text"
-                              value={editCategoryData.name}
-                              onChange={(e) => setEditCategoryData({ ...editCategoryData, name: e.target.value })}
-                              className="flex h-9 w-full items-center rounded-lg border border-gray-200 px-3 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
-                            />
-                          ) : (
-                            <>
-                              <div 
-                                className="flex h-9 w-9 items-center justify-center rounded-lg text-white shadow-sm"
-                                style={{ backgroundColor: cat.color }}
-                              >
-                                <Layers className="h-4 w-4" />
-                              </div>
-                              <span className="font-medium text-gray-900">{cat.name}</span>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {editingCategory === cat.id ? (
-                          <div className="flex items-center justify-center gap-2">
-                            <input
-                              type="color"
-                              value={editCategoryData.color}
-                              onChange={(e) => setEditCategoryData({ ...editCategoryData, color: e.target.value })}
-                              className="h-8 w-8 rounded cursor-pointer"
-                            />
-                            <span className="text-xs font-mono text-gray-500 uppercase">{editCategoryData.color}</span>
+                  {categories.map((cat) => {
+                    const stats = getCategoryStats(cat.id)
+                    return (
+                      <tr key={cat.id} className="transition-colors hover:bg-green-50/30">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            {editingCategory === cat.id ? (
+                              <input
+                                type="text"
+                                value={editCategoryData.name}
+                                onChange={(e) => setEditCategoryData({ ...editCategoryData, name: e.target.value })}
+                                className="flex h-9 w-full items-center rounded-lg border border-gray-200 px-3 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                              />
+                            ) : (
+                              <>
+                                <div 
+                                  className="flex h-9 w-9 items-center justify-center rounded-lg text-white shadow-sm"
+                                  style={{ backgroundColor: cat.color }}
+                                >
+                                  <Layers className="h-4 w-4" />
+                                </div>
+                                <span className="font-medium text-gray-900">{cat.name}</span>
+                              </>
+                            )}
                           </div>
-                        ) : (
-                          <div className="inline-flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-1.5">
-                            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: cat.color }} />
-                            <span className="text-xs font-mono text-gray-500 uppercase">{cat.color}</span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1">
+                        </td>
+                        <td className="px-6 py-4 text-center">
                           {editingCategory === cat.id ? (
-                            <>
-                              <button 
-                                onClick={() => handleSaveCategory(cat.id)}
-                                disabled={loading}
-                                className="rounded-lg p-2 text-green-600 hover:bg-green-50 transition-all"
-                              >
-                                <Check className="h-4 w-4" />
-                              </button>
-                              <button 
-                                onClick={handleCancelEdit}
-                                className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 transition-all"
-                              >
-                                <X className="h-4 w-4" />
-                              </button>
-                            </>
+                            <div className="flex items-center justify-center gap-2">
+                              <input
+                                type="color"
+                                value={editCategoryData.color}
+                                onChange={(e) => setEditCategoryData({ ...editCategoryData, color: e.target.value })}
+                                className="h-8 w-8 rounded cursor-pointer"
+                              />
+                              <span className="text-xs font-mono text-gray-500 uppercase">{editCategoryData.color}</span>
+                            </div>
                           ) : (
-                            <>
-                              <button 
-                                onClick={() => handleEditCategory(cat)}
-                                className="rounded-lg p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all"
-                              >
-                                <Edit2 className="h-4 w-4" />
-                              </button>
-                              <button 
-                                onClick={() => handleDeleteCategory(cat.id)} 
-                                className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            </>
+                            <div className="inline-flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-1.5 mx-auto">
+                              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: cat.color }} />
+                              <span className="text-xs font-mono text-gray-500 uppercase">{cat.color}</span>
+                            </div>
                           )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className="font-semibold text-gray-900">{stats.count}</span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className="font-semibold text-green-600">{stats.paid}</span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="inline-flex items-center gap-1.5 rounded-lg bg-green-50 px-2.5 py-1">
+                            <span className="text-sm font-semibold text-green-600">{stats.performance}%</span>
+                            <TrendingUp className="h-3 w-3 text-green-600" />
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            {editingCategory === cat.id ? (
+                              <>
+                                <button 
+                                  onClick={() => handleSaveCategory(cat.id)}
+                                  disabled={loading}
+                                  className="rounded-lg p-2 text-green-600 hover:bg-green-50 transition-all"
+                                >
+                                  <Check className="h-4 w-4" />
+                                </button>
+                                <button 
+                                  onClick={handleCancelEdit}
+                                  className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 transition-all"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button 
+                                  onClick={() => handleEditCategory(cat)}
+                                  className="rounded-lg p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all"
+                                >
+                                  <Edit2 className="h-4 w-4" />
+                                </button>
+                                <button 
+                                  onClick={() => handleDeleteCategory(cat.id)} 
+                                  className="rounded-lg p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
