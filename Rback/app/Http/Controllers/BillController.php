@@ -238,8 +238,8 @@ class BillController extends Controller
     public function fullData()
     {
         // Eager load only necessary relations
-        $people = \App\Models\PersonInCharge::select('id', 'name', 'email', 'avatar')->get();
-        $bills = Bill::with(['category:id,name,color', 'personInCharge:id,name', 'proofOfPayments:id,bill_id,created_at,paid_by,details'])
+        $people = \App\Models\PersonInCharge::select('id', 'first_name', 'last_name', 'email', 'avatar')->get();
+        $bills = Bill::with(['category:id,name,color', 'personInCharge:id,first_name,last_name', 'proofOfPayments:id,bill_id,created_at,paid_by,details'])
             ->get();
 
         return response()->json([
