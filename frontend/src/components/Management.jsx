@@ -99,10 +99,19 @@ const Management = () => {
     setNewCategory({ name: '', color: '#22c55e' })
 
     try {
-      await api.post('/categories', categoryData)
-      // Refresh all categories and bills to ensure sync with server
-      await fetchData()
+      const response = await api.post('/categories', categoryData)
+      // Laravel Resource collection wrapping might return data in 'data' key
+      const savedCategory = response.data.data || response.data;
+
+      // Update local state with the actual saved category (includes real ID)
+      setCategories(prev => prev.map(c => c.id === tempId ? savedCategory : c));
+      
       setMessage({ text: 'Category added successfully!', type: 'success' })
+
+      // Small delay before fetching to ensure DB consistency in distributed systems (like Supabase/Render)
+      setTimeout(() => {
+        fetchData();
+      }, 500);
     } catch (err) {
       setCategories(originalCategories);
       console.error('Add category error:', err)
@@ -183,10 +192,19 @@ const Management = () => {
     setNewPerson({ first_name: '', last_name: '', email: '' })
 
     try {
-      await api.post('/people', personData)
-      // Refresh all people and bills to ensure sync with server
-      await fetchData()
+      const response = await api.post('/people', personData)
+      // Laravel Resource collection wrapping might return data in 'data' key
+      const savedPerson = response.data.data || response.data;
+      
+      // Update local state with the actual saved person (includes real ID)
+      setPeople(prev => prev.map(p => p.id === tempId ? savedPerson : p));
+      
       setMessage({ text: 'Person added successfully!', type: 'success' })
+      
+      // Small delay before fetching to ensure DB consistency in distributed systems (like Supabase/Render)
+      setTimeout(() => {
+        fetchData();
+      }, 500);
     } catch (err) {
       setPeople(originalPeople);
       console.error('Add person error:', err)
