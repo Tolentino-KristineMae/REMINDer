@@ -13,7 +13,8 @@ import {
     Calendar,
     CloudUpload,
     Clock,
-    Users
+    Users,
+    Mic
 } from 'lucide-react';
 
 const SettleBillPage = () => {
@@ -231,7 +232,15 @@ const SettleBillPage = () => {
                         <CheckCircle className="text-[#22c55e]" size={48} />
                     </div>
                     <h2 className="text-3xl font-black text-green-950 mb-3 tracking-tight">Payment Secured!</h2>
-                    <p className="text-gray-400 font-medium mb-10 leading-relaxed text-base">Your proof of payment and details have been successfully logged in the system.</p>
+                    <p className="text-gray-400 font-medium mb-6 leading-relaxed text-base">Your proof of payment and details have been successfully logged in the system.</p>
+                    
+                    {audioURL && (
+                        <div className="mb-8 p-4 bg-green-50 rounded-2xl border border-green-100">
+                            <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest mb-2">Voice Note Attached</p>
+                            <audio src={audioURL} controls className="h-8 w-full" />
+                        </div>
+                    )}
+
                     <div className="w-full bg-green-50 h-2 rounded-full overflow-hidden">
                         <div className="bg-[#22c55e] h-full animate-[progress_2s_ease-in-out]"></div>
                     </div>
@@ -355,13 +364,13 @@ const SettleBillPage = () => {
                                                 {isRecording ? 'Stop Recording' : 'Add Voice Note'}
                                             </button>
                                         ) : (
-                                            <div className="flex-1 bg-green-50 border-2 border-green-100 rounded-2xl p-4 flex items-center gap-4">
-                                                <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center text-white">
-                                                    <CheckCircle size={20} />
+                                            <div className="flex-1 bg-green-50 border-2 border-green-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-4">
+                                                <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center text-white shrink-0">
+                                                    <Mic size={20} />
                                                 </div>
-                                                <div className="flex-1">
-                                                    <p className="text-xs font-bold text-green-800">Voice Note Attached</p>
-                                                    <audio src={audioURL} controls className="h-8 mt-2 w-full" />
+                                                <div className="flex-1 w-full">
+                                                    <p className="text-[10px] font-bold text-green-800 uppercase tracking-widest mb-1">Recorded Voice Note</p>
+                                                    <audio src={audioURL} controls className="h-8 w-full" />
                                                 </div>
                                             </div>
                                         )}

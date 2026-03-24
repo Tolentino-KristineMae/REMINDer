@@ -374,19 +374,24 @@ const SettlementsPage = () => {
     };
 
     const toggleAudio = (audioPath) => {
+        const fullUrl = buildStorageUrl(audioPath);
         if (playingAudio === audioPath) {
             audioRef.current.pause();
             setPlayingAudio(null);
         } else {
             setPlayingAudio(audioPath);
+            // Directly set src and play to ensure user gesture is captured
+            if (audioRef.current) {
+                audioRef.current.src = fullUrl;
+                audioRef.current.play().catch(err => {
+                    console.error("Playback failed:", err);
+                    // Fallback to state-based play if direct play fails
+                });
+            }
         }
     };
 
-    useEffect(() => {
-        if (playingAudio && audioRef.current) {
-            audioRef.current.play().catch(err => console.error("Playback failed:", err));
-        }
-    }, [playingAudio]);
+    // Removed the separate useEffect for playingAudio to avoid double-play or race conditions
 
     const safeBills = Array.isArray(bills) ? bills : [];
     const pendingBills = safeBills.filter(bill => bill?.status === 'pending');
