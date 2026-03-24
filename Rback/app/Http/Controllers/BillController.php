@@ -234,19 +234,20 @@ class BillController extends Controller
 
             return response()->json([
                 'stats' => [
-                    'total' => (int) $stats->total,
-                    'paid' => (int) $stats->paid,
-                    'pending' => (int) $stats->pending,
-                    'overdue' => (int) $stats->overdue,
-                    'total_amount' => (float) $stats->total_amount,
-                    'total_paid_amount' => (float) $stats->total_paid_amount,
-                    'total_unpaid_amount' => (float) $stats->total_unpaid_amount,
+                    'total' => (int) ($stats->total ?? 0),
+                    'paid' => (int) ($stats->paid ?? 0),
+                    'pending' => (int) ($stats->pending ?? 0),
+                    'overdue' => (int) ($stats->overdue ?? 0),
+                    'total_amount' => (float) ($stats->total_amount ?? 0),
+                    'total_paid_amount' => (float) ($stats->total_paid_amount ?? 0),
+                    'total_unpaid_amount' => (float) ($stats->total_unpaid_amount ?? 0),
                 ],
                 'categories' => CategoryResource::collection($categories)
             ]);
         } catch (\Exception $e) {
             \Log::error('BillController@dashboardData error: ' . $e->getMessage());
-            return response()->json(['message' => 'Error loading dashboard: ' . $e->getMessage()], 500);
+            $debug = config('app.debug') ? ['trace' => $e->getTraceAsString()] : [];
+            return response()->json(array_merge(['message' => 'Error loading dashboard: ' . $e->getMessage()], $debug), 500);
         }
     }
 
@@ -264,7 +265,8 @@ class BillController extends Controller
             ]);
         } catch (\Exception $e) {
             \Log::error('BillController@fullData error: ' . $e->getMessage());
-            return response()->json(['message' => 'Error loading bills: ' . $e->getMessage()], 500);
+            $debug = config('app.debug') ? ['trace' => $e->getTraceAsString()] : [];
+            return response()->json(array_merge(['message' => 'Error loading bills: ' . $e->getMessage()], $debug), 500);
         }
     }
 }

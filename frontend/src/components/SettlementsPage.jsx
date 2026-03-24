@@ -385,8 +385,8 @@ const SettlementsPage = () => {
         }
     }, [playingAudio]);
 
-    const pendingBills = bills.filter(bill => bill.status === 'pending');
-    const settledBills = bills.filter(bill => bill.status === 'paid');
+    const pendingBills = (bills || []).filter(bill => bill.status === 'pending');
+    const settledBills = (bills || []).filter(bill => bill.status === 'paid');
 
     const totalSettled = settledBills.reduce((acc, b) => acc + parseFloat(b.amount), 0);
     const totalPending = pendingBills.reduce((acc, b) => acc + parseFloat(b.amount), 0);
