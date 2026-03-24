@@ -157,11 +157,14 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
                     <div className="px-4 py-3 flex items-center justify-between">
                         <button
                             type="button"
-                            onClick={() => setSidebarOpen(true)}
-                            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-200 shadow-sm text-gray-600 hover:bg-gray-50"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSidebarOpen(true);
+                            }}
+                            className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center border border-gray-200 shadow-sm text-gray-900 hover:bg-gray-50 active:scale-90 transition-all"
                             aria-label="Open menu"
                         >
-                            <Menu size={18} className="stroke-[2.5]" />
+                            <Menu size={22} className="stroke-[2.5]" />
                         </button>
                         <TimeDisplay dateTime={dateTime} />
                     </div>

@@ -215,7 +215,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
     onCollapse?.(val);
   };
 
-  const W = isMobile ? 280 : (collapsed ? 72 : 256);
+  const sidebarWidth = isMobile ? 280 : (collapsed ? 72 : 256);
 
   return (
     <>
@@ -224,21 +224,21 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           type="button"
           aria-label="Close menu"
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm lg:hidden transition-opacity duration-300"
           style={{ border: 'none', cursor: 'pointer' }}
         />
       )}
 
       <aside
         className={`
-          fixed left-0 top-0 z-50 h-screen flex flex-col
+          fixed left-0 top-0 z-[70] h-screen flex flex-col
           transition-all duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
         `}
         style={{
-          width:      collapsed ? 72 : 256,
-          minWidth:   collapsed ? 72 : 256,
+          width:      sidebarWidth,
+          minWidth:   sidebarWidth,
           padding:    '16px 12px',
           background: C.bg,
           borderRight:`1px solid ${C.border}`,
@@ -258,7 +258,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
         }}>
           <Logo size={collapsed ? 'sm' : 'lg'} dark />
 
-          {!collapsed && (
+          {!collapsed && !isMobile && (
             <button
               onClick={() => setCollapsed(v => !v)}
               title="Collapse"
@@ -292,7 +292,7 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
           }} 
         />
 
-        {collapsed && (
+        {collapsed && !isMobile && (
           <button
             onClick={() => setCollapsed(v => !v)}
             title="Expand"

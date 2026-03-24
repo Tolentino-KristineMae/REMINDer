@@ -245,23 +245,23 @@ const DebtsPage = () => {
                                         )}
                                     </div>
                                     {viewMode === 'list' && (
-                                        <div className="flex items-center gap-8">
-                                            <div className="text-right">
-                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Balance</p>
-                                                <p className="text-xl font-black text-gray-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
+                                        <div className="flex flex-row items-center justify-between sm:justify-end gap-3 sm:gap-8 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-50">
+                                            <div className="text-left sm:text-right">
+                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 sm:mb-1">Balance</p>
+                                                <p className="text-lg sm:text-xl font-black text-gray-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <button 
                                                     onClick={() => handleDelete(debt)} 
-                                                    className="w-12 h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
+                                                    className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
                                                 >
-                                                    <Trash2 size={20} />
+                                                    <Trash2 size={18} className="sm:w-5 sm:h-5" />
                                                 </button>
                                                 <button 
                                                     onClick={() => navigate(`/settle-debt/${debt.id}`)} 
-                                                    className="bg-green-900 text-white h-12 px-8 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center gap-3 active:scale-95"
+                                                    className="bg-green-900 text-white h-10 sm:h-12 px-4 sm:px-8 rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center gap-2 sm:gap-3 active:scale-95"
                                                 >
-                                                    Bayad Time <ArrowUpRight size={16} />
+                                                    Bayad <span className="hidden sm:inline">Time</span> <ArrowUpRight size={14} className="sm:w-4 sm:h-4" />
                                                 </button>
                                             </div>
                                         </div>
@@ -362,31 +362,31 @@ const DebtsPage = () => {
                                         )}
                                     </div>
                                     {viewMode === 'list' && (
-                                        <div className="flex items-center gap-8">
-                                            <div className="text-right">
-                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Settled</p>
-                                                <p className="text-xl font-black text-green-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
+                                        <div className="flex flex-row items-center justify-between sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-50">
+                                            <div className="text-left sm:text-right">
+                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 sm:mb-1">Settled</p>
+                                                <p className="text-lg sm:text-xl font-black text-green-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <button 
                                                     onClick={() => toggleAudio(debt.proof_voice_path)} 
                                                     disabled={!debt.proof_voice_path} 
-                                                    className={`w-12 h-12 flex items-center justify-center rounded-2xl border transition-all ${!debt.proof_voice_path ? 'bg-gray-50 text-gray-200 border-gray-50 opacity-50' : playingAudio === debt.proof_voice_path ? 'bg-red-500 text-white border-red-500 shadow-xl' : 'bg-white border-gray-100 text-gray-400 hover:text-green-600 hover:bg-green-50 hover:border-green-100'}`}
+                                                    className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl border transition-all ${!debt.proof_voice_path ? 'bg-gray-50 text-gray-200 border-gray-50 opacity-50' : playingAudio === debt.proof_voice_path ? 'bg-red-500 text-white border-red-500 shadow-xl' : 'bg-white border-gray-100 text-gray-400 hover:text-green-600 hover:bg-green-50 hover:border-green-100'}`}
                                                 >
-                                                    {playingAudio === debt.proof_voice_path ? <Pause size={20} /> : <Volume2 size={20} />}
+                                                    {playingAudio === debt.proof_voice_path ? <Pause size={18} className="sm:w-5 sm:h-5" /> : <Volume2 size={18} className="sm:w-5 sm:h-5" />}
                                                 </button>
                                                 <button 
                                                     onClick={() => setPreviewImage(debt.proof_image_path)} 
                                                     disabled={!debt.proof_image_path} 
-                                                    className={`w-12 h-12 flex items-center justify-center rounded-2xl border transition-all ${!debt.proof_image_path ? 'bg-gray-50 text-gray-200 border-gray-50 opacity-50' : 'bg-white border-gray-100 text-gray-400 hover:text-green-600 hover:bg-green-50 hover:border-green-100'}`}
+                                                    className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl border transition-all ${!debt.proof_image_path ? 'bg-gray-50 text-gray-200 border-gray-50 opacity-50' : 'bg-white border-gray-100 text-gray-400 hover:text-green-600 hover:bg-green-50 hover:border-green-100'}`}
                                                 >
-                                                    <FileText size={20} />
+                                                    <FileText size={18} className="sm:w-5 sm:h-5" />
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDelete(debt)} 
-                                                    className="w-12 h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
+                                                    className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
                                                 >
-                                                    <Trash2 size={20} />
+                                                    <Trash2 size={18} className="sm:w-5 sm:h-5" />
                                                 </button>
                                             </div>
                                         </div>
