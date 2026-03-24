@@ -30,19 +30,19 @@ const Dashboard = () => {
         const fetchData = async () => {
             try {
                 const response = await api.get('/bills/dashboard');
-                const { stats: statsData, categories: categoriesData } = response.data;
+                const { stats: statsData, categories: categoriesData } = response.data || {};
                 
                 setStats({
-                    total: statsData.total || 0,
-                    paid: statsData.paid || 0,
-                    pending: statsData.pending || 0,
-                    overdue: statsData.overdue || 0,
-                    total_amount: statsData.total_amount || 0,
-                    total_paid_amount: statsData.total_paid_amount || 0,
-                    total_unpaid_amount: statsData.total_unpaid_amount || 0,
+                    total: statsData?.total || 0,
+                    paid: statsData?.paid || 0,
+                    pending: statsData?.pending || 0,
+                    overdue: statsData?.overdue || 0,
+                    total_amount: statsData?.total_amount || 0,
+                    total_paid_amount: statsData?.total_paid_amount || 0,
+                    total_unpaid_amount: statsData?.total_unpaid_amount || 0,
                 });
                 
-                setCategories(categoriesData.length > 0 ? categoriesData : [
+                setCategories(Array.isArray(categoriesData) && categoriesData.length > 0 ? categoriesData : [
                     { name: 'Utilities', count: 0, color: '#3B82F6' },
                     { name: 'Rent', count: 0, color: '#8B5CF6' },
                     { name: 'Internet', count: 0, color: '#06B6D4' },

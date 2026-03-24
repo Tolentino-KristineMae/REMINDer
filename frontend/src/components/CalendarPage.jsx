@@ -28,9 +28,11 @@ const CalendarPage = () => {
     const fetchBills = async () => {
         try {
             const response = await api.get('/bills');
-            setBills(response.data.data || response.data);
+            const data = response.data.data || response.data;
+            setBills(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('Error fetching bills:', err);
+            setBills([]);
         }
     };
 

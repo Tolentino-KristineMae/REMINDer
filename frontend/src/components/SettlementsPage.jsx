@@ -333,12 +333,15 @@ const SettlementsPage = () => {
     const fetchPaidBills = React.useCallback(async () => {
         try {
             const response = await api.get('/bills/full');
-            setBills(response.data.bills);
-            setPeople(response.data.people || []);
+            setBills(Array.isArray(response.data.bills) ? response.data.bills : []);
+            setPeople(Array.isArray(response.data.people) ? response.data.people : []);
             const catRes = await api.get('/categories');
-            setCategories(catRes.data.categories || []);
+            setCategories(Array.isArray(catRes.data.categories) ? catRes.data.categories : []);
         } catch (err) {
             console.error('Error fetching bills:', err);
+            setBills([]);
+            setPeople([]);
+            setCategories([]);
         }
     }, []);
 
