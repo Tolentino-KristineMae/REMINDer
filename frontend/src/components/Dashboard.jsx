@@ -42,15 +42,18 @@ const Dashboard = () => {
                     total_unpaid_amount: statsData?.total_unpaid_amount || 0,
                 });
                 
-                setCategories(Array.isArray(categoriesData) && categoriesData.length > 0 ? categoriesData : [
-                    { name: 'Utilities', count: 0, color: '#3B82F6' },
-                    { name: 'Rent', count: 0, color: '#8B5CF6' },
-                    { name: 'Internet', count: 0, color: '#06B6D4' },
-                    { name: 'Insurance', count: 0, color: '#F59E0B' },
-                    { name: 'Subscriptions', count: 0, color: '#EC4899' },
-                ]);
+                setCategories(Array.isArray(categoriesData) ? categoriesData : []);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
+                setStats({
+                    total: 0,
+                    paid: 0,
+                    pending: 0,
+                    overdue: 0,
+                    total_amount: 0,
+                    total_paid_amount: 0,
+                    total_unpaid_amount: 0,
+                });
                 setCategories([]);
             } finally {
                 setLoading(false);
@@ -188,40 +191,50 @@ const Dashboard = () => {
                         
                         {/* Vertical Category List */}
                         <div className="flex-1 space-y-3">
-                            {categories.map((cat, i) => {
-                                const maxCount = Math.max(...categories.map(c => c.count));
-                                const percentage = maxCount > 0 ? (cat.count / maxCount) * 100 : 0;
-                                const totalBills = categories.reduce((sum, c) => sum + c.count, 0);
-                                const catPercentage = totalBills > 0 ? Math.round((cat.count / totalBills) * 100) : 0;
-                                
-                                return (
-                                    <div key={i} className="group">
-                                        <div className="flex items-center justify-between mb-1.5">
-                                            <div className="flex items-center gap-2">
+                            {categories.length > 0 ? (
+                                categories.map((cat, i) => {
+                                    const maxCount = Math.max(...categories.map(c => c.count));
+                                    const percentage = maxCount > 0 ? (cat.count / maxCount) * 100 : 0;
+                                    const totalBills = categories.reduce((sum, c) => sum + c.count, 0);
+                                    const catPercentage = totalBills > 0 ? Math.round((cat.count / totalBills) * 100) : 0;
+                                    
+                                    return (
+                                        <div key={i} className="group">
+                                            <div className="flex items-center justify-between mb-1.5">
+                                                <div className="flex items-center gap-2">
+                                                    <div 
+                                                        className="w-3 h-3 rounded-full" 
+                                                        style={{ backgroundColor: cat.color }}
+                                                    />
+                                                    <span className="text-sm font-semibold text-gray-700">{cat.name}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm font-bold text-gray-900">{cat.count}</span>
+                                                    <span className="text-[10px] text-gray-400">bills</span>
+                                                    <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">{catPercentage}%</span>
+                                                </div>
+                                            </div>
+                                            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
                                                 <div 
-                                                    className="w-3 h-3 rounded-full" 
-                                                    style={{ backgroundColor: cat.color }}
+                                                    className="h-full rounded-full transition-all duration-700 ease-out group-hover:opacity-80"
+                                                    style={{ 
+                                                        width: `${percentage}%`,
+                                                        backgroundColor: cat.color
+                                                    }}
                                                 />
-                                                <span className="text-sm font-semibold text-gray-700">{cat.name}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-sm font-bold text-gray-900">{cat.count}</span>
-                                                <span className="text-[10px] text-gray-400">bills</span>
-                                                <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">{catPercentage}%</span>
                                             </div>
                                         </div>
-                                        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                                            <div 
-                                                className="h-full rounded-full transition-all duration-700 ease-out group-hover:opacity-80"
-                                                style={{ 
-                                                    width: `${percentage}%`,
-                                                    backgroundColor: cat.color
-                                                }}
-                                            />
-                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="flex-1 flex flex-col items-center justify-center py-10 opacity-60">
+                                    <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4 text-indigo-300">
+                                        <TrendingUp size={32} />
                                     </div>
-                                );
-                            })}
+                                    <p className="text-sm font-bold text-indigo-900/40 uppercase tracking-widest">No Category Data</p>
+                                    <p className="text-xs text-indigo-900/30 mt-1">Add bills to see analytics</p>
+                                </div>
+                            )}
                         </div>
                         
                         {/* Summary Stats */}
