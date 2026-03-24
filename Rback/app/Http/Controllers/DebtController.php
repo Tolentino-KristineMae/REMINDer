@@ -44,7 +44,7 @@ class DebtController extends Controller
         $debt = Debt::findOrFail($id);
         
         $request->validate([
-            'proof_image' => 'required|image|max:10240',
+            'proof_image' => 'nullable|image|max:10240',
             'proof_voice' => 'nullable|file|max:10240',
             'payment_details' => 'nullable|string',
         ]);
