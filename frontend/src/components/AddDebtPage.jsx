@@ -11,7 +11,8 @@ import {
   Sparkles, 
   ShieldCheck, 
   Clock, 
-  ArrowRight
+  ArrowRight,
+  Wallet2
 } from "lucide-react"
 import { cn } from "../lib/utils"
 

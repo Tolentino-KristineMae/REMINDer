@@ -36,7 +36,8 @@ const SettleDebtPage = () => {
         const fetchDebt = async () => {
             try {
                 const response = await api.get('/debts');
-                const found = response.data.debts.find(d => d.id == id);
+                const debts = response.data?.debts || response.data?.data || (Array.isArray(response.data) ? response.data : []);
+                const found = debts.find(d => d.id == id);
                 if (found) setDebt(found);
                 else setError('Debt not found');
             } catch (err) {

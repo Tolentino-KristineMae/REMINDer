@@ -39,7 +39,9 @@ const DebtsPage = () => {
         try {
             setLoading(true);
             const response = await api.get('/debts');
-            setDebts(response.data.debts || []);
+            // Ensure we handle both wrapped and unwrapped data
+            const debtsData = response.data?.debts || response.data?.data || (Array.isArray(response.data) ? response.data : []);
+            setDebts(debtsData);
         } catch (err) {
             console.error('Error fetching debts:', err);
             setError('Failed to load utangs');
@@ -95,8 +97,15 @@ const DebtsPage = () => {
         }
     };
 
-    const pendingDebts = debts.filter(d => d.status === 'pending');
-    const paidDebts = debts.filter(d => d.status === 'paid');
+    const pendingDebts = Array.isArray(debts) ? debts.filter(d => d.status === 'pending') : [];
+    const paidDebts = Array.isArray(debts) ? debts.filter(d => d.status === 'paid') : [];
+
+    const calculateTotal = (debtList) => {
+        return debtList.reduce((sum, d) => {
+            const amount = parseFloat(d.amount);
+            return sum + (isNaN(amount) ? 0 : amount);
+        }, 0);
+    };
 
     if (loading) {
         return (
@@ -157,7 +166,7 @@ const DebtsPage = () => {
                             </div>
                         </div>
                         <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Total Unpaid</p>
-                        <p className="text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(pendingDebts.reduce((sum, d) => sum + parseFloat(d.amount), 0))}</p>
+                        <p className="text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(pendingDebts))}</p>
                     </div>
 
                     <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-green-200 transition-all">
@@ -170,7 +179,7 @@ const DebtsPage = () => {
                             </div>
                         </div>
                         <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Total Settled</p>
-                        <p className="text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(paidDebts.reduce((sum, d) => sum + parseFloat(d.amount), 0))}</p>
+                        <p className="text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(paidDebts))}</p>
                     </div>
                 </div>
 
