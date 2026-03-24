@@ -70,7 +70,7 @@ const Button = ({ children, className, disabled, loading, size = "md", ...props 
   </button>
 );
 
-const Select = ({ value, onChange, options, placeholder, onFocus, onBlur, className }) => (
+const Select = ({ value, onChange, options, placeholder, onFocus, onBlur, className, isPerson = false }) => (
   <div className="relative group">
     <select
       value={value}
@@ -85,7 +85,9 @@ const Select = ({ value, onChange, options, placeholder, onFocus, onBlur, classN
     >
       <option value="" disabled>{placeholder}</option>
       {options.map(opt => (
-        <option key={opt.id} value={opt.id}>{opt.name}</option>
+        <option key={opt.id} value={opt.id}>
+          {isPerson ? `${opt.first_name} ${opt.last_name}` : opt.name}
+        </option>
       ))}
     </select>
     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
@@ -308,6 +310,7 @@ export default function AddBillPage() {
                         placeholder="Select member"
                         onFocus={() => setFocusedField("person")} 
                         onBlur={() => setFocusedField(null)} 
+                        isPerson={true}
                       />
                     </FormField>
                   </div>

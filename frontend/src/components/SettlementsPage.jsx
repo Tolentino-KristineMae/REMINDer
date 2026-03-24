@@ -148,7 +148,7 @@ const BillItem = React.memo(({
                             <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
                             <span className="text-[10px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
                                 <Users size={10} className="text-blue-500" />
-                                {bill.person_in_charge?.name || 'No PIC'}
+                                {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                             </span>
                             <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
                             <span className="text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-2 py-0.5 rounded-md border border-red-100/50 whitespace-nowrap">
@@ -227,7 +227,7 @@ const BillItem = React.memo(({
                                 <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
                                 <span className="text-[9px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
                                     <Users size={10} className="text-blue-500" /> 
-                                    {bill.person_in_charge?.name || 'No PIC'}
+                                    {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                                 </span>
                             </div>
                         </div>
@@ -606,7 +606,7 @@ const SettlementsPage = () => {
                                                                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
                                                                 <p className="text-[10px] font-black text-blue-600 flex items-center gap-1">
                                                                     <Users size={11} className="text-blue-500" />
-                                                                    {bill.person_in_charge?.name || 'No PIC'}
+                                                                    {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -762,7 +762,7 @@ const SettlementsPage = () => {
                                                             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
                                                             <p className="text-[10px] font-black text-blue-600 flex items-center gap-1">
                                                                 <Users size={11} className="text-blue-500" />
-                                                                {bill.person_in_charge?.name || 'No PIC'}
+                                                                {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                                                             </p>
                                                         </div>
                                                         {bill.proof_of_payments?.[0]?.paid_by && (

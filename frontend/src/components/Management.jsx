@@ -166,7 +166,6 @@ const Management = () => {
     const personToAdd = { 
       ...newPerson, 
       id: tempId, 
-      name: `${newPerson.first_name} ${newPerson.last_name}`,
       is_temp: true 
     };
     const originalPeople = [...people];
@@ -176,10 +175,7 @@ const Management = () => {
     setNewPerson({ first_name: '', last_name: '', email: '' })
 
     try {
-      const response = await api.post('/people', {
-        ...newPerson,
-        name: `${newPerson.first_name} ${newPerson.last_name}`
-      })
+      const response = await api.post('/people', newPerson)
       // Laravel wraps single resources in a 'data' key
       const savedPerson = response.data.data || response.data;
       setPeople(prev => prev.map(p => p.id === tempId ? savedPerson : p));
@@ -215,23 +211,24 @@ const Management = () => {
   }
 
   const handleEditPerson = (person) => {
+    setMessage({ text: '', type: '' })
     setEditingPerson(person.id)
-    setEditPersonData({ first_name: person.first_name || person.name.split(' ')[0], last_name: person.last_name || person.name.split(' ').slice(1).join(' ') || '', email: person.email })
+    setEditPersonData({ 
+      first_name: person.first_name || '', 
+      last_name: person.last_name || '', 
+      email: person.email || '' 
+    })
   }
 
   const handleSavePerson = async (id) => {
     const originalPeople = [...people];
-    const newName = `${editPersonData.first_name} ${editPersonData.last_name}`;
     
     // Optimistic update
-    setPeople(prev => prev.map(p => p.id === id ? { ...p, ...editPersonData, name: newName } : p));
+    setPeople(prev => prev.map(p => p.id === id ? { ...p, ...editPersonData } : p));
     setEditingPerson(null)
 
     try {
-      const response = await api.put(`/people/${id}`, {
-        ...editPersonData,
-        name: newName
-      })
+      const response = await api.put(`/people/${id}`, editPersonData)
       // Laravel wraps single resources in a 'data' key
       const updatedPerson = response.data.data || response.data;
       setPeople(prev => prev.map(p => p.id === id ? updatedPerson : p));
@@ -652,13 +649,13 @@ const Management = () => {
                   >
                     <div className="flex items-start justify-between">
                       <div className="relative">
-                        <div className="h-14 w-14 rounded-xl border-2 border-white shadow-md bg-green-600 text-white flex items-center justify-center font-bold text-lg">
-                          {person.first_name?.[0] || person.name?.[0]}{(person.last_name || person.name?.split(' ').slice(1).join(' '))?.[0]}
-                        </div>
-                        <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-white border-2 border-white">
-                          <ShieldCheck className="h-2.5 w-2.5" />
-                        </div>
-                      </div>
+                            <div className="h-14 w-14 rounded-xl border-2 border-white shadow-md bg-green-600 text-white flex items-center justify-center font-bold text-lg">
+                              {person.first_name?.[0] || '?'}{person.last_name?.[0] || ''}
+                            </div>
+                            <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-white border-2 border-white">
+                              <ShieldCheck className="h-2.5 w-2.5" />
+                            </div>
+                          </div>
                       <div className="flex items-center gap-1">
                         {editingPerson === person.id ? (
                           <>
@@ -728,7 +725,9 @@ const Management = () => {
                     ) : (
                       <>
                         <div className="mt-4">
-                          <h3 className="font-semibold text-gray-900 truncate" title={person.name}>{person.name}</h3>
+                          <h3 className="font-semibold text-gray-900 truncate" title={`${person.first_name} ${person.last_name}`}>
+                            {person.first_name} {person.last_name}
+                          </h3>
                           <p className="mt-0.5 text-sm text-gray-500 truncate" title={person.email}>{person.email}</p>
                         </div>
 
@@ -798,10 +797,10 @@ const Management = () => {
                               ) : (
                                 <>
                                   <div className="h-9 w-9 rounded-lg bg-green-600 text-white flex items-center justify-center font-bold text-sm border border-gray-100 shadow-sm">
-                                    {person.first_name?.[0] || person.name?.[0]}{(person.last_name || person.name?.split(' ').slice(1).join(' '))?.[0]}
+                                    {person.first_name?.[0] || '?'}{person.last_name?.[0] || ''}
                                   </div>
                                   <div>
-                                    <h4 className="font-medium text-gray-900">{person.name}</h4>
+                                    <h4 className="font-medium text-gray-900">{person.first_name} {person.last_name}</h4>
                                     <p className="text-xs text-gray-500">{person.email}</p>
                                   </div>
                                 </>

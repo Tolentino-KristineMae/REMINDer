@@ -1,0 +1,29 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('bills', function (Blueprint $table) {
+            // Composite index for common query pattern: Pending/Paid bills sorted by date
+            $table->index(['status', 'due_date'], 'bills_status_due_date_index');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('bills', function (Blueprint $table) {
+            $table->dropIndex('bills_status_due_date_index');
+        });
+    }
+};
