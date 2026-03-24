@@ -10,6 +10,7 @@ import {
     Users
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { formatCurrency, formatDateLocal } from '../utils/formatters';
 
 const CalendarPage = () => {
     const navigate = useNavigate();
@@ -424,7 +425,7 @@ const CalendarPage = () => {
                                             
                                             <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
                                                 <p className={`text-lg font-black ${isPaid ? 'text-gray-300' : 'text-emerald-600'}`}>
-                                                    ₱{new Intl.NumberFormat('en-PH').format(bill.amount)}
+                                                    {formatCurrency(bill.amount)}
                                                 </p>
                                                 {!isPaid && (
                                                     <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">
@@ -472,7 +473,7 @@ const CalendarPage = () => {
                             <div className="flex items-center justify-between pt-3 border-t border-gray-700">
                                 <span className="text-xs font-medium text-gray-300">Total Amount</span>
                                 <span className="text-sm font-black text-emerald-400">
-                                    ₱{new Intl.NumberFormat('en-PH').format(
+                                    {formatCurrency(
                                         weekDays.reduce((acc, d) => 
                                             acc + getBillsForDate(d).reduce((sum, b) => sum + parseFloat(b.amount), 0), 0
                                         )

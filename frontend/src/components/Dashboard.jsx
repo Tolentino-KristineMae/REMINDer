@@ -8,9 +8,9 @@ import {
     AlertCircle,
     TrendingUp,
     CheckCircle2,
-    FileText
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { formatCurrency } from '../utils/formatters';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -59,14 +59,6 @@ const Dashboard = () => {
 
         fetchData();
     }, []);
-
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('en-PH', {
-            style: 'currency',
-            currency: 'PHP',
-            currencyDisplay: 'symbol'
-        }).format(amount).replace('PHP', '₱');
-    };
 
     if (loading) {
         return (

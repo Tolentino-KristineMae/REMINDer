@@ -28,6 +28,7 @@ import {
     Check
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { formatCurrency, formatDateLocal } from '../utils/formatters';
 
 const BillItem = React.memo(({ 
     bill, 
@@ -42,8 +43,6 @@ const BillItem = React.memo(({
     categories, 
     people, 
     saving,
-    formatDateLocal,
-    formatCurrency,
     isPending = true,
     toggleAudio,
     playingAudio,
@@ -475,19 +474,6 @@ const SettlementsPage = () => {
         setEditBillData({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '', status: 'pending' });
     };
 
-    const formatDateLocal = (dateStr) => {
-        if (!dateStr) return '';
-        // Extract YYYY, MM, DD manually to avoid timezone shifts
-        const parts = dateStr.split(' ')[0].split('T')[0].split(/[-/]/);
-        if (parts.length < 3) return dateStr;
-        const [year, month, day] = parts;
-        return new Date(year, month - 1, day).toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            year: 'numeric' 
-        });
-    };
-
     return (
         <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             <main className="max-w-7xl mx-auto px-6 py-8" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -566,8 +552,6 @@ const SettlementsPage = () => {
                                             categories={categories}
                                             people={people}
                                             saving={saving}
-                                            formatDateLocal={formatDateLocal}
-                                            formatCurrency={formatCurrency}
                                             isPending={true}
                                         />
                                     ))}
@@ -704,8 +688,6 @@ const SettlementsPage = () => {
                                         categories={categories}
                                         people={people}
                                         saving={saving}
-                                        formatDateLocal={formatDateLocal}
-                                        formatCurrency={formatCurrency}
                                         isPending={false}
                                         toggleAudio={toggleAudio}
                                         playingAudio={playingAudio}
