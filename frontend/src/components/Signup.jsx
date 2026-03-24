@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
-import { Wallet, ShieldCheck, CreditCard, Landmark, CheckCircle } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import Logo from './Logo';
 import BackgroundAuth from './BackgroundAuth';
 
 const Signup = () => {
-    const [name, setName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { register } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
-            await register(name, email, password);
+            await register(firstName, lastName, email, password);
             navigate('/');
         } catch (err) {
             const msg =
@@ -23,139 +27,223 @@ const Signup = () => {
                 'Registration failed. Please try again.';
             console.error('Registration failed:', err);
             setError(msg);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-green-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-            <BackgroundAuth />
+        <>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-            <div className="max-w-4xl w-full flex bg-white rounded-3xl shadow-2xl overflow-hidden flex-row-reverse relative z-10">
-                {/* Right Side - Form */}
-                <div className="flex-1 p-12 bg-white">
-                    <div className="flex items-center gap-2 mb-12">
-                        <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
-                            <Wallet className="text-white" size={24} />
-                        </div>
-                        <span className="text-2xl font-bold text-gray-800">BillPay</span>
+                *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+                .login-root {
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-family: 'DM Sans', sans-serif;
+                    overflow: hidden;
+                    position: relative;
+                    padding: 2rem;
+                }
+
+                .login-card {
+                    position: relative; z-index: 10;
+                    width: 100%; max-width: 440px;
+                    background: #ffffff;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 28px;
+                    padding: 44px 40px 40px;
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+                    animation: cardIn .7s cubic-bezier(.22,1,.36,1) both;
+                }
+                @keyframes cardIn { from{opacity:0;transform:translateY(32px) scale(.97);} to{opacity:1;transform:translateY(0) scale(1);} }
+
+                .login-card-title {
+                    font-family: 'Syne', sans-serif;
+                    font-size: 24px; font-weight: 700;
+                    color: #0f172a; text-align: center;
+                    letter-spacing: -.5px; margin-bottom: 4px;
+                    animation: fadeUp .6s .15s cubic-bezier(.22,1,.36,1) both;
+                }
+                .login-card-sub {
+                    font-size: 14px; color: #475569;
+                    text-align: center; margin-bottom: 28px;
+                    animation: fadeUp .6s .2s cubic-bezier(.22,1,.36,1) both;
+                }
+                @keyframes fadeUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+
+                .fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+                .fg { margin-bottom: 16px; }
+                
+                .fg-row:nth-child(1) { animation: fadeUp .6s .25s cubic-bezier(.22,1,.36,1) both; }
+                .fg:nth-child(2) { animation: fadeUp .6s .30s cubic-bezier(.22,1,.36,1) both; }
+                .fg:nth-child(3) { animation: fadeUp .6s .35s cubic-bezier(.22,1,.36,1) both; }
+
+                .lbl {
+                    display: block; font-size: 11px; font-weight: 600;
+                    color: #475569; letter-spacing: .1em;
+                    text-transform: uppercase; margin-bottom: 7px; padding-left: 2px;
+                }
+                .inp {
+                    width: 100%; padding: 13px 16px;
+                    background: #f8fafc;
+                    border: 1.5px solid #e2e8f0;
+                    border-radius: 14px; color: #1e293b;
+                    font-size: 15px; font-family: 'DM Sans', sans-serif;
+                    outline: none; transition: all .25s ease;
+                }
+                .inp::placeholder { color: #94a3b8; }
+                .inp:focus {
+                    background: #ffffff;
+                    border-color: #22c55e;
+                    box-shadow: 0 0 0 3px rgba(34,197,94,.15);
+                }
+
+                .btn {
+                    width: 100%; padding: 14px; margin-top: 8px;
+                    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                    border: none; border-radius: 14px; color: white;
+                    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+                    cursor: pointer; letter-spacing: .02em;
+                    box-shadow: 0 6px 24px rgba(34,197,94,.38), 0 1px 0 rgba(255,255,255,.15) inset;
+                    transition: all .22s cubic-bezier(.22,1,.36,1);
+                    animation: fadeUp .6s .40s cubic-bezier(.22,1,.36,1) both;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(34,197,94,.55); }
+                .btn:active:not(:disabled) { transform: translateY(0); }
+                .btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+                .spinner {
+                    width: 18px; height: 18px;
+                    border: 2px solid rgba(255,255,255,.3);
+                    border-top-color: white;
+                    border-radius: 50%;
+                    animation: spin .8s linear infinite;
+                }
+                @keyframes spin { to { transform: rotate(360deg); } }
+
+                .alert { padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-bottom: 20px; animation: fadeUp .4s cubic-bezier(.22,1,.36,1) both; }
+                .alert-err { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+
+                .footer-txt {
+                    text-align: center; font-size: 13px;
+                    color: #475569; margin-top: 22px;
+                    animation: fadeUp .6s .45s cubic-bezier(.22,1,.36,1) both;
+                }
+                .footer-txt a { color: #22c55e; font-weight: 600; text-decoration: none; }
+                .footer-txt a:hover { color: #16a34a; }
+
+                .info-box {
+                    margin-top: 24px;
+                    padding: 20px;
+                    background: #f0fdf4;
+                    border: 1px solid #dcfce7;
+                    border-radius: 16px;
+                    animation: fadeUp .6s .50s cubic-bezier(.22,1,.36,1) both;
+                }
+                .info-title {
+                    font-family: 'Syne', sans-serif;
+                    font-size: 14px; font-weight: 700;
+                    color: #166534; margin-bottom: 8px;
+                }
+                .info-desc {
+                    font-size: 11px; color: #15803d;
+                    line-height: 1.5; margin-bottom: 14px;
+                }
+                .info-item {
+                    display: flex; align-items: center; gap: 8px;
+                    margin-bottom: 6px;
+                }
+                .info-dot {
+                    width: 6px; height: 6px;
+                    background: #22c55e;
+                    border-radius: 50%;
+                    box-shadow: 0 0 8px rgba(34,197,94,.5);
+                }
+                .info-label {
+                    font-size: 11px; font-weight: 600;
+                    color: #15803d;
+                }
+
+                @media (max-width: 480px) {
+                    .login-root { padding: 1rem; }
+                    .login-card {
+                        padding: 28px 20px 24px;
+                        border-radius: 20px;
+                    }
+                    .login-card-title { font-size: 20px; }
+                    .fg-row { grid-template-columns: 1fr; gap: 0; }
+                    .fg-row .fg { margin-bottom: 16px; }
+                    .info-box { display: none; }
+                }
+            `}</style>
+
+            <div className="login-root">
+                <BackgroundAuth />
+
+                <div className="login-card">
+                    <div style={{ display:'flex', justifyContent:'center', marginBottom:'28px', animation:'fadeUp .6s .1s cubic-bezier(.22,1,.36,1) both' }}>
+                        <Logo size="lg" />
                     </div>
 
-                    <h2 className="text-4xl font-bold text-gray-900 mb-2">Create Account</h2>
-                    <p className="text-gray-500 mb-8">Start managing your bills today</p>
+                    <div className="login-card-title">Create Account</div>
+                    <div className="login-card-sub">Start managing your personal registry today</div>
 
-                    {error && (
-                        <div className="bg-red-50 text-red-500 p-3 rounded-lg mb-6">
-                            {error}
+                    {error && <div className="alert alert-err">✕ {error}</div>}
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="fg-row">
+                            <div className="fg">
+                                <label className="lbl">First Name</label>
+                                <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="inp" placeholder="John" required disabled={loading} />
+                            </div>
+                            <div className="fg">
+                                <label className="lbl">Last Name</label>
+                                <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="inp" placeholder="Doe" required disabled={loading} />
+                            </div>
                         </div>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                            <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none text-base"
-                                placeholder="Enter your full name"
-                                required
-                            />
+                        <div className="fg">
+                            <label className="lbl">Email Address</label>
+                            <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="inp" placeholder="john@example.com" required disabled={loading} />
                         </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none text-base"
-                                placeholder="Enter your email"
-                                required
-                            />
+                        <div className="fg">
+                            <label className="lbl">Password</label>
+                            <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="inp" placeholder="••••••••" required disabled={loading} />
                         </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none text-base"
-                                placeholder="Min. 8 characters"
-                                required
-                            />
-                        </div>
-
-                        <div className="flex items-start">
-                            <input type="checkbox" className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded mt-1" required />
-                            <label className="ml-2 block text-sm text-gray-700">I agree to the <a href="#" className="text-green-600 font-semibold">Terms of Service</a> and <a href="#" className="text-green-600 font-semibold">Privacy Policy</a></label>
-                        </div>
-
-                        <button
-                            type="submit"
-                            className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-all shadow-lg shadow-green-200"
-                        >
-                            Create Account
+                        <button type="submit" className="btn" disabled={loading}>
+                            {loading ? <><div className="spinner"></div>Creating account...</> : 'Sign Up'}
                         </button>
-
-                        <p className="text-center text-sm text-gray-600 mt-8">
-                            Already have an account? <Link to="/login" className="font-bold text-green-600 hover:text-green-500">Sign In</Link>
-                        </p>
                     </form>
-                </div>
 
-                {/* Left Side - Visual */}
-                <div className="hidden lg:block lg:w-[45%] bg-green-50 p-12 relative overflow-hidden border-r border-green-100">
-                    <div className="relative z-10 h-full flex flex-col">
-                        <h2 className="text-5xl font-bold mb-6 text-green-900">Join Us!</h2>
-                        <h3 className="text-4xl font-bold mb-8 text-green-800">Master your finances with BillPay</h3>
-                        
-                        <div className="space-y-8 flex-grow">
-                            <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center shrink-0">
-                                    <CheckCircle className="text-green-600" size={24} />
-                                </div>
-                                <div>
-                                    <h4 className="text-xl font-semibold mb-1 text-green-900">Bill Reminders</h4>
-                                    <p className="text-green-600">Never miss a payment again with our smart due date notifications.</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center shrink-0">
-                                    <ShieldCheck className="text-green-600" size={24} />
-                                </div>
-                                <div>
-                                    <h4 className="text-xl font-semibold mb-1 text-green-900">Secure Proofs</h4>
-                                    <p className="text-green-600">Safely upload and store your payment receipts for future reference.</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center shrink-0">
-                                    <Landmark className="text-green-600" size={24} />
-                                </div>
-                                <div>
-                                    <h4 className="text-xl font-semibold mb-1 text-green-900">Expense Tracking</h4>
-                                    <p className="text-green-600">Analyze your spending patterns across different categories like BPI, Spay, etc.</p>
-                                </div>
-                            </div>
+                    <div className="footer-txt">
+                        Already have an account? <Link to="/login">Sign In</Link>
+                    </div>
+
+                    <div className="info-box">
+                        <div className="info-title">Secure Registration</div>
+                        <div className="info-desc">
+                            Your data is protected by multi-layer encryption and secure authentication protocols.
                         </div>
-
-                        <div className="mt-auto pt-8">
-                            <div className="flex -space-x-3 mb-4">
-                                {[1, 2, 3, 4, 5].map(i => (
-                                    <img key={i} src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} className="w-10 h-10 rounded-full border-2 border-white shadow-sm" alt="Avatar" />
-                                ))}
-                                <div className="w-10 h-10 rounded-full bg-green-600 border-2 border-white flex items-center justify-center text-xs font-bold text-white shadow-sm">+10k</div>
-                            </div>
-                            <p className="text-green-500 text-sm font-medium">Trusted by over 10,000+ users worldwide</p>
+                        <div className="info-item">
+                            <div className="info-dot"></div>
+                            <span className="info-label">End-to-End Encryption</span>
+                        </div>
+                        <div className="info-item">
+                            <div className="info-dot"></div>
+                            <span className="info-label">Privacy First Architecture</span>
                         </div>
                     </div>
-                    {/* Abstract shapes */}
-                    <div className="absolute top-0 left-0 w-96 h-96 bg-green-200/20 rounded-full -ml-48 -mt-48 blur-3xl"></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-200/30 rounded-full -mr-48 -mb-48 blur-3xl"></div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
