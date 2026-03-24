@@ -256,30 +256,42 @@ const BillItem = React.memo(({
                 </div>
                 
                 <div className="flex items-center gap-2">
-                    {bill.proof_of_payments?.[0]?.voice_record_path && (
-                        <button 
-                            onClick={() => toggleAudio(bill.proof_of_payments[0].voice_record_path)}
-                            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all border ${
-                                playingAudio === bill.proof_of_payments[0].voice_record_path 
+                    {/* Voice Note Button - Always visible, disabled if no audio */}
+                    <button 
+                        onClick={() => bill.proof_of_payments?.[0]?.voice_record_path && toggleAudio(bill.proof_of_payments[0].voice_record_path)}
+                        disabled={!bill.proof_of_payments?.[0]?.voice_record_path}
+                        className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all border ${
+                            !bill.proof_of_payments?.[0]?.voice_record_path
+                            ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed opacity-50'
+                            : playingAudio === bill.proof_of_payments[0].voice_record_path 
                                 ? 'bg-red-500 text-white border-red-500' 
-                                : 'bg-gray-50 text-gray-400 border-gray-100 hover:bg-green-600 hover:text-white'
-                            }`}
-                        >
-                            {playingAudio === bill.proof_of_payments[0].voice_record_path ? <Pause size={14} /> : <Volume2 size={14} />}
-                        </button>
-                    )}
-                    {bill.proof_of_payments?.[0]?.file_path && (
-                        <button 
-                            onClick={() => handleViewProof(bill.proof_of_payments[0].file_path)}
-                            className="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-green-600 hover:text-white transition-all border border-gray-100"
-                        >
-                            <FileText size={14} />
-                        </button>
-                    )}
+                                : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-green-600 hover:text-white hover:border-green-600'
+                        }`}
+                        title={bill.proof_of_payments?.[0]?.voice_record_path ? "Play Voice Note" : "No Voice Note Available"}
+                    >
+                        {playingAudio === bill.proof_of_payments?.[0]?.voice_record_path ? <Pause size={14} /> : <Volume2 size={14} />}
+                    </button>
+
+                    {/* View Proof Button - Always visible, disabled if no file */}
+                    <button 
+                        onClick={() => bill.proof_of_payments?.[0]?.file_path && handleViewProof(bill.proof_of_payments[0].file_path)}
+                        disabled={!bill.proof_of_payments?.[0]?.file_path}
+                        className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all border ${
+                            !bill.proof_of_payments?.[0]?.file_path
+                            ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed opacity-50'
+                            : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-green-600 hover:text-white hover:border-green-600'
+                        }`}
+                        title={bill.proof_of_payments?.[0]?.file_path ? "View Receipt" : "No Receipt Available"}
+                    >
+                        <FileText size={14} />
+                    </button>
+
+                    {/* Delete Button - Always visible and active */}
                     <button 
                         type="button"
                         onClick={() => confirmDelete(bill)}
-                        className="w-9 h-9 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100"
+                        className="w-9 h-9 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-600 hover:text-white transition-all border border-red-100"
+                        title="Delete Transaction"
                     >
                         <Trash2 size={14} />
                     </button>
@@ -808,32 +820,45 @@ const SettlementsPage = () => {
                                             )}
 
                                             <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                                                {bill.proof_of_payments?.[0]?.voice_record_path && (
-                                                    <button 
-                                                        onClick={() => toggleAudio(bill.proof_of_payments[0].voice_record_path)}
-                                                        className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${
-                                                            playingAudio === bill.proof_of_payments[0].voice_record_path 
+                                                {/* Voice Note Button - Always visible */}
+                                                <button 
+                                                    onClick={() => bill.proof_of_payments?.[0]?.voice_record_path && toggleAudio(bill.proof_of_payments[0].voice_record_path)}
+                                                    disabled={!bill.proof_of_payments?.[0]?.voice_record_path}
+                                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${
+                                                        !bill.proof_of_payments?.[0]?.voice_record_path
+                                                        ? 'bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                                                        : playingAudio === bill.proof_of_payments[0].voice_record_path 
                                                             ? 'bg-red-500 text-white' 
                                                             : 'bg-gray-50 text-gray-600 hover:bg-green-600 hover:text-white'
-                                                        }`}
-                                                    >
-                                                        {playingAudio === bill.proof_of_payments[0].voice_record_path ? <><Pause size={12} /> Playing</> : <><Mic size={12} /> Voice</>}
-                                                    </button>
-                                                )}
+                                                    }`}
+                                                    title={bill.proof_of_payments?.[0]?.voice_record_path ? "Play Voice Note" : "No Voice Note Available"}
+                                                >
+                                                    {playingAudio === bill.proof_of_payments?.[0]?.voice_record_path ? <><Pause size={12} /> Playing</> : <><Mic size={12} /> Voice</>}
+                                                </button>
+
+                                                {/* View Proof Button - Always visible */}
                                                 <button 
-                                                    onClick={() => handleViewProof(bill.proof_of_payments?.[0]?.file_path)}
-                                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-black uppercase bg-gray-50 text-gray-600 hover:bg-green-600 hover:text-white transition-all"
+                                                    onClick={() => bill.proof_of_payments?.[0]?.file_path && handleViewProof(bill.proof_of_payments[0].file_path)}
+                                                    disabled={!bill.proof_of_payments?.[0]?.file_path}
+                                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${
+                                                        !bill.proof_of_payments?.[0]?.file_path
+                                                        ? 'bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                                                        : 'bg-gray-50 text-gray-600 hover:bg-green-600 hover:text-white'
+                                                    }`}
+                                                    title={bill.proof_of_payments?.[0]?.file_path ? "View Receipt" : "No Receipt Available"}
                                                 >
                                                     <FileText size={12} /> View
                                                 </button>
+
+                                                {/* Delete Button - Always visible */}
                                                 <button 
                                                     type="button"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        console.log('Delete clicked for bill:', bill.id);
                                                         confirmDelete(bill);
                                                     }}
-                                                    className="w-9 h-9 flex items-center justify-center rounded-lg text-red-400 hover:bg-red-500 hover:text-white transition-all shrink-0"
+                                                    className="w-9 h-9 flex items-center justify-center rounded-lg text-red-500 hover:bg-red-600 hover:text-white transition-all shrink-0"
+                                                    title="Delete Transaction"
                                                 >
                                                     <Trash2 size={14} />
                                                 </button>
