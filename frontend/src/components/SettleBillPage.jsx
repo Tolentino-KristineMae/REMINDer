@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { formatDateLocal, formatCurrency } from '../utils/formatters';
 import { 
     X, 
     CheckCircle, 
@@ -27,6 +28,13 @@ const SettleBillPage = () => {
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState('');
     const [isUploaded, setIsUploaded] = useState(false);
+
+    // Audio recording states
+    const [isRecording, setIsRecording] = useState(false);
+    const [audioBlob, setAudioBlob] = useState(null);
+    const [audioURL, setAudioURL] = useState(null);
+    const mediaRecorderRef = useRef(null);
+    const audioChunksRef = useRef([]);
 
     const resetForm = () => {
         setFile(null);
@@ -143,6 +151,11 @@ const SettleBillPage = () => {
         formData.append('proof', file);
         formData.append('details', details);
         formData.append('paid_by', currentUser?.name || currentUser?.email || 'Unknown');
+
+        // Append audio if exists
+        if (audioBlob) {
+            formData.append('voice_note', audioBlob, 'recording.webm');
+        }
 
         console.log('FormData proof:', formData.get('proof'));
         console.log('FormData details:', formData.get('details'));
@@ -309,8 +322,51 @@ const SettleBillPage = () => {
                                     value={details}
                                     onChange={(e) => setDetails(e.target.value)}
                                     placeholder="Type how you paid (e.g. GCash, Bank Transfer, Cash)..."
-                                    className="w-full h-36 bg-gray-50 border-2 border-gray-100 rounded-2xl p-6 text-sm font-bold outline-none focus:ring-4 focus:ring-green-500/10 focus:border-green-600 focus:bg-white transition-all resize-none"
+                                    className="w-full h-36 bg-gray-50 border-2 border-gray-100 rounded-2xl p-6 text-sm font-bold outline-none focus:ring-4 focus:ring-green-500/10 focus:border-green-600 focus:bg-white transition-all resize-none mb-6"
                                 />
+
+                                {/* Voice Recording UI */}
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Optional: Voice Note</h4>
+                                        {audioURL && (
+                                            <button 
+                                                type="button"
+                                                onClick={deleteRecording}
+                                                className="text-red-500 text-[10px] font-bold uppercase tracking-widest hover:text-red-600 transition-colors"
+                                            >
+                                                Delete Recording
+                                            </button>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="flex items-center gap-4">
+                                        {!audioURL ? (
+                                            <button
+                                                type="button"
+                                                onClick={isRecording ? stopRecording : startRecording}
+                                                className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-2xl font-bold text-sm transition-all ${
+                                                    isRecording 
+                                                    ? 'bg-red-50 text-red-600 border-2 border-red-100 animate-pulse' 
+                                                    : 'bg-gray-50 text-gray-600 border-2 border-gray-100 hover:bg-gray-100'
+                                                }`}
+                                            >
+                                                <div className={`w-3 h-3 rounded-full ${isRecording ? 'bg-red-500' : 'bg-gray-400'}`}></div>
+                                                {isRecording ? 'Stop Recording' : 'Add Voice Note'}
+                                            </button>
+                                        ) : (
+                                            <div className="flex-1 bg-green-50 border-2 border-green-100 rounded-2xl p-4 flex items-center gap-4">
+                                                <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center text-white">
+                                                    <CheckCircle size={20} />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <p className="text-xs font-bold text-green-800">Voice Note Attached</p>
+                                                    <audio src={audioURL} controls className="h-8 mt-2 w-full" />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

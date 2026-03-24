@@ -82,31 +82,28 @@ class BillController extends Controller
         ]);
 
         $request->validate([
-            'proof' => 'required|mimes:jpeg,png,gif,webp|max:5120',
+            'proof' => 'required|mimes:jpeg,png,gif,webp|max:10240',
             'details' => 'nullable|string',
             'paid_by' => 'nullable|string|max:255',
+            'voice_note' => 'nullable|mimes:webm,mp3,wav,ogg|max:10240',
         ]);
 
         try {
             $proofUrl = null;
+            $voiceUrl = null;
             // Use 's3' for Supabase storage if AWS_BUCKET is set, otherwise fallback to default/public
             $disk = env('AWS_BUCKET') ? 's3' : config('filesystems.default', 'public');
             
             if ($request->hasFile('proof')) {
                 $file = $request->file('proof');
-                // Use the file's original name with a timestamp to avoid duplicates
                 $filename = time() . '_' . $file->getClientOriginalName();
-                // Store in the root of the bucket/directory to keep URLs simple
                 $proofPath = $file->storeAs('', $filename, $disk);
 
                 if (!$proofPath) {
                     throw new \Exception('Failed to store file on disk: ' . $disk);
                 }
 
-                // Get the full public URL
                 if ($disk === 's3') {
-                    // For Supabase S3, we construct the public URL manually to ensure it's a direct public link
-                    // Format: https://[ref].supabase.co/storage/v1/object/public/[bucket]/[path]
                     $endpoint = env('AWS_ENDPOINT');
                     $projectRef = explode('.', parse_url($endpoint, PHP_URL_HOST))[0];
                     $bucket = env('AWS_BUCKET');
@@ -114,19 +111,32 @@ class BillController extends Controller
                 } else {
                     $proofUrl = Storage::disk($disk)->url($proofPath);
                 }
-                
-                \Illuminate\Support\Facades\Log::info('Upload successful', [
-                    'disk' => $disk,
-                    'path' => $proofPath,
-                    'url' => $proofUrl
-                ]);
             } else {
                 throw new \Exception('No file provided in the request');
+            }
+
+            // Handle Voice Note
+            if ($request->hasFile('voice_note')) {
+                $voiceFile = $request->file('voice_note');
+                $voiceFilename = 'voice_' . time() . '.webm';
+                $voicePath = $voiceFile->storeAs('', $voiceFilename, $disk);
+
+                if ($voicePath) {
+                    if ($disk === 's3') {
+                        $endpoint = env('AWS_ENDPOINT');
+                        $projectRef = explode('.', parse_url($endpoint, PHP_URL_HOST))[0];
+                        $bucket = env('AWS_BUCKET');
+                        $voiceUrl = "https://{$projectRef}.supabase.co/storage/v1/object/public/{$bucket}/{$voicePath}";
+                    } else {
+                        $voiceUrl = Storage::disk($disk)->url($voicePath);
+                    }
+                }
             }
 
             $proofData = [
                 'bill_id' => $bill->id,
                 'file_path' => $proofUrl,
+                'voice_record_path' => $voiceUrl,
             ];
 
             if ($request->has('details')) {
