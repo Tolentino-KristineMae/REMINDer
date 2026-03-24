@@ -394,26 +394,41 @@ const SettlementsPage = () => {
     };
 
     const toggleAudio = async (audioPath) => {
+        if (!audioRef.current) return;
+        
         const fullUrl = buildStorageUrl(audioPath);
         
+        // If clicking the same audio that's already playing, stop it
         if (playingAudio === audioPath) {
-            if (audioRef.current) {
-                audioRef.current.pause();
-            }
+            audioRef.current.pause();
             setPlayingAudio(null);
             return;
         }
 
-        if (audioRef.current) {
+        try {
+            // Stop any current audio
+            audioRef.current.pause();
+            
+            // Explicitly set the source and load it
             audioRef.current.src = fullUrl;
-            try {
-                await audioRef.current.play();
+            audioRef.current.load();
+            
+            // We need to wait for a user interaction to play, which this click is.
+            // But we also handle the promise returned by play().
+            const playPromise = audioRef.current.play();
+            
+            if (playPromise !== undefined) {
+                await playPromise;
                 setPlayingAudio(audioPath);
-            } catch (err) {
-                console.error("Audio playback failed:", err);
-                setError("Could not play audio. The file may be corrupt or unsupported.");
-                setPlayingAudio(null); // Reset state on failure
             }
+        } catch (err) {
+            console.error("Detailed audio playback error:", {
+                error: err,
+                url: fullUrl,
+                path: audioPath
+            });
+            setError(`Playback failed: ${err.message || "Unknown error"}. Check if the file is public in Supabase.`);
+            setPlayingAudio(null);
         }
     };
 
@@ -547,8 +562,14 @@ const SettlementsPage = () => {
                 {/* Audio Player */}
                 <audio 
                     ref={audioRef}
-                    src={playingAudio ? buildStorageUrl(playingAudio) : ""}
+                    crossOrigin="anonymous"
+                    preload="auto"
                     onEnded={() => setPlayingAudio(null)}
+                    onError={(e) => {
+                        console.error("Audio playback error event:", e);
+                        setError("Audio stream interrupted or file inaccessible.");
+                        setPlayingAudio(null);
+                    }}
                     className="hidden"
                 />
 
