@@ -104,25 +104,43 @@ const SettleBillPage = () => {
     const startRecording = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorderRef.current = new MediaRecorder(stream);
+            
+            // Try to use a specific, widely supported codec
+            let options = { mimeType: 'audio/webm;codecs=opus' };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                console.warn(`${options.mimeType} is not supported, falling back to default audio/webm`);
+                options = { mimeType: 'audio/webm' };
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    console.warn('audio/webm is not supported, falling back to default browser codec');
+                    options = {}; // Let the browser choose
+                }
+            }
+
+            const mediaRecorder = new MediaRecorder(stream, options);
+            mediaRecorderRef.current = mediaRecorder;
             audioChunksRef.current = [];
 
-            mediaRecorderRef.current.ondataavailable = (event) => {
-                audioChunksRef.current.push(event.data);
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunksRef.current.push(event.data);
+                }
             };
 
-            mediaRecorderRef.current.onstop = () => {
-                const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-                setAudioBlob(blob);
-                setAudioURL(URL.createObjectURL(blob));
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunksRef.current, { type: mediaRecorder.mimeType || 'audio/webm' });
+                setAudioBlob(audioBlob);
+                const audioUrl = URL.createObjectURL(audioBlob);
+                setAudioURL(audioUrl);
+                
+                // Stop all tracks to release the microphone
                 stream.getTracks().forEach(track => track.stop());
             };
 
-            mediaRecorderRef.current.start();
+            mediaRecorder.start();
             setIsRecording(true);
         } catch (err) {
-            console.error('Error accessing microphone:', err);
-            setError('Could not access microphone.');
+            console.error("Error accessing microphone:", err);
+            setError("Could not access microphone. Please check your browser permissions.");
         }
     };
 
@@ -136,6 +154,7 @@ const SettleBillPage = () => {
     const deleteRecording = () => {
         setAudioBlob(null);
         setAudioURL(null);
+        audioChunksRef.current = [];
     };
 
     const handleSubmit = async (e) => {
