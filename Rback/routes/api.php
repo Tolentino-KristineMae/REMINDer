@@ -24,8 +24,9 @@ Route::get('/status', function () {
 // Hidden route to run migrations - requires MIGRATION_SECRET env var
 Route::post('/migrate', function (Request $request) {
     $secret = $request->header('X-Migration-Secret');
+    $validSecret = env('MIGRATION_SECRET', 'secret123');
     
-    if ($secret !== env('MIGRATION_SECRET')) {
+    if ($secret !== $validSecret) {
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     
@@ -45,8 +46,9 @@ Route::post('/migrate', function (Request $request) {
 // Hidden route to seed database
 Route::post('/seed', function (Request $request) {
     $secret = $request->header('X-Migration-Secret');
+    $validSecret = env('MIGRATION_SECRET', 'secret123');
     
-    if ($secret !== env('MIGRATION_SECRET')) {
+    if ($secret !== $validSecret) {
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     
