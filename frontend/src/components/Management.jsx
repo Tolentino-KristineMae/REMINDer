@@ -248,7 +248,8 @@ const Management = () => {
   }
 
   const getPersonStats = useCallback((personId) => {
-    const personBills = bills.filter(b => b.person_in_charge_id === personId)
+    const safeBills = Array.isArray(bills) ? bills : [];
+    const personBills = safeBills.filter(b => b.person_in_charge_id === personId)
     const paidCount = personBills.filter(b => b.status === 'paid').length
     const totalAmount = personBills.reduce((acc, b) => acc + parseFloat(b.amount), 0)
     return {
