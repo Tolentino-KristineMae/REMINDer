@@ -12,6 +12,7 @@ class Debt extends Model
     protected $fillable = [
         'amount',
         'description',
+        'is_my_debt',
         'status',
         'proof_image_path',
         'proof_voice_path',
@@ -21,6 +22,7 @@ class Debt extends Model
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'is_my_debt' => 'boolean',
         'paid_at' => 'datetime',
     ];
 }

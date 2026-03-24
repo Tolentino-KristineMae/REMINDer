@@ -23,11 +23,13 @@ class DebtController extends Controller
         $request->validate([
             'amount' => 'required|numeric|min:0',
             'description' => 'required|string',
+            'is_my_debt' => 'boolean',
         ]);
 
         $debt = Debt::create([
             'amount' => $request->amount,
             'description' => $request->description,
+            'is_my_debt' => $request->is_my_debt ?? true,
             'status' => 'pending',
         ]);
 

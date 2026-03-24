@@ -70,6 +70,7 @@ export default function AddDebtPage() {
   const [formData, setFormData] = useState({
     amount: "",
     description: "",
+    is_my_debt: true,
   });
 
   const handleSubmit = async (e) => {
@@ -163,6 +164,20 @@ export default function AddDebtPage() {
                       required 
                     />
                   </FormField>
+
+                  {/* Is My Debt Checkbox */}
+                  <div className="flex items-center gap-3 p-4 rounded-2xl bg-gray-50 border-2 border-transparent hover:border-gray-200 transition-all group cursor-pointer" onClick={() => setFormData({ ...formData, is_my_debt: !formData.is_my_debt })}>
+                    <div className={cn(
+                      "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all",
+                      formData.is_my_debt ? "bg-green-600 border-green-600 shadow-lg shadow-green-600/20" : "bg-white border-gray-300"
+                    )}>
+                      {formData.is_my_debt && <CheckCircle2 size={14} className="text-white" />}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-black text-gray-900">Is this my utang?</p>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Uncheck if someone owes you instead</p>
+                    </div>
+                  </div>
 
                   {message.text && (
                     <div className={cn(

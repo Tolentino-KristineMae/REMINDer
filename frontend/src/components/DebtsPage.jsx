@@ -142,6 +142,13 @@ const DebtsPage = () => {
                                 <div key={debt.id} className={`bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-amber-200 transition-all ${viewMode === 'list' ? "p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4" : ""}`}>
                                     {viewMode === 'grid' && <div className="h-32 bg-amber-50/30 flex items-center justify-center border-b border-amber-50"><Wallet2 size={32} className="text-amber-200" /></div>}
                                     <div className={viewMode === 'grid' ? "p-5" : "flex-1"}>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            {debt.is_my_debt ? (
+                                                <span className="text-[8px] font-black bg-red-50 text-red-600 px-2 py-0.5 rounded-full border border-red-100 uppercase tracking-widest">My Utang</span>
+                                            ) : (
+                                                <span className="text-[8px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full border border-blue-100 uppercase tracking-widest">Owed to Me</span>
+                                            )}
+                                        </div>
                                         <h4 className="font-black text-gray-900 text-sm mb-1">{debt.description}</h4>
                                         <div className="flex items-center gap-3 text-[10px] font-bold text-gray-400">
                                             <span className="flex items-center gap-1"><Clock size={10} /> Created {formatDateLocal(debt.created_at)}</span>
@@ -194,6 +201,13 @@ const DebtsPage = () => {
                                         </div>
                                     )}
                                     <div className={viewMode === 'grid' ? "p-5" : "flex-1"}>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            {debt.is_my_debt ? (
+                                                <span className="text-[8px] font-black bg-gray-50 text-gray-600 px-2 py-0.5 rounded-full border border-gray-100 uppercase tracking-widest">My Utang</span>
+                                            ) : (
+                                                <span className="text-[8px] font-black bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-100 uppercase tracking-widest">Owed to Me</span>
+                                            )}
+                                        </div>
                                         <h4 className="font-black text-gray-900 text-sm mb-1">{debt.description}</h4>
                                         <div className="flex flex-col gap-1.5">
                                             <div className="flex items-center gap-3 text-[10px] font-bold text-gray-400">
