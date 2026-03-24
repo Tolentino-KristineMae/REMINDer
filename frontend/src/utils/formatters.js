@@ -6,14 +6,17 @@ export const formatCurrency = (amount) => {
     }).format(amount || 0).replace('PHP', '₱');
 };
 
-export const formatDateLocal = (dateString) => {
+export const formatDateLocal = (dateString, options = {}) => {
     if (!dateString) return 'No Date';
-    // Use manual extraction to avoid timezone shifts
-    const [year, month, day] = dateString.split(/[-T]/);
-    const date = new Date(year, month - 1, day);
-    return date.toLocaleDateString('en-US', {
+
+    const date = new Date(dateString);
+
+    const defaultOptions = {
         month: 'short',
         day: 'numeric',
-        year: 'numeric'
-    });
+        year: 'numeric',
+        ...options
+    };
+
+    return date.toLocaleString('en-US', defaultOptions);
 };
