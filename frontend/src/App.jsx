@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar';
 import { Menu } from 'lucide-react';
 
 const Login = lazy(() => import('./components/Login'));
+const Signup = lazy(() => import('./components/Signup'));
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const AddBillPage = lazy(() => import('./components/AddBillPage'));
 const EditBillPage = lazy(() => import('./components/EditBillPage'));
@@ -132,6 +133,7 @@ const App = () => {
                     <Router>
                         <Routes>
                             <Route path="/login" element={<Login />} />
+                            <Route path="/setup" element={<Signup />} />
                             <Route 
                                 path="/" 
                                 element={
