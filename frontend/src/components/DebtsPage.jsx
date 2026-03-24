@@ -102,19 +102,7 @@ const DebtsPage = () => {
 
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-green-900 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-green-900/20">
-                            <Wallet2 size={24} />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-black text-gray-900 tracking-tight leading-none">Utangs</h1>
-                            <div className="mt-1 flex items-center gap-2">
-                                <div className="h-1 w-1 rounded-full bg-green-500" />
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Transaction Registry</span>
-                            </div>
-                        </div>
-                    </div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
                     <div className="flex items-center gap-3">
                         <div className="flex bg-white border border-gray-100 p-1.5 rounded-2xl shadow-sm">
                             <button 

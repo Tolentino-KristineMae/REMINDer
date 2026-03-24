@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 
 import { formatCurrency, formatDateLocal } from '../utils/formatters'
+import { cn } from '../lib/utils'
 
 const Management = () => {
   const [activeTab, setActiveTab] = useState('categories')
@@ -274,6 +275,12 @@ const Management = () => {
     setEditingPerson(null)
     setEditPersonData({ first_name: '', last_name: '', email: '' })
   }
+
+  const getPerformanceColor = (percentage) => {
+    if (percentage < 40) return { bg: 'bg-red-50', text: 'text-red-600', icon: 'text-red-600', border: 'border-red-100' };
+    if (percentage < 80) return { bg: 'bg-amber-50', text: 'text-amber-600', icon: 'text-amber-600', border: 'border-amber-100' };
+    return { bg: 'bg-green-50', text: 'text-green-600', icon: 'text-green-600', border: 'border-green-100' };
+  };
 
   const getCategoryStats = useCallback((categoryId) => {
     const safeBills = Array.isArray(bills) ? bills : [];
@@ -584,13 +591,18 @@ const Management = () => {
                             <p className="text-xs text-gray-500">Bills</p>
                             <p className="mt-1 text-lg font-bold text-gray-900">{stats.count}</p>
                           </div>
-                          <div className="rounded-xl bg-green-50 p-3">
-                            <p className="text-xs text-green-600">Performance</p>
-                            <div className="mt-1 flex items-center gap-1">
-                              <p className="text-lg font-bold text-green-600">{stats.performance}%</p>
-                              <TrendingUp className="h-3.5 w-3.5 text-green-600" />
-                            </div>
-                          </div>
+                          {(() => {
+                            const colors = getPerformanceColor(stats.performance);
+                            return (
+                              <div className={cn("rounded-xl p-3", colors.bg)}>
+                                <p className={cn("text-xs font-bold", colors.text)}>Performance</p>
+                                <div className="mt-1 flex items-center gap-1">
+                                  <p className={cn("text-lg font-bold", colors.text)}>{stats.performance}%</p>
+                                  <TrendingUp className={cn("h-3.5 w-3.5", colors.icon)} />
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       </>
                     )}
@@ -664,10 +676,15 @@ const Management = () => {
                           <span className="font-semibold text-green-600">{stats.paid}</span>
                         </td>
                         <td className="px-6 py-4 text-center">
-                          <div className="inline-flex items-center gap-1.5 rounded-lg bg-green-50 px-2.5 py-1">
-                            <span className="text-sm font-semibold text-green-600">{stats.performance}%</span>
-                            <TrendingUp className="h-3 w-3 text-green-600" />
-                          </div>
+                          {(() => {
+                            const colors = getPerformanceColor(stats.performance);
+                            return (
+                              <div className={cn("inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1", colors.bg)}>
+                                <span className={cn("text-sm font-semibold", colors.text)}>{stats.performance}%</span>
+                                <TrendingUp className={cn("h-3 w-3", colors.icon)} />
+                              </div>
+                            );
+                          })()}
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-1">
@@ -812,13 +829,18 @@ const Management = () => {
                             <p className="text-xs text-gray-500">Assigned</p>
                             <p className="mt-1 text-lg font-bold text-gray-900">{stats.count}</p>
                           </div>
-                          <div className="rounded-xl bg-green-50 p-3">
-                            <p className="text-xs text-green-600">Performance</p>
-                            <div className="mt-1 flex items-center gap-1">
-                              <p className="text-lg font-bold text-green-600">{stats.performance}%</p>
-                              <TrendingUp className="h-3.5 w-3.5 text-green-600" />
-                            </div>
-                          </div>
+                          {(() => {
+                            const colors = getPerformanceColor(stats.performance);
+                            return (
+                              <div className={cn("rounded-xl p-3", colors.bg)}>
+                                <p className={cn("text-xs font-bold", colors.text)}>Performance</p>
+                                <div className="mt-1 flex items-center gap-1">
+                                  <p className={cn("text-lg font-bold", colors.text)}>{stats.performance}%</p>
+                                  <TrendingUp className={cn("h-3.5 w-3.5", colors.icon)} />
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       </>
                     )}
@@ -890,10 +912,15 @@ const Management = () => {
                             <span className="font-semibold text-green-600">{stats.paid}</span>
                           </td>
                           <td className="px-6 py-4 text-center">
-                            <div className="inline-flex items-center gap-1.5 rounded-lg bg-green-50 px-2.5 py-1">
-                              <span className="text-sm font-semibold text-green-600">{stats.performance}%</span>
-                              <TrendingUp className="h-3 w-3 text-green-600" />
-                            </div>
+                            {(() => {
+                              const colors = getPerformanceColor(stats.performance);
+                              return (
+                                <div className={cn("inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1", colors.bg)}>
+                                  <span className={cn("text-sm font-semibold", colors.text)}>{stats.performance}%</span>
+                                  <TrendingUp className={cn("h-3 w-3", colors.icon)} />
+                                </div>
+                              );
+                            })()}
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center justify-end gap-1">

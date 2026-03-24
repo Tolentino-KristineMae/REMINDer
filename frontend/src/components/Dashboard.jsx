@@ -11,9 +11,17 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency } from '../utils/formatters';
+import { cn } from '../lib/utils';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    
+    const getPercentageColor = (percentage) => {
+        if (percentage < 40) return 'text-red-600 bg-red-50';
+        if (percentage < 80) return 'text-amber-600 bg-amber-50';
+        return 'text-emerald-600 bg-emerald-50';
+    };
+
     const [stats, setStats] = useState({
         total: 0,
         paid: 0,
@@ -201,7 +209,9 @@ const Dashboard = () => {
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-sm font-bold text-gray-900">{cat.count}</span>
                                                     <span className="text-[10px] text-gray-400">bills</span>
-                                                    <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">{catPercentage}%</span>
+                                                    <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded", getPercentageColor(catPercentage))}>
+                                                        {catPercentage}%
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
