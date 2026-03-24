@@ -43,6 +43,10 @@ const Management = () => {
   const [editingPerson, setEditingPerson] = useState(null)
   const [editPersonData, setEditPersonData] = useState({ first_name: '', last_name: '', email: '' })
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+
   const fetchData = useCallback(async () => {
     try {
       if (activeTab === 'categories') {
@@ -126,27 +130,14 @@ const Management = () => {
     }
   }
 
-  const handleDeleteCategory = async (id) => {
+  const handleDeleteCategory = (id) => {
     if (checkCategoryBills(id)) {
       setMessage({ text: 'Cannot delete category with associated bills.', type: 'error' })
       return
     }
-    if (!window.confirm('Are you sure you want to delete this category?')) return
-    
-    const originalCategories = [...categories];
-    // Optimistic update
-    setCategories(prev => prev.filter(c => c.id !== id));
-
-    try {
-      await api.delete(`/categories/${id}`)
-      await fetchData() // Refresh for consistency
-      setMessage({ text: 'Category deleted successfully!', type: 'success' })
-    } catch (err) {
-      setCategories(originalCategories);
-      console.error('Delete category error:', err)
-      const errorMsg = err.response?.data?.message || err.message || 'Failed to delete category.'
-      setMessage({ text: errorMsg, type: 'error' })
-    }
+    const cat = categories.find(c => c.id === id);
+    setItemToDelete({ type: 'category', id, name: cat?.name });
+    setIsDeleteModalOpen(true);
   }
 
   const handleEditCategory = (cat) => {
@@ -219,26 +210,56 @@ const Management = () => {
     }
   }
 
-  const handleDeletePerson = async (id) => {
+  const handleDeletePerson = (id) => {
     if (checkPersonBills(id)) {
       setMessage({ text: 'Cannot delete person with associated bills.', type: 'error' })
       return
     }
-    if (!window.confirm('Are you sure you want to delete this person?')) return
-    
-    const originalPeople = [...people];
-    // Optimistic update
-    setPeople(prev => prev.filter(p => p.id !== id));
+    const person = people.find(p => p.id === id);
+    setItemToDelete({ 
+      type: 'person', 
+      id, 
+      name: person ? `${person.first_name} ${person.last_name}` : 'this person' 
+    });
+    setIsDeleteModalOpen(true);
+  }
 
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+    setDeleting(true);
+    
     try {
-      await api.delete(`/people/${id}`)
-      await fetchData() // Refresh for consistency
-      setMessage({ text: 'Person deleted successfully!', type: 'success' })
+      if (itemToDelete.type === 'category') {
+        const originalCategories = [...categories];
+        setCategories(prev => prev.filter(c => c.id !== itemToDelete.id));
+        try {
+          await api.delete(`/categories/${itemToDelete.id}`);
+          await fetchData();
+          setMessage({ text: 'Category deleted successfully!', type: 'success' });
+        } catch (err) {
+          setCategories(originalCategories);
+          throw err;
+        }
+      } else {
+        const originalPeople = [...people];
+        setPeople(prev => prev.filter(p => p.id !== itemToDelete.id));
+        try {
+          await api.delete(`/people/${itemToDelete.id}`);
+          await fetchData();
+          setMessage({ text: 'Person deleted successfully!', type: 'success' });
+        } catch (err) {
+          setPeople(originalPeople);
+          throw err;
+        }
+      }
+      setIsDeleteModalOpen(false);
+      setItemToDelete(null);
     } catch (err) {
-      setPeople(originalPeople);
-      console.error('Delete person error:', err)
-      const errorMsg = err.response?.data?.message || err.message || 'Failed to delete person.'
-      setMessage({ text: errorMsg, type: 'error' })
+      console.error('Delete error:', err);
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to delete item.';
+      setMessage({ text: errorMsg, type: 'error' });
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -968,6 +989,39 @@ const Management = () => {
           )
         )}
       </main>
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in duration-200">
+            <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Trash2 className="w-10 h-10 text-red-500" />
+            </div>
+            <h3 className="text-2xl font-black text-gray-900 text-center mb-2">Delete {itemToDelete?.type === 'category' ? 'Category' : 'Person'}?</h3>
+            <p className="text-sm text-gray-500 text-center mb-8 leading-relaxed">
+              This action cannot be undone. Are you sure you want to remove <span className="font-black text-red-500">&ldquo;{itemToDelete?.name}&rdquo;</span>?
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <button 
+                onClick={() => setIsDeleteModalOpen(false)}
+                disabled={deleting}
+                className="h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all active:scale-95"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-red-500 text-white hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 active:scale-95 flex items-center justify-center"
+              >
+                {deleting ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

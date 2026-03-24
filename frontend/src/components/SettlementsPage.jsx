@@ -922,28 +922,30 @@ const SettlementsPage = () => {
                 {/* Delete Dialog */}
                 {isDeleteModalOpen && (
                     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                        <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
-                            <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Trash2 className="w-7 h-7 text-red-500" />
+                        <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in duration-200">
+                            <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <Trash2 className="w-10 h-10 text-red-500" />
                             </div>
-                            <h3 className="text-lg font-black text-gray-900 text-center mb-2">Delete Transaction?</h3>
-                            <p className="text-sm text-gray-500 text-center mb-6">
-                                This action cannot be undone. Are you sure you want to remove <span className="font-bold text-red-500">&ldquo;{billToDelete?.details}&rdquo;</span>?
+                            <h3 className="text-2xl font-black text-gray-900 text-center mb-2">Delete Transaction?</h3>
+                            <p className="text-sm text-gray-500 text-center mb-8 leading-relaxed">
+                                This action cannot be undone. Are you sure you want to remove <span className="font-black text-red-500">&ldquo;{billToDelete?.details}&rdquo;</span>?
                             </p>
-                            <div className="flex gap-3 justify-center">
+                            <div className="grid grid-cols-2 gap-4">
                                 <button 
                                     onClick={() => setIsDeleteModalOpen(false)}
                                     disabled={deleting}
-                                    className="px-5 py-2.5 rounded-xl font-black text-xs uppercase bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+                                    className="h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all active:scale-95"
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     onClick={handleDelete}
                                     disabled={deleting}
-                                    className="px-5 py-2.5 rounded-xl font-black text-xs uppercase bg-red-500 text-white hover:bg-red-600 transition-all"
+                                    className="h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-red-500 text-white hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 active:scale-95 flex items-center justify-center"
                                 >
-                                    {deleting ? 'Deleting...' : 'Delete'}
+                                    {deleting ? (
+                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    ) : 'Delete'}
                                 </button>
                             </div>
                         </div>

@@ -31,6 +31,10 @@ const DebtsPage = () => {
     const [previewImage, setPreviewImage] = useState(null);
     const [error, setError] = useState('');
 
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [debtToDelete, setDebtToDelete] = useState(null);
+    const [deleting, setDeleting] = useState(false);
+
     const fetchData = useCallback(async () => {
         try {
             setLoading(true);
@@ -48,14 +52,28 @@ const DebtsPage = () => {
         fetchData();
     }, [fetchData]);
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this utang record?')) return;
+    const handleDelete = (debt) => {
+        setDebtToDelete(debt);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!debtToDelete) return;
+        setDeleting(true);
+        
+        const originalDebts = [...debts];
+        setDebts(prev => prev.filter(d => d.id !== debtToDelete.id));
+        setIsDeleteModalOpen(false);
+
         try {
-            await api.delete(`/debts/${id}`);
-            setDebts(prev => prev.filter(d => d.id !== id));
+            await api.delete(`/debts/${debtToDelete.id}`);
+            setDebtToDelete(null);
         } catch (err) {
             console.error('Delete error:', err);
+            setDebts(originalDebts);
             setError('Failed to delete utang');
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -202,7 +220,7 @@ const DebtsPage = () => {
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <button 
-                                                        onClick={() => handleDelete(debt.id)} 
+                                                        onClick={() => handleDelete(debt)} 
                                                         className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-100"
                                                     >
                                                         <Trash2 size={18} />
@@ -225,7 +243,7 @@ const DebtsPage = () => {
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <button 
-                                                    onClick={() => handleDelete(debt.id)} 
+                                                    onClick={() => handleDelete(debt)} 
                                                     className="w-12 h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
                                                 >
                                                     <Trash2 size={20} />
@@ -325,7 +343,7 @@ const DebtsPage = () => {
                                                         <FileText size={16} />
                                                     </button>
                                                     <button 
-                                                        onClick={() => handleDelete(debt.id)} 
+                                                        onClick={() => handleDelete(debt)} 
                                                         className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-100"
                                                     >
                                                         <Trash2 size={18} />
@@ -356,7 +374,7 @@ const DebtsPage = () => {
                                                     <FileText size={20} />
                                                 </button>
                                                 <button 
-                                                    onClick={() => handleDelete(debt.id)} 
+                                                    onClick={() => handleDelete(debt)} 
                                                     className="w-12 h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
                                                 >
                                                     <Trash2 size={20} />
@@ -377,6 +395,39 @@ const DebtsPage = () => {
                     )}
                 </section>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {isDeleteModalOpen && (
+                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in duration-200">
+                        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Trash2 className="w-10 h-10 text-red-500" />
+                        </div>
+                        <h3 className="text-2xl font-black text-gray-900 text-center mb-2">Delete Utang?</h3>
+                        <p className="text-sm text-gray-500 text-center mb-8 leading-relaxed">
+                            This action cannot be undone. Are you sure you want to remove <span className="font-black text-red-500">&ldquo;{debtToDelete?.description}&rdquo;</span>?
+                        </p>
+                        <div className="grid grid-cols-2 gap-4">
+                            <button 
+                                onClick={() => setIsDeleteModalOpen(false)}
+                                disabled={deleting}
+                                className="h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all active:scale-95"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={confirmDelete}
+                                disabled={deleting}
+                                className="h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-red-500 text-white hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 active:scale-95 flex items-center justify-center"
+                            >
+                                {deleting ? (
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
