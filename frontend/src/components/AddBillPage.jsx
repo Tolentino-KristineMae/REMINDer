@@ -114,10 +114,8 @@ export default function AddBillPage() {
   useEffect(() => {
     const fetchFormData = async () => {
       try {
-        const catRes = await api.get('/categories');
-        setCategories(catRes.data.categories || []);
-        
-        const response = await api.get('/bills/dashboard');
+        const response = await api.get('/bills/create-data');
+        setCategories(response.data.categories || []);
         setPeople(response.data.people || []);
       } catch (err) {
         console.error('Error fetching form data:', err);
