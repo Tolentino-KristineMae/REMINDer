@@ -66,6 +66,9 @@ class AuthController extends Controller
             ], 401);
         }
 
+        // Cleanup old tokens to keep personal_access_tokens table small and fast
+        $user->tokens()->delete();
+
         if (!$looksHashed) {
             $user->password = Hash::make($request->input('password'));
             $user->save();

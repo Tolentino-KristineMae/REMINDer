@@ -12,6 +12,11 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
 
+    // Wake up backend (cold start) as soon as user lands on login page
+    useEffect(() => {
+        api.get('/status').catch(() => {});
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
