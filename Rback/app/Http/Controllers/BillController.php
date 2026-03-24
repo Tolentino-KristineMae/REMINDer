@@ -15,9 +15,13 @@ class BillController extends Controller
 {
     public function index()
     {
-        return BillResource::collection(
-            Bill::with(['category:id,name,color', 'personInCharge:id,name,avatar', 'proofOfPayments'])->get()
-        );
+        try {
+            $bills = Bill::with(['category:id,name,color', 'personInCharge:id,first_name,last_name,avatar', 'proofOfPayments'])->get();
+            return BillResource::collection($bills);
+        } catch (\Exception $e) {
+            \Log::error('BillController@index error: ' . $e->getMessage());
+            return response()->json(['message' => 'Error loading bills: ' . $e->getMessage()], 500);
+        }
     }
 
     public function show(Bill $bill)
@@ -237,14 +241,19 @@ class BillController extends Controller
 
     public function fullData()
     {
-        // Eager load only necessary relations
-        $people = \App\Models\PersonInCharge::select('id', 'first_name', 'last_name', 'email', 'avatar')->get();
-        $bills = Bill::with(['category:id,name,color', 'personInCharge:id,first_name,last_name', 'proofOfPayments:id,bill_id,created_at,paid_by,details'])
-            ->get();
+        try {
+            // Eager load only necessary relations
+            $people = \App\Models\PersonInCharge::select('id', 'first_name', 'last_name', 'email', 'avatar')->get();
+            $bills = Bill::with(['category:id,name,color', 'personInCharge:id,first_name,last_name', 'proofOfPayments:id,bill_id,created_at,paid_by,details'])
+                ->get();
 
-        return response()->json([
-            'people' => PersonInChargeResource::collection($people),
-            'bills' => BillResource::collection($bills),
-        ]);
+            return response()->json([
+                'people' => PersonInChargeResource::collection($people),
+                'bills' => BillResource::collection($bills),
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('BillController@fullData error: ' . $e->getMessage());
+            return response()->json(['message' => 'Error loading bills: ' . $e->getMessage()], 500);
+        }
     }
 }
