@@ -191,18 +191,18 @@ const Dashboard = () => {
                         <div className="flex-1 space-y-3">
                             {categories.length > 0 ? (
                                 categories.map((cat, i) => {
-                                    const maxCount = Math.max(...categories.map(c => c.count));
-                                    const percentage = maxCount > 0 ? (cat.count / maxCount) * 100 : 0;
+                                    const maxCount = Math.max(...categories.map(c => c.count), 1);
+                                    const percentage = cat.count / maxCount * 100;
                                     const totalBills = categories.reduce((sum, c) => sum + c.count, 0);
                                     const catPercentage = totalBills > 0 ? Math.round((cat.count / totalBills) * 100) : 0;
                                     
                                     return (
-                                        <div key={i} className="group">
+                                        <div key={cat.id || i} className="group">
                                             <div className="flex items-center justify-between mb-1.5">
                                                 <div className="flex items-center gap-2">
                                                     <div 
                                                         className="w-3 h-3 rounded-full" 
-                                                        style={{ backgroundColor: cat.color }}
+                                                        style={{ backgroundColor: cat.color || '#22c55e' }}
                                                     />
                                                     <span className="text-sm font-semibold text-gray-700">{cat.name}</span>
                                                 </div>
@@ -218,8 +218,8 @@ const Dashboard = () => {
                                                 <div 
                                                     className="h-full rounded-full transition-all duration-700 ease-out group-hover:opacity-80"
                                                     style={{ 
-                                                        width: `${percentage}%`,
-                                                        backgroundColor: cat.color
+                                                        width: `${Math.max(percentage, cat.count > 0 ? 5 : 0)}%`,
+                                                        backgroundColor: cat.color || '#22c55e'
                                                     }}
                                                 />
                                             </div>

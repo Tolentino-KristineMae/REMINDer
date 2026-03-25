@@ -240,13 +240,12 @@ class BillController extends Controller
                 ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
                 ->first();
 
-            // 2. Get Categories with counts for the current month
-            $categories = \App\Models\Category::leftJoin('bills', function($join) use ($startOfMonth, $endOfMonth) {
-                    $join->on('categories.id', '=', 'bills.category_id')
-                         ->whereBetween('bills.due_date', [$startOfMonth, $endOfMonth]);
+            // 2. Get Categories with counts (all-time)
+            $categories = \App\Models\Category::leftJoin('bills', function($join) {
+                    $join->on('categories.id', '=', 'bills.category_id');
                 })
                 ->select('categories.id', 'categories.name')
-                ->selectRaw('COALESCE(categories.color, ?) as color', ['#22c55e'])
+                ->selectRaw("COALESCE(categories.color, '#22c55e') as color")
                 ->selectRaw('COUNT(bills.id) as count')
                 ->groupBy('categories.id', 'categories.name', 'categories.color')
                 ->get();
