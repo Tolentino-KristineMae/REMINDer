@@ -107,4 +107,28 @@ class DebtController extends Controller
         $debt->delete();
         return response()->json(['success' => true]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $debt = Debt::findOrFail($id);
+
+        $request->validate([
+            'amount' => 'sometimes|numeric|min:0',
+            'description' => 'sometimes|string',
+            'is_my_debt' => 'sometimes|boolean',
+            'person_in_charge_id' => 'nullable|exists:person_in_charges,id',
+        ]);
+
+        $debt->update([
+            'amount' => $request->amount ?? $debt->amount,
+            'description' => $request->description ?? $debt->description,
+            'is_my_debt' => $request->is_my_debt ?? $debt->is_my_debt,
+            'person_in_charge_id' => $request->person_in_charge_id ?? $debt->person_in_charge_id,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'debt' => $debt->load('personInCharge')
+        ]);
+    }
 }

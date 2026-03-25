@@ -112,6 +112,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Debts (Utangs)
     Route::get('/debts', [App\Http\Controllers\DebtController::class, 'index']);
     Route::post('/debts', [App\Http\Controllers\DebtController::class, 'store']);
+    Route::put('/debts/{id}', [App\Http\Controllers\DebtController::class, 'update']);
     Route::post('/debts/{id}/settle', [App\Http\Controllers\DebtController::class, 'settle']);
     Route::delete('/debts/{id}', [App\Http\Controllers\DebtController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);

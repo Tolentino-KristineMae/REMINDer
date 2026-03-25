@@ -65,6 +65,7 @@ const SettlementsPage = lazy(() => import('./components/SettlementsPage'));
 const SettleBillPage = lazy(() => import('./components/SettleBillPage'));
 const DebtsPage = lazy(() => import('./components/DebtsPage'));
 const AddDebtPage = lazy(() => import('./components/AddDebtPage'));
+const EditDebtPage = lazy(() => import('./components/EditDebtPage'));
 const SettleDebtPage = lazy(() => import('./components/SettleDebtPage'));
 
 const LoadingFallback = ({ fullScreen = true }) => {
@@ -259,6 +260,14 @@ const App = () => {
                                     element={
                                         <PrivateRoute pageTitle="Add Utang" pageSubtitle="Record a new personal debt">
                                             <AddDebtPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/edit-debt/:id" 
+                                    element={
+                                        <PrivateRoute pageTitle="Edit Utang" pageSubtitle="Update your personal debt">
+                                            <EditDebtPage />
                                         </PrivateRoute>
                                     } 
                                 />

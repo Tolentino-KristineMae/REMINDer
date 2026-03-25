@@ -17,7 +17,8 @@ import {
     ArrowUpRight,
     X,
     TrendingUp,
-    User
+    User,
+    Pencil
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency, formatDateLocal } from '../utils/formatters';
@@ -321,6 +322,12 @@ const DebtsPage = () => {
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <button 
+                                                        onClick={() => navigate(`/edit-debt/${debt.id}`)} 
+                                                        className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-300 hover:bg-blue-50 hover:text-blue-500 transition-all border border-transparent hover:border-blue-100"
+                                                    >
+                                                        <Pencil size={18} />
+                                                    </button>
+                                                    <button 
                                                         onClick={() => handleDelete(debt)} 
                                                         className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-100"
                                                     >
@@ -343,6 +350,12 @@ const DebtsPage = () => {
                                                 <p className="text-lg sm:text-xl font-black text-gray-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
                                             </div>
                                             <div className="flex items-center gap-2">
+                                                <button 
+                                                    onClick={() => navigate(`/edit-debt/${debt.id}`)} 
+                                                    className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-blue-50 hover:text-blue-500 transition-all border border-gray-100"
+                                                >
+                                                    <Pencil size={18} className="sm:w-5 sm:h-5" />
+                                                </button>
                                                 <button 
                                                     onClick={() => handleDelete(debt)} 
                                                     className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
