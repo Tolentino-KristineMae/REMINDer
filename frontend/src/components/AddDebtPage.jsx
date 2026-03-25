@@ -81,7 +81,8 @@ export default function AddDebtPage() {
     const fetchPeople = async () => {
       try {
         const response = await api.get('/people');
-        setPeople(response.data.data || response.data || []);
+        const peopleData = response.data?.people || response.data?.data || (Array.isArray(response.data) ? response.data : []);
+        setPeople(peopleData);
       } catch (err) {
         console.error('Error fetching people:', err);
       }
@@ -94,8 +95,15 @@ export default function AddDebtPage() {
     setLoading(true);
     setMessage({ text: "", type: "" });
 
+    const payload = {
+      amount: formData.amount,
+      description: formData.description,
+      is_my_debt: formData.is_my_debt,
+      person_in_charge_id: formData.person_in_charge_id || null,
+    };
+
     try {
-      await api.post('/debts', formData);
+      await api.post('/debts', payload);
       setMessage({ text: "Utang added successfully!", type: "success" });
       setTimeout(() => {
         navigate('/utangs');
