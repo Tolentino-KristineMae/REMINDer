@@ -16,7 +16,8 @@ import {
     AlertCircle,
     ArrowUpRight,
     X,
-    TrendingUp
+    TrendingUp,
+    User
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency, formatDateLocal } from '../utils/formatters';
@@ -34,6 +35,9 @@ const DebtsPage = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [debtToDelete, setDebtToDelete] = useState(null);
     const [deleting, setDeleting] = useState(false);
+
+    const [activeTab, setActiveTab] = useState('owed'); // 'owed' or 'mine'
+    const [selectedPersonId, setSelectedPersonId] = useState('all');
 
     const fetchData = useCallback(async () => {
         try {
@@ -97,8 +101,37 @@ const DebtsPage = () => {
         }
     };
 
-    const pendingDebts = Array.isArray(debts) ? debts.filter(d => d.status === 'pending') : [];
-    const paidDebts = Array.isArray(debts) ? debts.filter(d => d.status === 'paid') : [];
+    // Filter debts based on active tab and status
+    const filteredDebts = Array.isArray(debts) ? debts.filter(d => {
+        const isMine = d.is_my_debt;
+        if (activeTab === 'mine') return isMine;
+        return !isMine;
+    }) : [];
+
+    // Further filter by person if in 'owed' tab
+    const personFilteredDebts = activeTab === 'owed' && selectedPersonId !== 'all'
+        ? filteredDebts.filter(d => d.person_in_charge_id?.toString() === selectedPersonId.toString())
+        : filteredDebts;
+
+    const pendingDebts = personFilteredDebts.filter(d => d.status === 'pending');
+    const paidDebts = personFilteredDebts.filter(d => d.status === 'paid');
+
+    // Get unique people from 'owed' debts for the person tabs
+    const peopleWithOwedDebts = Array.isArray(debts) 
+        ? Object.values(debts.reduce((acc, debt) => {
+            if (!debt.is_my_debt && debt.person_in_charge) {
+                const personId = debt.person_in_charge.id;
+                if (!acc[personId]) {
+                    acc[personId] = {
+                        ...debt.person_in_charge,
+                        count: 0
+                    };
+                }
+                acc[personId].count += 1;
+            }
+            return acc;
+        }, {}))
+        : [];
 
     const calculateTotal = (debtList) => {
         return debtList.reduce((sum, d) => {
@@ -128,9 +161,32 @@ const DebtsPage = () => {
             <audio ref={audioRef} onEnded={() => setPlayingAudio(null)} className="hidden" />
 
             <div className="max-w-7xl mx-auto space-y-8">
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-                    <div className="flex items-center gap-3">
+                {/* Header & Main Tabs */}
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Personal Ledger</h1>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Manage your personal financial obligations</p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex bg-white border border-gray-100 p-1.5 rounded-[1.5rem] shadow-sm">
+                            <button 
+                                onClick={() => {
+                                    setActiveTab('owed');
+                                    setSelectedPersonId('all');
+                                }} 
+                                className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'owed' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
+                            >
+                                Siningilin
+                            </button>
+                            <button 
+                                onClick={() => setActiveTab('mine')} 
+                                className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'mine' ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
+                            >
+                                Bayarin
+                            </button>
+                        </div>
+
                         <div className="flex bg-white border border-gray-100 p-1.5 rounded-2xl shadow-sm">
                             <button 
                                 onClick={() => setViewMode('list')} 
@@ -145,14 +201,39 @@ const DebtsPage = () => {
                                 <LayoutGrid size={18} />
                             </button>
                         </div>
+
                         <button 
                             onClick={() => navigate('/add-debt')} 
                             className="bg-green-900 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center gap-3 active:scale-[0.98]"
                         >
-                            <Plus size={18} strokeWidth={3} /> New Utang
+                            <Plus size={18} strokeWidth={3} /> New Entry
                         </button>
                     </div>
                 </div>
+
+                {/* Person Filter Tabs (Only for Owed) */}
+                {activeTab === 'owed' && peopleWithOwedDebts.length > 0 && (
+                    <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                        <button 
+                            onClick={() => setSelectedPersonId('all')}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2 ${selectedPersonId === 'all' ? 'bg-green-50 border-green-600 text-green-900' : 'bg-white border-transparent text-gray-400 hover:border-gray-100'}`}
+                        >
+                            All Persons
+                        </button>
+                        {peopleWithOwedDebts.map(person => (
+                            <button 
+                                key={person.id}
+                                onClick={() => setSelectedPersonId(person.id)}
+                                className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2 ${selectedPersonId === person.id ? 'bg-green-50 border-green-600 text-green-900' : 'bg-white border-transparent text-gray-400 hover:border-gray-100'}`}
+                            >
+                                <div className="w-5 h-5 bg-green-100 rounded-lg flex items-center justify-center text-[8px] text-green-700">
+                                    {person.count}
+                                </div>
+                                {person.first_name} {person.last_name}
+                            </button>
+                        ))}
+                    </div>
+                )}
 
                 {/* Stats Summary */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -165,7 +246,9 @@ const DebtsPage = () => {
                                 <span className="text-[10px] font-black uppercase tracking-wider">{pendingDebts.length} Pending</span>
                             </div>
                         </div>
-                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Total Unpaid</p>
+                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">
+                            {activeTab === 'mine' ? 'Total to Pay' : 'Total to Collect'}
+                        </p>
                         <p className="text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(pendingDebts))}</p>
                     </div>
 
@@ -191,8 +274,12 @@ const DebtsPage = () => {
                                 <Clock size={20} />
                             </div>
                             <div>
-                                <h2 className="text-lg font-black text-gray-900 leading-tight">Active Utangs</h2>
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Unsettled personal obligations</p>
+                                <h2 className="text-lg font-black text-gray-900 leading-tight">
+                                    {activeTab === 'mine' ? 'My Unpaid Utangs' : 'Active Collections'}
+                                </h2>
+                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                    {activeTab === 'mine' ? 'Personal financial obligations' : 'Outstanding debts from others'}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -210,11 +297,16 @@ const DebtsPage = () => {
                                         </div>
                                     )}
                                     <div className={viewMode === 'grid' ? "p-6" : "flex-1"}>
-                                        <div className="flex items-center gap-2 mb-3">
+                                        <div className="flex flex-wrap items-center gap-2 mb-3">
                                             {debt.is_my_debt ? (
                                                 <span className="text-[9px] font-black bg-gray-900 text-white px-3 py-1 rounded-lg uppercase tracking-wider">My Utang</span>
                                             ) : (
                                                 <span className="text-[9px] font-black bg-green-600 text-white px-3 py-1 rounded-lg uppercase tracking-wider">Owed to Me</span>
+                                            )}
+                                            {debt.person_in_charge && (
+                                                <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5">
+                                                    <User size={10} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
+                                                </span>
                                             )}
                                         </div>
                                         <h4 className="font-black text-gray-900 text-base mb-2 group-hover:text-amber-600 transition-colors">{debt.description}</h4>
@@ -287,7 +379,7 @@ const DebtsPage = () => {
                                 <CheckCircle2 size={20} />
                             </div>
                             <div>
-                                <h2 className="text-lg font-black text-gray-900 leading-tight">Bayad History</h2>
+                                <h2 className="text-lg font-black text-gray-900 leading-tight">Settlement History</h2>
                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Completed personal settlements</p>
                             </div>
                         </div>
@@ -315,11 +407,16 @@ const DebtsPage = () => {
                                         </div>
                                     )}
                                     <div className={viewMode === 'grid' ? "p-6" : "flex-1"}>
-                                        <div className="flex items-center gap-2 mb-3">
+                                        <div className="flex flex-wrap items-center gap-2 mb-3">
                                             {debt.is_my_debt ? (
                                                 <span className="text-[9px] font-black bg-gray-100 text-gray-500 px-3 py-1 rounded-lg uppercase tracking-wider">My Utang</span>
                                             ) : (
                                                 <span className="text-[9px] font-black bg-green-50 text-green-600 px-3 py-1 rounded-lg uppercase tracking-wider">Owed to Me</span>
+                                            )}
+                                            {debt.person_in_charge && (
+                                                <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5">
+                                                    <User size={10} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
+                                                </span>
                                             )}
                                         </div>
                                         <h4 className="font-black text-gray-900 text-base mb-2">{debt.description}</h4>

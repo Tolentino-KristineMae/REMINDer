@@ -13,6 +13,7 @@ class Debt extends Model
         'amount',
         'description',
         'is_my_debt',
+        'person_in_charge_id',
         'status',
         'proof_image_path',
         'proof_voice_path',
@@ -25,4 +26,9 @@ class Debt extends Model
         'is_my_debt' => 'boolean',
         'paid_at' => 'datetime',
     ];
+
+    public function personInCharge()
+    {
+        return $this->belongsTo(PersonInCharge::class, 'person_in_charge_id');
+    }
 }

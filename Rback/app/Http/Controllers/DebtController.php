@@ -11,7 +11,7 @@ class DebtController extends Controller
 {
     public function index()
     {
-        $debts = Debt::orderBy('created_at', 'desc')->get();
+        $debts = Debt::with('personInCharge')->orderBy('created_at', 'desc')->get();
         return response()->json([
             'success' => true,
             'debts' => $debts
@@ -24,18 +24,20 @@ class DebtController extends Controller
             'amount' => 'required|numeric|min:0',
             'description' => 'required|string',
             'is_my_debt' => 'boolean',
+            'person_in_charge_id' => 'nullable|exists:person_in_charges,id',
         ]);
 
         $debt = Debt::create([
             'amount' => $request->amount,
             'description' => $request->description,
             'is_my_debt' => $request->is_my_debt ?? true,
+            'person_in_charge_id' => $request->person_in_charge_id,
             'status' => 'pending',
         ]);
 
         return response()->json([
             'success' => true,
-            'debt' => $debt
+            'debt' => $debt->load('personInCharge')
         ], 201);
     }
 

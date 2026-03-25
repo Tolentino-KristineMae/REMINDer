@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { 
@@ -12,7 +12,8 @@ import {
   ShieldCheck, 
   Clock, 
   ArrowRight,
-  Wallet2
+  Wallet2,
+  User
 } from "lucide-react"
 import { cn } from "../lib/utils"
 
@@ -65,6 +66,7 @@ const Button = ({ children, className, disabled, loading, size = "md", ...props 
 export default function AddDebtPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [people, setPeople] = useState([]);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [focusedField, setFocusedField] = useState(null);
 
@@ -72,7 +74,20 @@ export default function AddDebtPage() {
     amount: "",
     description: "",
     is_my_debt: true,
+    person_in_charge_id: "",
   });
+
+  useEffect(() => {
+    const fetchPeople = async () => {
+      try {
+        const response = await api.get('/people');
+        setPeople(response.data.data || response.data || []);
+      } catch (err) {
+        console.error('Error fetching people:', err);
+      }
+    };
+    fetchPeople();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -157,6 +172,49 @@ export default function AddDebtPage() {
                     </div>
                   </FormField>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                    <FormField label="Person in Charge" icon={User} focused={focusedField === "person_in_charge_id"}>
+                      <select 
+                        value={formData.person_in_charge_id} 
+                        onChange={(e) => setFormData({ ...formData, person_in_charge_id: e.target.value })} 
+                        onFocus={() => setFocusedField("person_in_charge_id")} 
+                        onBlur={() => setFocusedField(null)} 
+                        className="w-full h-16 lg:h-20 px-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-green-900 font-black text-sm uppercase tracking-wider outline-none transition-all appearance-none cursor-pointer"
+                      >
+                        <option value="">Select Person</option>
+                        {people.map(person => (
+                          <option key={person.id} value={person.id}>
+                            {person.first_name} {person.last_name}
+                          </option>
+                        ))}
+                      </select>
+                    </FormField>
+
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-gray-400 pl-1">
+                        <Wallet2 className="w-3.5 h-3.5" />
+                        Type of Record
+                      </label>
+                      <div 
+                        className={cn(
+                          "flex items-center gap-4 h-16 lg:h-20 px-6 rounded-2xl border-2 transition-all cursor-pointer group",
+                          formData.is_my_debt ? "bg-gray-900 border-gray-900 text-white shadow-xl" : "bg-white border-gray-100 text-gray-900 hover:border-green-900"
+                        )}
+                        onClick={() => setFormData({ ...formData, is_my_debt: !formData.is_my_debt })}
+                      >
+                        <div className={cn(
+                          "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0",
+                          formData.is_my_debt ? "bg-white border-white" : "bg-gray-50 border-gray-200 group-hover:border-green-900"
+                        )}>
+                          {formData.is_my_debt && <CheckCircle2 size={14} className="text-gray-900" />}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[10px] font-black uppercase tracking-wider">{formData.is_my_debt ? "My Utang" : "Owed to Me"}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <FormField label="Transaction Description" icon={FileText} focused={focusedField === "description"}>
                     <Textarea 
                       value={formData.description} 
@@ -168,28 +226,6 @@ export default function AddDebtPage() {
                       required 
                     />
                   </FormField>
-
-                  {/* Is My Debt Checkbox */}
-                  <div 
-                    className={cn(
-                      "flex items-center gap-4 p-5 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] border-2 transition-all cursor-pointer group",
-                      formData.is_my_debt ? "bg-gray-900 border-gray-900 text-white shadow-2xl" : "bg-white border-gray-100 text-gray-900 hover:border-green-900"
-                    )}
-                    onClick={() => setFormData({ ...formData, is_my_debt: !formData.is_my_debt })}
-                  >
-                    <div className={cn(
-                      "w-7 h-7 lg:w-8 lg:h-8 rounded-lg lg:rounded-xl border-2 flex items-center justify-center transition-all shrink-0",
-                      formData.is_my_debt ? "bg-white border-white" : "bg-gray-50 border-gray-200 group-hover:border-green-900"
-                    )}>
-                      {formData.is_my_debt && <CheckCircle2 size={16} className="text-gray-900 lg:w-[18px] lg:h-[18px]" />}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs lg:text-sm font-black uppercase tracking-wider">Is this my utang?</p>
-                      <p className={cn("text-[9px] lg:text-[10px] font-bold uppercase tracking-widest mt-0.5", formData.is_my_debt ? "text-gray-400" : "text-gray-400")}>
-                        {formData.is_my_debt ? "Logged as your liability" : "Logged as someone else's debt to you"}
-                      </p>
-                    </div>
-                  </div>
 
                   {message.text && (
                     <div className={cn(
