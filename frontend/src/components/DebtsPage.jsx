@@ -161,55 +161,50 @@ const DebtsPage = () => {
 
             <audio ref={audioRef} onEnded={() => setPlayingAudio(null)} className="hidden" />
 
-            <div className="max-w-7xl mx-auto space-y-8">
+            <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
                 {/* Header & Main Tabs */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                    <div className="flex flex-col gap-2">
-                        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Personal Ledger</h1>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Manage your personal financial obligations</p>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-4">
-                        <div className="flex bg-white border border-gray-100 p-1.5 rounded-[1.5rem] shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                        <div className="flex bg-white border border-gray-100 p-1.5 rounded-xl sm:rounded-[1.5rem] shadow-sm">
                             <button 
                                 onClick={() => {
                                     setActiveTab('owed');
                                     setSelectedPersonId('all');
                                 }} 
-                                className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'owed' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
+                                className={`px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'owed' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
                             >
                                 Siningilin
                             </button>
                             <button 
                                 onClick={() => setActiveTab('mine')} 
-                                className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'mine' ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
+                                className={`px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'mine' ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
                             >
                                 Bayarin
                             </button>
                         </div>
 
-                        <div className="flex bg-white border border-gray-100 p-1.5 rounded-2xl shadow-sm">
+                        <div className="flex bg-white border border-gray-100 p-1 rounded-xl sm:p-1.5 shadow-sm">
                             <button 
                                 onClick={() => setViewMode('list')} 
-                                className={`p-2 rounded-xl transition-all ${viewMode === 'list' ? 'bg-green-900 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50'}`}
+                                className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all ${viewMode === 'list' ? 'bg-green-900 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50'}`}
                             >
-                                <LayoutList size={18} />
+                                <LayoutList size={16} className="sm:w-[18px] sm:h-[18px]" />
                             </button>
                             <button 
                                 onClick={() => setViewMode('grid')} 
-                                className={`p-2 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50'}`}
+                                className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50'}`}
                             >
-                                <LayoutGrid size={18} />
+                                <LayoutGrid size={16} className="sm:w-[18px] sm:h-[18px]" />
                             </button>
                         </div>
-
-                        <button 
-                            onClick={() => navigate('/add-debt')} 
-                            className="bg-green-900 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center gap-3 active:scale-[0.98]"
-                        >
-                            <Plus size={18} strokeWidth={3} /> New Entry
-                        </button>
                     </div>
+
+                    <button 
+                        onClick={() => navigate('/add-debt')} 
+                        className="bg-green-900 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center justify-center gap-2 sm:gap-3 active:scale-[0.98] w-full sm:w-auto"
+                    >
+                        <Plus size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={3} /> <span className="sm:hidden">New</span><span className="hidden sm:inline">New Entry</span>
+                    </button>
                 </div>
 
                 {/* Person Filter Tabs (Only for Owed) */}
@@ -237,33 +232,33 @@ const DebtsPage = () => {
                 )}
 
                 {/* Stats Summary */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-amber-200 transition-all">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 border border-amber-100">
-                                <Clock size={20} />
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+                    <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-amber-200 transition-all">
+                        <div className="flex items-center justify-between mb-2 sm:mb-4">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-amber-50 rounded-lg sm:rounded-xl flex items-center justify-center text-amber-600 border border-amber-100">
+                                <Clock size={16} className="sm:w-5 sm:h-5" />
                             </div>
-                            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 rounded-full">
-                                <span className="text-[10px] font-black uppercase tracking-wider">{pendingDebts.length} Pending</span>
+                            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-amber-50 text-amber-600 rounded-full">
+                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{pendingDebts.length}</span>
                             </div>
                         </div>
-                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">
+                        <p className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">
                             {activeTab === 'mine' ? 'Total to Pay' : 'Total to Collect'}
                         </p>
-                        <p className="text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(pendingDebts))}</p>
+                        <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(pendingDebts))}</p>
                     </div>
 
-                    <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-green-200 transition-all">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-green-600 border border-green-100">
-                                <CheckCircle2 size={20} />
+                    <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-green-200 transition-all">
+                        <div className="flex items-center justify-between mb-2 sm:mb-4">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg sm:rounded-xl flex items-center justify-center text-green-600 border border-green-100">
+                                <CheckCircle2 size={16} className="sm:w-5 sm:h-5" />
                             </div>
-                            <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-600 rounded-full">
-                                <span className="text-[10px] font-black uppercase tracking-wider">{paidDebts.length} Settled</span>
+                            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-green-50 text-green-600 rounded-full">
+                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{paidDebts.length}</span>
                             </div>
                         </div>
-                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Total Settled</p>
-                        <p className="text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(paidDebts))}</p>
+                        <p className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">Total Settled</p>
+                        <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(paidDebts))}</p>
                     </div>
                 </div>
 
