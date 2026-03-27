@@ -16,6 +16,7 @@ class PersonInChargeResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'avatar' => $this->avatar,
+            'color' => $this->color ?? '#22c55e',
         ];
     }
 }

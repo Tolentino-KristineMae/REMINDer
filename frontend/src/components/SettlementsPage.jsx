@@ -148,8 +148,8 @@ const BillItem = React.memo(({
                                 <span className="hidden sm:inline">Due:</span> {formatDateLocal(bill.due_date)}
                             </div>
                             <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
-                            <span className="text-[9px] sm:text-[10px] font-black text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                                <Users size={8} className="sm:w-2.5 sm:h-2.5 text-blue-500" />
+                            <span className="text-[9px] sm:text-[10px] font-black flex items-center gap-1 whitespace-nowrap" style={{ color: bill.person_in_charge?.color || '#2563eb' }}>
+                                <Users size={8} className="sm:w-2.5 sm:h-2.5" style={{ color: bill.person_in_charge?.color || '#2563eb' }} />
                                 {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                             </span>
                             <span className="text-[8px] sm:text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-1.5 sm:px-2 py-0.5 rounded-md border border-red-100/50 whitespace-nowrap">
@@ -225,8 +225,8 @@ const BillItem = React.memo(({
                             )}
                             <div className="flex items-center gap-1">
                                 <span className="text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
-                                <span className="text-[8px] sm:text-[9px] font-black text-blue-600 flex items-center gap-0.5 sm:gap-1 whitespace-nowrap">
-                                    <Users size={8} className="sm:w-2.5 sm:h-2.5 text-blue-500" /> 
+                                <span className="text-[8px] sm:text-[9px] font-black flex items-center gap-0.5 sm:gap-1 whitespace-nowrap" style={{ color: bill.person_in_charge?.color || '#2563eb' }}>
+                                    <Users size={8} className="sm:w-2.5 sm:h-2.5" style={{ color: bill.person_in_charge?.color || '#2563eb' }} /> 
                                     {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                                 </span>
                             </div>
@@ -656,8 +656,8 @@ const SettlementsPage = () => {
                                                             </div>
                                                             <div className="flex items-center gap-1.5">
                                                                 <span className="text-[8px] sm:text-[10px] font-bold text-gray-500 uppercase">Charge:</span>
-                                                                <p className="text-[8px] sm:text-[10px] font-black text-blue-600 flex items-center gap-1">
-                                                                    <Users size={9} className="sm:w-2.5 sm:h-2.5 text-blue-500" />
+                                                                <p className="text-[8px] sm:text-[10px] font-black flex items-center gap-1" style={{ color: bill.person_in_charge?.color || '#2563eb' }}>
+                                                                    <Users size={9} className="sm:w-2.5 sm:h-2.5" style={{ color: bill.person_in_charge?.color || '#2563eb' }} />
                                                                     {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                                                                 </p>
                                                             </div>

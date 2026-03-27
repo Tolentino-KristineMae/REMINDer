@@ -23,6 +23,7 @@ class PersonInChargeController extends Controller
             'email' => 'required|email|max:255|unique:person_in_charges',
             'phone' => 'nullable|string|max:255',
             'avatar' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
         ]);
 
         $person = PersonInCharge::create($request->all());
@@ -43,6 +44,7 @@ class PersonInChargeController extends Controller
             'email' => 'sometimes|email|max:255|unique:person_in_charges,email,' . $person->id,
             'phone' => 'nullable|string|max:255',
             'avatar' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
         ]);
 
         $person->update($request->all());

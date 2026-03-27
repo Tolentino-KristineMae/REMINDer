@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PersonInCharge extends Model
 {
     protected $table = 'person_in_charges';
-    protected $fillable = ['first_name', 'last_name', 'email', 'phone', 'avatar'];
+    protected $fillable = ['first_name', 'last_name', 'email', 'phone', 'avatar', 'color'];
 
     public function getNameAttribute()
     {

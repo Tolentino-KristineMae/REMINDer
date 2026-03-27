@@ -39,9 +39,9 @@ const Management = () => {
 
   const [people, setPeople] = useState([])
   const [bills, setBills] = useState([])
-  const [newPerson, setNewPerson] = useState({ first_name: '', last_name: '', email: '' })
+  const [newPerson, setNewPerson] = useState({ first_name: '', last_name: '', email: '', color: '#22c55e' })
   const [editingPerson, setEditingPerson] = useState(null)
-  const [editPersonData, setEditPersonData] = useState({ first_name: '', last_name: '', email: '' })
+  const [editPersonData, setEditPersonData] = useState({ first_name: '', last_name: '', email: '', color: '' })
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [itemToDelete, setItemToDelete] = useState(null)
@@ -185,7 +185,7 @@ const Management = () => {
     
     // Optimistic update
     setPeople(prev => [...prev, personToAdd]);
-    setNewPerson({ first_name: '', last_name: '', email: '' })
+    setNewPerson({ first_name: '', last_name: '', email: '', color: '#22c55e' })
 
     try {
       const response = await api.post('/people', personData)
@@ -269,7 +269,8 @@ const Management = () => {
     setEditPersonData({ 
       first_name: person.first_name || '', 
       last_name: person.last_name || '', 
-      email: person.email || '' 
+      email: person.email || '',
+      color: person.color || '#22c55e'
     })
   }
 
@@ -294,7 +295,7 @@ const Management = () => {
 
   const handleCancelPersonEdit = () => {
     setEditingPerson(null)
-    setEditPersonData({ first_name: '', last_name: '', email: '' })
+    setEditPersonData({ first_name: '', last_name: '', email: '', color: '' })
   }
 
   const getPerformanceColor = (percentage) => {
@@ -464,6 +465,26 @@ const Management = () => {
                   className="h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-all"
                   required
                 />
+              </div>
+
+              <div className="w-full sm:w-40">
+                <label className="mb-2 block text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Identity Color
+                </label>
+                <div className="flex h-11 items-center gap-3 rounded-xl border border-gray-200 bg-white px-4">
+                  <div 
+                    className="relative h-6 w-6 rounded-lg border border-gray-200 shadow-sm"
+                    style={{ backgroundColor: newPerson.color }}
+                  >
+                    <input
+                      type="color"
+                      value={newPerson.color}
+                      onChange={(e) => setNewPerson({ ...newPerson, color: e.target.value })}
+                      className="absolute inset-0 cursor-pointer opacity-0"
+                    />
+                  </div>
+                  <span className="text-xs font-mono text-muted-foreground uppercase">{newPerson.color}</span>
+                </div>
               </div>
 
               <button 
@@ -763,7 +784,7 @@ const Management = () => {
                   >
                     <div className="flex items-start justify-between">
                       <div className="relative">
-                            <div className="h-14 w-14 rounded-xl border-2 border-white shadow-md bg-green-600 text-white flex items-center justify-center font-bold text-lg">
+                            <div className="h-14 w-14 rounded-xl border-2 border-white shadow-md text-white flex items-center justify-center font-bold text-lg" style={{ backgroundColor: person.color || '#22c55e' }}>
                               {person.first_name?.[0] || '?'}{person.last_name?.[0] || ''}
                             </div>
                             <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-white border-2 border-white">
@@ -834,6 +855,23 @@ const Management = () => {
                             onChange={(e) => setEditPersonData({ ...editPersonData, email: e.target.value })}
                             className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                           />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Identity Color</label>
+                          <div className="flex h-10 items-center gap-3 rounded-lg border border-gray-200 bg-white px-3">
+                            <div 
+                              className="relative h-6 w-6 rounded-lg border border-gray-200 shadow-sm"
+                              style={{ backgroundColor: editPersonData.color || '#22c55e' }}
+                            >
+                              <input
+                                type="color"
+                                value={editPersonData.color || '#22c55e'}
+                                onChange={(e) => setEditPersonData({ ...editPersonData, color: e.target.value })}
+                                className="absolute inset-0 cursor-pointer opacity-0"
+                              />
+                            </div>
+                            <span className="text-xs font-mono text-gray-500 uppercase">{editPersonData.color || '#22c55e'}</span>
+                          </div>
                         </div>
                       </div>
                     ) : (
@@ -912,10 +950,24 @@ const Management = () => {
                                     className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                                     placeholder="Email"
                                   />
+                                  <div className="flex items-center gap-2">
+                                    <div 
+                                      className="relative h-7 w-7 rounded-lg border border-gray-200 shadow-sm shrink-0"
+                                      style={{ backgroundColor: editPersonData.color || '#22c55e' }}
+                                    >
+                                      <input
+                                        type="color"
+                                        value={editPersonData.color || '#22c55e'}
+                                        onChange={(e) => setEditPersonData({ ...editPersonData, color: e.target.value })}
+                                        className="absolute inset-0 cursor-pointer opacity-0"
+                                      />
+                                    </div>
+                                    <span className="text-xs font-mono text-gray-500 uppercase">{editPersonData.color || '#22c55e'}</span>
+                                  </div>
                                 </div>
                               ) : (
                                 <>
-                                  <div className="h-9 w-9 rounded-lg bg-green-600 text-white flex items-center justify-center font-bold text-sm border border-gray-100 shadow-sm">
+                                  <div className="h-9 w-9 rounded-lg text-white flex items-center justify-center font-bold text-sm border border-gray-100 shadow-sm" style={{ backgroundColor: person.color || '#22c55e' }}>
                                     {person.first_name?.[0] || '?'}{person.last_name?.[0] || ''}
                                   </div>
                                   <div>

@@ -469,7 +469,7 @@ const SettleBillPage = () => {
                                     <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
                                         <Users size={16} />
                                     </div>
-                                    <span className="text-xs uppercase tracking-wider">PIC: {bill?.person_in_charge?.name || 'No PIC'}</span>
+                                    <span className="text-xs uppercase tracking-wider">PIC: <span style={{ color: bill?.person_in_charge?.color || '#d1d5db' }}>{bill?.person_in_charge?.name || 'No PIC'}</span></span>
                                 </div>
                             </div>
                         </div>

@@ -417,7 +417,10 @@ const CalendarPage = () => {
                                                     </h4>
                                                     <div className="flex flex-col gap-1 mt-1">
                                                         <p className="text-[10px] text-gray-500">
-                                                            <span className="font-bold">Charge:</span> {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
+                                                            <span className="font-bold">Charge:</span>{' '}
+                                                            <span style={{ color: bill.person_in_charge?.color || '#374151', fontWeight: 700 }}>
+                                                                {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
+                                                            </span>
                                                         </p>
                                                         {isPaid && bill.proof_of_payments?.[0]?.paid_by && (
                                                             <p className="text-[10px] text-green-600">

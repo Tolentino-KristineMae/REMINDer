@@ -222,7 +222,7 @@ const DebtsPage = () => {
                                 onClick={() => setSelectedPersonId(person.id)}
                                 className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2 ${selectedPersonId === person.id ? 'bg-green-50 border-green-600 text-green-900' : 'bg-white border-transparent text-gray-400 hover:border-gray-100'}`}
                             >
-                                <div className="w-5 h-5 bg-green-100 rounded-lg flex items-center justify-center text-[8px] text-green-700">
+                                <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-bold" style={{ backgroundColor: (person.color || '#22c55e') + '20', color: person.color || '#22c55e' }}>
                                     {person.count}
                                 </div>
                                 {person.first_name} {person.last_name}
@@ -300,7 +300,7 @@ const DebtsPage = () => {
                                                 <span className="text-[9px] font-black bg-green-600 text-white px-3 py-1 rounded-lg uppercase tracking-wider">Owed to Me</span>
                                             )}
                                             {debt.person_in_charge && (
-                                                <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5">
+                                                <span className="text-[9px] font-black px-3 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5" style={{ color: debt.person_in_charge.color || '#2563eb', backgroundColor: (debt.person_in_charge.color || '#2563eb') + '15' }}>
                                                     <User size={10} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
                                                 </span>
                                             )}
@@ -422,7 +422,7 @@ const DebtsPage = () => {
                                                 <span className="text-[9px] font-black bg-green-50 text-green-600 px-3 py-1 rounded-lg uppercase tracking-wider">Owed to Me</span>
                                             )}
                                             {debt.person_in_charge && (
-                                                <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5">
+                                                <span className="text-[9px] font-black px-3 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5" style={{ color: debt.person_in_charge.color || '#2563eb', backgroundColor: (debt.person_in_charge.color || '#2563eb') + '15' }}>
                                                     <User size={10} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
                                                 </span>
                                             )}
