@@ -198,13 +198,13 @@ const BillItem = React.memo(({
 
     // Settled Item
     return (
-        <div className="group bg-green-50 border border-green-200 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg hover:shadow-green-500/10 transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+        <div className="group bg-white border border-green-50 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-200 rounded-lg sm:rounded-xl flex items-center justify-center text-green-800 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg sm:rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
                     <CheckCircle2 size={14} className="sm:w-[18px] sm:h-[18px]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h4 className="font-black text-green-900 text-sm mb-1.5 line-clamp-2 leading-tight">{bill.details}</h4>
+                    <h4 className="font-black text-green-950 text-sm mb-1.5 leading-tight">{bill.details}</h4>
                     <div className="flex flex-col gap-1.5 sm:gap-2">
                         <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1">
                             <div className="flex items-center gap-1">
@@ -233,8 +233,8 @@ const BillItem = React.memo(({
                         </div>
                         <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 mt-0.5">
                             <div className="flex items-center gap-1">
-                                <span className="text-[8px] sm:text-[9px] font-bold text-green-700 uppercase tracking-wider">Category:</span>
-                                <span className="text-[8px] sm:text-[9px] font-black text-green-800 bg-green-200 px-1 sm:px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                                <span className="text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
+                                <span className="text-[8px] sm:text-[9px] font-black text-green-600 bg-green-50 px-1 sm:px-1.5 py-0.5 rounded-full whitespace-nowrap">
                                     {bill.category?.name}
                                 </span>
                             </div>
@@ -645,7 +645,7 @@ const SettlementsPage = () => {
                                             <div className="p-3 sm:p-4">
                                                 <div className="flex justify-between items-start mb-2 sm:mb-3">
                                                     <div className="min-w-0 flex-1">
-                                                        <h4 className="font-black text-gray-900 text-xs sm:text-sm mb-1 line-clamp-2 truncate">{bill.details}</h4>
+<h4 className="font-black text-gray-900 text-xs sm:text-sm mb-1">{bill.details}</h4>
                                                         <div className="flex flex-col gap-0.5 sm:gap-1">
                                                             <div className="flex items-center gap-1.5">
                                                                 <span className="text-[8px] sm:text-[10px] font-bold text-gray-500 uppercase">Due:</span>
@@ -737,7 +737,7 @@ const SettlementsPage = () => {
                         </div>
                     </div>
                     
-                    <div className="p-3 sm:p-4 bg-green-100">
+                    <div className="p-3 sm:p-4 bg-green-50/5">
                         {viewMode === 'list' ? (
                             <div className="space-y-2 sm:space-y-3">
                                 {settledBills.map((bill) => (
@@ -767,7 +767,7 @@ const SettlementsPage = () => {
                                 {settledBills.map((bill) => (
                                     <div 
                                         key={bill.id}
-                                        className="group bg-green-50 border border-green-200 rounded-xl sm:rounded-2xl overflow-hidden hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all"
+                                        className="group bg-white border border-green-50 rounded-xl sm:rounded-2xl overflow-hidden hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all"
                                     >
                                         <div className="h-24 sm:h-28 lg:h-36 bg-gray-50 relative overflow-hidden">
                                             {bill.proof_of_payments?.[0]?.file_path ? (
@@ -842,7 +842,7 @@ const SettlementsPage = () => {
 
                                             {bill.proof_of_payments?.[0]?.details && (
                                                 <div className="bg-gray-50 p-2 sm:p-3 rounded-lg sm:rounded-xl mb-3 sm:mb-4">
-                                                    <p className="text-xs text-gray-500 italic line-clamp-2 sm:line-clamp-none">&ldquo;{bill.proof_of_payments[0].details}&rdquo;</p>
+                                                    <p className="text-xs text-gray-500 italic">&ldquo;{bill.proof_of_payments[0].details}&rdquo;</p>
                                                 </div>
                                             )}
 
