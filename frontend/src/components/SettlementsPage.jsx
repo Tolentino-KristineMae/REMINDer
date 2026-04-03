@@ -198,13 +198,13 @@ const BillItem = React.memo(({
 
     // Settled Item
     return (
-        <div className="group bg-white border border-green-50 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+        <div className="group bg-green-50 border border-green-200 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg hover:shadow-green-500/10 transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg sm:rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-200 rounded-lg sm:rounded-xl flex items-center justify-center text-green-800 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
                     <CheckCircle2 size={14} className="sm:w-[18px] sm:h-[18px]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h4 className="font-black text-green-950 text-sm mb-1.5 line-clamp-2 leading-tight">{bill.details}</h4>
+                    <h4 className="font-black text-green-900 text-sm mb-1.5 line-clamp-2 leading-tight">{bill.details}</h4>
                     <div className="flex flex-col gap-1.5 sm:gap-2">
                         <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1">
                             <div className="flex items-center gap-1">
@@ -233,8 +233,8 @@ const BillItem = React.memo(({
                         </div>
                         <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 mt-0.5">
                             <div className="flex items-center gap-1">
-                                <span className="text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
-                                <span className="text-[8px] sm:text-[9px] font-black text-green-600 bg-green-50 px-1 sm:px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                                <span className="text-[8px] sm:text-[9px] font-bold text-green-700 uppercase tracking-wider">Category:</span>
+                                <span className="text-[8px] sm:text-[9px] font-black text-green-800 bg-green-200 px-1 sm:px-1.5 py-0.5 rounded-full whitespace-nowrap">
                                     {bill.category?.name}
                                 </span>
                             </div>
