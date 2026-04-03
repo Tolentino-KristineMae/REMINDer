@@ -23,7 +23,7 @@ const api = axios.create({
     headers: {
         'Accept': 'application/json',
     },
-    timeout: 30000, // Reduced from 60s to 30s to better handle Render sleep
+    timeout: 10000, // 10 second timeout for faster feedback
 });
 
 api.interceptors.request.use((config) => {
@@ -43,18 +43,15 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Response interceptor to handle Render "Cold Start" and Vercel timeouts
+// Handle cold start on deployed backend
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const { config, response } = error;
         
-        // Handle Render.com free tier sleep (503 Service Unavailable or Timeout)
         if (!response || response.status === 503 || error.code === 'ECONNABORTED') {
-            // If it's the first attempt at a GET request, try one retry after a small delay
             if (!config.__isRetryRequest && config.method === 'get') {
                 config.__isRetryRequest = true;
-                // Wait 2 seconds before retrying (gives Render time to wake up)
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 return api(config);
             }
