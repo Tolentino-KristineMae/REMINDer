@@ -212,22 +212,37 @@ const DebtsPage = () => {
                     <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
                         <button 
                             onClick={() => setSelectedPersonId('all')}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2 ${selectedPersonId === 'all' ? 'bg-green-50 border-green-600 text-green-900' : 'bg-white border-transparent text-gray-400 hover:border-gray-100'}`}
+                            className="flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2"
+                            style={{ 
+                                backgroundColor: selectedPersonId === 'all' ? '#22c55e15' : 'white',
+                                borderColor: selectedPersonId === 'all' ? '#22c55e' : 'transparent',
+                                color: selectedPersonId === 'all' ? '#22c55e' : '#9ca3af'
+                            }}
                         >
                             All Persons
                         </button>
-                        {peopleWithOwedDebts.map(person => (
-                            <button 
-                                key={person.id}
-                                onClick={() => setSelectedPersonId(person.id)}
-                                className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2 ${selectedPersonId === person.id ? 'bg-green-50 border-green-600 text-green-900' : 'bg-white border-transparent text-gray-400 hover:border-gray-100'}`}
-                            >
-                                <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-bold" style={{ backgroundColor: (person.color || '#22c55e') + '20', color: person.color || '#22c55e' }}>
-                                    {person.count}
-                                </div>
-                                {person.first_name} {person.last_name}
-                            </button>
-                        ))}
+                        {peopleWithOwedDebts.map((person, idx) => {
+                            const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4'];
+                            const personColor = person.color || colors[idx % colors.length];
+                            const isSelected = selectedPersonId === person.id;
+                            return (
+                                <button 
+                                    key={person.id}
+                                    onClick={() => setSelectedPersonId(person.id)}
+                                    className="flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2"
+                                    style={{ 
+                                        backgroundColor: isSelected ? personColor + '15' : 'white',
+                                        borderColor: isSelected ? personColor : 'transparent',
+                                        color: isSelected ? personColor : '#9ca3af'
+                                    }}
+                                >
+                                    <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-bold" style={{ backgroundColor: personColor + '20', color: personColor }}>
+                                        {person.count}
+                                    </div>
+                                    {person.first_name} {person.last_name}
+                                </button>
+                            );
+                        })}
                     </div>
                 )}
 
