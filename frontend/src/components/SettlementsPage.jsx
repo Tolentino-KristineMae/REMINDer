@@ -684,6 +684,13 @@ const SettlementsPage = () => {
                     </div>
                 )}
 
+                {/* Visual Separator */}
+                <div className="flex items-center gap-3 my-8">
+                    <div className="flex-1 h-[2px] bg-red-300 rounded-full"></div>
+                    <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Settled</span>
+                    <div className="flex-1 h-[2px] bg-green-300 rounded-full"></div>
+                </div>
+
                 {/* Transaction History */}
                 <div className="bg-white rounded-xl sm:rounded-2xl border border-green-100 shadow-sm overflow-hidden">
                     <div className="p-3 sm:p-4 px-4 sm:px-5 border-b border-green-50 flex items-center justify-between bg-green-50/10">

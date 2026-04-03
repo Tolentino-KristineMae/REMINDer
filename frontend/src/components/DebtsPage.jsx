@@ -299,7 +299,7 @@ const DebtsPage = () => {
                             {pendingDebts.map(debt => (
                                 <div 
                                     key={debt.id} 
-                                    className={`group bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:border-amber-400 hover:shadow-2xl hover:shadow-amber-900/5 transition-all duration-300 ${viewMode === 'list' ? "p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6" : ""}`}
+                                    className={`group bg-red-50 border border-red-100 rounded-[2rem] overflow-hidden hover:border-red-300 hover:shadow-2xl hover:shadow-red-900/5 transition-all duration-300 ${viewMode === 'list' ? "p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6" : ""}`}
                                 >
                                     {viewMode === 'grid' && (
                                         <div className="h-40 bg-amber-50/30 flex items-center justify-center border-b border-amber-50 relative overflow-hidden">
