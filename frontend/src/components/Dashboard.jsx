@@ -37,8 +37,12 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get('/bills/dashboard');
-                const { stats: statsData, categories: categoriesData } = response.data || {};
+                const [dashboardRes, billsRes] = await Promise.all([
+                    api.get('/bills/dashboard'),
+                    api.get('/bills')
+                ]);
+                const { stats: statsData } = dashboardRes.data || {};
+                const bills = billsRes.data?.data || billsRes.data || [];
                 
                 setStats({
                     total: statsData?.total || 0,
@@ -50,7 +54,22 @@ const Dashboard = () => {
                     total_unpaid_amount: statsData?.total_unpaid_amount || 0,
                 });
                 
-                setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+                const unpaidBills = bills.filter(b => b.status === 'pending' || b.status === 'overdue');
+                const categoryMap = {};
+                unpaidBills.forEach(bill => {
+                    if (bill.category_id) {
+                        if (!categoryMap[bill.category_id]) {
+                            categoryMap[bill.category_id] = {
+                                id: bill.category_id,
+                                name: bill.category?.name || 'Uncategorized',
+                                color: bill.category?.color || '#6b7280',
+                                count: 0
+                            };
+                        }
+                        categoryMap[bill.category_id].count++;
+                    }
+                });
+                setCategories(Object.values(categoryMap));
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
             } finally {
@@ -181,7 +200,7 @@ const Dashboard = () => {
                                     <TrendingUp size={20} className="text-white" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-900">Categories Analytics</h3>
+                                    <h3 className="text-lg font-bold text-gray-900">Unpaid Bills by Category</h3>
                                     <p className="text-xs text-indigo-500 font-semibold">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
                                 </div>
                             </div>
@@ -231,8 +250,8 @@ const Dashboard = () => {
                                     <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4 text-indigo-300">
                                         <TrendingUp size={32} />
                                     </div>
-                                    <p className="text-sm font-bold text-indigo-900/40 uppercase tracking-widest">No Category Data</p>
-                                    <p className="text-xs text-indigo-900/30 mt-1">Add bills to see analytics</p>
+                                    <p className="text-sm font-bold text-indigo-900/40 uppercase tracking-widest">No Unpaid Bills</p>
+                                    <p className="text-xs text-indigo-900/30 mt-1">All bills are settled!</p>
                                 </div>
                             )}
                         </div>
