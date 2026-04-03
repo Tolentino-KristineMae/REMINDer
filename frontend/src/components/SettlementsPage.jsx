@@ -20,7 +20,8 @@ import {
     X,
     Edit2,
     Trash2,
-    Receipt
+    Receipt,
+    Users
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency, formatDateLocal } from '../utils/formatters';
