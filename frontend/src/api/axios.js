@@ -23,7 +23,7 @@ const api = axios.create({
     headers: {
         'Accept': 'application/json',
     },
-    timeout: 10000, // 10 second timeout for faster feedback
+    timeout: 30000, // 30 second timeout for slower backends (cold starts)
 });
 
 api.interceptors.request.use((config) => {
@@ -50,7 +50,7 @@ api.interceptors.response.use(
         const { config, response } = error;
         
         if (!response || response.status === 503 || error.code === 'ECONNABORTED') {
-            if (!config.__isRetryRequest && config.method === 'get') {
+            if (!config.__isRetryRequest) {
                 config.__isRetryRequest = true;
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 return api(config);
