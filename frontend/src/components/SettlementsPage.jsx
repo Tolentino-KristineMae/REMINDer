@@ -11,21 +11,12 @@ import {
     Plus,
     Filter,
     AlertCircle,
-    Mic,
     LayoutGrid,
     LayoutList,
-    Play,
-    Pause,
-    Volume2,
     X,
-    Trash2,
-    Users,
-    Clock,
-    Receipt,
-    Sparkles,
-    TrendingUp,
     Edit2,
-    Check
+    Trash2,
+    Receipt
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency, formatDateLocal } from '../utils/formatters';
@@ -198,7 +189,7 @@ const BillItem = React.memo(({
 
     // Settled Item
     return (
-        <div className="group bg-white border border-green-50 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+        <div className="group bg-green-50 border border-green-200 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg sm:rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
                     <CheckCircle2 size={14} className="sm:w-[18px] sm:h-[18px]" />
@@ -238,12 +229,6 @@ const BillItem = React.memo(({
                                     {bill.category?.name}
                                 </span>
                             </div>
-                            {bill.proof_of_payments?.[0]?.voice_record_path && (
-                                <div className="flex items-center gap-1 bg-red-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-red-100 animate-pulse">
-                                    <Mic size={8} className="sm:w-2.5 sm:h-2.5 text-red-500" />
-                                    <span className="text-[7px] sm:text-[9px] font-black text-red-600 uppercase tracking-tight">Voice Note</span>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>
@@ -256,23 +241,7 @@ const BillItem = React.memo(({
                 </div>
                 
                 <div className="flex items-center gap-1.5 sm:gap-2">
-                    {/* Voice Note Button - Always visible, disabled if no audio */}
-                    <button 
-                        onClick={() => bill.proof_of_payments?.[0]?.voice_record_path && toggleAudio(bill.proof_of_payments[0].voice_record_path)}
-                        disabled={!bill.proof_of_payments?.[0]?.voice_record_path}
-                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center transition-all border ${
-                            !bill.proof_of_payments?.[0]?.voice_record_path
-                            ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed opacity-50'
-                            : playingAudio === bill.proof_of_payments[0].voice_record_path 
-                                ? 'bg-red-500 text-white border-red-500' 
-                                : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-green-600 hover:text-white hover:border-green-600'
-                        }`}
-                        title={bill.proof_of_payments?.[0]?.voice_record_path ? "Play Voice Note" : "No Voice Note Available"}
-                    >
-                        {playingAudio === bill.proof_of_payments?.[0]?.voice_record_path ? <Pause size={12} /> : <Volume2 size={12} />}
-                    </button>
-
-                    {/* View Proof Button - Always visible, disabled if no file */}
+                    {/* View Proof Button */}
                     <button 
                         onClick={() => bill.proof_of_payments?.[0]?.file_path && handleViewProof(bill.proof_of_payments[0].file_path)}
                         disabled={!bill.proof_of_payments?.[0]?.file_path}
@@ -286,7 +255,7 @@ const BillItem = React.memo(({
                         <FileText size={12} />
                     </button>
 
-                    {/* Delete Button - Always visible and active */}
+                    {/* Delete Button */}
                     <button 
                         type="button"
                         onClick={() => confirmDelete(bill)}
@@ -737,7 +706,7 @@ const SettlementsPage = () => {
                         </div>
                     </div>
                     
-                    <div className="p-3 sm:p-4 bg-green-50/5">
+                    <div className="p-3 sm:p-4 bg-green-100">
                         {viewMode === 'list' ? (
                             <div className="space-y-2 sm:space-y-3">
                                 {settledBills.map((bill) => (
@@ -767,7 +736,7 @@ const SettlementsPage = () => {
                                 {settledBills.map((bill) => (
                                     <div 
                                         key={bill.id}
-                                        className="group bg-white border border-green-50 rounded-xl sm:rounded-2xl overflow-hidden hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all"
+                                        className="group bg-green-50 border border-green-200 rounded-xl sm:rounded-2xl overflow-hidden hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all"
                                     >
                                         <div className="h-24 sm:h-28 lg:h-36 bg-gray-50 relative overflow-hidden">
                                             {bill.proof_of_payments?.[0]?.file_path ? (
@@ -826,12 +795,7 @@ const SettlementsPage = () => {
                                                                 </p>
                                                             </div>
                                                         )}
-                                                        {bill.proof_of_payments?.[0]?.voice_record_path && (
-                                                            <div className="flex items-center gap-1 mt-1 bg-red-50 w-fit px-1.5 sm:px-2.5 py-0.5 rounded-lg border border-red-100 animate-pulse">
-                                                                <Mic size={10} className="sm:w-3 sm:h-3 text-red-500" />
-                                                                <span className="text-[7px] sm:text-[10px] font-black text-red-600 uppercase tracking-tight">Audio Proof</span>
-                                                            </div>
-                                                        )}
+                                                        
                                                     </div>
                                                 </div>
                                                 <div className="text-right shrink-0 ml-2">
@@ -847,22 +811,6 @@ const SettlementsPage = () => {
                                             )}
 
                                             <div className="flex items-center gap-1.5 sm:gap-2 pt-2 sm:pt-3 border-t border-gray-100">
-                                                {/* Voice Note Button - Always visible */}
-                                                <button 
-                                                    onClick={() => bill.proof_of_payments?.[0]?.voice_record_path && toggleAudio(bill.proof_of_payments[0].voice_record_path)}
-                                                    disabled={!bill.proof_of_payments?.[0]?.voice_record_path}
-                                                    className={`flex-1 flex items-center justify-center gap-1 py-1.5 sm:py-2 rounded-lg text-[8px] sm:text-[10px] font-black uppercase transition-all ${
-                                                        !bill.proof_of_payments?.[0]?.voice_record_path
-                                                        ? 'bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-                                                        : playingAudio === bill.proof_of_payments[0].voice_record_path 
-                                                            ? 'bg-red-500 text-white' 
-                                                            : 'bg-gray-50 text-gray-600 hover:bg-green-600 hover:text-white'
-                                                    }`}
-                                                    title={bill.proof_of_payments?.[0]?.voice_record_path ? "Play Voice Note" : "No Voice Note Available"}
-                                                >
-                                                    {playingAudio === bill.proof_of_payments?.[0]?.voice_record_path ? <><Pause size={10} className="sm:w-3 sm:h-3" /> <span className="hidden sm:inline">Playing</span></> : <><Mic size={10} className="sm:w-3 sm:h-3" /> <span className="hidden sm:inline">Voice</span></>}
-                                                </button>
-
                                                 {/* View Proof Button - Always visible */}
                                                 <button 
                                                     onClick={() => bill.proof_of_payments?.[0]?.file_path && handleViewProof(bill.proof_of_payments[0].file_path)}
