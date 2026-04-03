@@ -60,6 +60,7 @@ return [
             'sslmode' => env('DB_SSLMODE', 'require'),
             'options' => [
                 \PDO::ATTR_TIMEOUT => env('DB_TIMEOUT', 30),
+                \PDO::ATTR_PERSISTENT => true,
             ],
             'connect_timeout' => env('DB_CONNECT_TIMEOUT', 30),
             'prepare_threshold' => 0, // recommended for Supabase pooler (port 6543)
