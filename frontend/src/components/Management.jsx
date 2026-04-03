@@ -524,7 +524,7 @@ const Management = () => {
           <div className="flex items-center gap-2">
             <CircleDot className="h-3 w-3 text-green-500" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
-              {activeTab === 'categories' ? `${categories.length} Categories` : `${people.length} Person in Charge`}
+              {activeTab === 'categories' ? `${categories.length} Categories` : `${people.filter(p => bills.some(b => b.person_in_charge_id === p.id && (b.status === 'pending' || b.status === 'overdue'))).length} Person in Charge`}
             </h3>
           </div>
           <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-green-100">

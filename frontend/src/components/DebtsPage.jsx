@@ -117,10 +117,10 @@ const DebtsPage = () => {
     const pendingDebts = personFilteredDebts.filter(d => d.status === 'pending');
     const paidDebts = personFilteredDebts.filter(d => d.status === 'paid');
 
-    // Get unique people from 'owed' debts for the person tabs
+    // Get unique people from 'owed' debts for the person tabs (only unpaid)
     const peopleWithOwedDebts = Array.isArray(debts) 
         ? Object.values(debts.reduce((acc, debt) => {
-            if (!debt.is_my_debt && debt.person_in_charge) {
+            if (!debt.is_my_debt && debt.person_in_charge && (debt.status === 'pending' || debt.status === 'overdue')) {
                 const personId = debt.person_in_charge.id;
                 if (!acc[personId]) {
                     acc[personId] = {
