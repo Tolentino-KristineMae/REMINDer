@@ -737,7 +737,7 @@ const SettlementsPage = () => {
                         </div>
                     </div>
                     
-                    <div className="p-3 sm:p-4 bg-green-50/5">
+                    <div className="p-3 sm:p-4 bg-green-100">
                         {viewMode === 'list' ? (
                             <div className="space-y-2 sm:space-y-3">
                                 {settledBills.map((bill) => (
@@ -767,7 +767,7 @@ const SettlementsPage = () => {
                                 {settledBills.map((bill) => (
                                     <div 
                                         key={bill.id}
-                                        className="group bg-white border border-green-50 rounded-xl sm:rounded-2xl overflow-hidden hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all"
+                                        className="group bg-green-50 border border-green-200 rounded-xl sm:rounded-2xl overflow-hidden hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all"
                                     >
                                         <div className="h-24 sm:h-28 lg:h-36 bg-gray-50 relative overflow-hidden">
                                             {bill.proof_of_payments?.[0]?.file_path ? (
