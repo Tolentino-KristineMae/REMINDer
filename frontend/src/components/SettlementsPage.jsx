@@ -292,6 +292,7 @@ const SettlementsPage = () => {
     const [editingBill, setEditingBill] = useState(null);
     const [editBillData, setEditBillData] = useState({ amount: '', due_date: '', details: '', category_id: '', person_in_charge_id: '', status: 'pending' });
     const [saving, setSaving] = useState(false);
+    const [selectedPersonId, setSelectedPersonId] = useState('all');
 
     const STORAGE_BASE_URL = (() => {
         const a = import.meta.env.VITE_STORAGE_BASE_URL?.trim();
@@ -412,8 +413,47 @@ const SettlementsPage = () => {
     const pendingBills = safeBills.filter(bill => bill?.status === 'pending');
     const settledBills = safeBills.filter(bill => bill?.status === 'paid');
 
-    const totalSettled = settledBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0);
-    const totalPending = pendingBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0);
+    const peopleWithPendingBills = Array.isArray(pendingBills) 
+        ? Object.values(pendingBills.reduce((acc, bill) => {
+            if (bill.person_in_charge) {
+                const personId = bill.person_in_charge.id;
+                if (!acc[personId]) {
+                    acc[personId] = {
+                        ...bill.person_in_charge,
+                        count: 0
+                    };
+                }
+                acc[personId].count++;
+            }
+            return acc;
+        }, {}))
+        : [];
+
+    const peopleWithSettledBills = Array.isArray(settledBills) 
+        ? Object.values(settledBills.reduce((acc, bill) => {
+            if (bill.person_in_charge) {
+                const personId = bill.person_in_charge.id;
+                if (!acc[personId]) {
+                    acc[personId] = {
+                        ...bill.person_in_charge,
+                        count: 0
+                    };
+                }
+                acc[personId].count++;
+            }
+            return acc;
+        }, {}))
+        : [];
+
+    const filteredPendingBills = selectedPersonId === 'all' 
+        ? pendingBills 
+        : pendingBills.filter(b => b.person_in_charge_id === selectedPersonId);
+    const filteredSettledBills = selectedPersonId === 'all' 
+        ? settledBills 
+        : settledBills.filter(b => b.person_in_charge_id === selectedPersonId);
+
+    const totalSettled = filteredSettledBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0);
+    const totalPending = filteredPendingBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0);
 
     const handleUploadClick = (bill) => {
         navigate(`/settle/${bill.id}`);
@@ -547,14 +587,53 @@ const SettlementsPage = () => {
                     className="hidden"
                 />
 
+                {/* Person Filter Tabs */}
+                {(peopleWithPendingBills.length > 0 || peopleWithSettledBills.length > 0) && (
+                    <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide mb-6">
+                        <button 
+                            onClick={() => setSelectedPersonId('all')}
+                            className="flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2"
+                            style={{ 
+                                backgroundColor: selectedPersonId === 'all' ? '#22c55e15' : 'white',
+                                borderColor: selectedPersonId === 'all' ? '#22c55e' : 'transparent',
+                                color: selectedPersonId === 'all' ? '#22c55e' : '#9ca3af'
+                            }}
+                        >
+                            All
+                        </button>
+                        {peopleWithPendingBills.map((person, idx) => {
+                            const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4'];
+                            const personColor = person.color || colors[idx % colors.length];
+                            const isSelected = selectedPersonId === person.id;
+                            return (
+                                <button 
+                                    key={person.id}
+                                    onClick={() => setSelectedPersonId(person.id)}
+                                    className="flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2"
+                                    style={{ 
+                                        backgroundColor: isSelected ? personColor + '15' : 'white',
+                                        borderColor: isSelected ? personColor : 'transparent',
+                                        color: isSelected ? personColor : '#9ca3af'
+                                    }}
+                                >
+                                    <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-bold" style={{ backgroundColor: personColor + '20', color: personColor }}>
+                                        {person.count}
+                                    </div>
+                                    {person.first_name} {person.last_name}
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
+
                 {/* Pending Settlements */}
-                {pendingBills.length > 0 && (
+                {filteredPendingBills.length > 0 && (
                     <div className="bg-red-50 rounded-xl sm:rounded-2xl border border-red-100 shadow-sm overflow-hidden mb-6 sm:mb-8">
                         <div className="p-3 sm:p-4 px-4 sm:px-5 border-b border-red-50 flex items-center justify-between bg-red-50/10">
                             <div className="flex items-center gap-2 sm:gap-3">
                                 <h3 className="text-xs sm:text-sm font-black text-red-900 uppercase tracking-wider">Awaiting Settlement</h3>
                                 <div className="h-4 w-[1px] bg-red-200 hidden sm:block"></div>
-                                <span className="text-[8px] sm:text-[9px] font-black text-red-600 bg-white px-2 sm:px-2.5 py-0.5 rounded-full uppercase border border-red-100">{pendingBills.length} Items</span>
+                                <span className="text-[8px] sm:text-[9px] font-black text-red-600 bg-white px-2 sm:px-2.5 py-0.5 rounded-full uppercase border border-red-100">{filteredPendingBills.length} Items</span>
                             </div>
 
                             <div className="flex items-center gap-1 bg-red-50/50 p-0.5 sm:p-1 rounded-lg sm:rounded-xl border border-red-100">
@@ -578,7 +657,7 @@ const SettlementsPage = () => {
                         <div className="p-3 sm:p-4">
                             {pendingViewMode === 'list' ? (
                                 <div className="flex flex-col gap-2 sm:gap-3">
-                                    {pendingBills.map((bill) => (
+                                    {filteredPendingBills.map((bill) => (
                                         <BillItem 
                                             key={bill.id}
                                             bill={bill}
@@ -599,7 +678,7 @@ const SettlementsPage = () => {
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                                    {pendingBills.map((bill) => (
+                                    {filteredPendingBills.map((bill) => (
                                         <div 
                                             key={bill.id}
                                             className="group bg-white border border-red-100 rounded-xl sm:rounded-2xl overflow-hidden hover:border-red-500 hover:shadow-xl hover:shadow-red-900/5 transition-all"
@@ -697,7 +776,7 @@ const SettlementsPage = () => {
                         <div className="flex items-center gap-2 sm:gap-3">
                             <h3 className="text-xs sm:text-sm font-black text-green-900 uppercase tracking-wider">Completed Transactions</h3>
                             <div className="h-4 w-[1px] bg-green-200 hidden sm:block"></div>
-                            <span className="text-[8px] sm:text-[9px] font-black text-green-600 bg-white px-2 sm:px-2.5 py-0.5 rounded-full uppercase border border-green-100">{settledBills.length} Records</span>
+                            <span className="text-[8px] sm:text-[9px] font-black text-green-600 bg-white px-2 sm:px-2.5 py-0.5 rounded-full uppercase border border-green-100">{filteredSettledBills.length} Records</span>
                         </div>
                         
                         <div className="flex items-center gap-1 bg-green-50/50 p-0.5 sm:p-1 rounded-lg sm:rounded-xl border border-green-100">
@@ -721,7 +800,7 @@ const SettlementsPage = () => {
                     <div className="p-3 sm:p-4 bg-white">
                         {viewMode === 'list' ? (
                             <div className="space-y-2 sm:space-y-3">
-                                {settledBills.map((bill) => (
+                                {filteredSettledBills.map((bill) => (
                                     <BillItem 
                                         key={bill.id}
                                         bill={bill}
@@ -745,7 +824,7 @@ const SettlementsPage = () => {
                             </div>
                             ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                                {settledBills.map((bill) => (
+                                {filteredSettledBills.map((bill) => (
                                     <div 
                                         key={bill.id}
                                         className="group bg-green-50 border border-green-200 rounded-xl sm:rounded-2xl overflow-hidden hover:border-green-500 hover:shadow-xl hover:shadow-green-900/5 transition-all"
