@@ -130,7 +130,7 @@ const BillItem = React.memo(({
 
     if (isPending) {
         return (
-            <div className="group bg-white border border-gray-100 rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:border-red-200 hover:shadow-xl hover:shadow-red-500/5 transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 relative overflow-hidden">
+            <div className="group bg-red-50 border border-red-100 rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:border-red-300 hover:shadow-xl hover:shadow-red-500/5 transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 relative overflow-hidden">
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div className="flex items-center gap-3 sm:gap-4 flex-1 relative z-10">
                     <div className="w-9 h-9 sm:w-11 sm:h-11 bg-red-50 rounded-xl sm:rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
@@ -194,7 +194,7 @@ const BillItem = React.memo(({
 
     // Settled Item
     return (
-        <div className="group bg-green-50 border border-green-200 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+        <div className="group bg-white border border-green-50 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg sm:rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
                     <CheckCircle2 size={14} className="sm:w-[18px] sm:h-[18px]" />
@@ -549,7 +549,7 @@ const SettlementsPage = () => {
 
                 {/* Pending Settlements */}
                 {pendingBills.length > 0 && (
-                    <div className="bg-white rounded-xl sm:rounded-2xl border border-red-100 shadow-sm overflow-hidden mb-6 sm:mb-8">
+                    <div className="bg-red-50 rounded-xl sm:rounded-2xl border border-red-100 shadow-sm overflow-hidden mb-6 sm:mb-8">
                         <div className="p-3 sm:p-4 px-4 sm:px-5 border-b border-red-50 flex items-center justify-between bg-red-50/10">
                             <div className="flex items-center gap-2 sm:gap-3">
                                 <h3 className="text-xs sm:text-sm font-black text-red-900 uppercase tracking-wider">Awaiting Settlement</h3>
@@ -602,7 +602,7 @@ const SettlementsPage = () => {
                                     {pendingBills.map((bill) => (
                                         <div 
                                             key={bill.id}
-                                            className="group bg-white border border-red-50 rounded-xl sm:rounded-2xl overflow-hidden hover:border-red-500 hover:shadow-xl hover:shadow-red-900/5 transition-all"
+                                            className="group bg-white border border-red-100 rounded-xl sm:rounded-2xl overflow-hidden hover:border-red-500 hover:shadow-xl hover:shadow-red-900/5 transition-all"
                                         >
                                             <div className="h-24 sm:h-28 lg:h-36 bg-red-50/30 relative overflow-hidden flex items-center justify-center">
                                                 <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-white/50 rounded-full flex items-center justify-center text-red-600 shadow-sm">
@@ -711,7 +711,7 @@ const SettlementsPage = () => {
                         </div>
                     </div>
                     
-                    <div className="p-3 sm:p-4 bg-green-100">
+                    <div className="p-3 sm:p-4 bg-white">
                         {viewMode === 'list' ? (
                             <div className="space-y-2 sm:space-y-3">
                                 {settledBills.map((bill) => (
