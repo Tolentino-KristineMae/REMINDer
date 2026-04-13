@@ -25,7 +25,10 @@ const Login = () => {
         setError('');
         try {
             await login(email, password);
-            navigate('/');
+            // Small delay to ensure state updates propagate before navigation
+            setTimeout(() => {
+                navigate('/', { replace: true });
+            }, 0);
         } catch (err) {
             const msg =
                 err?.response?.data?.message ||

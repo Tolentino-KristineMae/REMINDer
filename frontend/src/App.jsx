@@ -52,7 +52,7 @@ class ErrorBoundary extends Component {
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ModalProvider } from './context/ModalContext';
 import Sidebar from './Shared/Sidebar';
-import Header, { TimeDisplay } from './Shared/Header';
+import Header, { TimeDisplay } from './shared/Header';
 import { Menu } from 'lucide-react';
 
 const Login = lazy(() => import('./Auth/LoginAndSignup/Login'));
@@ -95,6 +95,16 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
         const timer = setInterval(() => setDateTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
+
+    // Force layout recalculation after authentication
+    useEffect(() => {
+        if (user) {
+            // Trigger a reflow to ensure styles are applied
+            window.requestAnimationFrame(() => {
+                document.body.offsetHeight;
+            });
+        }
+    }, [user]);
 
     if (loading) return <LoadingFallback />;
     
