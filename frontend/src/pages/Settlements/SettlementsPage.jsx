@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../api/axios';
+import api from '../../api/axios';
 import { 
     CheckCircle2, 
     ChevronLeft, 
@@ -24,7 +24,7 @@ import {
     Users
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { formatCurrency, formatDateLocal } from '../utils/formatters';
+import { formatCurrency, formatDateLocal } from '../../utils/formatters';
 
 const BillItem = React.memo(({ 
     bill, 
@@ -338,11 +338,20 @@ const SettlementsPage = () => {
             setBills(Array.isArray(billsData) ? billsData : []);
             setPeople(Array.isArray(peopleData) ? peopleData : []);
             
-            const catRes = await api.get('/categories');
-            const catResData = catRes.data || {};
-            let catData = catResData.categories;
-            if (catData?.data) catData = catData.data;
-            setCategories(Array.isArray(catData) ? catData : []);
+            // Extract unique categories from bills instead of separate API call
+            const uniqueCategories = [];
+            const categoryMap = new Map();
+            
+            if (Array.isArray(billsData)) {
+                billsData.forEach(bill => {
+                    if (bill.category && !categoryMap.has(bill.category.id)) {
+                        categoryMap.set(bill.category.id, bill.category);
+                        uniqueCategories.push(bill.category);
+                    }
+                });
+            }
+            
+            setCategories(uniqueCategories);
         } catch (err) {
             console.error('Error fetching bills:', err);
             setBills([]);
@@ -838,7 +847,7 @@ const SettlementsPage = () => {
                                                 />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center">
-                                                    <FileText className="text-gray-300" size={24} className="sm:w-8 sm:h-8 lg:w-10 lg:h-10" />
+                                                    <FileText className="text-gray-300 sm:w-8 sm:h-8 lg:w-10 lg:h-10" size={24} />
                                                 </div>
                                             )}
                                             <div className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-white/90 backdrop-blur-sm px-1.5 sm:px-2.5 py-0.5 rounded-md text-[8px] sm:text-[10px] font-black text-gray-900 uppercase">

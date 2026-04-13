@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react'
-import api from '../api/axios'
+import api from '../../api/axios'
 import { 
   Layers, 
   Users,
@@ -22,9 +22,10 @@ import {
   Check,
   BellRing
 } from 'lucide-react'
+import '../../styles/pages/Management/Management.css';
 
-import { formatCurrency, formatDateLocal } from '../utils/formatters'
-import { cn } from '../lib/utils'
+import { formatCurrency, formatDateLocal } from '../../utils/formatters'
+import { cn } from '../../lib/utils'
 
 const Management = () => {
   const [activeTab, setActiveTab] = useState('categories')
@@ -66,10 +67,6 @@ const Management = () => {
           statsMap[stat.id] = stat;
         });
         setCategoryStats(statsMap);
-        
-        // Also fetch bills for category check
-        const billsRes = await api.get('/bills');
-        setBills(billsRes.data.data || billsRes.data || []);
       } else {
         const [peopleRes, statsRes] = await Promise.all([
           api.get('/people'),
@@ -85,10 +82,6 @@ const Management = () => {
           statsMap[stat.id] = stat;
         });
         setPersonStats(statsMap);
-        
-        // Also fetch bills for person check
-        const billsRes = await api.get('/bills');
-        setBills(billsRes.data.data || billsRes.data || []);
       }
     } catch (err) {
       console.error(`Error fetching ${activeTab}:`, err)
@@ -107,11 +100,15 @@ const Management = () => {
   }, [message])
 
   const checkCategoryBills = (categoryId) => {
-    return bills.some(bill => bill.category_id === categoryId)
+    // Use stats instead of loading all bills
+    const stats = categoryStats[categoryId];
+    return stats && stats.count > 0;
   }
 
   const checkPersonBills = (personId) => {
-    return bills.some(bill => bill.person_in_charge_id === personId)
+    // Use stats instead of loading all bills
+    const stats = personStats[personId];
+    return stats && stats.count > 0;
   }
 
   const handleAddCategory = async (e) => {

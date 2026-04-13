@@ -1,0 +1,850 @@
+/* CalendarPage Component Styles */
+
+.container {
+    flex: 1;
+    min-height: 100vh;
+    background-color: #f9fafb;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding: 1.5rem;
+    }
+}
+
+.mainLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex: 1;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+@media (min-width: 1024px) {
+    .mainLayout {
+        flex-direction: row;
+    }
+}
+
+/* Main Calendar Section */
+.calendarSection {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* Week Navigator Header */
+.weekNavigator {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f3f4f6;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.weekNavigatorContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .weekNavigatorContent {
+        flex-direction: row;
+    }
+}
+
+.weekNavigatorControls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: space-between;
+}
+
+@media (min-width: 640px) {
+    .weekNavigatorControls {
+        gap: 1rem;
+        width: auto;
+        justify-content: flex-start;
+    }
+}
+
+.navButton {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.navButton:hover {
+    background-color: #f3f4f6;
+    transform: scale(1.05);
+}
+
+.weekRangeText {
+    text-align: center;
+    min-width: 0;
+    flex: 1;
+}
+
+@media (min-width: 640px) {
+    .weekRangeText {
+        min-width: 200px;
+    }
+}
+
+.weekRangeTitle {
+    font-size: 0.875rem;
+    font-weight: 900;
+    color: #111827;
+    letter-spacing: -0.025em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+    .weekRangeTitle {
+        font-size: 1.125rem;
+    }
+}
+
+.todayButton {
+    width: 100%;
+    padding: 0.625rem 1.5rem;
+    background-color: #16a34a;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+    box-shadow: 0 10px 15px -3px rgba(22, 163, 74, 0.2);
+    cursor: pointer;
+    border: none;
+}
+
+.todayButton:hover {
+    background-color: #15803d;
+}
+
+.todayButton:active {
+    transform: scale(0.95);
+}
+
+@media (min-width: 640px) {
+    .todayButton {
+        width: auto;
+    }
+}
+
+/* Week Days Grid */
+.weekGrid {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f3f4f6;
+    padding: 1rem;
+    flex: 1;
+    overflow: hidden;
+}
+
+@media (min-width: 640px) {
+    .weekGrid {
+        padding: 1.5rem;
+    }
+}
+
+.weekGridScroll {
+    height: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+.weekGridScroll::-webkit-scrollbar {
+    display: none;
+}
+
+.weekDaysContainer {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    height: 100%;
+    min-width: 700px;
+}
+
+@media (min-width: 640px) {
+    .weekDaysContainer {
+        gap: 1rem;
+        min-width: 0;
+    }
+}
+
+.dayCard {
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    border: 2px solid;
+    transition: all 0.3s;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.dayCardDefault {
+    border-color: #f3f4f6;
+    background-color: white;
+}
+
+.dayCardDefault:hover {
+    border-color: #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dayCardToday {
+    border-color: #a7f3d0;
+    background-color: rgba(16, 185, 129, 0.05);
+}
+
+.dayCardToday:hover {
+    border-color: #6ee7b7;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dayCardSelected {
+    border-color: #22c55e;
+    background-color: #f0fdf4;
+    box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.2);
+}
+
+.dayHeader {
+    text-align: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid;
+}
+
+.dayHeaderDefault {
+    background-color: #f9fafb;
+    color: #6b7280;
+    border-bottom-color: #e5e7eb;
+}
+
+.dayHeaderToday {
+    background-color: #d1fae5;
+    color: #047857;
+    border-bottom-color: #a7f3d0;
+}
+
+.dayHeaderSelected {
+    background-color: #22c55e;
+    color: white;
+    border-bottom-color: #16a34a;
+}
+
+.dayHeaderText {
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dayContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+    background-color: white;
+}
+
+.dayContentSelected {
+    background-color: #f0fdf4;
+}
+
+.dayNumber {
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+
+@media (min-width: 640px) {
+    .dayNumber {
+        font-size: 1.875rem;
+    }
+}
+
+.dayNumberDefault {
+    color: #374151;
+}
+
+.dayNumberToday {
+    color: #059669;
+}
+
+.dayNumberSelected {
+    color: #16a34a;
+}
+
+.dayMonth {
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+}
+
+.statusIndicators {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+}
+
+.statusBadge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+}
+
+.statusBadgePending {
+    background-color: #fee2e2;
+}
+
+.statusBadgePaid {
+    background-color: #d1fae5;
+}
+
+.statusDot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+}
+
+.statusDotPending {
+    background-color: #ef4444;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.statusDotPaid {
+    background-color: #10b981;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.statusCount {
+    font-size: 0.5625rem;
+    font-weight: 700;
+}
+
+.statusCountPending {
+    color: #dc2626;
+}
+
+.billsPreview {
+    border-top: 1px solid #f3f4f6;
+    padding: 0.5rem;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.billItem {
+    font-size: 0.5625rem;
+    font-weight: 700;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 0.25rem;
+}
+
+.billItemPaid {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    text-decoration: line-through;
+}
+
+.billItemPending {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.billItemPending:hover {
+    background-color: #fee2e2;
+}
+
+.billsMore {
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-align: center;
+}
+
+.billsEmpty {
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: #d1d5db;
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+/* Right Sidebar */
+.sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+    .sidebar {
+        width: 20rem;
+    }
+}
+
+/* Mini Month Calendar */
+.miniCalendar {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.miniCalendarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.miniCalendarTitle {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #111827;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.miniCalendarNav {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.miniNavButton {
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    color: #9ca3af;
+    transition: all 0.2s;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}
+
+.miniNavButton:hover {
+    background-color: #f3f4f6;
+    color: #4b5563;
+}
+
+.miniCalendarDays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.miniDayLabel {
+    font-size: 0.625rem;
+    font-weight: 900;
+    color: #9ca3af;
+    text-align: center;
+    padding: 0.25rem 0;
+}
+
+.miniCalendarGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+}
+
+.miniDayEmpty {
+    height: 2rem;
+}
+
+.miniDayButton {
+    height: 2rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+}
+
+.miniDayDefault {
+    color: #4b5563;
+}
+
+.miniDayDefault:hover {
+    background-color: #f9fafb;
+}
+
+.miniDayToday {
+    background-color: #d1fae5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.miniDaySelected {
+    background-color: #16a34a;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.2);
+}
+
+.miniDayIndicator {
+    position: absolute;
+    bottom: 0.25rem;
+    width: 0.25rem;
+    height: 0.25rem;
+    background-color: #f87171;
+    border-radius: 9999px;
+}
+
+/* Selected Day Details */
+.dayDetails {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.dayDetailsHeader {
+    background: linear-gradient(to right, #22c55e, #10b981);
+    padding: 1rem 1.25rem;
+}
+
+.dayDetailsHeaderContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dayDetailsTitle {
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dayDetailsSubtitle {
+    color: #bbf7d0;
+    font-size: 0.625rem;
+    font-weight: 500;
+    margin-top: 0.125rem;
+}
+
+.dayDetailsIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dayDetailsList {
+    flex: 1;
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.billCard {
+    position: relative;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid;
+    transition: all 0.3s;
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+}
+
+.billCardPaid {
+    background-color: #f9fafb;
+    border-color: #f3f4f6;
+    opacity: 0.75;
+}
+
+.billCardPending {
+    background-color: white;
+    border-color: #f3f4f6;
+}
+
+.billCardPending:hover {
+    border-color: #d1fae5;
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.05);
+}
+
+.billCardTopBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0.25rem;
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.billCardTopBarPaid {
+    background-color: #d1d5db;
+}
+
+.billCardTopBarPending {
+    background-color: #ef4444;
+}
+
+.billCardContent {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+}
+
+.billCardInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.billStatus {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    border: 1px solid;
+}
+
+.billStatusPaid {
+    background-color: #d1fae5;
+    color: #059669;
+    border-color: #a7f3d0;
+}
+
+.billStatusPending {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.billTitle {
+    font-weight: 700;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    margin-top: 0.5rem;
+}
+
+.billTitlePaid {
+    color: #9ca3af;
+    text-decoration: line-through;
+}
+
+.billTitlePending {
+    color: #1f2937;
+}
+
+.billMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+.billMetaText {
+    font-size: 0.625rem;
+    color: #6b7280;
+}
+
+.billMetaPaid {
+    font-size: 0.625rem;
+    color: #16a34a;
+}
+
+.billFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.billAmount {
+    font-size: 1.125rem;
+    font-weight: 900;
+}
+
+.billAmountPaid {
+    color: #d1d5db;
+}
+
+.billAmountPending {
+    color: #10b981;
+}
+
+.billSettleButton {
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: #16a34a;
+    background-color: #f0fdf4;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.emptyStateIcon {
+    width: 3.5rem;
+    height: 3.5rem;
+    background-color: #f9fafb;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+}
+
+.emptyStateText {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9ca3af;
+}
+
+/* Summary Card */
+.summaryCard {
+    background: linear-gradient(to bottom right, #111827, #1f2937);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    color: white;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.summaryTitle {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.summaryList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.summaryItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.summaryItemLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.summaryItemDot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+}
+
+.summaryItemDotPending {
+    background-color: #f87171;
+}
+
+.summaryItemDotPaid {
+    background-color: #6ee7b7;
+}
+
+.summaryItemText {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #d1d5db;
+}
+
+.summaryItemValue {
+    font-size: 0.875rem;
+    font-weight: 900;
+}
+
+.summaryTotal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid #374151;
+}
+
+.summaryTotalLabel {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #d1d5db;
+}
+
+.summaryTotalValue {
+    font-size: 0.875rem;
+    font-weight: 900;
+    color: #6ee7b7;
+}

@@ -11,7 +11,8 @@ class DebtController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Debt::with('personInCharge')->orderBy('created_at', 'desc');
+        $query = Debt::with('personInCharge')
+            ->orderBy('created_at', 'desc');
         
         // Filter by type if requested
         if ($request->has('type')) {
@@ -32,7 +33,13 @@ class DebtController extends Controller
             $query->where('status', $request->status);
         }
         
-        $debts = $query->get();
+        // Use pagination if requested, otherwise get all (but limit to reasonable amount)
+        if ($request->has('paginate') && $request->paginate === 'true') {
+            $debts = $query->paginate($request->per_page ?? 50);
+        } else {
+            // Limit to 1000 records max for performance
+            $debts = $query->limit(1000)->get();
+        }
         
         return response()->json([
             'success' => true,
@@ -58,41 +65,43 @@ class DebtController extends Controller
             $query->where('person_in_charge_id', $request->person_id);
         }
         
-        // Calculate stats
-        $pending = (clone $query)->where('status', 'pending')->get();
-        $paid = (clone $query)->where('status', 'paid')->get();
+        // Calculate stats using database aggregation (much faster)
+        $stats = (clone $query)
+            ->selectRaw('COUNT(*) as total')
+            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count")
+            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid_count")
+            ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as pending_total")
+            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) as paid_total")
+            ->first();
         
-        $pendingTotal = $pending->sum('amount');
-        $paidTotal = $paid->sum('amount');
-        
-        // Get people with debts (only for owed debts)
+        // Get people with debts (only for owed debts) - optimized with single query
         $peopleWithDebts = [];
         if (!$request->has('type') || $request->type === 'owed') {
             $peopleWithDebts = Debt::where('is_my_debt', false)
                 ->where('status', 'pending')
-                ->with('personInCharge')
+                ->join('person_in_charges', 'debts.person_in_charge_id', '=', 'person_in_charges.id')
+                ->select('person_in_charges.id', 'person_in_charges.first_name', 'person_in_charges.last_name', 'person_in_charges.color')
+                ->selectRaw('COUNT(debts.id) as count')
+                ->groupBy('person_in_charges.id', 'person_in_charges.first_name', 'person_in_charges.last_name', 'person_in_charges.color')
                 ->get()
-                ->groupBy('person_in_charge_id')
-                ->map(function ($debts, $personId) {
-                    $person = $debts->first()->personInCharge;
+                ->map(function ($person) {
                     return [
                         'id' => $person->id,
                         'first_name' => $person->first_name,
                         'last_name' => $person->last_name,
                         'color' => $person->color,
-                        'count' => $debts->count()
+                        'count' => (int) $person->count
                     ];
-                })
-                ->values();
+                });
         }
         
         return response()->json([
             'success' => true,
             'stats' => [
-                'pending_count' => $pending->count(),
-                'pending_total' => $pendingTotal,
-                'paid_count' => $paid->count(),
-                'paid_total' => $paidTotal,
+                'pending_count' => (int) ($stats->pending_count ?? 0),
+                'pending_total' => (float) ($stats->pending_total ?? 0),
+                'paid_count' => (int) ($stats->paid_count ?? 0),
+                'paid_total' => (float) ($stats->paid_total ?? 0),
             ],
             'people_with_debts' => $peopleWithDebts
         ]);

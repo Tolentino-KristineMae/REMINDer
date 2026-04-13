@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom';
-import api from '../api/axios';
+import api from '../../api/axios';
 import { 
   Calendar, 
   Banknote, 
@@ -20,8 +20,7 @@ import {
   TrendingUp,
   CreditCard
 } from "lucide-react"
-import { cn } from "../lib/utils"
-import Logo from './Logo';
+import { cn } from "../../lib/utils"
 
 // Local UI Components to match the provided snippet's design
 const Card = ({ children, className }) => (
@@ -127,17 +126,6 @@ export default function AddBillPage() {
     };
 
     fetchFormData();
-  }, []);
-
-  useEffect(() => {
-    const handleFocus = () => {
-      api.get('/categories').then(res => {
-        setCategories(res.data.categories || []);
-      });
-    };
-    
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   const handleSubmit = async (e) => {

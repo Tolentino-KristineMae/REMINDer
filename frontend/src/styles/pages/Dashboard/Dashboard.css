@@ -1,0 +1,744 @@
+/* Dashboard Component Styles */
+
+.container {
+  flex: 1;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 1.5rem;
+  }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+.statCard {
+  background: linear-gradient(135deg, var(--card-from), var(--card-to));
+  padding: 1.25rem;
+  border-radius: 1rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.statCard.paid {
+  --card-from: #10b981;
+  --card-to: #059669;
+}
+
+.statCard.paid:hover {
+  box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.25);
+}
+
+.statCard.unpaid {
+  --card-from: #fbbf24;
+  --card-to: #f59e0b;
+}
+
+.statCard.unpaid:hover {
+  box-shadow: 0 20px 25px -5px rgba(251, 191, 36, 0.25);
+}
+
+.statCard.pending {
+  --card-from: #3b82f6;
+  --card-to: #4f46e5;
+}
+
+.statCard.pending:hover {
+  box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.25);
+}
+
+.statCard.overdue {
+  --card-from: #ef4444;
+  --card-to: #dc2626;
+}
+
+.statCard.overdue:hover {
+  box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.25);
+}
+
+.decorCircleLarge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7rem;
+  height: 7rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  margin-right: -2.5rem;
+  margin-top: -2.5rem;
+  transition: transform 0.3s ease;
+}
+
+.statCard:hover .decorCircleLarge {
+  transform: scale(1.1);
+}
+
+.decorCircleSmall {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 5rem;
+  height: 5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+  margin-left: -2rem;
+  margin-bottom: -2rem;
+}
+
+.statCardContent {
+  position: relative;
+  z-index: 10;
+}
+
+.statCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.iconWrapper {
+  width: 2.75rem;
+  height: 2.75rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.badge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+  opacity: 0.9;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.statFooter {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.statFooterText {
+  font-size: 0.625rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1280px) {
+  .mainGrid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.categoriesSection {
+  min-width: 0;
+}
+
+@media (min-width: 1280px) {
+  .categoriesSection {
+    grid-column: span 9;
+  }
+}
+
+.settlementSection {
+  min-width: 0;
+}
+
+@media (min-width: 1280px) {
+  .settlementSection {
+    grid-column: span 3;
+  }
+}
+
+.card {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 2px solid #e0e7ff;
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 1.5rem;
+    min-height: 420px;
+  }
+}
+
+.accentBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0.25rem;
+  background: linear-gradient(to right, #818cf8, #a78bfa, #818cf8);
+}
+
+.decorCorner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6rem;
+  height: 6rem;
+  background-color: #eef2ff;
+  border-bottom-left-radius: 9999px;
+  margin-right: -2rem;
+  margin-top: -2rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.cardHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cardIconWrapper {
+  width: 2.75rem;
+  height: 2.75rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.25);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.cardSubtitle {
+  font-size: 0.75rem;
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.categoryList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.categoryItemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.375rem;
+}
+
+.categoryName {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.categoryDot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+}
+
+.categoryLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.categoryStats {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.categoryCount {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.categoryCountLabel {
+  font-size: 0.625rem;
+  color: #9ca3af;
+}
+
+.categoryPercentage {
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+
+.progressBar {
+  height: 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: all 0.7s ease-out;
+}
+
+.categoryItem:hover .progressFill {
+  opacity: 0.8;
+}
+
+.emptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 0;
+  opacity: 0.6;
+}
+
+.emptyIcon {
+  width: 4rem;
+  height: 4rem;
+  background-color: #eef2ff;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c7d2fe;
+  margin-bottom: 1rem;
+}
+
+.emptyTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgba(17, 24, 39, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.emptySubtitle {
+  font-size: 0.75rem;
+  color: rgba(17, 24, 39, 0.3);
+  margin-top: 0.25rem;
+}
+
+.cardFooter {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footerLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.footerValue {
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: #111827;
+}
+
+.loadingContainer {
+  flex: 1;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .loadingContainer {
+    padding: 1.5rem;
+  }
+}
+
+.loadingText {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Settlement Card Specific Styles */
+.settlementCard {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 2px solid #d1fae5;
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .settlementCard {
+    padding: 1.5rem;
+  }
+}
+
+.settlementCard .accentBar {
+  background: linear-gradient(to right, #34d399, #10b981, #34d399);
+}
+
+.settlementCard .decorCorner {
+  background-color: #d1fae5;
+}
+
+.settlementCard .cardIconWrapper {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.25);
+}
+
+.settlementCard .cardSubtitle {
+  color: #059669;
+}
+
+.circularProgress {
+  position: relative;
+  width: 10rem;
+  height: 10rem;
+  margin: 0 auto 1.5rem;
+}
+
+.circularProgressCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.progressPercentage {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.025em;
+}
+
+.progressPercentageSymbol {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.progressLabel {
+  margin-top: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  background-color: #d1fae5;
+  border-radius: 9999px;
+}
+
+.progressLabelText {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  color: #059669;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendDot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.legendDot.paid {
+  background: linear-gradient(135deg, #34d399, #059669);
+}
+
+.legendDot.pending {
+  background: linear-gradient(135deg, #fcd34d, #fbbf24);
+}
+
+.legendDot.overdue {
+  background: linear-gradient(135deg, #fca5a5, #f87171);
+}
+
+.legendLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.statusCards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.statusCard {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid;
+  transition: all 0.2s ease;
+}
+
+.statusCard:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: scale(1.01);
+}
+
+.statusCard.paidStatus {
+  background: linear-gradient(to right, #d1fae5, rgba(209, 250, 229, 0.3));
+  border-color: #a7f3d0;
+}
+
+.statusCard.paidStatus:hover {
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.15);
+}
+
+.statusCard.pendingStatus {
+  background: linear-gradient(to right, #fef3c7, rgba(254, 243, 199, 0.3));
+  border-color: #fde68a;
+}
+
+.statusCard.pendingStatus:hover {
+  box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.15);
+}
+
+.statusCard.overdueStatus {
+  background: linear-gradient(to right, #fee2e2, rgba(254, 226, 226, 0.3));
+  border-color: #fecaca;
+}
+
+.statusCard.overdueStatus:hover {
+  box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.15);
+}
+
+.statusCardContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.statusCardLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.statusIconWrapper {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.statusIconWrapper.paidIcon {
+  background: linear-gradient(135deg, #34d399, #059669);
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+
+.statusIconWrapper.pendingIcon {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: 0 4px 6px -1px rgba(251, 191, 36, 0.2);
+}
+
+.statusIconWrapper.overdueIcon {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+}
+
+.statusInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.statusTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.statusSubtitle {
+  font-size: 0.625rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.statusCardRight {
+  text-align: right;
+}
+
+.statusCount {
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.statusCount.paidCount {
+  color: #059669;
+}
+
+.statusCount.pendingCount {
+  color: #d97706;
+}
+
+.statusCount.overdueCount {
+  color: #dc2626;
+}
+
+.statusPercentage {
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+.statusPercentage.paidPercentage {
+  color: #10b981;
+}
+
+.statusPercentage.pendingPercentage {
+  color: #f59e0b;
+}
+
+.statusPercentage.overduePercentage {
+  color: #ef4444;
+}
+
+.statusProgressBar {
+  margin-top: 0.75rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.statusProgressBar.paidProgress {
+  background-color: #a7f3d0;
+}
+
+.statusProgressBar.pendingProgress {
+  background-color: #fde68a;
+}
+
+.statusProgressBar.overdueProgress {
+  background-color: #fecaca;
+}
+
+.statusProgressFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: all 0.7s ease;
+}
+
+.statusProgressFill.paidFill {
+  background: linear-gradient(to right, #34d399, #10b981);
+}
+
+.statusProgressFill.pendingFill {
+  background: linear-gradient(to right, #fbbf24, #f59e0b);
+}
+
+.statusProgressFill.overdueFill {
+  background: linear-gradient(to right, #f87171, #ef4444);
+}

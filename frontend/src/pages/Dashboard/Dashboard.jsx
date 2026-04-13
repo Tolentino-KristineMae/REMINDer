@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api/axios';
+import api from '../../api/axios';
 import { 
     Plus, 
     Wallet,
@@ -10,8 +10,9 @@ import {
     CheckCircle2,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { formatCurrency } from '../utils/formatters';
-import { cn } from '../lib/utils';
+import { formatCurrency } from '../../utils/formatters';
+import { cn } from '../../lib/utils';
+import '../../styles/pages/Dashboard/Dashboard.css';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -32,7 +33,6 @@ const Dashboard = () => {
         total_unpaid_amount: 0,
     });
     const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -53,21 +53,11 @@ const Dashboard = () => {
                 setCategories(categoriesData || []);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchData();
     }, []);
-
-    if (loading) {
-        return (
-            <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-6 flex items-center justify-center">
-                <div className="text-center text-sm text-gray-500">Loading dashboard stats...</div>
-            </div>
-        );
-    }
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-3 sm:p-4 lg:p-6 relative">

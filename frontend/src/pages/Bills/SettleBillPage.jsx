@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../api/axios';
-import { useAuth } from '../context/AuthContext';
-import { formatDateLocal, formatCurrency } from '../utils/formatters';
+import api from '../../api/axios';
+import { useAuth } from '../../context/AuthContext';
+import { formatDateLocal, formatCurrency } from '../../utils/formatters';
 import { 
     X, 
     CheckCircle, 
@@ -306,7 +306,8 @@ const SettleBillPage = () => {
                                         id="proof"
                                         className="hidden" 
                                         onChange={handleFileChange}
-                                        accept="image/*"
+                                        accept="image/*,application/pdf"
+                                        capture="environment"
                                         multiple
                                         aria-label="Upload proof of payment"
                                     />
@@ -327,8 +328,8 @@ const SettleBillPage = () => {
                                                     <CloudUpload size={32} />
                                                 </div>
                                                 <div className="text-center">
-                                                    <p className="text-sm font-bold text-gray-900">Select Receipt Image</p>
-                                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">JPEG, PNG, GIF — Max 5MB</p>
+                                                    <p className="text-sm font-bold text-gray-900">Snap or Upload Receipt</p>
+                                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Photo, PDF • Camera, Gallery, or Files</p>
                                                 </div>
                                             </>
                                         )}

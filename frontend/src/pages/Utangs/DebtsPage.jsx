@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import api from '../api/axios';
+import api from '../../api/axios';
 import { 
     Plus, 
     Wallet2,
@@ -7,21 +7,18 @@ import {
     CheckCircle2,
     Trash2,
     FileText,
-    Mic,
-    Play,
     Pause,
     Volume2,
     LayoutGrid,
     LayoutList,
-    AlertCircle,
     ArrowUpRight,
     X,
-    TrendingUp,
     User,
     Pencil
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { formatCurrency, formatDateLocal } from '../utils/formatters';
+import { formatCurrency, formatDateLocal } from '../../utils/formatters';
+import '../../styles/pages/Utangs/DebtsPage.css';
 
 const DebtsPage = () => {
     const navigate = useNavigate();
@@ -34,11 +31,10 @@ const DebtsPage = () => {
         paid_total: 0
     });
     const [peopleWithDebts, setPeopleWithDebts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [viewMode, setViewMode] = useState('list');
+    const [pendingViewMode, setPendingViewMode] = useState('list');
+    const [paidViewMode, setPaidViewMode] = useState('list');
     const [playingAudio, setPlayingAudio] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
-    const [error, setError] = useState('');
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [debtToDelete, setDebtToDelete] = useState(null);
@@ -49,7 +45,6 @@ const DebtsPage = () => {
 
     const fetchData = useCallback(async () => {
         try {
-            setLoading(true);
             const params = {
                 type: activeTab,
                 person_id: selectedPersonId
@@ -66,9 +61,6 @@ const DebtsPage = () => {
             setPeopleWithDebts(statsRes.data?.people_with_debts || []);
         } catch (err) {
             console.error('Error fetching debts:', err);
-            setError('Failed to load utangs');
-        } finally {
-            setLoading(false);
         }
     }, [activeTab, selectedPersonId]);
 
@@ -95,7 +87,6 @@ const DebtsPage = () => {
         } catch (err) {
             console.error('Delete error:', err);
             setDebts(originalDebts);
-            setError('Failed to delete utang');
         } finally {
             setDeleting(false);
         }
@@ -114,7 +105,6 @@ const DebtsPage = () => {
             setPlayingAudio(audioPath);
         } catch (err) {
             console.error("Playback failed:", err);
-            setError("Could not play audio");
             setPlayingAudio(null);
         }
     };
@@ -123,17 +113,8 @@ const DebtsPage = () => {
     const pendingDebts = debts.filter(d => d.status === 'pending');
     const paidDebts = debts.filter(d => d.status === 'paid');
 
-    if (loading) {
-        return (
-            <div className="flex-1 min-h-screen bg-[#f8fafc] flex items-center justify-center">
-                <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-        );
-    }
-
     return (
-        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-8">
-            {/* Image Preview Overlay */}
+        <div className="flex-1 min-h-screen bg-[#f8fafc] p-4 lg:p-8">{/* Image Preview Overlay */}
             {previewImage && (
                 <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center p-4" onClick={() => setPreviewImage(null)}>
                     <button className="absolute top-6 right-6 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white"><X size={24} /></button>
@@ -162,21 +143,6 @@ const DebtsPage = () => {
                                 className={`px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'mine' ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
                             >
                                 Bayarin
-                            </button>
-                        </div>
-
-                        <div className="flex bg-white border border-gray-100 p-1 rounded-xl sm:p-1.5 shadow-sm">
-                            <button 
-                                onClick={() => setViewMode('list')} 
-                                className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all ${viewMode === 'list' ? 'bg-green-900 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50'}`}
-                            >
-                                <LayoutList size={16} className="sm:w-[18px] sm:h-[18px]" />
-                            </button>
-                            <button 
-                                onClick={() => setViewMode('grid')} 
-                                className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50'}`}
-                            >
-                                <LayoutGrid size={16} className="sm:w-[18px] sm:h-[18px]" />
                             </button>
                         </div>
                     </div>
@@ -230,12 +196,12 @@ const DebtsPage = () => {
 
                 {/* Stats Summary */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
-                    <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-amber-200 transition-all">
+                    <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-red-200 transition-all">
                         <div className="flex items-center justify-between mb-2 sm:mb-4">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-amber-50 rounded-lg sm:rounded-xl flex items-center justify-center text-amber-600 border border-amber-100">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-50 rounded-lg sm:rounded-xl flex items-center justify-center text-red-600 border border-red-100">
                                 <Clock size={16} className="sm:w-5 sm:h-5" />
                             </div>
-                            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-amber-50 text-amber-600 rounded-full">
+                            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-red-50 text-red-600 rounded-full">
                                 <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{stats.pending_count}</span>
                             </div>
                         </div>
@@ -245,12 +211,12 @@ const DebtsPage = () => {
                         <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(stats.pending_total)}</p>
                     </div>
 
-                    <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-green-200 transition-all">
+                    <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-green-300 transition-all">
                         <div className="flex items-center justify-between mb-2 sm:mb-4">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg sm:rounded-xl flex items-center justify-center text-green-600 border border-green-100">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center text-green-700 border border-green-200">
                                 <CheckCircle2 size={16} className="sm:w-5 sm:h-5" />
                             </div>
-                            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-green-50 text-green-600 rounded-full">
+                            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-green-100 text-green-700 rounded-full">
                                 <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{stats.paid_count}</span>
                             </div>
                         </div>
@@ -263,7 +229,7 @@ const DebtsPage = () => {
                 <section>
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 border border-amber-100 shadow-sm">
+                            <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-red-600 border border-red-100 shadow-sm">
                                 <Clock size={20} />
                             </div>
                             <div>
@@ -275,21 +241,39 @@ const DebtsPage = () => {
                                 </p>
                             </div>
                         </div>
+                        
+                        {/* View Mode Toggle for Pending */}
+                        <div className="flex items-center gap-1 bg-red-50/50 p-0.5 sm:p-1 rounded-lg sm:rounded-xl border border-red-100">
+                            <button 
+                                onClick={() => setPendingViewMode('list')}
+                                className={`p-1 rounded transition-all ${pendingViewMode === 'list' ? 'bg-red-600 text-white shadow-md' : 'text-gray-400 hover:bg-red-100'}`}
+                                title="List View"
+                            >
+                                <LayoutList size={12} className="sm:w-3.5 sm:h-3.5" />
+                            </button>
+                            <button 
+                                onClick={() => setPendingViewMode('grid')}
+                                className={`p-1 rounded transition-all ${pendingViewMode === 'grid' ? 'bg-red-600 text-white shadow-md' : 'text-gray-400 hover:bg-red-100'}`}
+                                title="Grid View"
+                            >
+                                <LayoutGrid size={12} className="sm:w-3.5 sm:h-3.5" />
+                            </button>
+                        </div>
                     </div>
                     {pendingDebts.length > 0 ? (
-                        <div className={viewMode === 'list' ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+                        <div className={pendingViewMode === 'list' ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
                             {pendingDebts.map(debt => (
                                 <div 
                                     key={debt.id} 
-                                    className={`group bg-red-50 border border-red-100 rounded-[2rem] overflow-hidden hover:border-red-300 hover:shadow-2xl hover:shadow-red-900/5 transition-all duration-300 ${viewMode === 'list' ? "p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6" : ""}`}
+                                    className={`group bg-red-50 border border-red-100 rounded-[2rem] overflow-hidden hover:border-red-300 hover:shadow-2xl hover:shadow-red-900/5 transition-all duration-300 ${pendingViewMode === 'list' ? "p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6" : ""}`}
                                 >
-                                    {viewMode === 'grid' && (
-                                        <div className="h-40 bg-amber-50/30 flex items-center justify-center border-b border-amber-50 relative overflow-hidden">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
-                                            <Wallet2 size={48} className="text-amber-200 relative z-10" />
+                                    {pendingViewMode === 'grid' && (
+                                        <div className="h-40 bg-red-50/30 flex items-center justify-center border-b border-red-50 relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent" />
+                                            <Wallet2 size={48} className="text-red-200 relative z-10" />
                                         </div>
                                     )}
-                                    <div className={viewMode === 'grid' ? "p-6" : "flex-1"}>
+                                    <div className={pendingViewMode === 'grid' ? "p-6" : "flex-1"}>
                                         <div className="flex flex-wrap items-center gap-2 mb-3">
                                             {debt.is_my_debt ? (
                                                 <span className="text-[9px] font-black bg-gray-900 text-white px-3 py-1 rounded-lg uppercase tracking-wider">My Utang</span>
@@ -306,7 +290,7 @@ const DebtsPage = () => {
                                         <div className="flex items-center gap-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
                                             <span className="flex items-center gap-1.5"><Clock size={12} /> {formatDateLocal(debt.created_at)}</span>
                                         </div>
-                                        {viewMode === 'grid' && (
+                                        {pendingViewMode === 'grid' && (
                                             <div className="mt-6 flex items-center justify-between pt-6 border-t border-gray-50">
                                                 <div>
                                                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Amount</p>
@@ -335,7 +319,7 @@ const DebtsPage = () => {
                                             </div>
                                         )}
                                     </div>
-                                    {viewMode === 'list' && (
+                                    {pendingViewMode === 'list' && (
                                         <div className="flex flex-row items-center justify-between sm:justify-end gap-3 sm:gap-8 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-50">
                                             <div className="text-left sm:text-right">
                                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 sm:mb-1">Balance</p>
@@ -380,7 +364,7 @@ const DebtsPage = () => {
                 <section>
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-green-600 border border-green-100 shadow-sm">
+                            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center text-green-700 border border-green-200 shadow-sm">
                                 <CheckCircle2 size={20} />
                             </div>
                             <div>
@@ -388,15 +372,33 @@ const DebtsPage = () => {
                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Completed personal settlements</p>
                             </div>
                         </div>
+                        
+                        {/* View Mode Toggle for Paid */}
+                        <div className="flex items-center gap-1 bg-green-100/50 p-0.5 sm:p-1 rounded-lg sm:rounded-xl border border-green-200">
+                            <button 
+                                onClick={() => setPaidViewMode('list')}
+                                className={`p-1 rounded transition-all ${paidViewMode === 'list' ? 'bg-green-700 text-white shadow-md' : 'text-gray-400 hover:bg-green-100'}`}
+                                title="List View"
+                            >
+                                <LayoutList size={12} className="sm:w-3.5 sm:h-3.5" />
+                            </button>
+                            <button 
+                                onClick={() => setPaidViewMode('grid')}
+                                className={`p-1 rounded transition-all ${paidViewMode === 'grid' ? 'bg-green-700 text-white shadow-md' : 'text-gray-400 hover:bg-green-100'}`}
+                                title="Grid View"
+                            >
+                                <LayoutGrid size={12} className="sm:w-3.5 sm:h-3.5" />
+                            </button>
+                        </div>
                     </div>
                     {paidDebts.length > 0 ? (
-                        <div className={viewMode === 'list' ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+                        <div className={paidViewMode === 'list' ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
                             {paidDebts.map(debt => (
                                 <div 
                                     key={debt.id} 
-                                    className={`group bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:border-green-400 hover:shadow-2xl hover:shadow-green-900/5 transition-all duration-300 ${viewMode === 'list' ? "p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6" : ""}`}
+                                    className={`group bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:border-green-400 hover:shadow-2xl hover:shadow-green-900/5 transition-all duration-300 ${paidViewMode === 'list' ? "p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6" : ""}`}
                                 >
-                                    {viewMode === 'grid' && (
+                                    {paidViewMode === 'grid' && (
                                         <div className="h-40 bg-gray-50 relative overflow-hidden group/img">
                                             {debt.proof_image_path ? (
                                                 <img src={debt.proof_image_path} className="w-full h-full object-cover transition-transform group-hover/img:scale-110 duration-500" alt="Proof" />
@@ -411,7 +413,7 @@ const DebtsPage = () => {
                                             </div>
                                         </div>
                                     )}
-                                    <div className={viewMode === 'grid' ? "p-6" : "flex-1"}>
+                                    <div className={paidViewMode === 'grid' ? "p-6" : "flex-1"}>
                                         <div className="flex flex-wrap items-center gap-2 mb-3">
                                             {debt.is_my_debt ? (
                                                 <span className="text-[9px] font-black bg-gray-100 text-gray-500 px-3 py-1 rounded-lg uppercase tracking-wider">My Utang</span>
@@ -435,7 +437,7 @@ const DebtsPage = () => {
                                                 </p>
                                             )}
                                         </div>
-                                        {viewMode === 'grid' && (
+                                        {paidViewMode === 'grid' && (
                                             <div className="mt-6 flex items-center justify-between pt-6 border-t border-gray-50">
                                                 <p className="text-xl font-black text-green-900">{formatCurrency(debt.amount)}</p>
                                                 <div className="flex gap-2">
@@ -463,7 +465,7 @@ const DebtsPage = () => {
                                             </div>
                                         )}
                                     </div>
-                                    {viewMode === 'list' && (
+                                    {paidViewMode === 'list' && (
                                         <div className="flex flex-row items-center justify-between sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-50">
                                             <div className="text-left sm:text-right">
                                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 sm:mb-1">Settled</p>
@@ -544,3 +546,6 @@ const DebtsPage = () => {
 };
 
 export default DebtsPage;
+
+
+

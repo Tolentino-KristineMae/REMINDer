@@ -1,0 +1,744 @@
+/* Print Page Styles */
+.print-page {
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+/* Screen-only styles */
+.screen-only {
+    display: block;
+    padding: 2rem;
+}
+
+.print-only {
+    display: none;
+}
+
+/* Header */
+.print-header {
+    background: white;
+    border-radius: 2rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.print-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.print-title-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.print-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.print-title {
+    font-size: 1.875rem;
+    font-weight: 900;
+    color: #111827;
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+.print-subtitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0.25rem 0 0 0;
+    font-weight: 600;
+}
+
+.print-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.print-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+.print-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Mobile Print Info */
+.mobile-print-info {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 2px solid #3b82f6;
+    border-radius: 1rem;
+    margin-top: 1rem;
+}
+
+.info-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.info-content {
+    flex: 1;
+}
+
+.info-title {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #1e40af;
+    margin: 0 0 0.25rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.info-text {
+    font-size: 0.8125rem;
+    color: #1e40af;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Content */
+.print-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Selection Section */
+.selection-section {
+    background: white;
+    border-radius: 2rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #111827;
+    margin: 0 0 1.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.875rem;
+}
+
+/* Type Cards */
+.type-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.type-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.type-card:hover {
+    border-color: #3b82f6;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+}
+
+.type-card-active {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+}
+
+.type-card-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.type-card-icon.settlements {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.type-card-icon.utangs {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.type-card-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #111827;
+    margin: 0 0 0.5rem 0;
+}
+
+.type-card-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Status Buttons */
+.status-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.status-button {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.25rem 2rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.status-button:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.status-button-active {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #2563eb;
+}
+
+/* Month Filter */
+.month-filter {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.month-button {
+    padding: 0.875rem 1.5rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.month-button:hover {
+    border-color: #8b5cf6;
+    color: #8b5cf6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.month-button-active {
+    border-color: #8b5cf6;
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    color: #7c3aed;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+}
+
+/* Items List */
+.items-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.select-all-button {
+    background: #f3f4f6;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.select-all-button:hover {
+    background: #e5e7eb;
+}
+
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.item-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.item-card:hover {
+    border-color: #3b82f6;
+    background: white;
+}
+
+.item-card-selected {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.item-checkbox input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 0.5rem 0;
+}
+
+.item-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.item-meta-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.item-amount {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #111827;
+}
+
+/* Loading & Empty States */
+.loading-state,
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    color: #9ca3af;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e5e7eb;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.empty-state svg {
+    margin-bottom: 1rem;
+}
+
+/* Print Styles */
+@media print {
+    .screen-only {
+        display: none !important;
+    }
+
+    .print-only {
+        display: block !important;
+    }
+
+    .print-page {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+    
+    /* Ensure images fit on mobile print */
+    .proof-image {
+        max-width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+    }
+    
+    /* Better text wrapping for mobile */
+    .field-value {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Ensure records don't break awkwardly */
+    .record-section {
+        page-break-inside: avoid;
+    }
+}
+
+/* Print Document Styles - Professional & Modern */
+.print-document {
+    max-width: 210mm;
+    margin: 0 auto;
+    background: white;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 10pt;
+    line-height: 1.4;
+}
+
+.document-header {
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 3px double #1e293b;
+    margin-bottom: 1rem;
+    background: linear-gradient(to bottom, #f8fafc 0%, white 100%);
+    padding-top: 0.5rem;
+}
+
+.document-logo {
+    margin-bottom: 0.75rem;
+}
+
+.logo-circle {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.logo-circle svg {
+    width: 28px;
+    height: 28px;
+}
+
+.document-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 0.375rem 0;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+}
+
+.document-subtitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #475569;
+    margin: 0 0 0.375rem 0;
+    letter-spacing: 0.025em;
+}
+
+.document-date {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Summary Section - Professional Card */
+.document-summary {
+    display: flex;
+    justify-content: space-around;
+    gap: 1.5rem;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    border: 2px solid #cbd5e1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.summary-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+}
+
+.summary-value {
+    font-size: 1.125rem;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.025em;
+}
+
+/* Record Section - Modern Card Design */
+.record-section {
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background: white;
+}
+
+.record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.625rem 1rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.record-number {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #0f172a;
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+}
+
+.record-status {
+    font-size: 0.625rem;
+    font-weight: 900;
+    padding: 0.3rem 0.75rem;
+    border-radius: 0.375rem;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+    box-shadow: 0 1px 3px rgba(34, 197, 94, 0.3);
+}
+
+.record-content {
+    padding: 1rem;
+}
+
+.record-main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    font-size: 0.75rem;
+}
+
+.record-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 0.375rem;
+    border: 1px solid #e2e8f0;
+}
+
+.record-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.field-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+}
+
+.field-value {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #0f172a;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.field-value.amount {
+    font-size: 1.125rem;
+    font-weight: 900;
+    color: #16a34a;
+    letter-spacing: -0.025em;
+}
+
+/* Proof Image - Professional Display */
+.record-proof {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 2px solid #e2e8f0;
+    grid-column: 1 / -1;
+}
+
+.proof-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #64748b;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+}
+
+.proof-image {
+    max-width: 100%;
+    max-height: 180px;
+    border-radius: 0.375rem;
+    border: 2px solid #e2e8f0;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Document Footer - Professional */
+.document-footer {
+    text-align: center;
+    padding-top: 1rem;
+    margin-top: 1.5rem;
+    border-top: 2px double #cbd5e1;
+    background: linear-gradient(to top, #f8fafc 0%, white 100%);
+    padding-bottom: 0.5rem;
+}
+
+.footer-text {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    margin: 0.25rem 0;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .print-header-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .print-title-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .type-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .status-buttons {
+        flex-direction: column;
+    }
+
+    .status-button {
+        min-width: 100%;
+    }
+    
+    .month-filter {
+        justify-content: center;
+    }
+    
+    .month-button {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .item-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .record-field {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+    
+    .mobile-print-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .info-icon {
+        font-size: 2rem;
+    }
+    
+    /* Mobile print button */
+    .print-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

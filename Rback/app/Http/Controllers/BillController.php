@@ -249,7 +249,7 @@ class BillController extends Controller
                 ->selectRaw("COALESCE(categories.color, '#22c55e') as color")
                 ->selectRaw('COUNT(bills.id) as count')
                 ->groupBy('categories.id', 'categories.name', 'categories.color')
-                ->having('count', '>', 0)
+                ->havingRaw('COUNT(bills.id) > 0')
                 ->get();
 
             return response()->json([
@@ -281,9 +281,13 @@ class BillController extends Controller
     public function fullData()
     {
         try {
-            // Eager load only necessary relations
-            $people = \App\Models\PersonInCharge::all();
-            $bills = Bill::with(['category', 'personInCharge', 'proofOfPayments'])
+            // Optimize: Use parallel queries and limit data
+            $people = \App\Models\PersonInCharge::select('id', 'first_name', 'last_name', 'color')->get();
+            
+            // Only load bills with necessary relations, limit to recent 500 for performance
+            $bills = Bill::with(['category:id,name,color', 'personInCharge:id,first_name,last_name,color', 'proofOfPayments:id,bill_id,file_path,voice_record_path,details,paid_by,created_at'])
+                ->orderBy('created_at', 'desc')
+                ->limit(500)
                 ->get();
 
             return response()->json([

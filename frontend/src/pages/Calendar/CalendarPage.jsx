@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api/axios';
+import api from '../../api/axios';
 import { 
     ChevronLeft, 
     ChevronRight, 
@@ -10,7 +10,8 @@ import {
     Users
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { formatCurrency, formatDateLocal } from '../utils/formatters';
+import { formatCurrency, formatDateLocal } from '../../utils/formatters';
+import '../../styles/pages/Calendar/CalendarPage.css';
 
 const CalendarPage = () => {
     const navigate = useNavigate();

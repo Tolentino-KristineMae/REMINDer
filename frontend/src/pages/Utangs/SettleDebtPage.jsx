@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../api/axios';
-import { formatDateLocal, formatCurrency } from '../utils/formatters';
+import api from '../../api/axios';
+import { formatDateLocal, formatCurrency } from '../../utils/formatters';
 import { 
     X, 
     CheckCircle, 
@@ -90,7 +90,12 @@ const SettleDebtPage = () => {
         const selected = e.target.files[0];
         if (selected) {
             setFile(selected);
-            setPreview(URL.createObjectURL(selected));
+            // Only create preview for images, not PDFs
+            if (selected.type.startsWith('image/')) {
+                setPreview(URL.createObjectURL(selected));
+            } else {
+                setPreview(null); // Clear preview for non-images
+            }
         }
     };
 
@@ -155,9 +160,27 @@ const SettleDebtPage = () => {
                         <form onSubmit={handleSubmit}>
                             <div className="p-6 sm:p-8 border-b border-gray-50">
                                 <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Step 1: Proof Photo (Optional)</label>
-                                <div onClick={() => document.getElementById('proof').click()} className={`relative h-48 sm:h-64 rounded-[1.5rem] sm:rounded-[2rem] border-4 border-dashed transition-all flex flex-col items-center justify-center cursor-pointer overflow-hidden ${preview ? 'border-green-500 bg-white' : 'border-gray-100 bg-gray-50 hover:border-green-200 hover:bg-gray-100/50'}`}>
-                                    {preview ? <img src={preview} className="w-full h-full object-cover" alt="Preview" /> : <><div className="w-12 h-12 sm:w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-gray-400 mb-4"><CloudUpload size={24} sm:size={32} /></div><p className="text-sm font-black text-gray-900">Snap or Upload Proof</p><p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mt-1">Optional • PNG, JPG up to 10MB</p></>}
-                                    <input type="file" id="proof" accept="image/*" className="hidden" onChange={handleFileChange} />
+                                <div onClick={() => document.getElementById('proof').click()} className={`relative h-48 sm:h-64 rounded-[1.5rem] sm:rounded-[2rem] border-4 border-dashed transition-all flex flex-col items-center justify-center cursor-pointer overflow-hidden ${file ? 'border-green-500 bg-white' : 'border-gray-100 bg-gray-50 hover:border-green-200 hover:bg-gray-100/50'}`}>
+                                    {preview ? (
+                                        <img src={preview} className="w-full h-full object-cover" alt="Preview" />
+                                    ) : file ? (
+                                        <div className="flex flex-col items-center">
+                                            <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 mb-4">
+                                                <FileText size={32} />
+                                            </div>
+                                            <p className="text-sm font-black text-gray-900">{file.name}</p>
+                                            <p className="text-[9px] text-gray-400 font-bold uppercase mt-1">PDF Document</p>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="w-12 h-12 sm:w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-gray-400 mb-4">
+                                                <CloudUpload size={24} sm:size={32} />
+                                            </div>
+                                            <p className="text-sm font-black text-gray-900">Snap or Upload Proof</p>
+                                            <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mt-1">Photo, PDF • Camera, Gallery, or Files</p>
+                                        </>
+                                    )}
+                                    <input type="file" id="proof" accept="image/*,application/pdf" capture="environment" className="hidden" onChange={handleFileChange} />
                                 </div>
                             </div>
 

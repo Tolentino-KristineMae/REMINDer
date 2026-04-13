@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../api/axios';
+import api from '../../api/axios';
 import { 
   Calendar, 
   Banknote, 
@@ -20,8 +20,7 @@ import {
   TrendingUp,
   CreditCard
 } from "lucide-react"
-import { cn } from "../lib/utils"
-import Logo from './Logo';
+import { cn } from "../../lib/utils"
 
 const Card = ({ children, className }) => (
   <div className={cn("bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden", className)}>

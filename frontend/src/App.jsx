@@ -51,22 +51,24 @@ class ErrorBoundary extends Component {
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ModalProvider } from './context/ModalContext';
-import Sidebar from './components/Sidebar';
+import Sidebar from './Shared/Sidebar';
+import Header, { TimeDisplay } from './Shared/Header';
 import { Menu } from 'lucide-react';
 
-const Login = lazy(() => import('./components/Login'));
-const Signup = lazy(() => import('./components/Signup'));
-const Dashboard = lazy(() => import('./components/Dashboard'));
-const AddBillPage = lazy(() => import('./components/AddBillPage'));
-const EditBillPage = lazy(() => import('./components/EditBillPage'));
-const Management = lazy(() => import('./components/Management'));
-const CalendarPage = lazy(() => import('./components/CalendarPage'));
-const SettlementsPage = lazy(() => import('./components/SettlementsPage'));
-const SettleBillPage = lazy(() => import('./components/SettleBillPage'));
-const DebtsPage = lazy(() => import('./components/DebtsPage'));
-const AddDebtPage = lazy(() => import('./components/AddDebtPage'));
-const EditDebtPage = lazy(() => import('./components/EditDebtPage'));
-const SettleDebtPage = lazy(() => import('./components/SettleDebtPage'));
+const Login = lazy(() => import('./Auth/LoginAndSignup/Login'));
+const Signup = lazy(() => import('./Auth/LoginAndSignup/Signup'));
+const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
+const AddBillPage = lazy(() => import('./pages/Bills/AddBillPage'));
+const EditBillPage = lazy(() => import('./pages/Bills/EditBillPage'));
+const SettleBillPage = lazy(() => import('./pages/Bills/SettleBillPage'));
+const Management = lazy(() => import('./pages/Management/Management'));
+const CalendarPage = lazy(() => import('./pages/Calendar/CalendarPage'));
+const SettlementsPage = lazy(() => import('./pages/Settlements/SettlementsPage'));
+const DebtsPage = lazy(() => import('./pages/Utangs/DebtsPage'));
+const AddDebtPage = lazy(() => import('./pages/Utangs/AddDebtPage'));
+const EditDebtPage = lazy(() => import('./pages/Utangs/EditDebtPage'));
+const SettleDebtPage = lazy(() => import('./pages/Utangs/SettleDebtPage'));
+const PrintPage = lazy(() => import('./pages/Print/PrintPage'));
 
 const LoadingFallback = ({ fullScreen = true }) => {
     const containerClass = fullScreen 
@@ -78,58 +80,6 @@ const LoadingFallback = ({ fullScreen = true }) => {
             <div className="text-center">
                 <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                 <p className="text-white font-bold text-lg">Loading...</p>
-            </div>
-        </div>
-    );
-};
-
-const TimeDisplay = ({ dateTime }) => {
-    const formatTime = (date) => {
-        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-    };
-    const formatDate = (date) => {
-        return `${date.getDate()} ${date.toLocaleString('en-US', { month: 'short' })} ${date.getFullYear()}`;
-    };
-
-    return (
-        <div className="flex items-center gap-3">
-            <div className="flex flex-col items-end">
-                <p className="text-lg font-bold text-gray-800 leading-none">{formatTime(dateTime)}</p>
-                <p className="text-[10px] font-semibold text-gray-500 leading-none mt-0.5">{formatDate(dateTime)}</p>
-            </div>
-            <div className="h-10 w-px bg-gray-200" />
-            <div className="flex flex-col items-start">
-                <p className="text-[9px] font-extrabold text-green-600 uppercase tracking-widest leading-none">REMINDear</p>
-                <p className="text-xs font-black text-gray-900 leading-none mt-0.5">System</p>
-            </div>
-        </div>
-    );
-};
-
-const PageHeader = ({ title, subtitle }) => {
-    const [dateTime, setDateTime] = useState(new Date());
-
-    useEffect(() => {
-        const timer = setInterval(() => setDateTime(new Date()), 1000);
-        return () => clearInterval(timer);
-    }, []);
-
-    return (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-4">
-            <div className="flex flex-col">
-                <div className="flex items-center gap-3">
-                    <div className="w-1 h-7 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full" />
-                    <h1 className="text-xl font-black text-gray-900 leading-none tracking-tight">{title}</h1>
-                </div>
-                {subtitle && (
-                    <div className="flex items-center gap-3 mt-1.5">
-                        <div className="w-1 h-3 bg-gradient-to-b from-green-400 to-emerald-500 rounded-full opacity-50" />
-                        <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest">{subtitle}</p>
-                    </div>
-                )}
-            </div>
-            <div className="flex sm:justify-end">
-                <TimeDisplay dateTime={dateTime} />
             </div>
         </div>
     );
@@ -172,7 +122,7 @@ const PrivateRoute = ({ children, pageTitle, pageSubtitle }) => {
                 </div>
                 <div className="hidden lg:block sticky top-0 z-30 bg-white border-b border-gray-100">
                     <div className="px-6 py-4">
-                        <PageHeader title={pageTitle} subtitle={pageSubtitle} />
+                        <Header title={pageTitle} subtitle={pageSubtitle} />
                     </div>
                 </div>
                 {children}
@@ -276,6 +226,14 @@ const App = () => {
                                     element={
                                         <PrivateRoute pageTitle="Bayad Time" pageSubtitle="Settle your personal debt">
                                             <SettleDebtPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/print" 
+                                    element={
+                                        <PrivateRoute pageTitle="Print Records" pageSubtitle="Print detailed payment and debt records">
+                                            <PrintPage />
                                         </PrivateRoute>
                                     } 
                                 />
