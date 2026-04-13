@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Printer, FileText, Wallet2, CheckCircle2, Calendar, User, DollarSign } from 'lucide-react';
+import { Printer, FileText, Wallet2, CheckCircle2, Calendar, User, DollarSign, LayoutGrid, LayoutList } from 'lucide-react';
 import api from '../../api/axios';
 import { formatCurrency, formatDateLocal } from '../../utils/formatters';
 import '../../styles/pages/Print/PrintPage.css';
@@ -12,6 +12,7 @@ const PrintPage = () => {
     const [loading, setLoading] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const [availableMonths, setAvailableMonths] = useState([]);
+    const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
 
     useEffect(() => {
         if (selectedType && selectedStatus) {
@@ -192,7 +193,7 @@ const PrintPage = () => {
                     {/* Step 1: Select Type */}
                     <div className="selection-section">
                         <h2 className="section-title">Step 1: Select Record Type</h2>
-                        <div className="type-cards">
+                        <div className="type-cards grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <button
                                 onClick={() => {
                                     setSelectedType('settlements');
@@ -231,7 +232,7 @@ const PrintPage = () => {
                     {selectedType && (
                         <div className="selection-section">
                             <h2 className="section-title">Step 2: Select Status</h2>
-                            <div className="status-buttons">
+                            <div className="status-buttons grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <button
                                     onClick={() => {
                                         setSelectedStatus('paid');
@@ -291,13 +292,32 @@ const PrintPage = () => {
                     {/* Step 4: Select Items */}
                     {selectedType && selectedStatus && (
                         <div className="selection-section">
-                            <div className="items-header">
-                                <h2 className="section-title">Step 4: Select Items to Print</h2>
-                                {data.length > 0 && (
-                                    <button onClick={toggleSelectAll} className="select-all-button">
-                                        {selectedItems.length === data.length ? 'Deselect All' : 'Select All'}
-                                    </button>
-                                )}
+                            <div className="items-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <h2 className="section-title mb-0">Step 4: Select Items to Print</h2>
+                                <div className="flex items-center gap-2">
+                                    {/* View Mode Toggle */}
+                                    <div className="flex bg-white border border-gray-200 rounded-lg p-1">
+                                        <button
+                                            onClick={() => setViewMode('list')}
+                                            className={`p-2 rounded transition-all ${viewMode === 'list' ? 'bg-green-900 text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                                            title="List View"
+                                        >
+                                            <LayoutList size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => setViewMode('grid')}
+                                            className={`p-2 rounded transition-all ${viewMode === 'grid' ? 'bg-green-900 text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                                            title="Grid View"
+                                        >
+                                            <LayoutGrid size={18} />
+                                        </button>
+                                    </div>
+                                    {data.length > 0 && (
+                                        <button onClick={toggleSelectAll} className="select-all-button whitespace-nowrap">
+                                            {selectedItems.length === data.length ? 'Deselect All' : 'Select All'}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
                             {loading ? (
@@ -311,7 +331,7 @@ const PrintPage = () => {
                                     <p>No records found</p>
                                 </div>
                             ) : (
-                                <div className="items-list">
+                                <div className={viewMode === 'grid' ? 'items-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4' : 'items-list'}>
                                     {data.map(item => (
                                         <div
                                             key={item.id}
@@ -325,42 +345,44 @@ const PrintPage = () => {
                                                     onChange={() => {}}
                                                 />
                                             </div>
-                                            <div className="item-details">
-                                                <h4 className="item-title">
+                                            <div className="item-details flex-1 min-w-0">
+                                                <h4 className="item-title truncate">
                                                     {selectedType === 'settlements' ? item.details || item.name : item.description}
                                                 </h4>
-                                                <div className="item-meta">
+                                                <div className="item-meta flex-wrap">
                                                     {selectedType === 'settlements' && item.person_in_charge && (
                                                         <span className="item-meta-tag">
                                                             <User size={12} />
-                                                            {item.person_in_charge.first_name} {item.person_in_charge.last_name}
+                                                            <span className="truncate">{item.person_in_charge.first_name} {item.person_in_charge.last_name}</span>
                                                         </span>
                                                     )}
                                                     {selectedType === 'utangs' && item.person_in_charge && (
                                                         <span className="item-meta-tag">
                                                             <User size={12} />
-                                                            {item.person_in_charge.first_name} {item.person_in_charge.last_name}
+                                                            <span className="truncate">{item.person_in_charge.first_name} {item.person_in_charge.last_name}</span>
                                                         </span>
                                                     )}
                                                     <span className="item-meta-tag">
                                                         <Calendar size={12} />
-                                                        {(() => {
-                                                            if (selectedType === 'settlements') {
-                                                                if (selectedStatus === 'paid') {
-                                                                    const paymentDate = item.proof_of_payments?.[0]?.created_at;
-                                                                    return paymentDate ? formatDateLocal(paymentDate) : 'No Date';
+                                                        <span className="truncate">
+                                                            {(() => {
+                                                                if (selectedType === 'settlements') {
+                                                                    if (selectedStatus === 'paid') {
+                                                                        const paymentDate = item.proof_of_payments?.[0]?.created_at;
+                                                                        return paymentDate ? formatDateLocal(paymentDate) : 'No Date';
+                                                                    } else {
+                                                                        return item.due_date ? formatDateLocal(item.due_date) : 'No Date';
+                                                                    }
                                                                 } else {
-                                                                    return item.due_date ? formatDateLocal(item.due_date) : 'No Date';
+                                                                    const dateValue = selectedStatus === 'paid' ? item.paid_at : item.created_at;
+                                                                    return dateValue ? formatDateLocal(dateValue) : 'No Date';
                                                                 }
-                                                            } else {
-                                                                const dateValue = selectedStatus === 'paid' ? item.paid_at : item.created_at;
-                                                                return dateValue ? formatDateLocal(dateValue) : 'No Date';
-                                                            }
-                                                        })()}
+                                                            })()}
+                                                        </span>
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="item-amount">
+                                            <div className="item-amount whitespace-nowrap">
                                                 {formatCurrency(item.amount)}
                                             </div>
                                         </div>
