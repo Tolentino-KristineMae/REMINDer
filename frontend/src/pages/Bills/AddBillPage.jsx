@@ -178,8 +178,8 @@ export default function AddBillPage() {
       `}</style>
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-          {/* Left Column - Info Panel */}
-          <div className="lg:col-span-4 space-y-6">
+          {/* Left Column - Info Panel (Hidden on Mobile) */}
+          <div className="hidden lg:block lg:col-span-4 space-y-6">
             {/* Hero Card */}
             <Card className="border-gray-100 shadow-xl shadow-gray-200/20">
               <div className="relative">
