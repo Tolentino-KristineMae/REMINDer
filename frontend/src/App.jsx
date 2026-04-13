@@ -52,7 +52,7 @@ class ErrorBoundary extends Component {
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ModalProvider } from './context/ModalContext';
 import Sidebar from './Shared/Sidebar';
-import Header, { TimeDisplay } from './shared/Header';
+import Header, { TimeDisplay } from './Shared/Header';
 import { Menu } from 'lucide-react';
 
 const Login = lazy(() => import('./Auth/LoginAndSignup/Login'));
