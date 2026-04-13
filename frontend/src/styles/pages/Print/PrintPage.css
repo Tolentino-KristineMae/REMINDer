@@ -706,15 +706,6 @@
     .status-button {
         min-width: 100%;
     }
-    
-    .month-filter {
-        justify-content: center;
-    }
-    
-    .month-button {
-        flex: 1;
-        min-width: 120px;
-    }
 
     .item-card {
         flex-direction: column;
@@ -724,21 +715,5 @@
     .record-field {
         grid-template-columns: 1fr;
         gap: 0.25rem;
-    }
-    
-    .mobile-print-info {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.5rem;
-    }
-    
-    .info-icon {
-        font-size: 2rem;
-    }
-    
-    /* Mobile print button */
-    .print-button {
-        width: 100%;
-        justify-content: center;
     }
 }
