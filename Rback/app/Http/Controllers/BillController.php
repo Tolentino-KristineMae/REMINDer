@@ -240,14 +240,16 @@ class BillController extends Controller
                 ->selectRaw("SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as total_unpaid_amount")
                 ->first();
 
-            // 2. Get Categories with counts (all-time)
+            // 2. Get Categories with unpaid bill counts
             $categories = \App\Models\Category::leftJoin('bills', function($join) {
-                    $join->on('categories.id', '=', 'bills.category_id');
+                    $join->on('categories.id', '=', 'bills.category_id')
+                        ->whereIn('bills.status', ['pending', 'overdue']);
                 })
                 ->select('categories.id', 'categories.name')
                 ->selectRaw("COALESCE(categories.color, '#22c55e') as color")
                 ->selectRaw('COUNT(bills.id) as count')
                 ->groupBy('categories.id', 'categories.name', 'categories.color')
+                ->having('count', '>', 0)
                 ->get();
 
             return response()->json([
@@ -260,7 +262,14 @@ class BillController extends Controller
                     'total_paid_amount' => (float) ($stats->total_paid_amount ?? 0),
                     'total_unpaid_amount' => (float) ($stats->total_unpaid_amount ?? 0),
                 ],
-                'categories' => CategoryResource::collection($categories)
+                'categories' => $categories->map(function($cat) {
+                    return [
+                        'id' => $cat->id,
+                        'name' => $cat->name,
+                        'color' => $cat->color,
+                        'count' => (int) $cat->count
+                    ];
+                })
             ]);
         } catch (\Exception $e) {
             \Log::error('BillController@dashboardData error: ' . $e->getMessage());
@@ -285,6 +294,149 @@ class BillController extends Controller
             \Log::error('BillController@fullData error: ' . $e->getMessage());
             $debug = config('app.debug') ? ['trace' => $e->getTraceAsString()] : [];
             return response()->json(array_merge(['message' => 'Error loading bills: ' . $e->getMessage()], $debug), 500);
+        }
+    }
+    
+    public function byPerson(Request $request)
+    {
+        try {
+            $query = Bill::with(['category', 'personInCharge', 'proofOfPayments']);
+            
+            // Filter by person if requested
+            if ($request->has('person_id') && $request->person_id !== 'all') {
+                $query->where('person_in_charge_id', $request->person_id);
+            }
+            
+            // Filter by status if requested
+            if ($request->has('status')) {
+                $query->where('status', $request->status);
+            }
+            
+            $bills = $query->get();
+            
+            // Get people with pending bills
+            $peopleWithPendingBills = Bill::where('status', 'pending')
+                ->with('personInCharge')
+                ->get()
+                ->groupBy('person_in_charge_id')
+                ->map(function ($bills, $personId) {
+                    $person = $bills->first()->personInCharge;
+                    return [
+                        'id' => $person->id,
+                        'first_name' => $person->first_name,
+                        'last_name' => $person->last_name,
+                        'color' => $person->color,
+                        'count' => $bills->count()
+                    ];
+                })
+                ->values();
+            
+            // Get people with settled bills
+            $peopleWithSettledBills = Bill::where('status', 'paid')
+                ->with('personInCharge')
+                ->get()
+                ->groupBy('person_in_charge_id')
+                ->map(function ($bills, $personId) {
+                    $person = $bills->first()->personInCharge;
+                    return [
+                        'id' => $person->id,
+                        'first_name' => $person->first_name,
+                        'last_name' => $person->last_name,
+                        'color' => $person->color,
+                        'count' => $bills->count()
+                    ];
+                })
+                ->values();
+            
+            // Calculate totals
+            $pendingBills = $bills->where('status', 'pending');
+            $settledBills = $bills->where('status', 'paid');
+            
+            return response()->json([
+                'bills' => BillResource::collection($bills),
+                'people_with_pending' => $peopleWithPendingBills,
+                'people_with_settled' => $peopleWithSettledBills,
+                'stats' => [
+                    'pending_total' => $pendingBills->sum('amount'),
+                    'settled_total' => $settledBills->sum('amount'),
+                    'pending_count' => $pendingBills->count(),
+                    'settled_count' => $settledBills->count(),
+                ]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('BillController@byPerson error: ' . $e->getMessage());
+            return response()->json(['message' => 'Error loading bills: ' . $e->getMessage()], 500);
+        }
+    }
+    
+    public function categoryStats()
+    {
+        try {
+            $bills = Bill::with('category')->get();
+            
+            $stats = \App\Models\Category::leftJoin('bills', 'categories.id', '=', 'bills.category_id')
+                ->select('categories.id', 'categories.name', 'categories.color')
+                ->selectRaw('COUNT(bills.id) as total_count')
+                ->selectRaw("SUM(CASE WHEN bills.status = 'paid' THEN 1 ELSE 0 END) as paid_count")
+                ->selectRaw('SUM(bills.amount) as total_amount')
+                ->groupBy('categories.id', 'categories.name', 'categories.color')
+                ->get()
+                ->map(function ($category) {
+                    return [
+                        'id' => $category->id,
+                        'name' => $category->name,
+                        'color' => $category->color ?? '#22c55e',
+                        'count' => (int) $category->total_count,
+                        'paid_count' => (int) $category->paid_count,
+                        'total_amount' => (float) $category->total_amount,
+                        'performance_percentage' => $category->total_count > 0 
+                            ? round(($category->paid_count / $category->total_count) * 100) 
+                            : 0
+                    ];
+                });
+            
+            return response()->json([
+                'success' => true,
+                'categories' => $stats
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('BillController@categoryStats error: ' . $e->getMessage());
+            return response()->json(['message' => 'Error loading category stats: ' . $e->getMessage()], 500);
+        }
+    }
+    
+    public function personStats()
+    {
+        try {
+            $stats = \App\Models\PersonInCharge::leftJoin('bills', 'person_in_charges.id', '=', 'bills.person_in_charge_id')
+                ->select('person_in_charges.id', 'person_in_charges.first_name', 'person_in_charges.last_name', 'person_in_charges.color')
+                ->selectRaw('COUNT(bills.id) as total_count')
+                ->selectRaw("SUM(CASE WHEN bills.status = 'paid' THEN 1 ELSE 0 END) as paid_count")
+                ->selectRaw('SUM(bills.amount) as total_amount')
+                ->groupBy('person_in_charges.id', 'person_in_charges.first_name', 'person_in_charges.last_name', 'person_in_charges.color')
+                ->get()
+                ->map(function ($person) {
+                    return [
+                        'id' => $person->id,
+                        'first_name' => $person->first_name,
+                        'last_name' => $person->last_name,
+                        'color' => $person->color,
+                        'count' => (int) $person->total_count,
+                        'paid_count' => (int) $person->paid_count,
+                        'total_amount' => (float) $person->total_amount,
+                        'performance_percentage' => $person->total_count > 0 
+                            ? round(($person->paid_count / $person->total_count) * 100) 
+                            : 0
+                    ];
+                });
+            
+            return response()->json([
+                'success' => true,
+                'people' => $stats
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('BillController@personStats error: ' . $e->getMessage());
+            return response()->json(['message' => 'Error loading person stats: ' . $e->getMessage()], 500);
         }
     }
 }

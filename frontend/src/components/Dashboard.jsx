@@ -37,12 +37,8 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [dashboardRes, billsRes] = await Promise.all([
-                    api.get('/bills/dashboard'),
-                    api.get('/bills')
-                ]);
-                const { stats: statsData } = dashboardRes.data || {};
-                const bills = billsRes.data?.data || billsRes.data || [];
+                const dashboardRes = await api.get('/bills/dashboard');
+                const { stats: statsData, categories: categoriesData } = dashboardRes.data || {};
                 
                 setStats({
                     total: statsData?.total || 0,
@@ -54,22 +50,7 @@ const Dashboard = () => {
                     total_unpaid_amount: statsData?.total_unpaid_amount || 0,
                 });
                 
-                const unpaidBills = bills.filter(b => b.status === 'pending' || b.status === 'overdue');
-                const categoryMap = {};
-                unpaidBills.forEach(bill => {
-                    if (bill.category_id) {
-                        if (!categoryMap[bill.category_id]) {
-                            categoryMap[bill.category_id] = {
-                                id: bill.category_id,
-                                name: bill.category?.name || 'Uncategorized',
-                                color: bill.category?.color || '#6b7280',
-                                count: 0
-                            };
-                        }
-                        categoryMap[bill.category_id].count++;
-                    }
-                });
-                setCategories(Object.values(categoryMap));
+                setCategories(categoriesData || []);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
             } finally {

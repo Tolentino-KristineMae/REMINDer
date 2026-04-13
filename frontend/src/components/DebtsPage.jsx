@@ -27,6 +27,13 @@ const DebtsPage = () => {
     const navigate = useNavigate();
     const audioRef = useRef(null);
     const [debts, setDebts] = useState([]);
+    const [stats, setStats] = useState({
+        pending_count: 0,
+        pending_total: 0,
+        paid_count: 0,
+        paid_total: 0
+    });
+    const [peopleWithDebts, setPeopleWithDebts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState('list');
     const [playingAudio, setPlayingAudio] = useState(null);
@@ -43,17 +50,27 @@ const DebtsPage = () => {
     const fetchData = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await api.get('/debts');
-            // Ensure we handle both wrapped and unwrapped data
-            const debtsData = response.data?.debts || response.data?.data || (Array.isArray(response.data) ? response.data : []);
+            const params = {
+                type: activeTab,
+                person_id: selectedPersonId
+            };
+            
+            const [debtsRes, statsRes] = await Promise.all([
+                api.get('/debts', { params }),
+                api.get('/debts/stats', { params })
+            ]);
+            
+            const debtsData = debtsRes.data?.debts || [];
             setDebts(debtsData);
+            setStats(statsRes.data?.stats || {});
+            setPeopleWithDebts(statsRes.data?.people_with_debts || []);
         } catch (err) {
             console.error('Error fetching debts:', err);
             setError('Failed to load utangs');
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [activeTab, selectedPersonId]);
 
     useEffect(() => {
         fetchData();
@@ -102,44 +119,9 @@ const DebtsPage = () => {
         }
     };
 
-    // Filter debts based on active tab and status
-    const filteredDebts = Array.isArray(debts) ? debts.filter(d => {
-        const isMine = d.is_my_debt;
-        if (activeTab === 'mine') return isMine;
-        return !isMine;
-    }) : [];
-
-    // Further filter by person if in 'owed' tab
-    const personFilteredDebts = activeTab === 'owed' && selectedPersonId !== 'all'
-        ? filteredDebts.filter(d => d.person_in_charge_id?.toString() === selectedPersonId.toString())
-        : filteredDebts;
-
-    const pendingDebts = personFilteredDebts.filter(d => d.status === 'pending');
-    const paidDebts = personFilteredDebts.filter(d => d.status === 'paid');
-
-    // Get unique people from 'owed' debts for the person tabs (only unpaid)
-    const peopleWithOwedDebts = Array.isArray(debts) 
-        ? Object.values(debts.reduce((acc, debt) => {
-            if (!debt.is_my_debt && debt.person_in_charge && (debt.status === 'pending' || debt.status === 'overdue')) {
-                const personId = debt.person_in_charge.id;
-                if (!acc[personId]) {
-                    acc[personId] = {
-                        ...debt.person_in_charge,
-                        count: 0
-                    };
-                }
-                acc[personId].count += 1;
-            }
-            return acc;
-        }, {}))
-        : [];
-
-    const calculateTotal = (debtList) => {
-        return debtList.reduce((sum, d) => {
-            const amount = parseFloat(d.amount);
-            return sum + (isNaN(amount) ? 0 : amount);
-        }, 0);
-    };
+    // Filter debts by status for display
+    const pendingDebts = debts.filter(d => d.status === 'pending');
+    const paidDebts = debts.filter(d => d.status === 'paid');
 
     if (loading) {
         return (
@@ -208,7 +190,7 @@ const DebtsPage = () => {
                 </div>
 
                 {/* Person Filter Tabs (Only for Owed) */}
-                {activeTab === 'owed' && peopleWithOwedDebts.length > 0 && (
+                {activeTab === 'owed' && peopleWithDebts.length > 0 && (
                     <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
                         <button 
                             onClick={() => setSelectedPersonId('all')}
@@ -221,7 +203,7 @@ const DebtsPage = () => {
                         >
                             All Persons
                         </button>
-                        {peopleWithOwedDebts.map((person, idx) => {
+                        {peopleWithDebts.map((person, idx) => {
                             const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4'];
                             const personColor = person.color || colors[idx % colors.length];
                             const isSelected = selectedPersonId === person.id;
@@ -254,13 +236,13 @@ const DebtsPage = () => {
                                 <Clock size={16} className="sm:w-5 sm:h-5" />
                             </div>
                             <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-amber-50 text-amber-600 rounded-full">
-                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{pendingDebts.length}</span>
+                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{stats.pending_count}</span>
                             </div>
                         </div>
                         <p className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">
                             {activeTab === 'mine' ? 'Total to Pay' : 'Total to Collect'}
                         </p>
-                        <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(pendingDebts))}</p>
+                        <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(stats.pending_total)}</p>
                     </div>
 
                     <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-green-200 transition-all">
@@ -269,11 +251,11 @@ const DebtsPage = () => {
                                 <CheckCircle2 size={16} className="sm:w-5 sm:h-5" />
                             </div>
                             <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-green-50 text-green-600 rounded-full">
-                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{paidDebts.length}</span>
+                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{stats.paid_count}</span>
                             </div>
                         </div>
                         <p className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">Total Settled</p>
-                        <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(calculateTotal(paidDebts))}</p>
+                        <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(stats.paid_total)}</p>
                     </div>
                 </div>
 

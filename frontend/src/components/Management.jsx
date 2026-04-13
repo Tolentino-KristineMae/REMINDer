@@ -33,11 +33,13 @@ const Management = () => {
   const [message, setMessage] = useState({ text: '', type: '' })
 
   const [categories, setCategories] = useState([])
+  const [categoryStats, setCategoryStats] = useState({})
   const [newCategory, setNewCategory] = useState({ name: '', color: '#22c55e' })
   const [editingCategory, setEditingCategory] = useState(null)
   const [editCategoryData, setEditCategoryData] = useState({ name: '', color: '' })
 
   const [people, setPeople] = useState([])
+  const [personStats, setPersonStats] = useState({})
   const [bills, setBills] = useState([])
   const [newPerson, setNewPerson] = useState({ first_name: '', last_name: '', email: '', color: '#22c55e' })
   const [editingPerson, setEditingPerson] = useState(null)
@@ -50,23 +52,43 @@ const Management = () => {
   const fetchData = useCallback(async () => {
     try {
       if (activeTab === 'categories') {
-        const response = await api.get('/categories')
-        // Handle Laravel Resource collection wrapping
-        const cats = response.data.categories?.data || response.data.categories || []
-        setCategories(cats)
+        const [catsRes, statsRes] = await Promise.all([
+          api.get('/categories'),
+          api.get('/bills/category-stats')
+        ]);
         
-        // Also fetch bills for category stats
-        const billsRes = await api.get('/bills')
-        setBills(billsRes.data.data || billsRes.data || [])
+        const cats = catsRes.data.categories?.data || catsRes.data.categories || [];
+        setCategories(cats);
+        
+        // Convert stats array to object for easy lookup
+        const statsMap = {};
+        (statsRes.data.categories || []).forEach(stat => {
+          statsMap[stat.id] = stat;
+        });
+        setCategoryStats(statsMap);
+        
+        // Also fetch bills for category check
+        const billsRes = await api.get('/bills');
+        setBills(billsRes.data.data || billsRes.data || []);
       } else {
-        const response = await api.get('/people')
-        // Handle Laravel Resource collection wrapping
-        const ppl = response.data.people?.data || response.data.people || []
-        setPeople(ppl)
+        const [peopleRes, statsRes] = await Promise.all([
+          api.get('/people'),
+          api.get('/bills/person-stats')
+        ]);
         
-        // Also fetch bills for PIC stats check
-        const billsRes = await api.get('/bills')
-        setBills(billsRes.data.data || billsRes.data || [])
+        const ppl = peopleRes.data.people?.data || peopleRes.data.people || [];
+        setPeople(ppl);
+        
+        // Convert stats array to object for easy lookup
+        const statsMap = {};
+        (statsRes.data.people || []).forEach(stat => {
+          statsMap[stat.id] = stat;
+        });
+        setPersonStats(statsMap);
+        
+        // Also fetch bills for person check
+        const billsRes = await api.get('/bills');
+        setBills(billsRes.data.data || billsRes.data || []);
       }
     } catch (err) {
       console.error(`Error fetching ${activeTab}:`, err)
@@ -305,30 +327,24 @@ const Management = () => {
   };
 
   const getCategoryStats = useCallback((categoryId) => {
-    const safeBills = Array.isArray(bills) ? bills : [];
-    const categoryBills = safeBills.filter(b => b.category_id === categoryId)
-    const paidCount = categoryBills.filter(b => b.status === 'paid').length
-    const totalAmount = categoryBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0)
+    const stats = categoryStats[categoryId];
     return {
-      count: categoryBills.length,
-      paid: paidCount,
-      total: totalAmount,
-      performance: categoryBills.length > 0 ? Math.round((paidCount / categoryBills.length) * 100) : 0
-    }
-  }, [bills])
+      count: stats?.count || 0,
+      paid: stats?.paid_count || 0,
+      total: stats?.total_amount || 0,
+      performance: stats?.performance_percentage || 0
+    };
+  }, [categoryStats])
 
   const getPersonStats = useCallback((personId) => {
-    const safeBills = Array.isArray(bills) ? bills : [];
-    const personBills = safeBills.filter(b => b.person_in_charge_id === personId)
-    const paidCount = personBills.filter(b => b.status === 'paid').length
-    const totalAmount = personBills.reduce((acc, b) => acc + (parseFloat(b?.amount) || 0), 0)
+    const stats = personStats[personId];
     return {
-      count: personBills.length,
-      paid: paidCount,
-      total: totalAmount,
-      performance: personBills.length > 0 ? Math.round((paidCount / personBills.length) * 100) : 0
-    }
-  }, [bills])
+      count: stats?.count || 0,
+      paid: stats?.paid_count || 0,
+      total: stats?.total_amount || 0,
+      performance: stats?.performance_percentage || 0
+    };
+  }, [personStats])
 
   return (
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>

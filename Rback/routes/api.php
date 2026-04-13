@@ -111,6 +111,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     // Debts (Utangs)
     Route::get('/debts', [App\Http\Controllers\DebtController::class, 'index']);
+    Route::get('/debts/stats', [App\Http\Controllers\DebtController::class, 'stats']);
     Route::post('/debts', [App\Http\Controllers\DebtController::class, 'store']);
     Route::put('/debts/{id}', [App\Http\Controllers\DebtController::class, 'update']);
     Route::post('/debts/{id}/settle', [App\Http\Controllers\DebtController::class, 'settle']);
@@ -124,6 +125,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bills/create-data', [BillController::class, 'createData']);
     Route::get('/bills/dashboard', [BillController::class, 'dashboardData']);
     Route::get('/bills/full', [BillController::class, 'fullData']);
+    Route::get('/bills/by-person', [BillController::class, 'byPerson']);
+    Route::get('/bills/category-stats', [BillController::class, 'categoryStats']);
+    Route::get('/bills/person-stats', [BillController::class, 'personStats']);
     Route::post('/bills/{bill}/proof', [BillController::class, 'uploadProof']);
 
     Route::apiResource('bills', BillController::class);

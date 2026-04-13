@@ -9,12 +9,92 @@ use Illuminate\Support\Carbon;
 
 class DebtController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $debts = Debt::with('personInCharge')->orderBy('created_at', 'desc')->get();
+        $query = Debt::with('personInCharge')->orderBy('created_at', 'desc');
+        
+        // Filter by type if requested
+        if ($request->has('type')) {
+            if ($request->type === 'mine') {
+                $query->where('is_my_debt', true);
+            } elseif ($request->type === 'owed') {
+                $query->where('is_my_debt', false);
+            }
+        }
+        
+        // Filter by person if requested
+        if ($request->has('person_id') && $request->person_id !== 'all') {
+            $query->where('person_in_charge_id', $request->person_id);
+        }
+        
+        // Filter by status if requested
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        $debts = $query->get();
+        
         return response()->json([
             'success' => true,
             'debts' => $debts
+        ]);
+    }
+    
+    public function stats(Request $request)
+    {
+        $query = Debt::query();
+        
+        // Filter by type if requested
+        if ($request->has('type')) {
+            if ($request->type === 'mine') {
+                $query->where('is_my_debt', true);
+            } elseif ($request->type === 'owed') {
+                $query->where('is_my_debt', false);
+            }
+        }
+        
+        // Filter by person if requested
+        if ($request->has('person_id') && $request->person_id !== 'all') {
+            $query->where('person_in_charge_id', $request->person_id);
+        }
+        
+        // Calculate stats
+        $pending = (clone $query)->where('status', 'pending')->get();
+        $paid = (clone $query)->where('status', 'paid')->get();
+        
+        $pendingTotal = $pending->sum('amount');
+        $paidTotal = $paid->sum('amount');
+        
+        // Get people with debts (only for owed debts)
+        $peopleWithDebts = [];
+        if (!$request->has('type') || $request->type === 'owed') {
+            $peopleWithDebts = Debt::where('is_my_debt', false)
+                ->where('status', 'pending')
+                ->with('personInCharge')
+                ->get()
+                ->groupBy('person_in_charge_id')
+                ->map(function ($debts, $personId) {
+                    $person = $debts->first()->personInCharge;
+                    return [
+                        'id' => $person->id,
+                        'first_name' => $person->first_name,
+                        'last_name' => $person->last_name,
+                        'color' => $person->color,
+                        'count' => $debts->count()
+                    ];
+                })
+                ->values();
+        }
+        
+        return response()->json([
+            'success' => true,
+            'stats' => [
+                'pending_count' => $pending->count(),
+                'pending_total' => $pendingTotal,
+                'paid_count' => $paid->count(),
+                'paid_total' => $paidTotal,
+            ],
+            'people_with_debts' => $peopleWithDebts
         ]);
     }
 
