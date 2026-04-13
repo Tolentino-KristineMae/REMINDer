@@ -306,8 +306,7 @@ const SettleBillPage = () => {
                                         id="proof"
                                         className="hidden" 
                                         onChange={handleFileChange}
-                                        accept="image/*,application/pdf"
-                                        capture="environment"
+                                        accept="image/*"
                                         multiple
                                         aria-label="Upload proof of payment"
                                     />
@@ -328,8 +327,8 @@ const SettleBillPage = () => {
                                                     <CloudUpload size={32} />
                                                 </div>
                                                 <div className="text-center">
-                                                    <p className="text-sm font-bold text-gray-900">Snap or Upload Receipt</p>
-                                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Photo, PDF • Camera, Gallery, or Files</p>
+                                                    <p className="text-sm font-bold text-gray-900">Select Receipt Image</p>
+                                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">JPEG, PNG, GIF — Max 5MB</p>
                                                 </div>
                                             </>
                                         )}
