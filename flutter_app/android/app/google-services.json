@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "608722494176",
+    "project_id": "billreminderapp-690ed",
+    "storage_bucket": "billreminderapp-690ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608722494176:android:271a3d377653cddef72685",
+        "android_client_info": {
+          "package_name": "com.example.bill_reminder_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQUYgOZvkfIrs0B1rzOgP0ZV_3Uzuj5Gg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
