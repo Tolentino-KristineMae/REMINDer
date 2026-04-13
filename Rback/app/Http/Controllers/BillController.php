@@ -252,6 +252,61 @@ class BillController extends Controller
                 ->havingRaw('COUNT(bills.id) > 0')
                 ->get();
 
+            // 3. Get Historical Data by Category (ALL bills since beginning, grouped by month)
+            $historicalData = [];
+            
+            // Get the earliest bill date to determine starting point
+            $earliestBill = Bill::orderBy('created_at', 'asc')->first();
+            
+            if ($earliestBill) {
+                $startDate = \Carbon\Carbon::parse($earliestBill->created_at)->startOfMonth();
+                $endDate = now()->endOfMonth();
+                
+                // Calculate number of months between start and now
+                $monthsDiff = $startDate->diffInMonths($endDate);
+                
+                // Limit to last 12 months for performance, but start from earliest if less than 12 months
+                $monthsToShow = min($monthsDiff + 1, 12);
+                $chartStartDate = now()->subMonths($monthsToShow - 1)->startOfMonth();
+                
+                // Get all categories
+                $allCategories = \App\Models\Category::all();
+                
+                foreach ($allCategories as $category) {
+                    $monthlyData = [];
+                    
+                    for ($i = 0; $i < $monthsToShow; $i++) {
+                        $monthStart = (clone $chartStartDate)->addMonths($i)->startOfMonth();
+                        $monthEnd = (clone $monthStart)->endOfMonth();
+                        
+                        // Count ALL bills (paid + unpaid) created in this month for this category
+                        $count = Bill::where('category_id', $category->id)
+                            ->where('created_at', '>=', $monthStart)
+                            ->where('created_at', '<=', $monthEnd)
+                            ->count();
+                        
+                        $monthlyData[] = $count;
+                    }
+                    
+                    // Only include categories that have at least one bill
+                    $totalCount = array_sum($monthlyData);
+                    if ($totalCount > 0) {
+                        $historicalData[] = [
+                            'category_id' => $category->id,
+                            'category_name' => $category->name,
+                            'color' => $category->color ?? '#6366f1',
+                            'data' => $monthlyData,
+                            'total_bills' => $totalCount
+                        ];
+                    }
+                }
+                
+                // Sort by total bills descending (most used categories first)
+                usort($historicalData, function($a, $b) {
+                    return $b['total_bills'] - $a['total_bills'];
+                });
+            }
+
             return response()->json([
                 'stats' => [
                     'total' => (int) ($stats->total ?? 0),
@@ -269,7 +324,8 @@ class BillController extends Controller
                         'color' => $cat->color,
                         'count' => (int) $cat->count
                     ];
-                })
+                }),
+                'historical' => $historicalData
             ]);
         } catch (\Exception $e) {
             \Log::error('BillController@dashboardData error: ' . $e->getMessage());

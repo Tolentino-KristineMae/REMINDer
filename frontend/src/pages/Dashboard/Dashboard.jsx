@@ -12,16 +12,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency } from '../../utils/formatters';
 import { cn } from '../../lib/utils';
+import UnpaidBillsByCategory from '../../components/Dashboard/UnpaidBillsByCategory';
 import '../../styles/pages/Dashboard/Dashboard.css';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    
-    const getPercentageColor = (percentage) => {
-        if (percentage < 40) return 'text-red-600 bg-red-50';
-        if (percentage < 80) return 'text-amber-600 bg-amber-50';
-        return 'text-emerald-600 bg-emerald-50';
-    };
 
     const [stats, setStats] = useState({
         total: 0,
@@ -33,12 +28,13 @@ const Dashboard = () => {
         total_unpaid_amount: 0,
     });
     const [categories, setCategories] = useState([]);
+    const [historicalData, setHistoricalData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const dashboardRes = await api.get('/bills/dashboard');
-                const { stats: statsData, categories: categoriesData } = dashboardRes.data || {};
+                const { stats: statsData, categories: categoriesData, historical: historicalDataRes } = dashboardRes.data || {};
                 
                 setStats({
                     total: statsData?.total || 0,
@@ -51,6 +47,7 @@ const Dashboard = () => {
                 });
                 
                 setCategories(categoriesData || []);
+                setHistoricalData(historicalDataRes || []);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
             }
@@ -157,104 +154,20 @@ const Dashboard = () => {
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-                {/* Categories Analytics Card */}
+                {/* Categories Analytics Card with Chart */}
                 <div className="xl:col-span-9 space-y-6 min-w-0">
-                    <div className="bg-white p-4 sm:p-6 rounded-2xl border-2 border-indigo-100 shadow-lg shadow-indigo-100/30 min-h-[380px] sm:min-h-[420px] flex flex-col relative overflow-hidden">
-                        {/* Gradient accent bar like Overview */}
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 via-purple-500 to-indigo-600"></div>
-                        {/* Decorative corner accent */}
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-bl-full -mr-8 -mt-8" />
-                        
-                        <div className="flex items-center justify-between mb-6 relative z-10">
-                            <div className="flex items-center gap-3">
-                                <div className="w-11 h-11 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
-                                    <TrendingUp size={20} className="text-white" />
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-bold text-gray-900">Unpaid Bills by Category</h3>
-                                    <p className="text-xs text-indigo-500 font-semibold">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        {/* Vertical Category List */}
-                        <div className="flex-1 space-y-3">
-                            {categories.length > 0 ? (
-                                categories.map((cat, i) => {
-                                    const maxCount = Math.max(...categories.map(c => c.count), 1);
-                                    const percentage = cat.count / maxCount * 100;
-                                    const totalBills = categories.reduce((sum, c) => sum + c.count, 0);
-                                    const catPercentage = totalBills > 0 ? Math.round((cat.count / totalBills) * 100) : 0;
-                                    
-                                    return (
-                                        <div key={cat.id || i} className="group">
-                                            <div className="flex items-center justify-between mb-1.5">
-                                                <div className="flex items-center gap-2">
-                                                    <div 
-                                                        className="w-3 h-3 rounded-full" 
-                                                        style={{ backgroundColor: cat.color || '#22c55e' }}
-                                                    />
-                                                    <span className="text-sm font-semibold text-gray-700">{cat.name}</span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-sm font-bold text-gray-900">{cat.count}</span>
-                                                    <span className="text-[10px] text-gray-400">bills</span>
-                                                    <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded", getPercentageColor(catPercentage))}>
-                                                        {catPercentage}%
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                                                <div 
-                                                    className="h-full rounded-full transition-all duration-700 ease-out group-hover:opacity-80"
-                                                    style={{ 
-                                                        width: `${Math.max(percentage, cat.count > 0 ? 5 : 0)}%`,
-                                                        backgroundColor: cat.color || '#22c55e'
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                            ) : (
-                                <div className="flex-1 flex flex-col items-center justify-center py-10 opacity-60">
-                                    <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4 text-indigo-300">
-                                        <TrendingUp size={32} />
-                                    </div>
-                                    <p className="text-sm font-bold text-indigo-900/40 uppercase tracking-widest">No Unpaid Bills</p>
-                                    <p className="text-xs text-indigo-900/30 mt-1">All bills are settled!</p>
-                                </div>
-                            )}
-                        </div>
-                        
-                        {/* Summary Stats */}
-                        <div className="mt-6 pt-4 border-t border-gray-100">
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm font-semibold text-gray-500">Total Bills</span>
-                                <span className="text-lg font-black text-gray-900">{categories.reduce((sum, c) => sum + c.count, 0)}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <UnpaidBillsByCategory categories={categories} historicalData={historicalData} />
                 </div>
 
                 {/* Settlement Card */}
                 <div className="xl:col-span-3 space-y-6">
-                    <div className="bg-white p-4 sm:p-6 rounded-2xl border-2 border-emerald-100 shadow-lg shadow-emerald-100/30 h-full flex flex-col relative overflow-hidden">
-                        {/* Gradient accent bar like Overview */}
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl border shadow-sm h-full flex flex-col relative overflow-hidden" style={{ borderColor: '#e5e7eb' }}>
                         {/* Decorative corner accent */}
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-8 -mt-8" />
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50 rounded-bl-full -mr-8 -mt-8" />
                         
-                        <div className="flex items-center justify-between mb-6 relative z-10">
-                            <div className="flex items-center gap-3">
-                                <div className="w-11 h-11 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/25">
-                                    <CheckCircle2 size={20} className="text-white" />
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-bold text-gray-900">Settlement</h3>
-                                    <p className="text-xs text-emerald-600 font-semibold">Payment status</p>
-                                </div>
-                            </div>
+                        <div className="mb-6 relative z-10">
+                            <h3 className="text-lg font-bold text-gray-900">Settlement</h3>
+                            <p className="text-xs text-emerald-600 font-semibold">Payment status</p>
                         </div>
                         
                         <div className="flex-1 flex flex-col">
