@@ -58,8 +58,8 @@ const Dashboard = () => {
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-3 sm:p-4 lg:p-6 relative">
-            {/* Stats Grid - Optimized for Mobile */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-3 lg:gap-5 mb-4 sm:mb-6">
+            {/* Stats Grid - 2x2 on Mobile, 4 columns on Desktop */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5 mb-4 sm:mb-6">
                 {/* Card 1: Total Paid - Green Theme (Success/Positive) */}
                 <div className="bg-gradient-to-br from-emerald-500 to-green-700 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300">
                     {/* Decorative elements */}
@@ -155,12 +155,12 @@ const Dashboard = () => {
 
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
                 {/* Categories Analytics Card with Chart */}
-                <div className="xl:col-span-9 space-y-6 min-w-0">
+                <div className="xl:col-span-9 space-y-6 w-full overflow-hidden">
                     <UnpaidBillsByCategory categories={categories} historicalData={historicalData} />
                 </div>
 
                 {/* Settlement Card */}
-                <div className="xl:col-span-3 space-y-6">
+                <div className="xl:col-span-3 space-y-6 w-full">
                     <div className="bg-white p-4 sm:p-6 rounded-2xl border shadow-sm h-full flex flex-col relative overflow-hidden" style={{ borderColor: '#e5e7eb' }}>
                         {/* Decorative corner accent */}
                         <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50 rounded-bl-full -mr-8 -mt-8" />

@@ -161,10 +161,10 @@ const UnpaidBillsByCategory = ({ categories = [], historicalData = [] }) => {
       {/* Historical Chart - Most Used Categories (REAL DATA) */}
       {historicalData.length > 0 && (
         <div
-          className="relative rounded-2xl overflow-hidden flex flex-col bg-white border shadow-sm"
+          className="relative rounded-2xl overflow-hidden flex flex-col bg-white border shadow-sm w-full"
           style={{ 
             borderColor: '#e5e7eb', 
-            padding: '20px',
+            padding: '16px',
           }}
         >
 
@@ -180,15 +180,18 @@ const UnpaidBillsByCategory = ({ categories = [], historicalData = [] }) => {
 
           {/* Area Chart with modern background */}
           <div 
-            className="rounded-xl p-4" 
+            className="rounded-xl p-3 sm:p-4 w-full" 
             style={{ 
               position: 'relative', 
-              height: '220px', 
+              height: '200px',
+              minHeight: '200px',
               marginBottom: '10px',
               background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
             }}
           >
-            <Line data={chartData} options={chartOptions} />
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+              <Line data={chartData} options={chartOptions} />
+            </div>
           </div>
 
           {/* Legend showing top categories */}
@@ -213,8 +216,8 @@ const UnpaidBillsByCategory = ({ categories = [], historicalData = [] }) => {
 
       {/* Progress Bars - Current Unpaid Bills */}
       <div
-        className="relative rounded-2xl overflow-hidden flex flex-col bg-white border shadow-sm"
-        style={{ borderColor: '#e5e7eb', padding: '20px' }}
+        className="relative rounded-2xl overflow-hidden flex flex-col bg-white border shadow-sm w-full"
+        style={{ borderColor: '#e5e7eb', padding: '16px' }}
       >
 
         {/* Header */}

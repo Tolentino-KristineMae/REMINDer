@@ -127,7 +127,7 @@ const DebtsPage = () => {
             <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
                 {/* Header & Main Tabs */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                    <div className="flex items-center justify-between gap-3 w-full sm:w-auto">
                         <div className="flex bg-white border border-gray-100 p-1.5 rounded-xl sm:rounded-[1.5rem] shadow-sm">
                             <button 
                                 onClick={() => {
@@ -145,14 +145,14 @@ const DebtsPage = () => {
                                 Bayarin
                             </button>
                         </div>
-                    </div>
 
-                    <button 
-                        onClick={() => navigate('/add-debt')} 
-                        className="bg-green-900 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center justify-center gap-2 sm:gap-3 active:scale-[0.98] w-full sm:w-auto"
-                    >
-                        <Plus size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={3} /> <span className="sm:hidden">New</span><span className="hidden sm:inline">New Entry</span>
-                    </button>
+                        <button 
+                            onClick={() => navigate('/add-debt')} 
+                            className="bg-green-900 text-white px-4 sm:px-8 py-2 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center justify-center gap-2 sm:gap-3 active:scale-[0.98] sm:w-auto"
+                        >
+                            <Plus size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={3} /> <span>New</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Person Filter Tabs (Only for Owed) */}
