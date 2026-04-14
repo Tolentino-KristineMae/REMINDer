@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PersonInChargeController;
+use App\Http\Controllers\UserController;
 
 // So GET /api is handled by the API stack (not the SPA web fallback).
 Route::get('/', function () {
@@ -109,6 +110,10 @@ Route::post('/create-user', [AuthController::class, 'createUser']); // Setup end
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    // User endpoints
+    Route::post('/user/fcm-token', [UserController::class, 'updateFCMToken']);
+    Route::get('/user/profile', [UserController::class, 'profile']);
+    
     // Debts (Utangs)
     Route::get('/debts', [App\Http\Controllers\DebtController::class, 'index']);
     Route::get('/debts/stats', [App\Http\Controllers\DebtController::class, 'stats']);
