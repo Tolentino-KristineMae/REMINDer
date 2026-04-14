@@ -1,0 +1,49 @@
+🚀 QUICK SETUP FOR RENDER (Free Tier)
+
+Step 1: Copy Firebase JSON
+---------------------------
+Open file: Rback/storage/app/firebase/firebase-service-account.json
+Copy EVERYTHING (the entire JSON content)
+
+Step 2: Add to Render
+----------------------
+1. Go to: https://dashboard.render.com
+2. Select your service: reminder-system-3j70
+3. Click: Environment (left sidebar)
+4. Click: "Add Environment Variable"
+5. Add:
+   Key: FCM_CREDENTIALS_JSON
+   Value: [PASTE THE ENTIRE JSON HERE]
+6. Click: "Save Changes"
+7. Wait for deployment (2-3 minutes)
+
+Step 3: Test
+------------
+After deployment, test by visiting:
+https://reminder-system-3j70.onrender.com/api/trigger-reminders
+
+You should see:
+{
+  "success": true,
+  "message": "Bill reminders triggered successfully"
+}
+
+And you should receive a notification on your phone! 📱
+
+Step 4: Setup Daily Automatic Notifications
+--------------------------------------------
+Go to: https://cron-job.org (free account)
+Create new cron job:
+- Title: Bill Reminders
+- URL: https://reminder-system-3j70.onrender.com/api/trigger-reminders
+- Schedule: Daily at 9:00 AM (Manila timezone)
+- Method: POST
+
+DONE! 🎉
+
+Troubleshooting
+---------------
+If no notification:
+1. Check Render logs for errors
+2. Make sure you're logged in to the Flutter app (FCM token saved)
+3. Verify FCM_CREDENTIALS_JSON is set correctly in Render
