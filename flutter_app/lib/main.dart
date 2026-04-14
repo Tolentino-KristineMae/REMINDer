@@ -16,6 +16,7 @@ import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/bills/add_bill_screen.dart';
 import 'screens/bills/edit_bill_screen.dart';
 import 'screens/bills/settle_bill_screen.dart';
+import 'screens/bills/view_payment_screen.dart';
 import 'screens/debts/debts_screen.dart';
 import 'screens/debts/add_debt_screen.dart';
 import 'screens/debts/edit_debt_screen.dart';
@@ -93,6 +94,7 @@ class MyApp extends StatelessWidget {
           '/add-bill': (context) => const AddBillScreen(),
           '/edit-bill': (context) => const EditBillScreen(),
           '/settle-bill': (context) => const SettleBillScreen(),
+          '/view-payment': (context) => const ViewPaymentScreen(),
           '/debts': (context) => const DebtsScreen(),
           '/add-debt': (context) => const AddDebtScreen(),
           '/edit-debt': (context) => const EditDebtScreen(),

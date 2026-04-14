@@ -6,7 +6,7 @@ class ApiService {
   // Update this to your backend URL
   // For local development (emulator): 'http://10.0.2.2:8000/api'
   // For production (Render): 'https://reminder-system-3j70.onrender.com/api'
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  static const String baseUrl = 'https://reminder-system-3j70.onrender.com/api';
   
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -103,9 +103,9 @@ class ApiService {
   static Future<void> updateFCMToken(String fcmToken) async {
     final headers = await getHeaders();
     final response = await http.post(
-      Uri.parse('$baseUrl/fcm-token'),
+      Uri.parse('$baseUrl/user/fcm-token'),
       headers: headers,
-      body: jsonEncode({'fcm_token': fcmToken}),
+      body: jsonEncode({'token': fcmToken}),
     );
     
     if (response.statusCode != 200) {
@@ -136,7 +136,21 @@ class ApiService {
     );
     
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      // Handle different response formats
+      if (data is List) {
+        return data;
+      } else if (data is Map && data['bills'] != null) {
+        final bills = data['bills'];
+        if (bills is List) {
+          return bills;
+        } else if (bills is Map && bills['data'] != null) {
+          return bills['data'] as List;
+        }
+      } else if (data is Map && data['data'] != null) {
+        return data['data'] as List;
+      }
+      return [];
     } else {
       throw Exception('Failed to load bills');
     }
@@ -229,7 +243,21 @@ class ApiService {
     );
     
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      // Handle different response formats
+      if (data is List) {
+        return data;
+      } else if (data is Map && data['debts'] != null) {
+        final debts = data['debts'];
+        if (debts is List) {
+          return debts;
+        } else if (debts is Map && debts['data'] != null) {
+          return debts['data'] as List;
+        }
+      } else if (data is Map && data['data'] != null) {
+        return data['data'] as List;
+      }
+      return [];
     } else {
       throw Exception('Failed to load debts');
     }
@@ -315,7 +343,21 @@ class ApiService {
     );
     
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      // Handle different response formats
+      if (data is List) {
+        return data;
+      } else if (data is Map && data['categories'] != null) {
+        final categories = data['categories'];
+        if (categories is List) {
+          return categories;
+        } else if (categories is Map && categories['data'] != null) {
+          return categories['data'] as List;
+        }
+      } else if (data is Map && data['data'] != null) {
+        return data['data'] as List;
+      }
+      return [];
     } else {
       throw Exception('Failed to load categories');
     }
@@ -345,7 +387,21 @@ class ApiService {
     );
     
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      // Handle different response formats
+      if (data is List) {
+        return data;
+      } else if (data is Map && data['people'] != null) {
+        final people = data['people'];
+        if (people is List) {
+          return people;
+        } else if (people is Map && people['data'] != null) {
+          return people['data'] as List;
+        }
+      } else if (data is Map && data['data'] != null) {
+        return data['data'] as List;
+      }
+      return [];
     } else {
       throw Exception('Failed to load people');
     }
