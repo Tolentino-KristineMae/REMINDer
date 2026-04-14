@@ -108,19 +108,32 @@ class SendBillReminders extends Command
     private function sendFCMNotification($fcmToken, $title, $body)
     {
         $projectId = env('FCM_PROJECT_ID');
-        $credentialsPath = base_path(env('FCM_CREDENTIALS_PATH'));
         
-        if (!$projectId || !file_exists($credentialsPath)) {
+        // Try to get credentials from environment variable first, then from file
+        $credentials = null;
+        
+        if (env('FCM_CREDENTIALS_JSON')) {
+            // Read from environment variable (for Render free tier)
+            $credentials = json_decode(env('FCM_CREDENTIALS_JSON'), true);
+        } else {
+            // Read from file (for local development)
+            $credentialsPath = base_path(env('FCM_CREDENTIALS_PATH'));
+            if (file_exists($credentialsPath)) {
+                $credentials = json_decode(file_get_contents($credentialsPath), true);
+            }
+        }
+        
+        if (!$projectId || !$credentials) {
             Log::error('FCM configuration missing', [
                 'project_id' => $projectId,
-                'credentials_exists' => file_exists($credentialsPath),
+                'has_credentials' => !empty($credentials),
             ]);
             return false;
         }
         
         try {
             // Get OAuth2 access token
-            $accessToken = $this->getAccessToken($credentialsPath);
+            $accessToken = $this->getAccessToken($credentials);
             
             if (!$accessToken) {
                 Log::error('Failed to get FCM access token');
@@ -173,11 +186,9 @@ class SendBillReminders extends Command
         }
     }
     
-    private function getAccessToken($credentialsPath)
+    private function getAccessToken($credentials)
     {
         try {
-            $credentials = json_decode(file_get_contents($credentialsPath), true);
-            
             // Create JWT
             $now = time();
             $payload = [

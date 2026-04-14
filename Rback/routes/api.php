@@ -109,6 +109,26 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/create-user', [AuthController::class, 'createUser']); // Setup endpoint
 Route::post('/login', [AuthController::class, 'login']);
 
+// Public trigger endpoint for external cron services (e.g., cron-job.org)
+Route::post('/trigger-reminders', function () {
+    try {
+        \Artisan::call('bills:send-reminders');
+        $output = \Artisan::output();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Bill reminders triggered successfully',
+            'output' => $output,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to trigger reminders',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     // User endpoints
     Route::post('/user/fcm-token', [UserController::class, 'updateFCMToken']);
