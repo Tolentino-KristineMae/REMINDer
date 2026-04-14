@@ -19,14 +19,20 @@ class SendBillReminders extends Command
         
         $today = now()->toDateString();
         $tomorrow = now()->addDay()->toDateString();
+        $in3Days = now()->addDays(3)->toDateString();
+        $in5Days = now()->addDays(5)->toDateString();
+        $in7Days = now()->addDays(7)->toDateString();
         
-        // Get bills that are due today, tomorrow, or overdue
+        // Get bills that are due within 7 days, today, tomorrow, or overdue
         $bills = Bill::with(['personInCharge'])
             ->where('status', 'pending')
-            ->where(function($query) use ($today, $tomorrow) {
+            ->where(function($query) use ($today, $tomorrow, $in3Days, $in5Days, $in7Days) {
                 $query->where('due_date', '=', $today)
                       ->orWhere('due_date', '=', $tomorrow)
-                      ->orWhere('due_date', '<', $today);
+                      ->orWhere('due_date', '=', $in3Days)
+                      ->orWhere('due_date', '=', $in5Days)
+                      ->orWhere('due_date', '=', $in7Days)
+                      ->orWhere('due_date', '<', $today); // Overdue
             })
             ->get();
         
@@ -60,14 +66,24 @@ class SendBillReminders extends Command
                 continue;
             }
             
-            // Categorize bills
+            // Categorize bills by due date
+            $overdue = $userBills->filter(fn($b) => $b->due_date < $today);
             $dueToday = $userBills->filter(fn($b) => $b->due_date === $today);
             $dueTomorrow = $userBills->filter(fn($b) => $b->due_date === $tomorrow);
-            $overdue = $userBills->filter(fn($b) => $b->due_date < $today);
+            $dueIn3Days = $userBills->filter(fn($b) => $b->due_date === $in3Days);
+            $dueIn5Days = $userBills->filter(fn($b) => $b->due_date === $in5Days);
+            $dueIn7Days = $userBills->filter(fn($b) => $b->due_date === $in7Days);
             
             // Prepare notification message
             $title = '💰 Bill Reminder';
-            $body = $this->buildNotificationBody($dueToday->count(), $dueTomorrow->count(), $overdue->count());
+            $body = $this->buildNotificationBody(
+                $overdue->count(),
+                $dueToday->count(),
+                $dueTomorrow->count(),
+                $dueIn3Days->count(),
+                $dueIn5Days->count(),
+                $dueIn7Days->count()
+            );
             
             // Send FCM notification
             if ($this->sendFCMNotification($user->fcm_token, $title, $body)) {
@@ -86,20 +102,33 @@ class SendBillReminders extends Command
         return 0;
     }
     
-    private function buildNotificationBody($todayCount, $tomorrowCount, $overdueCount)
+    private function buildNotificationBody($overdueCount, $todayCount, $tomorrowCount, $in3DaysCount, $in5DaysCount, $in7DaysCount)
     {
         $messages = [];
         
+        // Priority order: Overdue > Today > Tomorrow > 3 days > 5 days > 7 days
         if ($overdueCount > 0) {
-            $messages[] = "{$overdueCount} bill(s) OVERDUE";
+            $messages[] = "🚨 {$overdueCount} OVERDUE";
         }
         
         if ($todayCount > 0) {
-            $messages[] = "{$todayCount} bill(s) due TODAY";
+            $messages[] = "⚠️ {$todayCount} due TODAY";
         }
         
         if ($tomorrowCount > 0) {
-            $messages[] = "{$tomorrowCount} bill(s) due TOMORROW";
+            $messages[] = "📅 {$tomorrowCount} due TOMORROW";
+        }
+        
+        if ($in3DaysCount > 0) {
+            $messages[] = "{$in3DaysCount} in 3 days";
+        }
+        
+        if ($in5DaysCount > 0) {
+            $messages[] = "{$in5DaysCount} in 5 days";
+        }
+        
+        if ($in7DaysCount > 0) {
+            $messages[] = "{$in7DaysCount} in 7 days";
         }
         
         return implode(' • ', $messages);
