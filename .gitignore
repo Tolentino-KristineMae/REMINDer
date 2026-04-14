@@ -1,0 +1,16 @@
+# Firebase Service Account (Sensitive!)
+**/firebase-service-account.json
+**/*firebase*.json
+flutter_app/billreminderapp-*.json
+
+# Environment files
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

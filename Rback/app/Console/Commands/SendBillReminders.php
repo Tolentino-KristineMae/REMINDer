@@ -107,30 +107,51 @@ class SendBillReminders extends Command
     
     private function sendFCMNotification($fcmToken, $title, $body)
     {
-        $serverKey = env('FCM_SERVER_KEY');
+        $projectId = env('FCM_PROJECT_ID');
+        $credentialsPath = base_path(env('FCM_CREDENTIALS_PATH'));
         
-        if (!$serverKey) {
-            Log::error('FCM_SERVER_KEY not configured in .env');
+        if (!$projectId || !file_exists($credentialsPath)) {
+            Log::error('FCM configuration missing', [
+                'project_id' => $projectId,
+                'credentials_exists' => file_exists($credentialsPath),
+            ]);
             return false;
         }
         
         try {
+            // Get OAuth2 access token
+            $accessToken = $this->getAccessToken($credentialsPath);
+            
+            if (!$accessToken) {
+                Log::error('Failed to get FCM access token');
+                return false;
+            }
+            
+            // FCM v1 API endpoint
+            $url = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
+            
             $response = Http::withHeaders([
-                'Authorization' => 'key=' . $serverKey,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->post('https://fcm.googleapis.com/fcm/send', [
-                'to' => $fcmToken,
-                'notification' => [
-                    'title' => $title,
-                    'body' => $body,
-                    'sound' => 'default',
-                    'badge' => '1',
+            ])->post($url, [
+                'message' => [
+                    'token' => $fcmToken,
+                    'notification' => [
+                        'title' => $title,
+                        'body' => $body,
+                    ],
+                    'data' => [
+                        'type' => 'bill_reminder',
+                        'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                    ],
+                    'android' => [
+                        'priority' => 'high',
+                        'notification' => [
+                            'sound' => 'default',
+                            'channel_id' => 'bill_reminders',
+                        ],
+                    ],
                 ],
-                'data' => [
-                    'type' => 'bill_reminder',
-                    'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                ],
-                'priority' => 'high',
             ]);
             
             if ($response->successful()) {
@@ -150,5 +171,65 @@ class SendBillReminders extends Command
             Log::error("FCM notification exception: " . $e->getMessage());
             return false;
         }
+    }
+    
+    private function getAccessToken($credentialsPath)
+    {
+        try {
+            $credentials = json_decode(file_get_contents($credentialsPath), true);
+            
+            // Create JWT
+            $now = time();
+            $payload = [
+                'iss' => $credentials['client_email'],
+                'sub' => $credentials['client_email'],
+                'aud' => 'https://oauth2.googleapis.com/token',
+                'iat' => $now,
+                'exp' => $now + 3600,
+                'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
+            ];
+            
+            // Create JWT header
+            $header = json_encode(['alg' => 'RS256', 'typ' => 'JWT']);
+            $base64UrlHeader = $this->base64UrlEncode($header);
+            
+            // Create JWT payload
+            $base64UrlPayload = $this->base64UrlEncode(json_encode($payload));
+            
+            // Create signature
+            $signatureInput = $base64UrlHeader . '.' . $base64UrlPayload;
+            $signature = '';
+            openssl_sign($signatureInput, $signature, $credentials['private_key'], OPENSSL_ALGO_SHA256);
+            $base64UrlSignature = $this->base64UrlEncode($signature);
+            
+            // Create JWT
+            $jwt = $signatureInput . '.' . $base64UrlSignature;
+            
+            // Exchange JWT for access token
+            $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
+                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion' => $jwt,
+            ]);
+            
+            if ($response->successful()) {
+                $data = $response->json();
+                return $data['access_token'] ?? null;
+            }
+            
+            Log::error('Failed to get access token', [
+                'status' => $response->status(),
+                'response' => $response->body(),
+            ]);
+            
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Access token exception: ' . $e->getMessage());
+            return null;
+        }
+    }
+    
+    private function base64UrlEncode($data)
+    {
+        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 }
