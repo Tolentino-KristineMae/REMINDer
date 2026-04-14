@@ -10,12 +10,19 @@ class ApiService {
   
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token');
+    final token = prefs.getString('auth_token');
+    if (token != null) {
+      print('✅ Auth token retrieved: ${token.substring(0, 20)}...');
+    } else {
+      print('❌ No auth token found in SharedPreferences');
+    }
+    return token;
   }
   
   static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
+    print('✅ Auth token saved to SharedPreferences: ${token.substring(0, 20)}...');
   }
   
   static Future<void> removeToken() async {
@@ -101,16 +108,32 @@ class ApiService {
   
   // Send FCM token to backend
   static Future<void> updateFCMToken(String fcmToken) async {
+    print('📤 Attempting to send FCM token to backend...');
+    print('FCM Token: ${fcmToken.substring(0, 50)}...');
+    
     final headers = await getHeaders();
+    print('Request headers: $headers');
+    
+    final url = '$baseUrl/user/fcm-token';
+    print('Request URL: $url');
+    
+    final body = jsonEncode({'token': fcmToken});
+    print('Request body: $body');
+    
     final response = await http.post(
-      Uri.parse('$baseUrl/user/fcm-token'),
+      Uri.parse(url),
       headers: headers,
-      body: jsonEncode({'token': fcmToken}),
+      body: body,
     );
     
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    
     if (response.statusCode != 200) {
-      throw Exception('Failed to update FCM token');
+      throw Exception('Failed to update FCM token: ${response.body}');
     }
+    
+    print('✅ FCM token successfully sent to backend');
   }
   
   // Bills endpoints

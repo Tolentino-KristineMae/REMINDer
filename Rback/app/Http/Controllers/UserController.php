@@ -11,6 +11,12 @@ class UserController extends Controller
      */
     public function updateFCMToken(Request $request)
     {
+        \Log::info('📥 FCM Token Update Request Received', [
+            'user_id' => $request->user() ? $request->user()->id : 'none',
+            'has_token' => $request->has('token'),
+            'token_length' => $request->has('token') ? strlen($request->token) : 0,
+        ]);
+
         $request->validate([
             'token' => 'required|string|max:500',
         ]);
@@ -18,6 +24,7 @@ class UserController extends Controller
         $user = $request->user();
         
         if (!$user) {
+            \Log::error('❌ FCM Token Update: User not authenticated');
             return response()->json([
                 'message' => 'Unauthenticated'
             ], 401);
@@ -25,6 +32,12 @@ class UserController extends Controller
 
         $user->update([
             'fcm_token' => $request->token
+        ]);
+
+        \Log::info('✅ FCM Token Updated Successfully', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'token_preview' => substr($request->token, 0, 50) . '...',
         ]);
 
         return response()->json([

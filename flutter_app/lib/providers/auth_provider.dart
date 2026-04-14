@@ -21,15 +21,22 @@ class AuthProvider with ChangeNotifier {
       final response = await ApiService.login(email, password);
       _user = response['user'];
       
+      // Wait a bit to ensure auth token is fully persisted
+      await Future.delayed(const Duration(milliseconds: 500));
+      
       // Send FCM token to backend after successful login
       try {
+        print('🔔 Getting FCM token after login...');
         final fcmToken = await NotificationService().getFCMToken();
         if (fcmToken != null) {
+          print('🔔 FCM token obtained: ${fcmToken.substring(0, 50)}...');
           await ApiService.updateFCMToken(fcmToken);
-          print('FCM token sent to backend after login');
+          print('✅ FCM token sent to backend after login');
+        } else {
+          print('❌ No FCM token available');
         }
       } catch (e) {
-        print('Failed to send FCM token after login: $e');
+        print('❌ Failed to send FCM token after login: $e');
         // Don't fail login if FCM token fails
       }
       

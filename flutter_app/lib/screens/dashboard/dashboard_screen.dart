@@ -27,13 +27,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _sendFCMToken() async {
     try {
+      print('🔔 Dashboard: Getting FCM token...');
       final fcmToken = await NotificationService().getFCMToken();
       if (fcmToken != null) {
+        print('🔔 Dashboard: FCM token obtained: ${fcmToken.substring(0, 50)}...');
         await ApiService.updateFCMToken(fcmToken);
-        print('FCM token sent to backend from dashboard');
+        print('✅ Dashboard: FCM token sent to backend');
+      } else {
+        print('❌ Dashboard: No FCM token available');
       }
     } catch (e) {
-      print('Failed to send FCM token from dashboard: $e');
+      print('❌ Dashboard: Failed to send FCM token: $e');
     }
   }
 
