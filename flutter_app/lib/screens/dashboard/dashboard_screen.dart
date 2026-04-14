@@ -5,6 +5,8 @@ import '../../providers/auth_provider.dart';
 import '../../providers/bill_provider.dart';
 import '../../widgets/stat_card.dart';
 import '../../widgets/app_drawer.dart';
+import '../../services/notification_service.dart';
+import '../../services/api_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -19,7 +21,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<BillProvider>(context, listen: false).loadDashboardData();
+      _sendFCMToken();
     });
+  }
+
+  Future<void> _sendFCMToken() async {
+    try {
+      final fcmToken = await NotificationService().getFCMToken();
+      if (fcmToken != null) {
+        await ApiService.updateFCMToken(fcmToken);
+        print('FCM token sent to backend from dashboard');
+      }
+    } catch (e) {
+      print('Failed to send FCM token from dashboard: $e');
+    }
   }
 
   String _formatCurrency(dynamic amount) {
