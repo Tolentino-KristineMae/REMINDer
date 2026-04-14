@@ -113,18 +113,19 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/trigger-reminders', function () {
     try {
         \Artisan::call('bills:send-reminders');
-        $output = \Artisan::output();
         
+        // Return minimal response to avoid "output too large" error
         return response()->json([
             'success' => true,
-            'message' => 'Bill reminders triggered successfully',
-            'output' => $output,
+            'message' => 'Reminders sent',
+            'timestamp' => now()->toIso8601String(),
         ]);
     } catch (\Exception $e) {
+        \Log::error('Trigger reminders failed: ' . $e->getMessage());
+        
         return response()->json([
             'success' => false,
-            'message' => 'Failed to trigger reminders',
-            'error' => $e->getMessage(),
+            'message' => 'Failed',
         ], 500);
     }
 });
