@@ -112,6 +112,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     // User endpoints
     Route::post('/user/fcm-token', [UserController::class, 'updateFCMToken']);
+    Route::put('/user/fcm-token', [UserController::class, 'updateFCMToken']); // Alternative method
     Route::get('/user/profile', [UserController::class, 'profile']);
     
     // Debts (Utangs)
