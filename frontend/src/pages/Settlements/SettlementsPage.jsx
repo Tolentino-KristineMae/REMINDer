@@ -910,6 +910,27 @@ const SettlementsPage = () => {
                                                 </div>
                                             )}
 
+                                            {bill.proof_of_payments?.[0]?.voice_record_path && (
+                                                <div className="bg-green-50 p-2 sm:p-3 rounded-lg sm:rounded-xl mb-3 sm:mb-4 border border-green-100">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <div className="w-6 h-6 bg-green-600 rounded-lg flex items-center justify-center">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                                                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                                                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                                                <line x1="12" x2="12" y1="19" y2="22"></line>
+                                                            </svg>
+                                                        </div>
+                                                        <span className="text-[10px] font-bold text-green-700 uppercase tracking-wider">Voice Note</span>
+                                                    </div>
+                                                    <audio 
+                                                        src={bill.proof_of_payments[0].voice_record_path} 
+                                                        controls 
+                                                        className="w-full h-8"
+                                                        style={{ maxHeight: '32px' }}
+                                                    />
+                                                </div>
+                                            )}
+
                                             <div className="flex items-center gap-1.5 sm:gap-2 pt-2 sm:pt-3 border-t border-gray-100">
                                                 {/* View Proof Button - Always visible */}
                                                 <button 
