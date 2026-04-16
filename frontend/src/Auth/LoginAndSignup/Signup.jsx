@@ -43,7 +43,7 @@ const Signup = () => {
                 </div>
 
                 <div className="title">Create Account</div>
-                <div className="subtitle">Create your account to get started with REMINDear.</div>
+                <div className="subtitle">Create your REMINDear account</div>
 
                 {error && <div className={`${styles.alert} ${styles.alertError}`}>✕ {error}</div>}
 
