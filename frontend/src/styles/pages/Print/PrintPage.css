@@ -4,6 +4,7 @@
 .print-page {
     min-height: 100vh;
     background: #f8fafc;
+    font-size: 16px;
 }
 
 .screen-only {
@@ -39,8 +40,8 @@
 }
 
 .print-icon-wrapper {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
     border-radius: 0.75rem;
     display: flex;
@@ -51,7 +52,7 @@
 }
 
 .print-title {
-    font-size: 1.125rem;
+    font-size: 1.5rem;
     font-weight: 900;
     color: #111827;
     margin: 0;
@@ -59,9 +60,9 @@
 }
 
 .print-subtitle {
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     color: #6b7280;
-    margin: 0.1rem 0 0 0;
+    margin: 0.2rem 0 0 0;
     font-weight: 500;
 }
 
@@ -139,15 +140,15 @@
 .selection-section {
     background: white;
     border-radius: 0.875rem;
-    padding: 1rem 1.25rem;
+    padding: 1.25rem 1.5rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .section-title {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
     font-weight: 800;
     color: #374151;
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.875rem 0;
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
@@ -201,14 +202,14 @@
 }
 
 .type-card-title {
-    font-size: 0.875rem;
+    font-size: 1.0625rem;
     font-weight: 800;
     color: #111827;
-    margin: 0 0 0.2rem 0;
+    margin: 0 0 0.25rem 0;
 }
 
 .type-card-description {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
     color: #6b7280;
     margin: 0;
     font-weight: 500;
@@ -228,11 +229,11 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.625rem 1rem;
+    padding: 0.875rem 1.25rem;
     background: white;
     border: 1.5px solid #e5e7eb;
     border-radius: 0.625rem;
-    font-size: 0.8125rem;
+    font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -260,11 +261,11 @@
 }
 
 .month-button {
-    padding: 0.375rem 0.875rem;
+    padding: 0.5rem 1.125rem;
     background: white;
     border: 1.5px solid #e5e7eb;
     border-radius: 0.5rem;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     font-weight: 600;
     color: #6b7280;
     cursor: pointer;
@@ -347,10 +348,10 @@
 .item-details { flex: 1; min-width: 0; }
 
 .item-title {
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #111827;
-    margin: 0 0 0.25rem 0;
+    margin: 0 0 0.3rem 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -366,13 +367,13 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    font-size: 0.7rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     color: #6b7280;
 }
 
 .item-amount {
-    font-size: 0.9375rem;
+    font-size: 1.0625rem;
     font-weight: 800;
     color: #111827;
     white-space: nowrap;
@@ -416,10 +417,20 @@
 /* ═══════════════════════════════════════════════
    PRINT MEDIA
 ═══════════════════════════════════════════════ */
+@page {
+    margin: 12mm 15mm;
+    size: A4 portrait;
+}
+
+@page :first {
+    margin-top: 0;
+}
+
 @media print {
     .screen-only { display: none !important; }
     .print-only  { display: block !important; }
     .sticky      { display: none !important; }
+    .sidebar     { display: none !important; }
 
     .print-page {
         background: white;
@@ -427,23 +438,19 @@
         margin: 0;
     }
 
-    @page {
-        margin: 0;
-        size: A4 portrait;
-    }
-
     .doc-table { page-break-inside: auto; }
     .doc-table tr { page-break-inside: avoid; }
+    .doc-section-heading { margin-top: 8pt; }
 }
 
 /* ═══════════════════════════════════════════════
    PRINT DOCUMENT — Professional Layout
 ═══════════════════════════════════════════════ */
 .print-document {
-    width: 210mm;
+    width: 100%;
     min-height: 297mm;
     margin: 0 auto;
-    padding: 12mm 15mm 14mm 15mm;
+    padding: 0;
     background: white;
     font-family: 'DejaVu Sans', Arial, sans-serif;
     font-size: 10pt;
@@ -459,7 +466,7 @@
 
 .document-header {
     border-bottom: 1.5pt solid #1b4332;
-    padding: 10pt 0;
+    padding: 18pt 0 16pt 0;
 }
 
 .doc-header-table {
@@ -469,11 +476,11 @@
     gap: 12pt;
 }
 
-.doc-header-left  { flex: 0 0 60pt; }
+.doc-header-left  { flex: 0 0 72pt; }
 
 .doc-logo-img {
-    width: 56pt;
-    height: 56pt;
+    width: 68pt;
+    height: 68pt;
     object-fit: contain;
     border-radius: 50%;
 }
@@ -481,10 +488,10 @@
 .doc-header-center { flex: 1; text-align: center; }
 
 .document-title {
-    font-size: 22pt;
+    font-size: 18pt;
     font-weight: 900;
     color: #1b4332;
-    letter-spacing: 4pt;
+    letter-spacing: 3pt;
     text-transform: uppercase;
     line-height: 1;
     margin: 0;

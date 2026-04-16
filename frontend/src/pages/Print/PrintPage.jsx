@@ -413,7 +413,7 @@ const PrintPage = () => {
                                 />
                             </div>
                             <div className="doc-header-center">
-                                <div className="document-title">Remindear</div>
+                                <div className="document-title">Remindear System</div>
                                 <div className="document-subtitle">
                                     {selectedType === 'settlements' ? 'Settlement Records Report' : 'Utang Records Report'}
                                 </div>
