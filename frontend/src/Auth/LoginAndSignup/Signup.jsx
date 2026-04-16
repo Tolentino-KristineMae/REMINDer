@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import tempoLogo from '../../assets/tempo.png';
+import remindearLogo from '../../assets/REMINDear-Logo.png';
 import BackgroundAuth from '../../Shared/BackgroundGreen';
 import '../../styles/Auth/LoginAndSignup/Signup.css';
 
@@ -39,7 +39,7 @@ const Signup = () => {
 
             <div className="card">
                 <div className="logoWrapper">
-                    <img src={tempoLogo} alt="Tempo Logo" style={{ height: '60px', width: 'auto' }} />
+                    <img src={remindearLogo} alt="REMINDear Logo" style={{ height: '60px', width: 'auto' }} />
                 </div>
 
                 <div className="title">Create Account</div>

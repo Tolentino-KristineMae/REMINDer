@@ -13,7 +13,7 @@ import {
   Printer,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import tempoLogo from '../assets/tempo.png';
+import remindearLogo from '../assets/REMINDear-Logo.png';
 import '../styles/shared/Sidebar.css';
 
 const menuItems = [
@@ -122,8 +122,8 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
         {/* Logo Header */}
         <div className={`logoHeader ${collapsed ? 'logoHeaderCollapsed' : ''}`}>
           <img 
-            src={tempoLogo} 
-            alt="Tempo Logo" 
+            src={remindearLogo} 
+            alt="REMINDear Logo" 
             className={`logoImage ${collapsed ? 'logoImageCollapsed' : ''}`}
           />
 
