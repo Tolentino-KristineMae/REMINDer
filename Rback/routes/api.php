@@ -9,6 +9,7 @@ use App\Http\Controllers\BillController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PersonInChargeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
 
 // So GET /api is handled by the API stack (not the SPA web fallback).
 Route::get('/', function () {
@@ -160,4 +161,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('bills', BillController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('people', PersonInChargeController::class);
+
+    // Report endpoints
+    Route::get('/reports/due-bills/pdf', [ReportController::class, 'dueBillsPdf']);
+    Route::get('/reports/due-bills/preview', [ReportController::class, 'dueBillsPreview']);
 });
