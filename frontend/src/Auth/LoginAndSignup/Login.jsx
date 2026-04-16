@@ -50,7 +50,7 @@ const Login = () => {
                 </div>
 
                 <div className="title">Sign In</div>
-                <div className="subtitle">Enter your credentials to access the console</div>
+                <div className="subtitle">Welcome back. Please sign in to your account.</div>
 
                 {error && <div className={`${styles.alert} ${styles.alertError}`}>✕ {error}</div>}
 

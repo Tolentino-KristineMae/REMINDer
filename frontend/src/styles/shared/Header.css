@@ -38,10 +38,21 @@
     align-items: flex-start;
 }
 
-.brandLogo {
-    height: 36px;
-    width: auto;
-    object-fit: contain;
+.brandTop {
+    font-size: 0.5625rem;
+    font-weight: 800;
+    color: #16a34a;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1;
+}
+
+.brandBottom {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #111827;
+    line-height: 1;
+    margin-top: 0.125rem;
 }
 
 /* Header Component */

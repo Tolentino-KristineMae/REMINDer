@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import remindearLogo from '../assets/REMINDear-Logo.png';
 import '../styles/shared/Header.css';
 
 export const TimeDisplay = ({ dateTime }) => {
@@ -18,7 +17,8 @@ export const TimeDisplay = ({ dateTime }) => {
             </div>
             <div className="divider" />
             <div className="brandColumn">
-                <img src={remindearLogo} alt="REMINDear Logo" className="brandLogo" />
+                <p className="brandTop">REMINDear</p>
+                <p className="brandBottom">System</p>
             </div>
         </div>
     );
