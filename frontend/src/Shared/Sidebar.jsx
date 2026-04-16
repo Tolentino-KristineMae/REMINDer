@@ -127,6 +127,12 @@ const Sidebar = ({ isOpen, onClose, collapsed: externalCollapsed, onCollapse }) 
             className={`logoImage ${collapsed ? 'logoImageCollapsed' : ''}`}
           />
 
+          {!collapsed && (
+            <span className="logoText">
+              <span style={{ color: '#22c55e' }}>REMIN</span><span className="logoTextD">D</span><span style={{ color: '#ffffff' }}>ear</span>
+            </span>
+          )}
+
           {!collapsed && !isMobile && (
             <button
               onClick={() => setCollapsed(v => !v)}

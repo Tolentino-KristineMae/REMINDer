@@ -397,176 +397,186 @@ const PrintPage = () => {
             {/* Print View - Professional Document */}
             <div className="print-only">
                 <div className="print-document">
+
+                    {/* Top colour band */}
+                    <div className="doc-top-band"></div>
+
                     {/* Document Header */}
                     <div className="document-header">
-                        <div className="document-logo">
-                            <div className="logo-circle">
-                                <Printer size={32} />
+                        <div className="doc-header-table">
+                            <div className="doc-header-left">
+                                <img
+                                    src="/src/assets/REMINDear-Logo.png"
+                                    alt="REMINDear"
+                                    className="doc-logo-img"
+                                    onError={e => { e.target.style.display = 'none'; }}
+                                />
+                            </div>
+                            <div className="doc-header-center">
+                                <div className="document-title">Remindear</div>
+                                <div className="document-subtitle">
+                                    {selectedType === 'settlements' ? 'Settlement Records Report' : 'Utang Records Report'}
+                                </div>
+                                <div className="doc-status-line">
+                                    {selectedStatus === 'paid' ? 'Paid / Settled' : 'Pending / Due'}
+                                    {selectedMonth && ` — ${getMonthName(selectedMonth)}`}
+                                </div>
+                            </div>
+                            <div className="doc-header-right">
+                                <div className="doc-date-label">Generated On</div>
+                                <div className="doc-date-value">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
+                                <div className="doc-ref">Ref # RPT-{Date.now()}</div>
                             </div>
                         </div>
-                        <h1 className="document-title">REMINDear System</h1>
-                        <h2 className="document-subtitle">
-                            {selectedType === 'settlements' ? 'Settlement Records' : 'Utang Records'} - 
-                            {selectedStatus === 'paid' ? ' Paid/Settled' : ' Pending/Due'}
-                            {selectedMonth && ` - ${getMonthName(selectedMonth)}`}
-                        </h2>
-                        <p className="document-date">Generated: {new Date().toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })}</p>
                     </div>
 
-                    {/* Summary Section */}
-                    <div className="document-summary">
-                        <div className="summary-item">
-                            <span className="summary-label">Total Records:</span>
-                            <span className="summary-value">{selectedData.length}</span>
+                    {/* Summary Cards */}
+                    <div className="doc-section-heading">Summary</div>
+                    <div className="doc-summary-cards">
+                        <div className="doc-card doc-card-total">
+                            <div className="doc-card-label">Total Records</div>
+                            <div className="doc-card-value">{selectedData.length}</div>
+                            <div className="doc-card-sub">records</div>
                         </div>
-                        <div className="summary-item">
-                            <span className="summary-label">Total Amount:</span>
-                            <span className="summary-value">{formatCurrency(selectedData.reduce((sum, item) => sum + parseFloat(item.amount), 0))}</span>
+                        <div className="doc-card doc-card-amount">
+                            <div className="doc-card-label">Total Amount</div>
+                            <div className="doc-card-value">{formatCurrency(selectedData.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0))}</div>
+                            <div className="doc-card-sub">all selected</div>
+                        </div>
+                        <div className="doc-card doc-card-type">
+                            <div className="doc-card-label">Record Type</div>
+                            <div className="doc-card-value" style={{ fontSize: '11pt' }}>{selectedType === 'settlements' ? 'Settlements' : 'Utangs'}</div>
+                            <div className="doc-card-sub">{selectedStatus === 'paid' ? 'Paid / Settled' : 'Pending / Due'}</div>
+                        </div>
+                        <div className="doc-card doc-card-date">
+                            <div className="doc-card-label">Period</div>
+                            <div className="doc-card-value" style={{ fontSize: '11pt' }}>{selectedMonth ? getMonthName(selectedMonth) : 'All Months'}</div>
+                            <div className="doc-card-sub">filter applied</div>
                         </div>
                     </div>
 
                     {/* Records Table */}
-                    {selectedData.map((item, index) => (
-                        <div key={item.id} className="record-section">
-                            <div className="record-header">
-                                <span className="record-number">Record #{index + 1}</span>
-                                <span className="record-status">{selectedStatus === 'paid' ? 'PAID' : 'PENDING'}</span>
-                            </div>
+                    <div className="doc-section-heading">Records</div>
+                    <table className="doc-table">
+                        <thead>
+                            <tr>
+                                <th className="doc-th" style={{ width: '4%' }}>#</th>
+                                <th className="doc-th" style={{ width: '26%' }}>
+                                    {selectedType === 'settlements' ? 'Bill Details' : 'Description'}
+                                </th>
+                                {selectedType === 'settlements' && <th className="doc-th" style={{ width: '14%' }}>Category</th>}
+                                <th className="doc-th" style={{ width: '16%' }}>Person In Charge</th>
+                                <th className="doc-th" style={{ width: '12%' }}>
+                                    {selectedStatus === 'paid' ? 'Date Paid' : 'Due Date'}
+                                </th>
+                                <th className="doc-th doc-th-r" style={{ width: '13%' }}>Amount</th>
+                                <th className="doc-th doc-th-c" style={{ width: '10%' }}>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {selectedData.length === 0 ? (
+                                <tr>
+                                    <td colSpan="7" className="doc-no-data">No records selected for this report.</td>
+                                </tr>
+                            ) : (
+                                selectedData.map((item, index) => {
+                                    const dateValue = (() => {
+                                        if (selectedType === 'settlements') {
+                                            return selectedStatus === 'paid'
+                                                ? item.proof_of_payments?.[0]?.created_at
+                                                : item.due_date;
+                                        }
+                                        return selectedStatus === 'paid' ? item.paid_at : item.created_at;
+                                    })();
 
-                            <div className="record-content">
-                                <div className="record-main">
-                                    <div className="record-field">
-                                        <span className="field-label">
-                                            {selectedType === 'settlements' ? 'Bill Details:' : 'Description:'}
-                                        </span>
-                                        <span className="field-value">
-                                            {selectedType === 'settlements' ? item.details || item.name : item.description}
-                                        </span>
-                                    </div>
-
-                                    <div className="record-field">
-                                        <span className="field-label">Amount:</span>
-                                        <span className="field-value amount">{formatCurrency(item.amount)}</span>
-                                    </div>
-
-                                    {item.person_in_charge && (
-                                        <div className="record-field">
-                                            <span className="field-label">Person in Charge:</span>
-                                            <span className="field-value">
-                                                {item.person_in_charge.first_name} {item.person_in_charge.last_name}
-                                            </span>
-                                        </div>
-                                    )}
-
-                                    {selectedType === 'settlements' && item.category && (
-                                        <div className="record-field">
-                                            <span className="field-label">Category:</span>
-                                            <span className="field-value">{item.category.name}</span>
-                                        </div>
-                                    )}
-
-                                    {selectedStatus === 'pending' && (
-                                        <div className="record-field">
-                                            <span className="field-label">Due Date:</span>
-                                            <span className="field-value">
-                                                {(() => {
-                                                    const dateValue = selectedType === 'settlements' ? item.due_date : item.created_at;
-                                                    return dateValue ? formatDateLocal(dateValue) : 'No Date';
-                                                })()}
-                                            </span>
-                                        </div>
-                                    )}
-
-                                    {selectedStatus === 'paid' && (
-                                        <>
-                                            {selectedType === 'settlements' && item.due_date && (
-                                                <div className="record-field">
-                                                    <span className="field-label">Original Due Date:</span>
-                                                    <span className="field-value">
-                                                        {formatDateLocal(item.due_date)}
-                                                    </span>
-                                                </div>
+                                    return (
+                                        <tr key={item.id} className={index % 2 === 0 ? 'doc-tr-odd' : 'doc-tr-even'}>
+                                            <td className="doc-td doc-td-c">{index + 1}</td>
+                                            <td className="doc-td">
+                                                {selectedType === 'settlements' ? (item.details || item.name || '—') : (item.description || '—')}
+                                            </td>
+                                            {selectedType === 'settlements' && (
+                                                <td className="doc-td">{item.category?.name || '—'}</td>
                                             )}
-                                            <div className="record-field">
-                                                <span className="field-label">Date Paid:</span>
-                                                <span className="field-value">
-                                                    {(() => {
-                                                        let dateValue;
-                                                        if (selectedType === 'settlements') {
-                                                            dateValue = item.proof_of_payments?.[0]?.created_at;
-                                                        } else {
-                                                            dateValue = item.paid_at;
-                                                        }
-                                                        console.log('Payment date for item', item.id, ':', dateValue);
-                                                        return dateValue ? formatDateLocal(dateValue) : 'No Date';
-                                                    })()}
+                                            <td className="doc-td">
+                                                {item.person_in_charge
+                                                    ? `${item.person_in_charge.first_name} ${item.person_in_charge.last_name}`
+                                                    : '—'}
+                                            </td>
+                                            <td className="doc-td">
+                                                {dateValue ? formatDateLocal(dateValue) : '—'}
+                                            </td>
+                                            <td className="doc-td doc-td-r">{formatCurrency(item.amount)}</td>
+                                            <td className="doc-td doc-td-c">
+                                                <span className={selectedStatus === 'paid' ? 'doc-pill doc-pill-paid' : 'doc-pill doc-pill-unpaid'}>
+                                                    {selectedStatus === 'paid' ? 'Paid' : 'Pending'}
                                                 </span>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            )}
+                        </tbody>
+                        {selectedData.length > 0 && (
+                            <tfoot>
+                                <tr>
+                                    <td colSpan={selectedType === 'settlements' ? 5 : 4} className="doc-tfoot-label">TOTAL</td>
+                                    <td className="doc-tfoot-amount">
+                                        {formatCurrency(selectedData.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0))}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        )}
+                    </table>
+
+                    {/* Proof Images (paid only) */}
+                    {selectedStatus === 'paid' && selectedData.some(item =>
+                        (selectedType === 'settlements' && item.proof_of_payments?.[0]?.file_path) ||
+                        (selectedType === 'utangs' && item.proof_image_path)
+                    ) && (
+                        <>
+                            <div className="doc-section-heading">Payment Proofs</div>
+                            <div className="doc-proofs-grid">
+                                {selectedData.map((item, index) => {
+                                    const imgSrc = selectedType === 'settlements'
+                                        ? item.proof_of_payments?.[0]?.file_path
+                                        : item.proof_image_path;
+                                    if (!imgSrc) return null;
+                                    return (
+                                        <div key={item.id} className="doc-proof-card">
+                                            <div className="doc-proof-label">
+                                                #{index + 1} — {selectedType === 'settlements' ? (item.details || item.name) : item.description}
                                             </div>
-                                        </>
-                                    )}
-
-                                    {selectedType === 'settlements' && item.notes && (
-                                        <div className="record-field full-width">
-                                            <span className="field-label">Notes:</span>
-                                            <span className="field-value">{item.notes}</span>
+                                            <img src={imgSrc} alt="Payment Proof" className="doc-proof-img" />
                                         </div>
-                                    )}
-
-                                    {selectedStatus === 'paid' && selectedType === 'settlements' && item.proof_of_payments?.[0]?.details && (
-                                        <div className="record-field full-width">
-                                            <span className="field-label">Payment Details:</span>
-                                            <span className="field-value">{item.proof_of_payments[0].details}</span>
-                                        </div>
-                                    )}
-
-                                    {selectedStatus === 'paid' && selectedType === 'utangs' && item.payment_details && (
-                                        <div className="record-field full-width">
-                                            <span className="field-label">Payment Details:</span>
-                                            <span className="field-value">{item.payment_details}</span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Proof Image */}
-                                {selectedStatus === 'paid' && (
-                                    <>
-                                        {selectedType === 'settlements' && item.proof_of_payments?.[0]?.file_path && (
-                                            <div className="record-proof">
-                                                <p className="proof-label">Payment Proof:</p>
-                                                <img 
-                                                    src={item.proof_of_payments[0].file_path} 
-                                                    alt="Payment Proof" 
-                                                    className="proof-image"
-                                                />
-                                            </div>
-                                        )}
-                                        {selectedType === 'utangs' && item.proof_image_path && (
-                                            <div className="record-proof">
-                                                <p className="proof-label">Payment Proof:</p>
-                                                <img 
-                                                    src={item.proof_image_path} 
-                                                    alt="Payment Proof" 
-                                                    className="proof-image"
-                                                />
-                                            </div>
-                                        )}
-                                    </>
-                                )}
+                                    );
+                                })}
                             </div>
-                        </div>
-                    ))}
+                        </>
+                    )}
 
-                    {/* Document Footer */}
-                    <div className="document-footer">
-                        <p className="footer-text">This is a computer-generated document from REMINDear System</p>
-                        <p className="footer-text">Page printed on {new Date().toLocaleDateString()}</p>
+                    {/* Signatures */}
+                    <div className="doc-hr"></div>
+                    <div className="doc-footer-note">Generated by REMINDear System &nbsp;•&nbsp; {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                    <div className="doc-sig-row">
+                        <div className="doc-sig-cell">
+                            <div className="doc-sig-space"></div>
+                            <div className="doc-sig-line"></div>
+                            <div className="doc-sig-label">Prepared by</div>
+                            <div className="doc-sig-sub">Authorized User</div>
+                        </div>
+                        <div className="doc-sig-cell">
+                            <div className="doc-sig-space"></div>
+                            <div className="doc-sig-line"></div>
+                            <div className="doc-sig-label">Approved by</div>
+                            <div className="doc-sig-sub">Authorized Signatory</div>
+                        </div>
                     </div>
+
+                    {/* Bottom band */}
+                    <div className="doc-bottom-band"></div>
+                    <div className="doc-disclaimer">This is a system-generated document from REMINDear. Please verify all information before official use.</div>
                 </div>
             </div>
         </div>

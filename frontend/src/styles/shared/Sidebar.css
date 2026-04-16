@@ -64,12 +64,36 @@
 
 .logoImage {
     height: 48px;
-    width: auto;
-    object-fit: contain;
+    width: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    flex-shrink: 0;
 }
 
 .logoImageCollapsed {
     height: 32px;
+    width: 32px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.logoText {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-left: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.logoTextD {
+    font-weight: 900;
+    background: linear-gradient(to right, #22c55e 50%, #ffffff 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .collapseButton {
