@@ -60,8 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 // Logo
                 Container(
-                  width: 100,
-                  height: 100,
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(25),
@@ -73,10 +73,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.notifications_active,
-                    size: 50,
-                    color: Color(0xFF047857),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: Image.asset(
+                      'assets/images/REMINDear-Logo.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30),

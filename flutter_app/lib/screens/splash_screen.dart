@@ -46,8 +46,8 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 120,
-              height: 120,
+              width: 160,
+              height: 160,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
@@ -59,10 +59,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.notifications_active,
-                size: 60,
-                color: Color(0xFF047857),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Image.asset(
+                  'assets/images/REMINDear-Logo.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
             const SizedBox(height: 30),
