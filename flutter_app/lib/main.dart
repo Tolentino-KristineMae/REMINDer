@@ -28,6 +28,8 @@ import 'screens/test/notification_test_screen.dart';
 import 'services/notification_service.dart';
 import 'utils/theme.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
@@ -69,6 +71,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'REMINDer',
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(

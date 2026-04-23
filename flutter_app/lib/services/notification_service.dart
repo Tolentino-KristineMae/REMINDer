@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'api_service.dart';
+import '../main.dart' show navigatorKey;
 
 // Background message handler
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -127,12 +128,36 @@ class NotificationService {
   
   void _handleNotificationOpened(RemoteMessage message) {
     print('Notification opened: ${message.data}');
-    // TODO: Navigate to specific screen based on notification data
+    _navigateToBill(message.data);
   }
   
   void _onNotificationTapped(NotificationResponse response) {
     print('Notification tapped: ${response.payload}');
-    // TODO: Handle notification tap
+    if (response.payload != null) {
+      // payload format: "bill_<id>"
+      final parts = response.payload!.split('_');
+      if (parts.length == 2 && parts[0] == 'bill') {
+        final billId = int.tryParse(parts[1]);
+        if (billId != null) {
+          _navigateToBillById(billId);
+        }
+      }
+    }
+  }
+
+  /// Navigate using data map from FCM (contains bill_id as string)
+  void _navigateToBill(Map<String, dynamic> data) {
+    final billIdStr = data['bill_id'];
+    if (billIdStr == null) return;
+    final billId = int.tryParse(billIdStr.toString());
+    if (billId != null) {
+      _navigateToBillById(billId);
+    }
+  }
+
+  /// Push to settle-bill screen; the screen fetches its own details by id
+  void _navigateToBillById(int billId) {
+    navigatorKey.currentState?.pushNamed('/settle-bill', arguments: billId);
   }
   
   Future<void> _showLocalNotification({
@@ -220,19 +245,19 @@ class NotificationService {
       
       String? notificationTitle;
       String? notificationBody;
-      final name = bill['details'] ?? 'Unnamed Bill';
+      final category = bill['category']?['name'] ?? 'Uncategorized';
       final amount = '₱${bill['amount']}';
       
       if (dueDateOnly.isAtSameMomentAs(today)) {
         notificationTitle = '⚠️ Bill Due Today';
-        notificationBody = '$name — $amount is due TODAY!';
+        notificationBody = '$category — $amount due TODAY!';
       } else if (dueDateOnly.isAtSameMomentAs(tomorrow)) {
         notificationTitle = '📅 Bill Due Tomorrow';
-        notificationBody = '$name — $amount is due TOMORROW!';
+        notificationBody = '$category — $amount due TOMORROW!';
       } else if (dueDateOnly.isBefore(today)) {
         final daysOverdue = today.difference(dueDateOnly).inDays;
         notificationTitle = '🚨 Overdue Bill';
-        notificationBody = '$name — $amount is $daysOverdue day${daysOverdue > 1 ? 's' : ''} OVERDUE!';
+        notificationBody = '$category — $amount is $daysOverdue day${daysOverdue > 1 ? 's' : ''} OVERDUE!';
       }
       
       if (notificationTitle != null && notificationBody != null) {

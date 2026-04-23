@@ -24,7 +24,7 @@ class SendBillReminders extends Command
         $in7Days = now()->addDays(7)->toDateString();
         
         // Get bills that are due within 7 days, today, tomorrow, or overdue
-        $bills = Bill::with(['personInCharge'])
+        $bills = Bill::with(['personInCharge', 'category'])
             ->where('status', 'pending')
             ->where(function($query) use ($today, $tomorrow, $in3Days, $in5Days, $in7Days) {
                 $query->where('due_date', '=', $today)
@@ -67,7 +67,7 @@ class SendBillReminders extends Command
                 $title = $this->buildNotificationTitle($bill, $today, $tomorrow, $in3Days, $in5Days, $in7Days);
                 $body = $this->buildBillNotificationBody($bill);
                 
-                if ($this->sendFCMNotification($user->fcm_token, $title, $body)) {
+                if ($this->sendFCMNotification($user->fcm_token, $title, $body, $bill->id)) {
                     $sentCount++;
                     $this->info("✓ Sent notification for bill '{$bill->details}' to {$user->email}");
                 } else {
@@ -107,14 +107,13 @@ class SendBillReminders extends Command
 
     private function buildBillNotificationBody($bill)
     {
-        $name   = $bill->details ?? 'Unnamed Bill';
-        $amount = '₱' . number_format($bill->amount, 2);
-        $due    = \Carbon\Carbon::parse($bill->due_date)->format('M d, Y');
+        $category = $bill->category->name ?? 'Uncategorized';
+        $amount   = '₱' . number_format($bill->amount, 2);
 
-        return "{$name} — {$amount} is due on {$due}";
+        return "{$category} — {$amount}";
     }
     
-    private function sendFCMNotification($fcmToken, $title, $body)
+    private function sendFCMNotification($fcmToken, $title, $body, $billId = null)
     {
         $projectId = env('FCM_PROJECT_ID');
         
@@ -164,6 +163,7 @@ class SendBillReminders extends Command
                     ],
                     'data' => [
                         'type' => 'bill_reminder',
+                        'bill_id' => (string) $billId,
                         'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                     ],
                     'android' => [
