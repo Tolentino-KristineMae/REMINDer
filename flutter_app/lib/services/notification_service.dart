@@ -207,7 +207,6 @@ class NotificationService {
     }
   }
   
-  // Check for bills due today or tomorrow and send notifications
   Future<void> checkDueBills(List<Map<String, dynamic>> bills) async {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -219,20 +218,26 @@ class NotificationService {
       final dueDate = DateTime.parse(bill['due_date']);
       final dueDateOnly = DateTime(dueDate.year, dueDate.month, dueDate.day);
       
+      String? notificationTitle;
       String? notificationBody;
+      final name = bill['details'] ?? 'Unnamed Bill';
+      final amount = '₱${bill['amount']}';
       
       if (dueDateOnly.isAtSameMomentAs(today)) {
-        notificationBody = '${bill['details']} - ₱${bill['amount']} is due TODAY!';
+        notificationTitle = '⚠️ Bill Due Today';
+        notificationBody = '$name — $amount is due TODAY!';
       } else if (dueDateOnly.isAtSameMomentAs(tomorrow)) {
-        notificationBody = '${bill['details']} - ₱${bill['amount']} is due TOMORROW!';
+        notificationTitle = '📅 Bill Due Tomorrow';
+        notificationBody = '$name — $amount is due TOMORROW!';
       } else if (dueDateOnly.isBefore(today)) {
         final daysOverdue = today.difference(dueDateOnly).inDays;
-        notificationBody = '${bill['details']} - ₱${bill['amount']} is $daysOverdue days OVERDUE!';
+        notificationTitle = '🚨 Overdue Bill';
+        notificationBody = '$name — $amount is $daysOverdue day${daysOverdue > 1 ? 's' : ''} OVERDUE!';
       }
       
-      if (notificationBody != null) {
+      if (notificationTitle != null && notificationBody != null) {
         await _showLocalNotification(
-          title: '💰 Bill Reminder',
+          title: notificationTitle,
           body: notificationBody,
           payload: 'bill_${bill['id']}',
         );

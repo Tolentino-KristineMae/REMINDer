@@ -56,42 +56,24 @@ class SendBillReminders extends Command
         $failedCount = 0;
         
         foreach ($users as $user) {
-            // Get bills relevant to this user
-            // For now, sending all pending bills to all users
-            // You can customize this logic based on your requirements
-            
             $userBills = $bills;
             
             if ($userBills->isEmpty()) {
                 continue;
             }
             
-            // Categorize bills by due date
-            $overdue = $userBills->filter(fn($b) => $b->due_date < $today);
-            $dueToday = $userBills->filter(fn($b) => $b->due_date === $today);
-            $dueTomorrow = $userBills->filter(fn($b) => $b->due_date === $tomorrow);
-            $dueIn3Days = $userBills->filter(fn($b) => $b->due_date === $in3Days);
-            $dueIn5Days = $userBills->filter(fn($b) => $b->due_date === $in5Days);
-            $dueIn7Days = $userBills->filter(fn($b) => $b->due_date === $in7Days);
-            
-            // Prepare notification message
-            $title = '💰 Bill Reminder';
-            $body = $this->buildNotificationBody(
-                $overdue->count(),
-                $dueToday->count(),
-                $dueTomorrow->count(),
-                $dueIn3Days->count(),
-                $dueIn5Days->count(),
-                $dueIn7Days->count()
-            );
-            
-            // Send FCM notification
-            if ($this->sendFCMNotification($user->fcm_token, $title, $body)) {
-                $sentCount++;
-                $this->info("✓ Sent notification to {$user->email}");
-            } else {
-                $failedCount++;
-                $this->error("✗ Failed to send notification to {$user->email}");
+            // Send one notification per bill with specific details
+            foreach ($userBills as $bill) {
+                $title = $this->buildNotificationTitle($bill, $today, $tomorrow, $in3Days, $in5Days, $in7Days);
+                $body = $this->buildBillNotificationBody($bill);
+                
+                if ($this->sendFCMNotification($user->fcm_token, $title, $body)) {
+                    $sentCount++;
+                    $this->info("✓ Sent notification for bill '{$bill->details}' to {$user->email}");
+                } else {
+                    $failedCount++;
+                    $this->error("✗ Failed to send notification for bill '{$bill->details}' to {$user->email}");
+                }
             }
         }
         
@@ -102,36 +84,34 @@ class SendBillReminders extends Command
         return 0;
     }
     
-    private function buildNotificationBody($overdueCount, $todayCount, $tomorrowCount, $in3DaysCount, $in5DaysCount, $in7DaysCount)
+    private function buildNotificationTitle($bill, $today, $tomorrow, $in3Days, $in5Days, $in7Days)
     {
-        $messages = [];
-        
-        // Priority order: Overdue > Today > Tomorrow > 3 days > 5 days > 7 days
-        if ($overdueCount > 0) {
-            $messages[] = "🚨 {$overdueCount} OVERDUE";
+        $dueDate = $bill->due_date;
+
+        if ($dueDate < $today) {
+            return ' Overdue Bill';
+        } elseif ($dueDate === $today) {
+            return 'Bill Due Today';
+        } elseif ($dueDate === $tomorrow) {
+            return 'Bill Due Tomorrow';
+        } elseif ($dueDate === $in3Days) {
+            return 'Bill Due in 3 Days';
+        } elseif ($dueDate === $in5Days) {
+            return 'Bill Due in 5 Days';
+        } elseif ($dueDate === $in7Days) {
+            return 'Bill Due in 7 Days';
         }
-        
-        if ($todayCount > 0) {
-            $messages[] = "⚠️ {$todayCount} due TODAY";
-        }
-        
-        if ($tomorrowCount > 0) {
-            $messages[] = "📅 {$tomorrowCount} due TOMORROW";
-        }
-        
-        if ($in3DaysCount > 0) {
-            $messages[] = "{$in3DaysCount} in 3 days";
-        }
-        
-        if ($in5DaysCount > 0) {
-            $messages[] = "{$in5DaysCount} in 5 days";
-        }
-        
-        if ($in7DaysCount > 0) {
-            $messages[] = "{$in7DaysCount} in 7 days";
-        }
-        
-        return implode(' • ', $messages);
+
+        return 'Bill Reminder';
+    }
+
+    private function buildBillNotificationBody($bill)
+    {
+        $name   = $bill->details ?? 'Unnamed Bill';
+        $amount = '₱' . number_format($bill->amount, 2);
+        $due    = \Carbon\Carbon::parse($bill->due_date)->format('M d, Y');
+
+        return "{$name} — {$amount} is due on {$due}";
     }
     
     private function sendFCMNotification($fcmToken, $title, $body)
