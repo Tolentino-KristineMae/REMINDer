@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import api from '../../api/axios';
 import { 
     Plus, 
@@ -14,6 +14,186 @@ import { formatCurrency } from '../../utils/formatters';
 import { cn } from '../../lib/utils';
 import UnpaidBillsByCategory from '../../components/Dashboard/UnpaidBillsByCategory';
 import '../../styles/pages/Dashboard/Dashboard.css';
+
+// ─── Settlement Card ────────────────────────────────────────────────────────
+const CIRCUMFERENCE = 2 * Math.PI * 54; // r=54
+
+const DonutSegment = ({ offset, dash, color, delay = 0 }) => {
+    const ref = useRef(null);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        el.style.strokeDashoffset = CIRCUMFERENCE;
+        const t = setTimeout(() => {
+            el.style.transition = `stroke-dashoffset 1s cubic-bezier(.4,0,.2,1) ${delay}ms`;
+            el.style.strokeDashoffset = offset;
+        }, 60);
+        return () => clearTimeout(t);
+    }, [offset, delay]);
+
+    return (
+        <circle
+            ref={ref}
+            cx="64" cy="64" r="54"
+            fill="none"
+            stroke={color}
+            strokeWidth="11"
+            strokeLinecap="round"
+            strokeDasharray={`${dash} ${CIRCUMFERENCE - dash}`}
+            style={{ strokeDashoffset: CIRCUMFERENCE }}
+            transform="rotate(-90 64 64)"
+        />
+    );
+};
+
+const SettlementCard = ({ stats }) => {
+    const total = stats.total || 1;
+    const paidPct   = stats.paid    / total;
+    const pendPct   = stats.pending / total;
+    const overPct   = stats.overdue / total;
+
+    // Each segment: dash = fraction * circumference, offset = -(sum of previous dashes)
+    const paidDash  = paidPct  * CIRCUMFERENCE;
+    const pendDash  = pendPct  * CIRCUMFERENCE;
+    const overDash  = overPct  * CIRCUMFERENCE;
+
+    // Offsets: rotate so each segment starts after the previous
+    const paidOffset  = 0;
+    const pendOffset  = -(paidDash);
+    const overOffset  = -(paidDash + pendDash);
+
+    const displayPct = Math.round(paidPct * 100);
+
+    const rows = [
+        {
+            label: 'Paid',
+            sub: 'Settled',
+            count: stats.paid,
+            pct: Math.round(paidPct * 100),
+            color: '#10b981',
+            bg: 'bg-emerald-50',
+            border: 'border-emerald-100',
+            textColor: 'text-emerald-600',
+            barColor: 'bg-gradient-to-r from-emerald-400 to-emerald-500',
+            icon: <CheckCircle2 size={15} className="text-emerald-600" />,
+        },
+        {
+            label: 'Pending',
+            sub: 'Awaiting',
+            count: stats.pending,
+            pct: Math.round(pendPct * 100),
+            color: '#f59e0b',
+            bg: 'bg-amber-50',
+            border: 'border-amber-100',
+            textColor: 'text-amber-600',
+            barColor: 'bg-gradient-to-r from-amber-400 to-amber-500',
+            icon: <Clock size={15} className="text-amber-500" />,
+        },
+        {
+            label: 'Overdue',
+            sub: 'Past due',
+            count: stats.overdue,
+            pct: Math.round(overPct * 100),
+            color: '#ef4444',
+            bg: 'bg-red-50',
+            border: 'border-red-100',
+            textColor: 'text-red-500',
+            barColor: 'bg-gradient-to-r from-red-400 to-red-500',
+            icon: <AlertCircle size={15} className="text-red-500" />,
+        },
+    ];
+
+    return (
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden h-full flex flex-col">
+            {/* Header */}
+            <div className="px-5 pt-5 pb-4 flex items-center justify-between border-b border-gray-50">
+                <div>
+                    <h3 className="text-base font-bold text-gray-900 tracking-tight">Settlement</h3>
+                    <p className="text-[11px] text-gray-400 font-medium mt-0.5">Bill payment overview</p>
+                </div>
+                <div className="flex items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-full">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Live</span>
+                </div>
+            </div>
+
+            <div className="flex-1 flex flex-col px-5 py-5 gap-5">
+                {/* Donut chart */}
+                <div className="relative w-[128px] h-[128px] mx-auto flex-shrink-0">
+                    <svg viewBox="0 0 128 128" className="w-full h-full">
+                        <defs>
+                            <filter id="donutGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        {/* Track */}
+                        <circle cx="64" cy="64" r="54" fill="none" stroke="#f1f5f9" strokeWidth="11" />
+
+                        {/* Segments */}
+                        {stats.total > 0 ? (
+                            <>
+                                <DonutSegment dash={paidDash}  offset={paidOffset}  color="#10b981" delay={0}   />
+                                <DonutSegment dash={pendDash}  offset={pendOffset}  color="#f59e0b" delay={120} />
+                                <DonutSegment dash={overDash}  offset={overOffset}  color="#ef4444" delay={240} />
+                            </>
+                        ) : (
+                            <circle cx="64" cy="64" r="54" fill="none" stroke="#e2e8f0" strokeWidth="11" strokeDasharray="4 6" />
+                        )}
+
+                        {/* Inner shadow ring */}
+                        <circle cx="64" cy="64" r="48" fill="none" stroke="rgba(0,0,0,0.03)" strokeWidth="1" />
+                    </svg>
+
+                    {/* Center label */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span className="text-[28px] font-black text-gray-900 leading-none tracking-tight">{displayPct}</span>
+                        <span className="text-[11px] font-bold text-emerald-500 leading-none mt-0.5">% paid</span>
+                        <span className="text-[9px] text-gray-400 font-medium mt-1">{stats.total} total</span>
+                    </div>
+                </div>
+
+                {/* Stat rows */}
+                <div className="flex flex-col gap-2.5 flex-1">
+                    {rows.map((r) => (
+                        <div
+                            key={r.label}
+                            className={`${r.bg} ${r.border} border rounded-2xl px-3.5 py-3 flex flex-col gap-2`}
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-lg bg-white/80 flex items-center justify-center shadow-sm">
+                                        {r.icon}
+                                    </div>
+                                    <div>
+                                        <p className="text-[12px] font-bold text-gray-800 leading-none">{r.label}</p>
+                                        <p className="text-[10px] text-gray-400 font-medium leading-none mt-0.5">{r.sub}</p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <span className={`text-lg font-black ${r.textColor} leading-none`}>{r.count}</span>
+                                    <span className={`text-[10px] font-bold ${r.textColor} opacity-70 ml-1`}>{r.pct}%</span>
+                                </div>
+                            </div>
+                            {/* Mini progress bar */}
+                            <div className="h-1 bg-white/60 rounded-full overflow-hidden">
+                                <div
+                                    className={`h-full ${r.barColor} rounded-full transition-all duration-700`}
+                                    style={{ width: `${r.pct}%` }}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+// ────────────────────────────────────────────────────────────────────────────
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -160,168 +340,8 @@ const Dashboard = () => {
                 </div>
 
                 {/* Settlement Card */}
-                <div className="xl:col-span-3 space-y-6 w-full">
-                    <div className="bg-white p-4 sm:p-6 rounded-2xl border shadow-sm h-full flex flex-col relative overflow-hidden" style={{ borderColor: '#e5e7eb' }}>
-                        {/* Decorative corner accent */}
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50 rounded-bl-full -mr-8 -mt-8" />
-                        
-                        <div className="mb-6 relative z-10">
-                            <h3 className="text-lg font-bold text-gray-900">Settlement</h3>
-                            <p className="text-xs text-emerald-600 font-semibold">Payment status</p>
-                        </div>
-                        
-                        <div className="flex-1 flex flex-col">
-                            {/* Modern Circular Progress */}
-                            <div className="relative w-40 h-40 mx-auto mb-6">
-                                <svg className="w-full h-full transform -rotate-90">
-                                    <defs>
-                                        <linearGradient id="settleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#10b981" />
-                                            <stop offset="100%" stopColor="#059669" />
-                                        </linearGradient>
-                                        <filter id="glow">
-                                            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                                            <feMerge>
-                                                <feMergeNode in="coloredBlur"/>
-                                                <feMergeNode in="SourceGraphic"/>
-                                            </feMerge>
-                                        </filter>
-                                    </defs>
-                                    {/* Outer glow ring */}
-                                    <circle cx="80" cy="80" r="72" stroke="transparent" strokeWidth="1" fill="none" />
-                                    
-                                    {/* Background track */}
-                                    <circle 
-                                        cx="80" cy="80" r="68" 
-                                        stroke="#f1f5f9" 
-                                        strokeWidth="12" 
-                                        fill="none" 
-                                    />
-                                    
-                                    {/* Progress ring */}
-                                    <circle 
-                                        cx="80" cy="80" r="68" 
-                                        stroke="url(#settleGrad)" 
-                                        strokeWidth="12" 
-                                        fill="none" 
-                                        strokeLinecap="round"
-                                        strokeDasharray={427.3} 
-                                        strokeDashoffset={427.3 * (1 - (stats.paid / (stats.total || 1)))} 
-                                        filter="url(#glow)"
-                                        className="transition-all duration-1000 ease-out" 
-                                    />
-                                </svg>
-                                
-                                {/* Center content */}
-                                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <div className="text-center">
-                                        <span className="text-4xl font-black text-gray-900 tracking-tight">{Math.round((stats.paid / (stats.total || 1)) * 100)}</span>
-                                        <span className="text-lg font-bold text-emerald-500">%</span>
-                                    </div>
-                                    <div className="mt-1 px-2 py-0.5 bg-emerald-50 rounded-full">
-                                        <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-wider">Settled</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {/* Modern Legend */}
-                            <div className="flex justify-center gap-6 mb-6">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-sm" />
-                                    <span className="text-[11px] font-semibold text-gray-600">Paid</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-amber-300 to-amber-400 shadow-sm" />
-                                    <span className="text-[11px] font-semibold text-gray-600">Pending</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-red-300 to-red-400 shadow-sm" />
-                                    <span className="text-[11px] font-semibold text-gray-600">Overdue</span>
-                                </div>
-                            </div>
-                            
-                            {/* Status Cards - Modern Design */}
-                            <div className="space-y-3 mt-auto">
-                                {/* Paid */}
-                                <div className="group p-4 bg-gradient-to-r from-green-50 to-green-100/30 rounded-2xl border border-green-100 hover:shadow-lg hover:shadow-green-500/15 hover:scale-[1.01] transition-all duration-200">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-md shadow-green-500/20">
-                                                <CheckCircle2 size={18} className="text-white" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-gray-800">Paid</p>
-                                                <p className="text-[10px] text-gray-500 font-medium">Settled bills</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-xl font-black text-green-600">{stats.paid}</p>
-                                            <p className="text-[10px] text-green-500 font-bold">{stats.total > 0 ? Math.round((stats.paid / stats.total) * 100) : 0}%</p>
-                                        </div>
-                                    </div>
-                                    {/* Progress bar */}
-                                    <div className="mt-3 h-1.5 bg-green-100 rounded-full overflow-hidden">
-                                        <div 
-                                            className="h-full bg-gradient-to-r from-green-400 to-green-500 rounded-full transition-all duration-700" 
-                                            style={{ width: `${stats.total > 0 ? (stats.paid / stats.total) * 100 : 0}%` }}
-                                        />
-                                    </div>
-                                </div>
-                                
-                                {/* Pending */}
-                                <div className="group p-4 bg-gradient-to-r from-amber-50 to-amber-100/30 rounded-2xl border border-amber-100 hover:shadow-lg hover:shadow-amber-500/15 hover:scale-[1.01] transition-all duration-200">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl flex items-center justify-center shadow-md shadow-amber-500/20">
-                                                <Clock size={18} className="text-white" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-gray-800">Pending</p>
-                                                <p className="text-[10px] text-gray-500 font-medium">Awaiting payment</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-xl font-black text-amber-600">{stats.pending}</p>
-                                            <p className="text-[10px] text-amber-500 font-bold">{stats.total > 0 ? Math.round((stats.pending / stats.total) * 100) : 0}%</p>
-                                        </div>
-                                    </div>
-                                    {/* Progress bar */}
-                                    <div className="mt-3 h-1.5 bg-amber-100 rounded-full overflow-hidden">
-                                        <div 
-                                            className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-700" 
-                                            style={{ width: `${stats.total > 0 ? (stats.pending / stats.total) * 100 : 0}%` }}
-                                        />
-                                    </div>
-                                </div>
-                                
-                                {/* Overdue */}
-                                <div className="group p-4 bg-gradient-to-r from-red-50 to-red-100/30 rounded-2xl border border-red-100 hover:shadow-lg hover:shadow-red-500/15 hover:scale-[1.01] transition-all duration-200">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-gradient-to-br from-red-400 to-red-500 rounded-xl flex items-center justify-center shadow-md shadow-red-500/20">
-                                                <AlertCircle size={18} className="text-white" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-gray-800">Overdue</p>
-                                                <p className="text-[10px] text-gray-500 font-medium">Past due date</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-xl font-black text-red-500">{stats.overdue}</p>
-                                            <p className="text-[10px] text-red-400 font-bold">{stats.total > 0 ? Math.round((stats.overdue / stats.total) * 100) : 0}%</p>
-                                        </div>
-                                    </div>
-                                    {/* Progress bar */}
-                                    <div className="mt-3 h-1.5 bg-red-100 rounded-full overflow-hidden">
-                                        <div 
-                                            className="h-full bg-gradient-to-r from-red-400 to-red-500 rounded-full transition-all duration-700" 
-                                            style={{ width: `${stats.total > 0 ? (stats.overdue / stats.total) * 100 : 0}%` }}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div className="xl:col-span-3 w-full">
+                    <SettlementCard stats={stats} />
                 </div>
             </div>
 
