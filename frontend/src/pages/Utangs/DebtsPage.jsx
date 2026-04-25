@@ -128,25 +128,24 @@ const DebtsPage = () => {
 
             <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
                 {/* Header & Main Tabs */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <div className="flex bg-white border border-gray-100 p-1.5 rounded-xl sm:rounded-[1.5rem] shadow-sm">
-                            <button 
-                                onClick={() => {
-                                    setActiveTab('owed');
-                                    setSelectedPersonId('all');
-                                }} 
-                                className={`px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'owed' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
-                            >
-                                Siningilin
-                            </button>
-                            <button 
-                                onClick={() => setActiveTab('mine')} 
-                                className={`px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === 'mine' ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
-                            >
-                                Bayarin
-                            </button>
-                        </div>
+                <div className="flex items-center justify-between gap-4 mb-2">
+                    {/* Siningilin / Bayarin tab — top right of content area */}
+                    <div className="flex bg-white border border-gray-100 p-1.5 rounded-2xl shadow-sm">
+                        <button 
+                            onClick={() => {
+                                setActiveTab('owed');
+                                setSelectedPersonId('all');
+                            }} 
+                            className={`px-5 sm:px-7 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all ${activeTab === 'owed' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
+                        >
+                            Siningilin
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('mine')} 
+                            className={`px-5 sm:px-7 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all ${activeTab === 'mine' ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
+                        >
+                            Bayarin
+                        </button>
                     </div>
                 </div>
 

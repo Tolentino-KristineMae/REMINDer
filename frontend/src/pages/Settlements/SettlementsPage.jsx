@@ -22,7 +22,9 @@ import {
     Edit2,
     Trash2,
     Receipt,
-    Users
+    Users,
+    Clock,
+    TrendingUp
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency, formatDateLocal } from '../../utils/formatters';
@@ -658,6 +660,53 @@ const SettlementsPage = () => {
                         })}
                     </div>
                 )}
+
+                {/* Stat Cards */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6">
+                    {/* Awaiting Settlement — Red */}
+                    <div className="bg-gradient-to-br from-red-500 to-rose-600 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-red-500/25 transition-all duration-300">
+                        <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -ml-8 -mb-8" />
+                        <div className="relative z-10">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                    <Clock size={22} className="text-red-100" />
+                                </div>
+                                <span className="text-[10px] font-bold text-red-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
+                                    <Receipt size={10} /> {filteredPendingBills.length} bills
+                                </span>
+                            </div>
+                            <p className="text-[11px] font-semibold text-red-200 uppercase tracking-wider mb-1">Awaiting Settlement</p>
+                            <p className="text-2xl font-black tracking-tight">{formatCurrency(totalPending)}</p>
+                            <div className="flex items-center gap-1 mt-2">
+                                <Clock size={12} className="text-red-200" />
+                                <p className="text-[10px] text-red-200 font-medium">Pending payment</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Total Settled — Green */}
+                    <div className="bg-gradient-to-br from-emerald-500 to-green-700 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300">
+                        <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -ml-8 -mb-8" />
+                        <div className="relative z-10">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                    <CheckCircle2 size={22} className="text-emerald-100" />
+                                </div>
+                                <span className="text-[10px] font-bold text-emerald-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
+                                    <CheckCircle2 size={10} /> {filteredSettledBills.length} bills
+                                </span>
+                            </div>
+                            <p className="text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-1">Total Settled</p>
+                            <p className="text-2xl font-black tracking-tight">{formatCurrency(totalSettled)}</p>
+                            <div className="flex items-center gap-1 mt-2">
+                                <TrendingUp size={12} className="text-emerald-200" />
+                                <p className="text-[10px] text-emerald-200 font-medium">All time settled</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Pending Settlements */}
                 {filteredPendingBills.length > 0 && (
