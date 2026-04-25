@@ -11,6 +11,7 @@ class Debt extends Model
 
     protected $fillable = [
         'amount',
+        'title',
         'description',
         'is_my_debt',
         'person_in_charge_id',

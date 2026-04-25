@@ -111,14 +111,16 @@ class DebtController extends Controller
     {
         $request->validate([
             'amount' => 'required|numeric|min:0',
-            'description' => 'required|string',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'is_my_debt' => 'boolean',
             'person_in_charge_id' => 'nullable|exists:person_in_charges,id',
         ]);
 
         $debt = Debt::create([
             'amount' => $request->amount,
-            'description' => $request->description,
+            'title' => $request->title,
+            'description' => $request->description ?? $request->title,
             'is_my_debt' => $request->is_my_debt ?? true,
             'person_in_charge_id' => $request->person_in_charge_id,
             'status' => 'pending',
@@ -203,14 +205,16 @@ class DebtController extends Controller
 
         $request->validate([
             'amount' => 'sometimes|numeric|min:0',
-            'description' => 'sometimes|string',
+            'title' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
             'is_my_debt' => 'sometimes|boolean',
             'person_in_charge_id' => 'nullable|exists:person_in_charges,id',
         ]);
 
         $debt->update([
             'amount' => $request->amount ?? $debt->amount,
-            'description' => $request->description ?? $debt->description,
+            'title' => $request->title ?? $debt->title,
+            'description' => $request->description ?? $request->title ?? $debt->description,
             'is_my_debt' => $request->is_my_debt ?? $debt->is_my_debt,
             'person_in_charge_id' => $request->person_in_charge_id ?? $debt->person_in_charge_id,
         ]);

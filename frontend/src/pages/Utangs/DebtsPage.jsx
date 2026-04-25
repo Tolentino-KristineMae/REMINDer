@@ -315,7 +315,7 @@ const DebtsPage = () => {
                                                         </span>
                                                     )}
                                                 </div>
-                                                <p className="font-bold text-gray-900 text-sm leading-snug break-words">{debt.description}</p>
+                                                <p className="font-bold text-gray-900 text-sm leading-snug break-words">{debt.title || debt.description}</p>
                                                 <p className="text-[11px] text-gray-400 font-medium mt-0.5 flex items-center gap-1">
                                                     <Clock size={10} /> {formatDateLocal(debt.created_at)}
                                                 </p>
@@ -445,7 +445,7 @@ const DebtsPage = () => {
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="font-bold text-gray-900 text-sm leading-snug break-words">{debt.description}</p>
+                                            <p className="font-bold text-gray-900 text-sm leading-snug break-words">{debt.title || debt.description}</p>
                                             <p className="text-[11px] text-emerald-500 font-semibold mt-0.5 flex items-center gap-1">
                                                 <CheckCircle2 size={10} /> Paid {formatDateLocal(debt.paid_at)}
                                             </p>
@@ -522,7 +522,7 @@ const DebtsPage = () => {
                         </div>
                         <h3 className="text-2xl font-black text-gray-900 text-center mb-2">Delete Utang?</h3>
                         <p className="text-sm text-gray-500 text-center mb-8 leading-relaxed">
-                            This action cannot be undone. Are you sure you want to remove <span className="font-black text-red-500">&ldquo;{debtToDelete?.description}&rdquo;</span>?
+                            This action cannot be undone. Are you sure you want to remove <span className="font-black text-red-500">&ldquo;{debtToDelete?.title || debtToDelete?.description}&rdquo;</span>?
                         </p>
                         <div className="grid grid-cols-2 gap-4">
                             <button 

@@ -76,7 +76,7 @@ export default function AddDebtPage() {
 
   const [formData, setFormData] = useState({
     amount: "",
-    description: "",
+    title: "",
     is_my_debt: true,
     person_in_charge_id: "",
   });
@@ -101,7 +101,8 @@ export default function AddDebtPage() {
     try {
       await api.post('/debts', {
         amount: formData.amount,
-        description: formData.description,
+        title: formData.title,
+        description: formData.title,
         is_my_debt: formData.is_my_debt,
         person_in_charge_id: formData.person_in_charge_id || null,
       });
@@ -270,15 +271,15 @@ export default function AddDebtPage() {
                     </div>
                   </div>
 
-                  {/* Description */}
-                  <FormField label="Transaction Description" icon={FileText} focused={focusedField === "description"}>
-                    <Textarea
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      onFocus={() => setFocusedField("description")}
+                  {/* Title */}
+                  <FormField label="Title" icon={FileText} focused={focusedField === "title"}>
+                    <Input
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      onFocus={() => setFocusedField("title")}
                       onBlur={() => setFocusedField(null)}
-                      placeholder="Who is this for? Provide context…"
-                      className="h-32 lg:h-40"
+                      placeholder="e.g. Lunch money, Rent share, Gadget loan…"
                       required
                     />
                   </FormField>

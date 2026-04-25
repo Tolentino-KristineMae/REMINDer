@@ -145,7 +145,7 @@ const SettleDebtPage = () => {
                             <h1 className="text-xl sm:text-2xl font-black text-gray-900 mb-2">Bayad Time</h1>
                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6 sm:mb-8">Settle your personal debt</p>
                             <div className="space-y-4 pt-6 border-t border-gray-50">
-                                <div><p className="text-[9px] font-bold text-gray-400 uppercase mb-1">Utang For</p><p className="text-base sm:text-lg font-black text-gray-900 leading-tight">{debt?.description}</p></div>
+                                <div><p className="text-[9px] font-bold text-gray-400 uppercase mb-1">Title</p><p className="text-base sm:text-lg font-black text-gray-900 leading-tight">{debt?.title || debt?.description}</p></div>
                                 <div><p className="text-[9px] font-bold text-gray-400 uppercase mb-1">Amount Due</p><p className="text-2xl sm:text-3xl font-black text-green-600 tracking-tight">{formatCurrency(debt?.amount)}</p></div>
                             </div>
                         </div>
