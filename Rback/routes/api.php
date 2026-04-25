@@ -110,6 +110,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/create-user', [AuthController::class, 'createUser']); // Setup endpoint
 Route::post('/login', [AuthController::class, 'login']);
 
+// Password reset (public — no auth required)
+Route::post('/forgot-password', [\App\Http\Controllers\PasswordResetController::class, 'forgotPassword']);
+Route::post('/reset-password', [\App\Http\Controllers\PasswordResetController::class, 'resetPassword']);
+
 // Public trigger endpoint for external cron services (e.g., cron-job.org)
 Route::post('/trigger-reminders', function () {
     try {
@@ -136,6 +140,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/fcm-token', [UserController::class, 'updateFCMToken']);
     Route::put('/user/fcm-token', [UserController::class, 'updateFCMToken']); // Alternative method
     Route::get('/user/profile', [UserController::class, 'profile']);
+    Route::post('/user/change-password', [\App\Http\Controllers\PasswordResetController::class, 'changePassword']);
     
     // Debts (Utangs)
     Route::get('/debts', [App\Http\Controllers\DebtController::class, 'index']);

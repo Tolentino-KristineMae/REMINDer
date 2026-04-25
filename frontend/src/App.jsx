@@ -57,6 +57,9 @@ import { Menu } from 'lucide-react';
 
 const Login = lazy(() => import('./Auth/LoginAndSignup/Login'));
 const Signup = lazy(() => import('./Auth/LoginAndSignup/Signup'));
+const ForgotPasswordPage = lazy(() => import('./Auth/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('./Auth/ResetPasswordPage'));
+const ChangePasswordPage = lazy(() => import('./pages/Settings/ChangePasswordPage'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 const AddBillPage = lazy(() => import('./pages/Bills/AddBillPage'));
 const EditBillPage = lazy(() => import('./pages/Bills/EditBillPage'));
@@ -151,6 +154,8 @@ const App = () => {
                             <Routes>
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/setup" element={<Signup />} />
+                                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                                <Route path="/reset-password" element={<ResetPasswordPage />} />
                                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                                 <Route 
                                     path="/dashboard" 
@@ -245,6 +250,14 @@ const App = () => {
                                     element={
                                         <PrivateRoute pageTitle="Print Records" pageSubtitle="Print detailed payment and debt records">
                                             <PrintPage />
+                                        </PrivateRoute>
+                                    } 
+                                />
+                                <Route 
+                                    path="/change-password" 
+                                    element={
+                                        <PrivateRoute pageTitle="Change Password" pageSubtitle="Update your account security">
+                                            <ChangePasswordPage />
                                         </PrivateRoute>
                                     } 
                                 />
