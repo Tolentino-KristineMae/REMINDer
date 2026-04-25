@@ -13,7 +13,6 @@ import {
   Clock,
   ArrowRight,
   Wallet2,
-  User,
   ChevronDown,
   Users,
 } from "lucide-react"
@@ -77,6 +76,7 @@ export default function AddDebtPage() {
   const [formData, setFormData] = useState({
     amount: "",
     title: "",
+    description: "",
     is_my_debt: true,
     person_in_charge_id: "",
   });
@@ -102,7 +102,7 @@ export default function AddDebtPage() {
       await api.post('/debts', {
         amount: formData.amount,
         title: formData.title,
-        description: formData.title,
+        description: formData.description,
         is_my_debt: formData.is_my_debt,
         person_in_charge_id: formData.person_in_charge_id || null,
       });
@@ -281,6 +281,18 @@ export default function AddDebtPage() {
                       onBlur={() => setFocusedField(null)}
                       placeholder="e.g. Lunch money, Rent share, Gadget loan…"
                       required
+                    />
+                  </FormField>
+
+                  {/* Description */}
+                  <FormField label="Description" icon={FileText} focused={focusedField === "description"}>
+                    <Textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      onFocus={() => setFocusedField("description")}
+                      onBlur={() => setFocusedField(null)}
+                      placeholder="Who is this for? Any context or notes…"
+                      className="h-28 lg:h-36"
                     />
                   </FormField>
 

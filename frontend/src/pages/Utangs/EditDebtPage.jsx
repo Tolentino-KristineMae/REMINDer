@@ -29,6 +29,16 @@ const Input = ({ className, ...props }) => (
   />
 );
 
+const Textarea = ({ className, ...props }) => (
+  <textarea
+    {...props}
+    className={cn(
+      "w-full p-5 rounded-2xl bg-gray-50 border-2 border-transparent hover:border-gray-200 focus:border-green-600 focus:bg-white transition-all outline-none font-bold text-gray-900 resize-none placeholder:text-gray-300",
+      className
+    )}
+  />
+);
+
 function FormField({ label, icon: Icon, focused, children }) {
   return (
     <div className="space-y-2.5">
@@ -68,6 +78,7 @@ export default function EditDebtPage() {
   const [formData, setFormData] = useState({
     amount: "",
     title: "",
+    description: "",
     is_my_debt: true,
     person_in_charge_id: "",
   });
@@ -88,6 +99,7 @@ export default function EditDebtPage() {
           setFormData({
             amount: debt.amount || "",
             title: debt.title || debt.description || "",
+            description: debt.description || "",
             is_my_debt: debt.is_my_debt ?? true,
             person_in_charge_id: debt.person_in_charge_id || "",
           });
@@ -110,7 +122,7 @@ export default function EditDebtPage() {
       await api.put(`/debts/${id}`, {
         amount: formData.amount,
         title: formData.title,
-        description: formData.title,
+        description: formData.description,
         is_my_debt: formData.is_my_debt,
         person_in_charge_id: formData.person_in_charge_id || null,
       });
@@ -230,6 +242,18 @@ export default function EditDebtPage() {
                       onBlur={() => setFocusedField(null)}
                       placeholder="e.g. Lunch money, Rent share, Gadget loan…"
                       required
+                    />
+                  </FormField>
+
+                  {/* Description */}
+                  <FormField label="Description" icon={FileText} focused={focusedField === "description"}>
+                    <Textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      onFocus={() => setFocusedField("description")}
+                      onBlur={() => setFocusedField(null)}
+                      placeholder="Who is this for? Any context or notes…"
+                      className="h-28 lg:h-36"
                     />
                   </FormField>
 

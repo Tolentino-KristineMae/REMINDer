@@ -316,6 +316,9 @@ const DebtsPage = () => {
                                                     )}
                                                 </div>
                                                 <p className="font-bold text-gray-900 text-sm leading-snug break-words">{debt.title || debt.description}</p>
+                                                {debt.description && debt.title && debt.description !== debt.title && (
+                                                    <p className="text-[11px] text-gray-400 font-medium mt-0.5 break-words">{debt.description}</p>
+                                                )}
                                                 <p className="text-[11px] text-gray-400 font-medium mt-0.5 flex items-center gap-1">
                                                     <Clock size={10} /> {formatDateLocal(debt.created_at)}
                                                 </p>
@@ -446,6 +449,9 @@ const DebtsPage = () => {
                                                 )}
                                             </div>
                                             <p className="font-bold text-gray-900 text-sm leading-snug break-words">{debt.title || debt.description}</p>
+                                            {debt.description && debt.title && debt.description !== debt.title && (
+                                                <p className="text-[11px] text-gray-400 font-medium mt-0.5 break-words">{debt.description}</p>
+                                            )}
                                             <p className="text-[11px] text-emerald-500 font-semibold mt-0.5 flex items-center gap-1">
                                                 <CheckCircle2 size={10} /> Paid {formatDateLocal(debt.paid_at)}
                                             </p>
