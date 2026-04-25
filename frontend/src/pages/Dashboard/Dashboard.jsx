@@ -111,10 +111,6 @@ const SettlementCard = ({ stats }) => {
                     <h3 className="text-base font-bold text-gray-900 tracking-tight">Settlement</h3>
                     <p className="text-[11px] text-gray-400 font-medium mt-0.5">Bill payment overview</p>
                 </div>
-                <div className="flex items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-full">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Live</span>
-                </div>
             </div>
 
             <div className="flex-1 flex flex-col px-5 py-5 gap-5">
