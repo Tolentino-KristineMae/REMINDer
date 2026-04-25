@@ -17,7 +17,7 @@ import remindearLogo from '../assets/REMINDear-Logo.png';
 import '../styles/shared/Sidebar.css';
 
 const menuItems = [
-  { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/' },
+  { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/dashboard' },
   { icon: <Plus size={18} />,            label: 'Add Bill',   path: '/add-bill' },
   { icon: <Calendar size={18} />,        label: 'Calendar',   path: '/calendar' },
   { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },

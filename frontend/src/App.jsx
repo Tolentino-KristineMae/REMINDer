@@ -151,8 +151,9 @@ const App = () => {
                             <Routes>
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/setup" element={<Signup />} />
+                                <Route path="/" element={<Navigate to="/dashboard" replace />} />
                                 <Route 
-                                    path="/" 
+                                    path="/dashboard" 
                                     element={
                                         <PrivateRoute pageTitle="Dashboard" pageSubtitle="Manage and prioritize your bills with ease">
                                             <Dashboard />
@@ -247,7 +248,7 @@ const App = () => {
                                         </PrivateRoute>
                                     } 
                                 />
-                                <Route path="*" element={<Navigate to="/" />} />
+                                <Route path="*" element={<Navigate to="/dashboard" replace />} />
                             </Routes>
                         </Router>
                     </Suspense>

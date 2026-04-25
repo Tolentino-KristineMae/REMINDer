@@ -27,7 +27,7 @@ const Login = () => {
             await login(email, password);
             // Small delay to ensure state updates propagate before navigation
             setTimeout(() => {
-                navigate('/', { replace: true });
+                navigate('/dashboard', { replace: true });
             }, 0);
         } catch (err) {
             const msg =

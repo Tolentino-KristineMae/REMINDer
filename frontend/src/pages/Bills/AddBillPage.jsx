@@ -137,7 +137,7 @@ export default function AddBillPage() {
       await api.post('/bills', formData);
       setMessage({ text: "Bill created successfully!", type: "success" });
       setTimeout(() => {
-        navigate('/');
+        navigate('/dashboard');
       }, 1500);
     } catch (err) {
       console.error('Error creating bill:', err);

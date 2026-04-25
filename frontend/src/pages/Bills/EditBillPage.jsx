@@ -150,7 +150,7 @@ export default function EditBillPage() {
       await api.put(`/bills/${id}`, formData);
       setMessage({ text: "Bill updated successfully!", type: "success" });
       setTimeout(() => {
-        navigate('/');
+        navigate('/dashboard');
       }, 1500);
     } catch (err) {
       console.error('Error updating bill:', err);
