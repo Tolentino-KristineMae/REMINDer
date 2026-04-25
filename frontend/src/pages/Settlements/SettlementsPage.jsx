@@ -710,7 +710,15 @@ const SettlementsPage = () => {
                                                 <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-white/50 rounded-full flex items-center justify-center text-red-600 shadow-sm">
                                                     <Receipt size={24} className="sm:w-7 sm:h-7 lg:w-8 lg:h-8" />
                                                 </div>
-                                                <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-red-600 text-white px-1.5 sm:px-2.5 py-0.5 rounded-md text-[8px] sm:text-[10px] font-black uppercase tracking-wider">
+                                                <div
+                                                    className="absolute top-2 left-2 sm:top-3 sm:left-3 px-1.5 sm:px-2.5 py-0.5 rounded-md text-[8px] sm:text-[10px] font-black uppercase tracking-wider"
+                                                    style={{
+                                                        color: bill.category?.color || '#dc2626',
+                                                        backgroundColor: (bill.category?.color || '#dc2626') + '22',
+                                                        border: `1px solid ${(bill.category?.color || '#dc2626')}40`,
+                                                        backdropFilter: 'blur(4px)',
+                                                    }}
+                                                >
                                                     {bill.category?.name}
                                                 </div>
                                                 <div className="absolute top-2 right-2 sm:top-3 sm:right-3 w-6 h-6 sm:w-8 sm:h-8 bg-white border border-red-100 rounded-full flex items-center justify-center text-red-500 shadow-sm">
@@ -864,7 +872,15 @@ const SettlementsPage = () => {
                                                     <FileText className="text-gray-300 sm:w-8 sm:h-8 lg:w-10 lg:h-10" size={24} />
                                                 </div>
                                             )}
-                                            <div className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-white/90 backdrop-blur-sm px-1.5 sm:px-2.5 py-0.5 rounded-md text-[8px] sm:text-[10px] font-black text-gray-900 uppercase">
+                                            <div
+                                                className="absolute top-2 sm:top-3 left-2 sm:left-3 px-1.5 sm:px-2.5 py-0.5 rounded-md text-[8px] sm:text-[10px] font-black uppercase"
+                                                style={{
+                                                    color: bill.category?.color || '#16a34a',
+                                                    backgroundColor: (bill.category?.color || '#16a34a') + '22',
+                                                    border: `1px solid ${(bill.category?.color || '#16a34a')}40`,
+                                                    backdropFilter: 'blur(4px)',
+                                                }}
+                                            >
                                                 {bill.category?.name}
                                             </div>
                                             <div className="absolute top-2 sm:top-3 right-2 sm:right-3 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center text-white">
