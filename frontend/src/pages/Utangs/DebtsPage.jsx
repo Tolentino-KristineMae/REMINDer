@@ -127,66 +127,69 @@ const DebtsPage = () => {
             <audio ref={audioRef} onEnded={() => setPlayingAudio(null)} className="hidden" />
 
             <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
-                {/* Header & Main Tabs */}
-                <div className="flex items-center justify-between gap-4 mb-2">
-                    {/* Siningilin / Bayarin tab — top right of content area */}
-                    <div className="flex bg-white border border-gray-100 p-1.5 rounded-2xl shadow-sm">
+                {/* Person Filter + Tab switcher on same row */}
+                <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                    {/* Person pills (only for Owed) */}
+                    {activeTab === 'owed' && peopleWithDebts.length > 0 && (
+                        <>
+                            <button 
+                                onClick={() => setSelectedPersonId('all')}
+                                className="flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2"
+                                style={{ 
+                                    backgroundColor: selectedPersonId === 'all' ? '#22c55e15' : 'white',
+                                    borderColor: selectedPersonId === 'all' ? '#22c55e' : 'transparent',
+                                    color: selectedPersonId === 'all' ? '#22c55e' : '#9ca3af'
+                                }}
+                            >
+                                All Persons
+                            </button>
+                            {peopleWithDebts.map((person, idx) => {
+                                const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4'];
+                                const personColor = person.color || colors[idx % colors.length];
+                                const isSelected = selectedPersonId === person.id;
+                                return (
+                                    <button 
+                                        key={person.id}
+                                        onClick={() => setSelectedPersonId(person.id)}
+                                        className="flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2"
+                                        style={{ 
+                                            backgroundColor: isSelected ? personColor + '15' : 'white',
+                                            borderColor: isSelected ? personColor : 'transparent',
+                                            color: isSelected ? personColor : '#9ca3af'
+                                        }}
+                                    >
+                                        <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-bold" style={{ backgroundColor: personColor + '20', color: personColor }}>
+                                            {person.count}
+                                        </div>
+                                        {person.first_name} {person.last_name}
+                                    </button>
+                                );
+                            })}
+                        </>
+                    )}
+
+                    {/* Spacer pushes tab to the right */}
+                    <div className="flex-1" />
+
+                    {/* Siningilin / Bayarin tab — right side, same row */}
+                    <div className="flex bg-white border border-gray-100 p-1 rounded-2xl shadow-sm flex-shrink-0">
                         <button 
                             onClick={() => {
                                 setActiveTab('owed');
                                 setSelectedPersonId('all');
                             }} 
-                            className={`px-5 sm:px-7 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all ${activeTab === 'owed' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
+                            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${activeTab === 'owed' ? 'bg-green-900 text-white shadow-lg shadow-green-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
                         >
                             Siningilin
                         </button>
                         <button 
                             onClick={() => setActiveTab('mine')} 
-                            className={`px-5 sm:px-7 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all ${activeTab === 'mine' ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
+                            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${activeTab === 'mine' ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:bg-gray-50'}`}
                         >
                             Bayarin
                         </button>
                     </div>
                 </div>
-
-                {/* Person Filter Tabs (Only for Owed) */}
-                {activeTab === 'owed' && peopleWithDebts.length > 0 && (
-                    <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                        <button 
-                            onClick={() => setSelectedPersonId('all')}
-                            className="flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2"
-                            style={{ 
-                                backgroundColor: selectedPersonId === 'all' ? '#22c55e15' : 'white',
-                                borderColor: selectedPersonId === 'all' ? '#22c55e' : 'transparent',
-                                color: selectedPersonId === 'all' ? '#22c55e' : '#9ca3af'
-                            }}
-                        >
-                            All Persons
-                        </button>
-                        {peopleWithDebts.map((person, idx) => {
-                            const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4'];
-                            const personColor = person.color || colors[idx % colors.length];
-                            const isSelected = selectedPersonId === person.id;
-                            return (
-                                <button 
-                                    key={person.id}
-                                    onClick={() => setSelectedPersonId(person.id)}
-                                    className="flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border-2"
-                                    style={{ 
-                                        backgroundColor: isSelected ? personColor + '15' : 'white',
-                                        borderColor: isSelected ? personColor : 'transparent',
-                                        color: isSelected ? personColor : '#9ca3af'
-                                    }}
-                                >
-                                    <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-bold" style={{ backgroundColor: personColor + '20', color: personColor }}>
-                                        {person.count}
-                                    </div>
-                                    {person.first_name} {person.last_name}
-                                </button>
-                            );
-                        })}
-                    </div>
-                )}
 
                 {/* Stats Summary */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
