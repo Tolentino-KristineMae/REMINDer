@@ -52,7 +52,9 @@ class PasswordResetController extends Controller
         ]);
 
         // Send email via Brevo with reset link
-        $resetUrl = config('app.url') . "/reset-password?email=" . urlencode($request->email) . "&token=" . urlencode($token);
+        // Use frontend URL for reset link (React app), not backend URL
+        $frontendUrl = env('FRONTEND_URL', 'http://localhost:5173');
+        $resetUrl = $frontendUrl . "/reset-password?email=" . urlencode($request->email) . "&token=" . urlencode($token);
         $this->brevoService->sendEmail(
             $request->email,
             $user->getNameAttribute() ?? 'User',
