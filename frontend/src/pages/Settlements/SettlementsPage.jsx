@@ -131,70 +131,69 @@ const BillItem = React.memo(({
 
     if (isPending) {
         return (
-            <div className="group bg-red-50 border border-red-100 rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:border-red-300 hover:shadow-xl hover:shadow-red-500/5 transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 relative overflow-hidden">
-                <div className="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div className="flex items-center gap-3 sm:gap-4 flex-1 relative z-10">
-                    <div className="w-9 h-9 sm:w-11 sm:h-11 bg-red-50 rounded-xl sm:rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
-                        <Receipt size={16} strokeWidth={2.5} className="sm:w-5 sm:h-5" />
+            <div className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md hover:border-red-200 transition-all duration-200 flex items-stretch">
+                {/* Left accent */}
+                <div className="w-1 flex-shrink-0 bg-gradient-to-b from-red-400 to-rose-500 rounded-l-2xl" />
+
+                <div className="flex-1 flex items-center gap-3 sm:gap-4 px-4 py-3.5">
+                    {/* Icon */}
+                    <div className="flex-shrink-0 w-10 h-10 bg-red-50 border border-red-100 rounded-xl flex items-center justify-center">
+                        <Receipt size={17} className="text-red-400" strokeWidth={2.5} />
                     </div>
+
+                    {/* Info */}
                     <div className="flex-1 min-w-0">
-                        <h4 className="font-black text-gray-900 text-sm mb-1 line-clamp-2 group-hover:text-red-700 transition-colors">{bill.details}</h4>
-                        <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 mt-1.5 sm:mt-2">
-                            <div className="flex items-center gap-1 text-[9px] sm:text-[10px] font-bold text-gray-400 whitespace-nowrap">
-                                <Calendar size={10} className="sm:w-3 sm:h-3 text-red-400" />
-                                <span className="hidden sm:inline">Due:</span> {formatDateLocal(bill.due_date)}
-                            </div>
-                            <span className="hidden sm:block h-1 w-1 bg-gray-200 rounded-full"></span>
-                            <span className="text-[9px] sm:text-[10px] font-black flex items-center gap-1 whitespace-nowrap" style={{ color: bill.person_in_charge?.color || '#2563eb' }}>
-                                <Users size={8} className="sm:w-2.5 sm:h-2.5" style={{ color: bill.person_in_charge?.color || '#2563eb' }} />
+                        <p className="font-bold text-gray-900 text-sm leading-snug truncate">{bill.details}</p>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                            <span className="text-[11px] text-gray-400 font-medium flex items-center gap-1 whitespace-nowrap">
+                                <Calendar size={10} className="text-red-400" /> {formatDateLocal(bill.due_date)}
+                            </span>
+                            <span className="text-[11px] font-semibold flex items-center gap-1 whitespace-nowrap" style={{ color: bill.person_in_charge?.color || '#2563eb' }}>
+                                <Users size={10} style={{ color: bill.person_in_charge?.color || '#2563eb' }} />
                                 {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                             </span>
                             <span
-                                className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-md border whitespace-nowrap"
+                                className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap"
                                 style={{
                                     color: bill.category?.color || '#dc2626',
                                     backgroundColor: (bill.category?.color || '#dc2626') + '18',
-                                    borderColor: (bill.category?.color || '#dc2626') + '30',
                                 }}
                             >
                                 {bill.category?.name}
                             </span>
                         </div>
                     </div>
-                </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 sm:gap-6 relative z-10 w-full sm:w-auto">
-                    <div className="text-left sm:text-right">
-                        <p className="text-sm sm:text-base font-black text-red-600 leading-none mb-1 sm:mb-1.5 tracking-tighter">{formatCurrency(bill.amount)}</p>
-                        <div className="flex items-center justify-start sm:justify-end gap-1">
-                            <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-red-500 rounded-full animate-pulse"></span>
-                            <p className="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest">Amount Due</p>
+                    {/* Amount + actions */}
+                    <div className="flex-shrink-0 flex items-center gap-2 sm:gap-3">
+                        <div className="text-right hidden sm:block">
+                            <p className="text-sm font-black text-red-600 leading-none">{formatCurrency(bill.amount)}</p>
+                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Due</p>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <button
+                                type="button"
+                                onClick={() => handleEditBill(bill)}
+                                className="w-8 h-8 sm:w-9 sm:h-9 bg-gray-50 text-gray-400 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all border border-gray-100"
+                            >
+                                <Edit2 size={13} />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => confirmDelete(bill)}
+                                className="w-8 h-8 sm:w-9 sm:h-9 bg-red-50 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100"
+                            >
+                                <Trash2 size={13} />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleUploadClick(bill)}
+                                className="h-8 sm:h-9 px-3 sm:px-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-black text-[10px] uppercase tracking-wider hover:from-green-500 hover:to-emerald-500 transition-all shadow-md shadow-green-600/20 active:scale-95 flex items-center gap-1.5 whitespace-nowrap"
+                            >
+                                Settle <ArrowUpRight size={12} strokeWidth={3} />
+                            </button>
                         </div>
                     </div>
-                </div>
-
-                <div className="flex items-center gap-1.5 sm:gap-2 relative z-10">
-                    <button 
-                        type="button"
-                        onClick={() => handleEditBill(bill)}
-                        className="w-8 h-8 sm:w-9 sm:h-9 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all border border-gray-100"
-                    >
-                        <Edit2 size={12} className="sm:w-3.5 sm:h-3.5" />
-                    </button>
-                    <button 
-                        type="button"
-                        onClick={() => confirmDelete(bill)}
-                        className="w-8 h-8 sm:w-9 sm:h-9 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100"
-                    >
-                        <Trash2 size={12} className="sm:w-3.5 sm:h-3.5" />
-                    </button>
-                    <button 
-                        type="button"
-                        onClick={() => handleUploadClick(bill)}
-                        className="bg-green-600 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-black text-[9px] sm:text-[10px] hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 uppercase tracking-widest active:scale-95 flex items-center justify-center gap-1.5"
-                    >
-                        Settle <ArrowUpRight size={10} className="sm:w-3.5 sm:h-3.5" strokeWidth={3} />
-                    </button>
                 </div>
             </div>
         );
@@ -202,87 +201,81 @@ const BillItem = React.memo(({
 
     // Settled Item
     return (
-        <div className="group bg-white border border-green-50 rounded-xl sm:rounded-[1.25rem] p-3 sm:p-3.5 sm:px-4 hover:border-green-500 hover:shadow-lg transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg sm:rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0">
-                    <CheckCircle2 size={14} className="sm:w-[18px] sm:h-[18px]" />
+        <div className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md hover:border-emerald-200 transition-all duration-200 flex items-stretch">
+            {/* Left accent */}
+            <div className="w-1 flex-shrink-0 bg-gradient-to-b from-emerald-400 to-green-600 rounded-l-2xl" />
+
+            <div className="flex-1 flex items-center gap-3 sm:gap-4 px-4 py-3.5">
+                {/* Proof thumbnail or icon */}
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl overflow-hidden border border-gray-100">
+                    {bill.proof_of_payments?.[0]?.file_path ? (
+                        <img
+                            src={bill.proof_of_payments[0].file_path}
+                            className="w-full h-full object-cover cursor-pointer"
+                            alt="Proof"
+                            onClick={() => handleViewProof(bill.proof_of_payments[0].file_path)}
+                        />
+                    ) : (
+                        <div className="w-full h-full bg-emerald-50 flex items-center justify-center">
+                            <CheckCircle2 size={17} className="text-emerald-400" />
+                        </div>
+                    )}
                 </div>
+
+                {/* Info */}
                 <div className="flex-1 min-w-0">
-                    <h4 className="font-black text-green-950 text-sm mb-1.5 leading-tight">{bill.details}</h4>
-                    <div className="flex flex-col gap-1.5 sm:gap-2">
-                        <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1">
-                            <div className="flex items-center gap-1">
-                                <span className="text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-wider">Due:</span>
-                                <span className="text-[8px] sm:text-[9px] font-black text-red-500 flex items-center gap-0.5 sm:gap-1 whitespace-nowrap">
-                                    <Calendar size={8} className="sm:w-2.5 sm:h-2.5 text-red-400" /> 
-                                    {formatDateLocal(bill.due_date)}
-                                </span>
-                            </div>
-                            {bill.proof_of_payments?.[0]?.created_at && (
-                                <div className="flex items-center gap-1">
-                                    <span className="text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-wider">Paid:</span>
-                                    <span className="text-[8px] sm:text-[9px] font-black text-green-600 flex items-center gap-0.5 sm:gap-1 whitespace-nowrap">
-                                        <CheckCircle2 size={8} className="sm:w-2.5 sm:h-2.5" /> 
-                                        {formatDateLocal(bill.proof_of_payments[0].created_at)}
-                                    </span>
-                                </div>
-                            )}
-                            <div className="flex items-center gap-1">
-                                <span className="text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-wider">Charge:</span>
-                                <span className="text-[8px] sm:text-[9px] font-black flex items-center gap-0.5 sm:gap-1 whitespace-nowrap" style={{ color: bill.person_in_charge?.color || '#2563eb' }}>
-                                    <Users size={8} className="sm:w-2.5 sm:h-2.5" style={{ color: bill.person_in_charge?.color || '#2563eb' }} /> 
-                                    {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 mt-0.5">
-                            <div className="flex items-center gap-1">
-                                <span className="text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
-                                <span
-                                    className="text-[8px] sm:text-[9px] font-black px-1 sm:px-1.5 py-0.5 rounded-full whitespace-nowrap"
-                                    style={{
-                                        color: bill.category?.color || '#16a34a',
-                                        backgroundColor: (bill.category?.color || '#16a34a') + '18',
-                                    }}
-                                >
-                                    {bill.category?.name}
-                                </span>
-                            </div>
-                        </div>
+                    <p className="font-bold text-gray-900 text-sm leading-snug truncate">{bill.details}</p>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                        {bill.proof_of_payments?.[0]?.created_at && (
+                            <span className="text-[11px] text-emerald-500 font-semibold flex items-center gap-1 whitespace-nowrap">
+                                <CheckCircle2 size={10} /> {formatDateLocal(bill.proof_of_payments[0].created_at)}
+                            </span>
+                        )}
+                        <span className="text-[11px] text-gray-400 font-medium flex items-center gap-1 whitespace-nowrap">
+                            <Calendar size={10} className="text-red-400" /> {formatDateLocal(bill.due_date)}
+                        </span>
+                        <span className="text-[11px] font-semibold flex items-center gap-1 whitespace-nowrap" style={{ color: bill.person_in_charge?.color || '#2563eb' }}>
+                            <Users size={10} style={{ color: bill.person_in_charge?.color || '#2563eb' }} />
+                            {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
+                        </span>
+                        <span
+                            className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap"
+                            style={{
+                                color: bill.category?.color || '#16a34a',
+                                backgroundColor: (bill.category?.color || '#16a34a') + '18',
+                            }}
+                        >
+                            {bill.category?.name}
+                        </span>
                     </div>
                 </div>
-            </div>
 
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0 pl-0 sm:pl-4 border-t sm:border-t-0 border-green-100 sm:border-0 pt-3 sm:pt-0">
-                <div className="text-right">
-                    <p className="text-sm sm:text-base font-black text-green-900">{formatCurrency(bill.amount)}</p>
-                    <p className="text-[8px] sm:text-[9px] font-bold text-gray-400 uppercase tracking-widest">Paid</p>
-                </div>
-                
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                    {/* View Proof Button */}
-                    <button 
-                        onClick={() => bill.proof_of_payments?.[0]?.file_path && handleViewProof(bill.proof_of_payments[0].file_path)}
-                        disabled={!bill.proof_of_payments?.[0]?.file_path}
-                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center transition-all border ${
-                            !bill.proof_of_payments?.[0]?.file_path
-                            ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed opacity-50'
-                            : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-green-600 hover:text-white hover:border-green-600'
-                        }`}
-                        title={bill.proof_of_payments?.[0]?.file_path ? "View Receipt" : "No Receipt Available"}
-                    >
-                        <FileText size={12} />
-                    </button>
-
-                    {/* Delete Button */}
-                    <button 
-                        type="button"
-                        onClick={() => confirmDelete(bill)}
-                        className="w-8 h-8 sm:w-9 sm:h-9 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-600 hover:text-white transition-all border border-red-100"
-                        title="Delete Transaction"
-                    >
-                        <Trash2 size={12} />
-                    </button>
+                {/* Amount + actions */}
+                <div className="flex-shrink-0 flex items-center gap-2 sm:gap-3">
+                    <div className="text-right hidden sm:block">
+                        <p className="text-sm font-black text-emerald-700 leading-none">{formatCurrency(bill.amount)}</p>
+                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Paid</p>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <button
+                            onClick={() => bill.proof_of_payments?.[0]?.file_path && handleViewProof(bill.proof_of_payments[0].file_path)}
+                            disabled={!bill.proof_of_payments?.[0]?.file_path}
+                            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all border ${
+                                !bill.proof_of_payments?.[0]?.file_path
+                                ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed opacity-40'
+                                : 'bg-gray-50 text-gray-500 border-gray-100 hover:bg-emerald-600 hover:text-white hover:border-emerald-600'
+                            }`}
+                        >
+                            <FileText size={13} />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => confirmDelete(bill)}
+                            className="w-8 h-8 sm:w-9 sm:h-9 bg-red-50 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100"
+                        >
+                            <Trash2 size={13} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
