@@ -160,7 +160,6 @@ const ChartCard = ({ historicalData, monthLabels }) => {
 // ─── Category Bars Card ──────────────────────────────────────────────────────
 const CategoryBarsCard = ({ categories }) => {
   const totalBills = categories.reduce((sum, c) => sum + c.count, 0);
-  const maxCount = categories.length > 0 ? Math.max(...categories.map(c => c.count)) : 1;
 
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
@@ -182,7 +181,6 @@ const CategoryBarsCard = ({ categories }) => {
           <div className="space-y-3">
             {categories.map((cat, i) => {
               const pct = totalBills > 0 ? Math.round((cat.count / totalBills) * 100) : 0;
-              const barWidth = maxCount > 0 ? (cat.count / maxCount) * 100 : 0;
               const [r, g, b] = hexToRgb(cat.color);
               return (
                 <div key={cat.id || i} className="group">
@@ -211,12 +209,12 @@ const CategoryBarsCard = ({ categories }) => {
                       </span>
                     </div>
                   </div>
-                  {/* Bar track */}
+                  {/* Bar track — width matches the displayed pct (share of total) */}
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-700 ease-out"
                       style={{
-                        width: `${barWidth}%`,
+                        width: `${pct}%`,
                         background: `linear-gradient(90deg, rgba(${r},${g},${b},0.7), ${cat.color})`,
                       }}
                     />

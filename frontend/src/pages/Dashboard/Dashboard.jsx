@@ -176,7 +176,7 @@ const SettlementCard = ({ stats }) => {
                                 </div>
                             </div>
                             {/* Mini progress bar */}
-                            <div className="h-1 bg-white/60 rounded-full overflow-hidden">
+                            <div className="h-1.5 bg-black/10 rounded-full overflow-hidden">
                                 <div
                                     className={`h-full ${r.barColor} rounded-full transition-all duration-700`}
                                     style={{ width: `${r.pct}%` }}
