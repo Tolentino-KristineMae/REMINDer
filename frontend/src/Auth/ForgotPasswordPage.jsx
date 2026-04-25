@@ -10,7 +10,6 @@ export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [token, setToken] = useState('');
     const [step, setStep] = useState('request'); // 'request' | 'done'
 
     const handleSubmit = async (e) => {
@@ -18,8 +17,7 @@ export default function ForgotPasswordPage() {
         setLoading(true);
         setError('');
         try {
-            const res = await api.post('/forgot-password', { email });
-            setToken(res.data.token || '');
+            await api.post('/forgot-password', { email });
             setStep('done');
         } catch (err) {
             setError(err?.response?.data?.message || 'Something went wrong. Please try again.');
@@ -48,8 +46,6 @@ export default function ForgotPasswordPage() {
                     .fp-btn:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 6px 20px rgba(34,197,94,0.4); }
                     .fp-btn:disabled { opacity:0.6; cursor:not-allowed; }
                     .fp-label { display:block; font-size:11px; font-weight:600; color:#475569; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; }
-                    .token-box { background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:16px; margin-top:16px; }
-                    .token-value { font-family:monospace; font-size:12px; color:#166534; word-break:break-all; background:#dcfce7; padding:10px 12px; border-radius:8px; margin-top:8px; border:1px solid #bbf7d0; }
                 `}</style>
 
                 {/* Logo */}
@@ -109,26 +105,39 @@ export default function ForgotPasswordPage() {
                             <div style={{ width:'52px', height:'52px', background:'#f0fdf4', borderRadius:'16px', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', border:'1px solid #dcfce7' }}>
                                 <CheckCircle2 size={24} color="#16a34a" />
                             </div>
-                            <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:'22px', fontWeight:700, color:'#0f172a', marginBottom:'6px' }}>Token Generated</h1>
-                            <p style={{ fontSize:'13px', color:'#64748b', lineHeight:1.5 }}>Copy the token below and use it to reset your password. It expires in <strong>60 minutes</strong>.</p>
+                            <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:'22px', fontWeight:700, color:'#0f172a', marginBottom:'6px' }}>Check Your Email</h1>
+                            <p style={{ fontSize:'13px', color:'#64748b', lineHeight:1.5 }}>We've sent a password reset link to <strong>{email}</strong>. Check your inbox and click the link to reset your password.</p>
+                            <p style={{ fontSize:'12px', color:'#94a3b8', marginTop:'8px' }}>The link expires in <strong>60 minutes</strong>.</p>
                         </div>
 
-                        <div className="token-box">
-                            <p style={{ fontSize:'11px', fontWeight:700, color:'#166534', textTransform:'uppercase', letterSpacing:'0.08em' }}>Your Reset Token</p>
-                            <div className="token-value">{token}</div>
-                            <p style={{ fontSize:'11px', color:'#4ade80', marginTop:'8px' }}>⚠ Keep this token private. It grants access to reset your password.</p>
+                        <div style={{ textAlign:'center', marginTop:'20px' }}>
+                            <button
+                                className="fp-btn"
+                                onClick={() => navigate('/login')}
+                            >
+                                Return to Sign In <ArrowRight size={16} />
+                            </button>
                         </div>
-
-                        <button
-                            className="fp-btn"
-                            style={{ marginTop:'20px' }}
-                            onClick={() => navigate(`/reset-password?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`)}
-                        >
-                            Continue to Reset Password <ArrowRight size={16} />
-                        </button>
 
                         <div style={{ textAlign:'center', marginTop:'16px', fontSize:'13px', color:'#64748b' }}>
-                            <Link to="/login" style={{ color:'#16a34a', fontWeight:600, textDecoration:'none' }}>Back to Sign In</Link>
+                            <p style={{ marginBottom:'8px' }}>Didn't receive the email?</p>
+                            <button
+                                onClick={() => {
+                                    setLoading(true);
+                                    api.post('/forgot-password', { email })
+                                        .then(() => {
+                                            // Success - already on done step
+                                        })
+                                        .catch(err => {
+                                            setError(err?.response?.data?.message || 'Failed to resend. Please try again.');
+                                        })
+                                        .finally(() => setLoading(false));
+                                }}
+                                style={{ color:'#16a34a', fontWeight:600, textDecoration:'none', background:'none', border:'none', cursor:'pointer', fontSize:'13px' }}
+                                disabled={loading}
+                            >
+                                {loading ? 'Resending...' : 'Resend reset link'}
+                            </button>
                         </div>
                     </>
                 )}

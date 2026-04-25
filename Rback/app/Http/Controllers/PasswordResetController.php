@@ -51,7 +51,7 @@ class PasswordResetController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        // Send email via Brevo
+        // Send email via Brevo with reset link
         $resetUrl = config('app.url') . "/reset-password?email=" . urlencode($request->email) . "&token=" . urlencode($token);
         $this->brevoService->sendEmail(
             $request->email,
@@ -65,8 +65,7 @@ class PasswordResetController extends Controller
         );
 
         return response()->json([
-            'message' => 'Reset link sent to your email.',
-            'token' => $token,
+            'message' => 'Reset link sent to your email. Check your inbox for the password reset link.',
         ]);
     }
 
