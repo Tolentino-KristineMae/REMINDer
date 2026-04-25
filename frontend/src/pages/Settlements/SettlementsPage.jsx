@@ -702,10 +702,29 @@ const SettlementsPage = () => {
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                                     {filteredPendingBills.map((bill) => (
-                                        <div 
-                                            key={bill.id}
-                                            className="group bg-white border border-red-100 rounded-xl sm:rounded-2xl overflow-hidden hover:border-red-500 hover:shadow-xl hover:shadow-red-900/5 transition-all"
-                                        >
+                                        editingBill === bill.id ? (
+                                            <div key={bill.id} className="sm:col-span-2 lg:col-span-3">
+                                                <BillItem
+                                                    bill={bill}
+                                                    editingBill={editingBill}
+                                                    editBillData={editBillData}
+                                                    setEditBillData={setEditBillData}
+                                                    handleSaveBill={handleSaveBill}
+                                                    handleCancelEdit={handleCancelEdit}
+                                                    handleEditBill={handleEditBill}
+                                                    confirmDelete={confirmDelete}
+                                                    handleUploadClick={handleUploadClick}
+                                                    categories={categories}
+                                                    people={people}
+                                                    saving={saving}
+                                                    isPending={true}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div
+                                                key={bill.id}
+                                                className="group bg-white border border-red-100 rounded-xl sm:rounded-2xl overflow-hidden hover:border-red-500 hover:shadow-xl hover:shadow-red-900/5 transition-all"
+                                            >
                                             <div className="h-24 sm:h-28 lg:h-36 bg-red-50/30 relative overflow-hidden flex items-center justify-center">
                                                 <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-white/50 rounded-full flex items-center justify-center text-red-600 shadow-sm">
                                                     <Receipt size={24} className="sm:w-7 sm:h-7 lg:w-8 lg:h-8" />
@@ -787,6 +806,7 @@ const SettlementsPage = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                        )
                                     ))}
                                 </div>
                             )}
