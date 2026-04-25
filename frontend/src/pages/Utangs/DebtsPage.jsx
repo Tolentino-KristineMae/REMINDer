@@ -274,99 +274,84 @@ const DebtsPage = () => {
                         </div>
                     </div>
                     {pendingDebts.length > 0 ? (
-                        <div className={pendingViewMode === 'list' ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+                        <div className={pendingViewMode === 'list' ? "space-y-3" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"}>
                             {pendingDebts.map(debt => (
-                                <div 
-                                    key={debt.id} 
-                                    className={`group bg-red-50 border border-red-100 rounded-[2rem] overflow-hidden hover:border-red-300 hover:shadow-2xl hover:shadow-red-900/5 transition-all duration-300 ${pendingViewMode === 'list' ? "p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6" : ""}`}
+                                <div
+                                    key={debt.id}
+                                    className={`group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-red-500/8 hover:border-red-200 transition-all duration-200 ${pendingViewMode === 'grid' ? '' : 'flex items-stretch'}`}
                                 >
-                                    {pendingViewMode === 'grid' && (
-                                        <div className="h-40 bg-red-50/30 flex items-center justify-center border-b border-red-50 relative overflow-hidden">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent" />
-                                            <Wallet2 size={48} className="text-red-200 relative z-10" />
-                                        </div>
-                                    )}
-                                    <div className={pendingViewMode === 'grid' ? "p-6" : "flex-1"}>
-                                        <div className="flex flex-wrap items-center gap-2 mb-3">
-                                            {debt.is_my_debt ? (
-                                                <span className="text-[9px] font-black bg-gray-900 text-white px-3 py-1 rounded-lg uppercase tracking-wider">My Utang</span>
-                                            ) : (
-                                                <span className="text-[9px] font-black bg-green-600 text-white px-3 py-1 rounded-lg uppercase tracking-wider">Owed to Me</span>
-                                            )}
-                                            {debt.person_in_charge && (
-                                                <span className="text-[9px] font-black px-3 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5" style={{ color: debt.person_in_charge.color || '#2563eb', backgroundColor: (debt.person_in_charge.color || '#2563eb') + '15' }}>
-                                                    <User size={10} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <h4 className="font-black text-gray-900 text-base mb-2 group-hover:text-amber-600 transition-colors">{debt.description}</h4>
-                                        <div className="flex items-center gap-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                                            <span className="flex items-center gap-1.5"><Clock size={12} /> {formatDateLocal(debt.created_at)}</span>
-                                        </div>
-                                        {pendingViewMode === 'grid' && (
-                                            <div className="mt-6 flex items-center justify-between pt-6 border-t border-gray-50">
-                                                <div>
-                                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Amount</p>
-                                                    <p className="text-xl font-black text-gray-900">{formatCurrency(debt.amount)}</p>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                    <button 
-                                                        onClick={() => navigate(`/edit-debt/${debt.id}`)} 
-                                                        className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-300 hover:bg-blue-50 hover:text-blue-500 transition-all border border-transparent hover:border-blue-100"
-                                                    >
-                                                        <Pencil size={18} />
-                                                    </button>
-                                                    <button 
-                                                        onClick={() => handleDelete(debt)} 
-                                                        className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-100"
-                                                    >
-                                                        <Trash2 size={18} />
-                                                    </button>
-                                                    <button 
-                                                        onClick={() => navigate(`/settle-debt/${debt.id}`)} 
-                                                        className="bg-green-900 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-green-800 transition-all shadow-lg shadow-green-900/20 flex items-center gap-2 active:scale-95"
-                                                    >
-                                                        Bayad <ArrowUpRight size={14} />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
+                                    {/* Left accent bar (list only) */}
                                     {pendingViewMode === 'list' && (
-                                        <div className="flex flex-row items-center justify-between sm:justify-end gap-3 sm:gap-8 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-50">
-                                            <div className="text-left sm:text-right">
-                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 sm:mb-1">Balance</p>
-                                                <p className="text-lg sm:text-xl font-black text-gray-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
+                                        <div className="w-1 flex-shrink-0 bg-gradient-to-b from-red-400 to-rose-500 rounded-l-2xl" />
+                                    )}
+
+                                    {/* Grid top banner */}
+                                    {pendingViewMode === 'grid' && (
+                                        <div className="h-2 bg-gradient-to-r from-red-400 to-rose-500" />
+                                    )}
+
+                                    <div className={`flex-1 ${pendingViewMode === 'list' ? 'flex items-center gap-4 px-5 py-4' : 'p-5'}`}>
+                                        {/* Icon avatar */}
+                                        <div className={`flex-shrink-0 w-11 h-11 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center ${pendingViewMode === 'grid' ? 'mb-4' : ''}`}>
+                                            <Wallet2 size={20} className="text-red-400" />
+                                        </div>
+
+                                        {/* Main info */}
+                                        <div className={`flex-1 min-w-0 ${pendingViewMode === 'list' ? '' : 'mt-0'}`}>
+                                            {/* Badges */}
+                                            <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                                                {debt.is_my_debt ? (
+                                                    <span className="text-[9px] font-black bg-gray-900 text-white px-2 py-0.5 rounded-md uppercase tracking-wider">My Utang</span>
+                                                ) : (
+                                                    <span className="text-[9px] font-black bg-emerald-500 text-white px-2 py-0.5 rounded-md uppercase tracking-wider">Owed to Me</span>
+                                                )}
+                                                {debt.person_in_charge && (
+                                                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider flex items-center gap-1" style={{ color: debt.person_in_charge.color || '#2563eb', backgroundColor: (debt.person_in_charge.color || '#2563eb') + '15' }}>
+                                                        <User size={9} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
+                                                    </span>
+                                                )}
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <button 
-                                                    onClick={() => navigate(`/edit-debt/${debt.id}`)} 
-                                                    className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-blue-50 hover:text-blue-500 transition-all border border-gray-100"
+                                            <p className="font-bold text-gray-900 text-sm leading-snug truncate">{debt.description}</p>
+                                            <p className="text-[11px] text-gray-400 font-medium mt-0.5 flex items-center gap-1">
+                                                <Clock size={10} /> {formatDateLocal(debt.created_at)}
+                                            </p>
+                                        </div>
+
+                                        {/* Amount + actions */}
+                                        <div className={`flex-shrink-0 ${pendingViewMode === 'list' ? 'flex items-center gap-3' : 'flex items-center justify-between mt-4 pt-4 border-t border-gray-50'}`}>
+                                            <div className={pendingViewMode === 'list' ? 'text-right' : ''}>
+                                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-0.5">Amount</p>
+                                                <p className="text-base font-black text-gray-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
+                                            </div>
+                                            <div className="flex items-center gap-1.5">
+                                                <button
+                                                    onClick={() => navigate(`/edit-debt/${debt.id}`)}
+                                                    className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-300 hover:bg-blue-50 hover:text-blue-500 transition-all border border-gray-100 hover:border-blue-100"
                                                 >
-                                                    <Pencil size={18} className="sm:w-5 sm:h-5" />
+                                                    <Pencil size={15} />
                                                 </button>
-                                                <button 
-                                                    onClick={() => handleDelete(debt)} 
-                                                    className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
+                                                <button
+                                                    onClick={() => handleDelete(debt)}
+                                                    className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100 hover:border-red-100"
                                                 >
-                                                    <Trash2 size={18} className="sm:w-5 sm:h-5" />
+                                                    <Trash2 size={15} />
                                                 </button>
-                                                <button 
-                                                    onClick={() => navigate(`/settle-debt/${debt.id}`)} 
-                                                    className="bg-green-900 text-white h-10 sm:h-12 px-4 sm:px-8 rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center gap-2 sm:gap-3 active:scale-95"
+                                                <button
+                                                    onClick={() => navigate(`/settle-debt/${debt.id}`)}
+                                                    className="h-9 px-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-wider hover:from-green-500 hover:to-emerald-500 transition-all shadow-md shadow-green-600/20 flex items-center gap-1.5 active:scale-95 whitespace-nowrap"
                                                 >
-                                                    Bayad <span className="hidden sm:inline">Time</span> <ArrowUpRight size={14} className="sm:w-4 sm:h-4" />
+                                                    Bayad <ArrowUpRight size={13} />
                                                 </button>
                                             </div>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="bg-white border-2 border-dashed border-gray-100 rounded-[2.5rem] py-20 flex flex-col items-center justify-center">
-                            <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center text-gray-200 mb-6">
-                                <Wallet2 size={40} />
+                        <div className="bg-white border-2 border-dashed border-gray-100 rounded-2xl py-16 flex flex-col items-center justify-center">
+                            <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-200 mb-4">
+                                <Wallet2 size={32} />
                             </div>
                             <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em]">No Active Records</p>
                         </div>
@@ -405,116 +390,104 @@ const DebtsPage = () => {
                         </div>
                     </div>
                     {paidDebts.length > 0 ? (
-                        <div className={paidViewMode === 'list' ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+                        <div className={paidViewMode === 'list' ? "space-y-3" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"}>
                             {paidDebts.map(debt => (
-                                <div 
-                                    key={debt.id} 
-                                    className={`group bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:border-green-400 hover:shadow-2xl hover:shadow-green-900/5 transition-all duration-300 ${paidViewMode === 'list' ? "p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6" : ""}`}
+                                <div
+                                    key={debt.id}
+                                    className={`group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-emerald-500/8 hover:border-emerald-200 transition-all duration-200 ${paidViewMode === 'grid' ? '' : 'flex items-stretch'}`}
                                 >
+                                    {/* Left accent bar (list only) */}
+                                    {paidViewMode === 'list' && (
+                                        <div className="w-1 flex-shrink-0 bg-gradient-to-b from-emerald-400 to-green-600 rounded-l-2xl" />
+                                    )}
+
+                                    {/* Grid top banner */}
                                     {paidViewMode === 'grid' && (
-                                        <div className="h-40 bg-gray-50 relative overflow-hidden group/img">
+                                        <div className="h-2 bg-gradient-to-r from-emerald-400 to-green-600" />
+                                    )}
+
+                                    <div className={`flex-1 ${paidViewMode === 'list' ? 'flex items-center gap-4 px-5 py-4' : 'p-5'}`}>
+                                        {/* Icon avatar / proof thumbnail */}
+                                        <div className={`flex-shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-gray-100 ${paidViewMode === 'grid' ? 'mb-4' : ''}`}>
                                             {debt.proof_image_path ? (
-                                                <img src={debt.proof_image_path} className="w-full h-full object-cover transition-transform group-hover/img:scale-110 duration-500" alt="Proof" />
+                                                <img
+                                                    src={debt.proof_image_path}
+                                                    className="w-full h-full object-cover cursor-pointer"
+                                                    alt="Proof"
+                                                    onClick={() => setPreviewImage(debt.proof_image_path)}
+                                                />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-gray-200 bg-gray-50">
-                                                    <FileText size={48} />
+                                                <div className="w-full h-full bg-emerald-50 flex items-center justify-center">
+                                                    <CheckCircle2 size={18} className="text-emerald-400" />
                                                 </div>
                                             )}
-                                            <div className="absolute inset-0 bg-black/20 group-hover/img:bg-black/40 transition-colors" />
-                                            <div className="absolute top-4 right-4 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white shadow-xl transform scale-90 group-hover/img:scale-100 transition-transform">
-                                                <CheckCircle2 size={20} />
+                                        </div>
+
+                                        {/* Main info */}
+                                        <div className="flex-1 min-w-0">
+                                            {/* Badges */}
+                                            <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                                                {debt.is_my_debt ? (
+                                                    <span className="text-[9px] font-black bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md uppercase tracking-wider">My Utang</span>
+                                                ) : (
+                                                    <span className="text-[9px] font-black bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md uppercase tracking-wider">Owed to Me</span>
+                                                )}
+                                                {debt.person_in_charge && (
+                                                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider flex items-center gap-1" style={{ color: debt.person_in_charge.color || '#2563eb', backgroundColor: (debt.person_in_charge.color || '#2563eb') + '15' }}>
+                                                        <User size={9} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
+                                                    </span>
+                                                )}
                                             </div>
-                                        </div>
-                                    )}
-                                    <div className={paidViewMode === 'grid' ? "p-6" : "flex-1"}>
-                                        <div className="flex flex-wrap items-center gap-2 mb-3">
-                                            {debt.is_my_debt ? (
-                                                <span className="text-[9px] font-black bg-gray-100 text-gray-500 px-3 py-1 rounded-lg uppercase tracking-wider">My Utang</span>
-                                            ) : (
-                                                <span className="text-[9px] font-black bg-green-50 text-green-600 px-3 py-1 rounded-lg uppercase tracking-wider">Owed to Me</span>
-                                            )}
-                                            {debt.person_in_charge && (
-                                                <span className="text-[9px] font-black px-3 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5" style={{ color: debt.person_in_charge.color || '#2563eb', backgroundColor: (debt.person_in_charge.color || '#2563eb') + '15' }}>
-                                                    <User size={10} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <h4 className="font-black text-gray-900 text-base mb-2">{debt.description}</h4>
-                                        <div className="flex flex-col gap-2">
-                                            <div className="flex items-center gap-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                                                <span className="flex items-center gap-1.5"><CheckCircle2 size={12} className="text-green-500" /> Paid {formatDateLocal(debt.paid_at)}</span>
+                                            <p className="font-bold text-gray-900 text-sm leading-snug truncate">{debt.description}</p>
+                                            <div className="flex items-center gap-3 mt-0.5">
+                                                <p className="text-[11px] text-emerald-500 font-semibold flex items-center gap-1">
+                                                    <CheckCircle2 size={10} /> Paid {formatDateLocal(debt.paid_at)}
+                                                </p>
                                             </div>
                                             {debt.payment_details && (
-                                                <p className="text-[10px] font-bold text-gray-500 italic bg-gray-50 px-3 py-2 rounded-xl border border-gray-100 leading-relaxed">
+                                                <p className="text-[10px] text-gray-400 italic mt-1 truncate">
                                                     &ldquo;{debt.payment_details}&rdquo;
                                                 </p>
                                             )}
                                         </div>
-                                        {paidViewMode === 'grid' && (
-                                            <div className="mt-6 flex items-center justify-between pt-6 border-t border-gray-50">
-                                                <p className="text-xl font-black text-green-900">{formatCurrency(debt.amount)}</p>
-                                                <div className="flex gap-2">
-                                                    <button 
-                                                        onClick={() => toggleAudio(debt.proof_voice_path)} 
-                                                        disabled={!debt.proof_voice_path} 
-                                                        className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all border ${!debt.proof_voice_path ? 'bg-gray-50 text-gray-200 border-gray-50 cursor-not-allowed opacity-50' : playingAudio === debt.proof_voice_path ? 'bg-red-500 text-white border-red-500 shadow-lg shadow-red-500/20' : 'bg-gray-50 text-gray-400 border-gray-100 hover:bg-green-600 hover:text-white hover:border-green-600'}`}
-                                                    >
-                                                        {playingAudio === debt.proof_voice_path ? <Pause size={16} /> : <Volume2 size={16} />}
-                                                    </button>
-                                                    <button 
-                                                        onClick={() => setPreviewImage(debt.proof_image_path)} 
-                                                        disabled={!debt.proof_image_path} 
-                                                        className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all border ${!debt.proof_image_path ? 'bg-gray-50 text-gray-200 border-gray-50 cursor-not-allowed opacity-50' : 'bg-gray-50 text-gray-400 border-gray-100 hover:bg-green-600 hover:text-white hover:border-green-600'}`}
-                                                    >
-                                                        <FileText size={16} />
-                                                    </button>
-                                                    <button 
-                                                        onClick={() => handleDelete(debt)} 
-                                                        className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-100"
-                                                    >
-                                                        <Trash2 size={18} />
-                                                    </button>
-                                                </div>
+
+                                        {/* Amount + actions */}
+                                        <div className={`flex-shrink-0 ${paidViewMode === 'list' ? 'flex items-center gap-3' : 'flex items-center justify-between mt-4 pt-4 border-t border-gray-50'}`}>
+                                            <div className={paidViewMode === 'list' ? 'text-right' : ''}>
+                                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-0.5">Settled</p>
+                                                <p className="text-base font-black text-emerald-700 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
                                             </div>
-                                        )}
-                                    </div>
-                                    {paidViewMode === 'list' && (
-                                        <div className="flex flex-row items-center justify-between sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-50">
-                                            <div className="text-left sm:text-right">
-                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 sm:mb-1">Settled</p>
-                                                <p className="text-lg sm:text-xl font-black text-green-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <button 
-                                                    onClick={() => toggleAudio(debt.proof_voice_path)} 
-                                                    disabled={!debt.proof_voice_path} 
-                                                    className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl border transition-all ${!debt.proof_voice_path ? 'bg-gray-50 text-gray-200 border-gray-50 opacity-50' : playingAudio === debt.proof_voice_path ? 'bg-red-500 text-white border-red-500 shadow-xl' : 'bg-white border-gray-100 text-gray-400 hover:text-green-600 hover:bg-green-50 hover:border-green-100'}`}
+                                            <div className="flex items-center gap-1.5">
+                                                <button
+                                                    onClick={() => toggleAudio(debt.proof_voice_path)}
+                                                    disabled={!debt.proof_voice_path}
+                                                    className={`w-9 h-9 flex items-center justify-center rounded-xl border transition-all ${!debt.proof_voice_path ? 'bg-gray-50 text-gray-200 border-gray-50 opacity-40 cursor-not-allowed' : playingAudio === debt.proof_voice_path ? 'bg-red-500 text-white border-red-500 shadow-md' : 'bg-white border-gray-100 text-gray-400 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-100'}`}
                                                 >
-                                                    {playingAudio === debt.proof_voice_path ? <Pause size={18} className="sm:w-5 sm:h-5" /> : <Volume2 size={18} className="sm:w-5 sm:h-5" />}
+                                                    {playingAudio === debt.proof_voice_path ? <Pause size={14} /> : <Volume2 size={14} />}
                                                 </button>
-                                                <button 
-                                                    onClick={() => setPreviewImage(debt.proof_image_path)} 
-                                                    disabled={!debt.proof_image_path} 
-                                                    className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl border transition-all ${!debt.proof_image_path ? 'bg-gray-50 text-gray-200 border-gray-50 opacity-50' : 'bg-white border-gray-100 text-gray-400 hover:text-green-600 hover:bg-green-50 hover:border-green-100'}`}
+                                                <button
+                                                    onClick={() => setPreviewImage(debt.proof_image_path)}
+                                                    disabled={!debt.proof_image_path}
+                                                    className={`w-9 h-9 flex items-center justify-center rounded-xl border transition-all ${!debt.proof_image_path ? 'bg-gray-50 text-gray-200 border-gray-50 opacity-40 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-100'}`}
                                                 >
-                                                    <FileText size={18} className="sm:w-5 sm:h-5" />
+                                                    <FileText size={14} />
                                                 </button>
-                                                <button 
-                                                    onClick={() => handleDelete(debt)} 
-                                                    className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100"
+                                                <button
+                                                    onClick={() => handleDelete(debt)}
+                                                    className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all border border-gray-100 hover:border-red-100"
                                                 >
-                                                    <Trash2 size={18} className="sm:w-5 sm:h-5" />
+                                                    <Trash2 size={14} />
                                                 </button>
                                             </div>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="bg-white border-2 border-dashed border-gray-100 rounded-[2.5rem] py-20 flex flex-col items-center justify-center">
-                            <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center text-gray-200 mb-6">
-                                <CheckCircle2 size={40} />
+                        <div className="bg-white border-2 border-dashed border-gray-100 rounded-2xl py-16 flex flex-col items-center justify-center">
+                            <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-200 mb-4">
+                                <CheckCircle2 size={32} />
                             </div>
                             <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em]">No Settlement History</p>
                         </div>
