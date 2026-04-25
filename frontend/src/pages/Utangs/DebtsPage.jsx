@@ -209,7 +209,7 @@ const DebtsPage = () => {
                             <p className="text-[11px] font-semibold text-red-200 uppercase tracking-wider mb-1">
                                 {activeTab === 'mine' ? 'Total to Pay' : 'Total to Collect'}
                             </p>
-                            <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.pending_total)}</p>
+                            <p className="text-xl sm:text-2xl font-black tracking-tight">{formatCurrency(stats.pending_total)}</p>
                             <div className="flex items-center gap-1 mt-2">
                                 <Clock size={12} className="text-red-200" />
                                 <p className="text-[10px] text-red-200 font-medium">Pending settlement</p>
@@ -231,7 +231,7 @@ const DebtsPage = () => {
                                 </span>
                             </div>
                             <p className="text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-1">Total Settled</p>
-                            <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.paid_total)}</p>
+                            <p className="text-xl sm:text-2xl font-black tracking-tight">{formatCurrency(stats.paid_total)}</p>
                             <div className="flex items-center gap-1 mt-2">
                                 <TrendingUp size={12} className="text-emerald-200" />
                                 <p className="text-[10px] text-emerald-200 font-medium">All time settled</p>
@@ -292,36 +292,39 @@ const DebtsPage = () => {
                                         <div className="h-2 bg-gradient-to-r from-red-400 to-rose-500" />
                                     )}
 
-                                    <div className={`flex-1 ${pendingViewMode === 'list' ? 'flex items-center gap-4 px-5 py-4' : 'flex flex-col p-5'}`}>
-                                        {/* Icon avatar */}
-                                        <div className={`flex-shrink-0 w-11 h-11 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center ${pendingViewMode === 'grid' ? 'mb-4' : ''}`}>
-                                            <Wallet2 size={20} className="text-red-400" />
-                                        </div>
-
-                                        {/* Main info */}
-                                        <div className={`min-w-0 ${pendingViewMode === 'list' ? 'flex-1' : 'flex-1'}`}>
-                                            {/* Badges */}
-                                            <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
-                                                {debt.is_my_debt ? (
-                                                    <span className="text-[9px] font-black bg-gray-900 text-white px-2 py-0.5 rounded-md uppercase tracking-wider">My Utang</span>
-                                                ) : (
-                                                    <span className="text-[9px] font-black bg-emerald-500 text-white px-2 py-0.5 rounded-md uppercase tracking-wider">Owed to Me</span>
-                                                )}
-                                                {debt.person_in_charge && (
-                                                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider flex items-center gap-1" style={{ color: debt.person_in_charge.color || '#2563eb', backgroundColor: (debt.person_in_charge.color || '#2563eb') + '15' }}>
-                                                        <User size={9} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
-                                                    </span>
-                                                )}
+                                    <div className={`flex-1 ${pendingViewMode === 'list' ? 'flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-4' : 'flex flex-col p-5'}`}>
+                                        {/* Top row: icon + info */}
+                                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                                            {/* Icon avatar */}
+                                            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center">
+                                                <Wallet2 size={18} className="text-red-400" />
                                             </div>
-                                            <p className="font-bold text-gray-900 text-sm leading-snug truncate">{debt.description}</p>
-                                            <p className="text-[11px] text-gray-400 font-medium mt-0.5 flex items-center gap-1">
-                                                <Clock size={10} /> {formatDateLocal(debt.created_at)}
-                                            </p>
+
+                                            {/* Main info */}
+                                            <div className="flex-1 min-w-0">
+                                                {/* Badges */}
+                                                <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                                                    {debt.is_my_debt ? (
+                                                        <span className="text-[9px] font-black bg-gray-900 text-white px-2 py-0.5 rounded-md uppercase tracking-wider">My Utang</span>
+                                                    ) : (
+                                                        <span className="text-[9px] font-black bg-emerald-500 text-white px-2 py-0.5 rounded-md uppercase tracking-wider">Owed to Me</span>
+                                                    )}
+                                                    {debt.person_in_charge && (
+                                                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider flex items-center gap-1" style={{ color: debt.person_in_charge.color || '#2563eb', backgroundColor: (debt.person_in_charge.color || '#2563eb') + '15' }}>
+                                                            <User size={9} /> {debt.person_in_charge.first_name} {debt.person_in_charge.last_name}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="font-bold text-gray-900 text-sm leading-snug break-words">{debt.description}</p>
+                                                <p className="text-[11px] text-gray-400 font-medium mt-0.5 flex items-center gap-1">
+                                                    <Clock size={10} /> {formatDateLocal(debt.created_at)}
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        {/* Amount + actions */}
-                                        <div className={`${pendingViewMode === 'list' ? 'flex-shrink-0 flex items-center gap-3' : 'flex items-center justify-between mt-4 pt-4 border-t border-gray-50'}`}>
-                                            <div className={pendingViewMode === 'list' ? 'text-right' : ''}>
+                                        {/* Amount + actions — stacks below on mobile, inline on sm+ */}
+                                        <div className={`flex items-center justify-between gap-3 mt-3 pt-3 border-t border-gray-50 sm:mt-0 sm:pt-0 sm:border-t-0 ${pendingViewMode === 'list' ? 'sm:flex-shrink-0' : 'mt-4 pt-4 border-t border-gray-50'}`}>
+                                            <div>
                                                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-0.5">Amount</p>
                                                 <p className="text-base font-black text-gray-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
                                             </div>
@@ -340,7 +343,7 @@ const DebtsPage = () => {
                                                 </button>
                                                 <button
                                                     onClick={() => navigate(`/settle-debt/${debt.id}`)}
-                                                    className="h-9 px-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-wider hover:from-green-500 hover:to-emerald-500 transition-all shadow-md shadow-green-600/20 flex items-center gap-1.5 active:scale-95 whitespace-nowrap"
+                                                    className="h-9 px-3 sm:px-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-wider hover:from-green-500 hover:to-emerald-500 transition-all shadow-md shadow-green-600/20 flex items-center gap-1.5 active:scale-95 whitespace-nowrap"
                                                 >
                                                     Bayad <ArrowUpRight size={13} />
                                                 </button>
@@ -408,9 +411,11 @@ const DebtsPage = () => {
                                         <div className="h-2 bg-gradient-to-r from-emerald-400 to-green-600" />
                                     )}
 
-                                    <div className={`flex-1 ${paidViewMode === 'list' ? 'flex items-center gap-4 px-5 py-4' : 'flex flex-col p-5'}`}>
+                                    <div className={`flex-1 ${paidViewMode === 'list' ? 'flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-4' : 'flex flex-col p-5'}`}>
+                                        {/* Top row: icon + info */}
+                                        <div className="flex items-start gap-3 flex-1 min-w-0">
                                         {/* Icon avatar / proof thumbnail */}
-                                        <div className={`flex-shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-gray-100 ${paidViewMode === 'grid' ? 'mb-4' : ''}`}>
+                                        <div className="flex-shrink-0 w-10 h-10 rounded-xl overflow-hidden border border-gray-100">
                                             {debt.proof_image_path ? (
                                                 <img
                                                     src={debt.proof_image_path}
@@ -420,7 +425,7 @@ const DebtsPage = () => {
                                                 />
                                             ) : (
                                                 <div className="w-full h-full bg-emerald-50 flex items-center justify-center">
-                                                    <CheckCircle2 size={18} className="text-emerald-400" />
+                                                    <CheckCircle2 size={16} className="text-emerald-400" />
                                                 </div>
                                             )}
                                         </div>
@@ -440,22 +445,21 @@ const DebtsPage = () => {
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="font-bold text-gray-900 text-sm leading-snug truncate">{debt.description}</p>
-                                            <div className="flex items-center gap-3 mt-0.5">
-                                                <p className="text-[11px] text-emerald-500 font-semibold flex items-center gap-1">
-                                                    <CheckCircle2 size={10} /> Paid {formatDateLocal(debt.paid_at)}
-                                                </p>
-                                            </div>
+                                            <p className="font-bold text-gray-900 text-sm leading-snug break-words">{debt.description}</p>
+                                            <p className="text-[11px] text-emerald-500 font-semibold mt-0.5 flex items-center gap-1">
+                                                <CheckCircle2 size={10} /> Paid {formatDateLocal(debt.paid_at)}
+                                            </p>
                                             {debt.payment_details && (
-                                                <p className="text-[10px] text-gray-400 italic mt-1 truncate">
+                                                <p className="text-[10px] text-gray-400 italic mt-1 break-words">
                                                     &ldquo;{debt.payment_details}&rdquo;
                                                 </p>
                                             )}
                                         </div>
+                                        </div>
 
-                                        {/* Amount + actions */}
-                                        <div className={`${paidViewMode === 'list' ? 'flex-shrink-0 flex items-center gap-3' : 'flex items-center justify-between mt-4 pt-4 border-t border-gray-50'}`}>
-                                            <div className={paidViewMode === 'list' ? 'text-right' : ''}>
+                                        {/* Amount + actions — stacks below on mobile */}
+                                        <div className={`flex items-center justify-between gap-3 mt-3 pt-3 border-t border-gray-50 sm:mt-0 sm:pt-0 sm:border-t-0 ${paidViewMode === 'list' ? 'sm:flex-shrink-0' : 'mt-4 pt-4 border-t border-gray-50'}`}>
+                                            <div>
                                                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-0.5">Settled</p>
                                                 <p className="text-base font-black text-emerald-700 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
                                             </div>
