@@ -203,21 +203,43 @@ export default function AddDebtPage() {
                         <Wallet2 className="w-3.5 h-3.5" />
                         Type of Record
                       </label>
-                      <div 
-                        className={cn(
-                          "flex items-center gap-4 h-16 lg:h-20 px-6 rounded-2xl border-2 transition-all cursor-pointer group",
-                          formData.is_my_debt ? "bg-gray-900 border-gray-900 text-white shadow-xl" : "bg-white border-gray-100 text-gray-900 hover:border-green-900"
-                        )}
-                        onClick={() => setFormData({ ...formData, is_my_debt: !formData.is_my_debt })}
-                      >
-                        <div className={cn(
-                          "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0",
-                          formData.is_my_debt ? "bg-white border-white" : "bg-gray-50 border-gray-200 group-hover:border-green-900"
-                        )}>
-                          {formData.is_my_debt && <CheckCircle2 size={14} className="text-gray-900" />}
+                      <div className="grid grid-cols-2 gap-3">
+                        {/* My Utang */}
+                        <div
+                          className={cn(
+                            "flex flex-col items-center justify-center gap-2 h-16 lg:h-20 px-4 rounded-2xl border-2 transition-all cursor-pointer",
+                            formData.is_my_debt
+                              ? "bg-gray-900 border-gray-900 text-white shadow-xl"
+                              : "bg-gray-50 border-gray-100 text-gray-400 hover:border-gray-300"
+                          )}
+                          onClick={() => setFormData({ ...formData, is_my_debt: true })}
+                        >
+                          <div className={cn(
+                            "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
+                            formData.is_my_debt ? "border-white bg-white" : "border-gray-300"
+                          )}>
+                            {formData.is_my_debt && <div className="w-2.5 h-2.5 rounded-full bg-gray-900" />}
+                          </div>
+                          <p className="text-[9px] font-black uppercase tracking-wider leading-none">My Utang</p>
                         </div>
-                        <div className="flex-1">
-                          <p className="text-[10px] font-black uppercase tracking-wider">{formData.is_my_debt ? "My Utang" : "Owed to Me"}</p>
+
+                        {/* Owed to Me */}
+                        <div
+                          className={cn(
+                            "flex flex-col items-center justify-center gap-2 h-16 lg:h-20 px-4 rounded-2xl border-2 transition-all cursor-pointer",
+                            !formData.is_my_debt
+                              ? "bg-green-900 border-green-900 text-white shadow-xl shadow-green-900/20"
+                              : "bg-gray-50 border-gray-100 text-gray-400 hover:border-gray-300"
+                          )}
+                          onClick={() => setFormData({ ...formData, is_my_debt: false })}
+                        >
+                          <div className={cn(
+                            "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
+                            !formData.is_my_debt ? "border-white bg-white" : "border-gray-300"
+                          )}>
+                            {!formData.is_my_debt && <div className="w-2.5 h-2.5 rounded-full bg-green-900" />}
+                          </div>
+                          <p className="text-[9px] font-black uppercase tracking-wider leading-none">Owed to Me</p>
                         </div>
                       </div>
                     </div>
