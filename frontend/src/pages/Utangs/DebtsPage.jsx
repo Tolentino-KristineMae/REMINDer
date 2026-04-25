@@ -12,6 +12,8 @@ import {
     LayoutGrid,
     LayoutList,
     ArrowUpRight,
+    ArrowDownRight,
+    TrendingUp,
     X,
     User,
     Pencil
@@ -127,7 +129,7 @@ const DebtsPage = () => {
             <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
                 {/* Header & Main Tabs */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-center justify-between gap-3 w-full sm:w-auto">
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
                         <div className="flex bg-white border border-gray-100 p-1.5 rounded-xl sm:rounded-[1.5rem] shadow-sm">
                             <button 
                                 onClick={() => {
@@ -145,13 +147,6 @@ const DebtsPage = () => {
                                 Bayarin
                             </button>
                         </div>
-
-                        <button 
-                            onClick={() => navigate('/add-debt')} 
-                            className="bg-green-900 text-white px-4 sm:px-8 py-2 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-green-800 transition-all shadow-xl shadow-green-900/20 flex items-center justify-center gap-2 sm:gap-3 active:scale-[0.98] sm:w-auto"
-                        >
-                            <Plus size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={3} /> <span>New</span>
-                        </button>
                     </div>
                 </div>
 
@@ -196,32 +191,50 @@ const DebtsPage = () => {
 
                 {/* Stats Summary */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
-                    <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-red-200 transition-all">
-                        <div className="flex items-center justify-between mb-2 sm:mb-4">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-50 rounded-lg sm:rounded-xl flex items-center justify-center text-red-600 border border-red-100">
-                                <Clock size={16} className="sm:w-5 sm:h-5" />
+                    {/* Total to Collect / Total to Pay — Red */}
+                    <div className="bg-gradient-to-br from-red-500 to-rose-600 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-red-500/25 transition-all duration-300">
+                        <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -ml-8 -mb-8" />
+                        <div className="relative z-10">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                    <Clock size={22} className="text-red-100" />
+                                </div>
+                                <span className="text-[10px] font-bold text-red-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
+                                    <ArrowDownRight size={10} /> {stats.pending_count} bills
+                                </span>
                             </div>
-                            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-red-50 text-red-600 rounded-full">
-                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{stats.pending_count}</span>
+                            <p className="text-[11px] font-semibold text-red-200 uppercase tracking-wider mb-1">
+                                {activeTab === 'mine' ? 'Total to Pay' : 'Total to Collect'}
+                            </p>
+                            <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.pending_total)}</p>
+                            <div className="flex items-center gap-1 mt-2">
+                                <Clock size={12} className="text-red-200" />
+                                <p className="text-[10px] text-red-200 font-medium">Pending settlement</p>
                             </div>
                         </div>
-                        <p className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">
-                            {activeTab === 'mine' ? 'Total to Pay' : 'Total to Collect'}
-                        </p>
-                        <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(stats.pending_total)}</p>
                     </div>
 
-                    <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/20 group hover:border-green-300 transition-all">
-                        <div className="flex items-center justify-between mb-2 sm:mb-4">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center text-green-700 border border-green-200">
-                                <CheckCircle2 size={16} className="sm:w-5 sm:h-5" />
+                    {/* Total Settled — Green */}
+                    <div className="bg-gradient-to-br from-emerald-500 to-green-700 p-5 rounded-2xl text-white relative overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300">
+                        <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -ml-8 -mb-8" />
+                        <div className="relative z-10">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                    <CheckCircle2 size={22} className="text-emerald-100" />
+                                </div>
+                                <span className="text-[10px] font-bold text-emerald-100 bg-white/15 px-2.5 py-1 rounded-full flex items-center gap-1">
+                                    <CheckCircle2 size={10} /> {stats.paid_count} bills
+                                </span>
                             </div>
-                            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 bg-green-100 text-green-700 rounded-full">
-                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider">{stats.paid_count}</span>
+                            <p className="text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-1">Total Settled</p>
+                            <p className="text-2xl font-black tracking-tight">{formatCurrency(stats.paid_total)}</p>
+                            <div className="flex items-center gap-1 mt-2">
+                                <TrendingUp size={12} className="text-emerald-200" />
+                                <p className="text-[10px] text-emerald-200 font-medium">All time settled</p>
                             </div>
                         </div>
-                        <p className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">Total Settled</p>
-                        <p className="text-lg sm:text-2xl lg:text-3xl font-black text-gray-900 tracking-tight">{formatCurrency(stats.paid_total)}</p>
                     </div>
                 </div>
 
@@ -508,6 +521,18 @@ const DebtsPage = () => {
                     )}
                 </section>
             </div>
+
+            {/* Floating Action Button */}
+            <button
+                onClick={() => navigate('/add-debt')}
+                className="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-green-600 to-green-900 text-white rounded-2xl shadow-2xl shadow-green-900/40 flex items-center justify-center hover:scale-110 hover:rotate-90 active:scale-95 transition-all duration-300 group z-40 border-4 border-white"
+                title="Add New Utang"
+            >
+                <Plus size={28} strokeWidth={3} className="group-hover:stroke-[3.5]" />
+                <span className="absolute right-full mr-4 px-3 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none uppercase tracking-widest">
+                    New Utang
+                </span>
+            </button>
 
             {/* Delete Confirmation Modal */}
             {isDeleteModalOpen && (
