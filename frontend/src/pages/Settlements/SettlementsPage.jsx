@@ -269,6 +269,23 @@ const BillItem = React.memo(({
                             <FileText size={13} />
                         </button>
                         <button
+                            onClick={() => bill.proof_of_payments?.[0]?.voice_record_path && toggleAudio(bill.proof_of_payments[0].voice_record_path)}
+                            disabled={!bill.proof_of_payments?.[0]?.voice_record_path}
+                            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all border ${
+                                !bill.proof_of_payments?.[0]?.voice_record_path
+                                ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed opacity-40'
+                                : playingAudio === bill.proof_of_payments?.[0]?.voice_record_path
+                                ? 'bg-red-500 text-white border-red-500 shadow-md'
+                                : 'bg-gray-50 text-gray-500 border-gray-100 hover:bg-emerald-600 hover:text-white hover:border-emerald-600'
+                            }`}
+                            title={bill.proof_of_payments?.[0]?.voice_record_path ? 'Play voice note' : 'No voice note'}
+                        >
+                            {playingAudio === bill.proof_of_payments?.[0]?.voice_record_path
+                                ? <Pause size={13} />
+                                : <Volume2 size={13} />
+                            }
+                        </button>
+                        <button
                             type="button"
                             onClick={() => confirmDelete(bill)}
                             className="w-8 h-8 sm:w-9 sm:h-9 bg-red-50 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-red-100"
@@ -953,7 +970,7 @@ const SettlementsPage = () => {
                                                 </div>
                                             )}
 
-                                            {bill.proof_of_payments?.[0]?.voice_record_path && (
+                                            {bill.proof_of_payments?.[0]?.voice_record_path ? (
                                                 <div className="bg-green-50 p-2 sm:p-3 rounded-lg sm:rounded-xl mb-3 sm:mb-4 border border-green-100">
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <div className="w-6 h-6 bg-green-600 rounded-lg flex items-center justify-center">
@@ -971,6 +988,13 @@ const SettlementsPage = () => {
                                                         className="w-full h-8"
                                                         style={{ maxHeight: '32px' }}
                                                     />
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-dashed border-gray-200 rounded-xl mb-3 sm:mb-4">
+                                                    <div className="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                        <Mic size={12} className="text-gray-300" />
+                                                    </div>
+                                                    <span className="text-[10px] font-semibold text-gray-400 italic">No voice note attached</span>
                                                 </div>
                                             )}
 
