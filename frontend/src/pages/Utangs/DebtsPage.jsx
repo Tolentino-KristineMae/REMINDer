@@ -290,14 +290,14 @@ const DebtsPage = () => {
                                         <div className="h-2 bg-gradient-to-r from-red-400 to-rose-500" />
                                     )}
 
-                                    <div className={`flex-1 ${pendingViewMode === 'list' ? 'flex items-center gap-4 px-5 py-4' : 'p-5'}`}>
+                                    <div className={`flex-1 ${pendingViewMode === 'list' ? 'flex items-center gap-4 px-5 py-4' : 'flex flex-col p-5'}`}>
                                         {/* Icon avatar */}
                                         <div className={`flex-shrink-0 w-11 h-11 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center ${pendingViewMode === 'grid' ? 'mb-4' : ''}`}>
                                             <Wallet2 size={20} className="text-red-400" />
                                         </div>
 
                                         {/* Main info */}
-                                        <div className={`flex-1 min-w-0 ${pendingViewMode === 'list' ? '' : 'mt-0'}`}>
+                                        <div className={`min-w-0 ${pendingViewMode === 'list' ? 'flex-1' : 'flex-1'}`}>
                                             {/* Badges */}
                                             <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
                                                 {debt.is_my_debt ? (
@@ -318,7 +318,7 @@ const DebtsPage = () => {
                                         </div>
 
                                         {/* Amount + actions */}
-                                        <div className={`flex-shrink-0 ${pendingViewMode === 'list' ? 'flex items-center gap-3' : 'flex items-center justify-between mt-4 pt-4 border-t border-gray-50'}`}>
+                                        <div className={`${pendingViewMode === 'list' ? 'flex-shrink-0 flex items-center gap-3' : 'flex items-center justify-between mt-4 pt-4 border-t border-gray-50'}`}>
                                             <div className={pendingViewMode === 'list' ? 'text-right' : ''}>
                                                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-0.5">Amount</p>
                                                 <p className="text-base font-black text-gray-900 whitespace-nowrap">{formatCurrency(debt.amount)}</p>
@@ -406,7 +406,7 @@ const DebtsPage = () => {
                                         <div className="h-2 bg-gradient-to-r from-emerald-400 to-green-600" />
                                     )}
 
-                                    <div className={`flex-1 ${paidViewMode === 'list' ? 'flex items-center gap-4 px-5 py-4' : 'p-5'}`}>
+                                    <div className={`flex-1 ${paidViewMode === 'list' ? 'flex items-center gap-4 px-5 py-4' : 'flex flex-col p-5'}`}>
                                         {/* Icon avatar / proof thumbnail */}
                                         <div className={`flex-shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-gray-100 ${paidViewMode === 'grid' ? 'mb-4' : ''}`}>
                                             {debt.proof_image_path ? (
@@ -452,7 +452,7 @@ const DebtsPage = () => {
                                         </div>
 
                                         {/* Amount + actions */}
-                                        <div className={`flex-shrink-0 ${paidViewMode === 'list' ? 'flex items-center gap-3' : 'flex items-center justify-between mt-4 pt-4 border-t border-gray-50'}`}>
+                                        <div className={`${paidViewMode === 'list' ? 'flex-shrink-0 flex items-center gap-3' : 'flex items-center justify-between mt-4 pt-4 border-t border-gray-50'}`}>
                                             <div className={paidViewMode === 'list' ? 'text-right' : ''}>
                                                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-0.5">Settled</p>
                                                 <p className="text-base font-black text-emerald-700 whitespace-nowrap">{formatCurrency(debt.amount)}</p>

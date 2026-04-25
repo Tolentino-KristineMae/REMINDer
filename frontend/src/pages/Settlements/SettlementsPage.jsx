@@ -149,7 +149,14 @@ const BillItem = React.memo(({
                                 <Users size={8} className="sm:w-2.5 sm:h-2.5" style={{ color: bill.person_in_charge?.color || '#2563eb' }} />
                                 {bill.person_in_charge ? `${bill.person_in_charge.first_name} ${bill.person_in_charge.last_name}` : 'No PIC'}
                             </span>
-                            <span className="text-[8px] sm:text-[10px] font-black text-red-600/70 uppercase tracking-widest bg-red-50/50 px-1.5 sm:px-2 py-0.5 rounded-md border border-red-100/50 whitespace-nowrap">
+                            <span
+                                className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-md border whitespace-nowrap"
+                                style={{
+                                    color: bill.category?.color || '#dc2626',
+                                    backgroundColor: (bill.category?.color || '#dc2626') + '18',
+                                    borderColor: (bill.category?.color || '#dc2626') + '30',
+                                }}
+                            >
                                 {bill.category?.name}
                             </span>
                         </div>
@@ -231,7 +238,13 @@ const BillItem = React.memo(({
                         <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 mt-0.5">
                             <div className="flex items-center gap-1">
                                 <span className="text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-wider">Category:</span>
-                                <span className="text-[8px] sm:text-[9px] font-black text-green-600 bg-green-50 px-1 sm:px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                                <span
+                                    className="text-[8px] sm:text-[9px] font-black px-1 sm:px-1.5 py-0.5 rounded-full whitespace-nowrap"
+                                    style={{
+                                        color: bill.category?.color || '#16a34a',
+                                        backgroundColor: (bill.category?.color || '#16a34a') + '18',
+                                    }}
+                                >
                                     {bill.category?.name}
                                 </span>
                             </div>
