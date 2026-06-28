@@ -16,12 +16,20 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  bool _isInitialized = false;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BillProvider>(context, listen: false).loadDashboardData();
-      _sendFCMToken();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    final billProvider = Provider.of<BillProvider>(context, listen: false);
+    await billProvider.loadDashboardData();
+    _sendFCMToken();
+    setState(() {
+      _isInitialized = true;
     });
   }
 
@@ -98,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: billProvider.isLoading
+      body: !_isInitialized || billProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: () => billProvider.loadDashboardData(),
@@ -244,14 +252,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildSettlementProgress(Map<String, dynamic>? data) {
     final stats = data?['stats'];
-    final total = stats?['total'] ?? 1;
-    final paid = stats?['paid'] ?? 0;
-    final pending = stats?['pending'] ?? 0;
-    final overdue = stats?['overdue'] ?? 0;
+    if (stats == null) {
+      return const Center(
+        child: Text(
+          'No data available',
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
+    }
     
-    final paidPercent = (paid / total * 100).round();
-    final pendingPercent = (pending / total * 100).round();
-    final overduePercent = (overdue / total * 100).round();
+    final total = (stats['total'] ?? 1) as int;
+    final paid = (stats['paid'] ?? 0) as int;
+    final pending = (stats['pending'] ?? 0) as int;
+    final overdue = (stats['overdue'] ?? 0) as int;
+    
+    // Prevent division by zero
+    final totalValue = total > 0 ? total : 1;
+    final paidPercent = (paid / totalValue * 100).round();
+    final pendingPercent = (pending / totalValue * 100).round();
+    final overduePercent = (overdue / totalValue * 100).round();
 
     return Column(
       children: [
@@ -265,7 +284,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 width: 150,
                 height: 150,
                 child: CircularProgressIndicator(
-                  value: paid / total,
+                  value: totalValue > 0 ? paid / totalValue : 0,
                   strokeWidth: 12,
                   backgroundColor: Colors.grey.shade200,
                   valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF10B981)),

@@ -16,9 +16,13 @@ class BillProvider with ChangeNotifier {
   String? get error => _error;
   
   Future<void> loadDashboardData() async {
-    _isLoading = true;
+    // Only show loading indicator if we don't have data yet
+    if (_dashboardData == null) {
+      _isLoading = true;
+      notifyListeners();
+    }
+    
     _error = null;
-    notifyListeners();
     
     try {
       _dashboardData = await ApiService.getDashboardData();
