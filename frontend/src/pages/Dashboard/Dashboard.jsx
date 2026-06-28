@@ -193,6 +193,7 @@ const SettlementCard = ({ stats }) => {
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
 
     const [stats, setStats] = useState({
         total: 0,
@@ -209,6 +210,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setIsLoading(true);
                 const dashboardRes = await api.get('/bills/dashboard');
                 const { stats: statsData, categories: categoriesData, historical: historicalDataRes } = dashboardRes.data || {};
                 
@@ -226,11 +228,24 @@ const Dashboard = () => {
                 setHistoricalData(historicalDataRes || []);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchData();
     }, []);
+
+    if (isLoading) {
+        return (
+            <div className="flex-1 min-h-screen bg-[#f8fafc] p-6 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600 font-semibold text-lg">Loading Dashboard...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex-1 min-h-screen bg-[#f8fafc] p-3 sm:p-4 lg:p-6 relative">
