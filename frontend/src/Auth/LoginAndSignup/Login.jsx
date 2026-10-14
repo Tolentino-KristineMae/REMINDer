@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api/axios';
 import remindearLogo from '../../assets/REMINDear-Logo.png';
 import BackgroundAuth from '../../Shared/BackgroundGreen';
-import '../../styles/Auth/LoginAndSignup/Login.css';
+import styles from '../../styles/Auth/LoginAndSignup/Login.module.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -41,39 +41,39 @@ const Login = () => {
     };
 
     return (
-        <div className="root">
+        <div className={styles.root}>
             <BackgroundAuth />
 
-            <div className="card">
-                <div className="logoWrapper">
+            <div className={styles.card}>
+                <div className={styles.logoWrapper}>
                     <img src={remindearLogo} alt="REMINDear Logo" style={{ height: '60px', width: 'auto' }} />
                 </div>
 
-                <div className="title">Sign In</div>
-                <div className="subtitle">Sign in to continue</div>
+                <div className={styles.title}>Sign In</div>
+                <div className={styles.subtitle}>Sign in to continue</div>
 
                 {error && <div className={`${styles.alert} ${styles.alertError}`}>✕ {error}</div>}
 
                 <form onSubmit={handleSubmit}>
-                    <div className="formGroup">
-                        <label className="label">Email Address</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Email Address</label>
                         <input 
                             type="email" 
                             value={email} 
                             onChange={e => setEmail(e.target.value)} 
-                            className="input" 
+                            className={styles.input}
                             placeholder="admin@example.com" 
                             required 
                             disabled={loading} 
                         />
                     </div>
-                    <div className="formGroup">
-                        <label className="label">Password</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Password</label>
                         <input 
                             type="password" 
                             value={password} 
                             onChange={e => setPassword(e.target.value)} 
-                            className="input" 
+                            className={styles.input}
                             placeholder="••••••••" 
                             required 
                             disabled={loading} 
@@ -84,10 +84,10 @@ const Login = () => {
                             </Link>
                         </div>
                     </div>
-                    <button type="submit" className="button" disabled={loading}>
+                    <button type="submit" className={styles.button} disabled={loading}>
                         {loading ? (
                             <>
-                                <div className="spinner"></div>
+                                <div className={styles.spinner}></div>
                                 Signing in...
                             </>
                         ) : (
@@ -96,22 +96,22 @@ const Login = () => {
                     </button>
                 </form>
 
-                <div className="footer">
+                <div className={styles.footer}>
                     Don't have an account? <Link to="/setup">Create one</Link>
                 </div>
 
-                <div className="infoBox">
-                    <div className="infoTitle">Secure Sign In</div>
-                    <div className="infoDesc">
+                <div className={styles.infoBox}>
+                    <div className={styles.infoTitle}>Secure Sign In</div>
+                    <div className={styles.infoDesc}>
                         Authorized access only. Your login session is protected by multi-layer encryption and secure authentication protocols.
                     </div>
-                    <div className="infoItem">
-                        <div className="infoDot"></div>
-                        <span className="infoLabel">End-to-End Encryption</span>
+                    <div className={styles.infoItem}>
+                        <div className={styles.infoDot}></div>
+                        <span className={styles.infoLabel}>End-to-End Encryption</span>
                     </div>
-                    <div className="infoItem">
-                        <div className="infoDot"></div>
-                        <span className="infoLabel">Secure Session Logging</span>
+                    <div className={styles.infoItem}>
+                        <div className={styles.infoDot}></div>
+                        <span className={styles.infoLabel}>Secure Session Logging</span>
                     </div>
                 </div>
             </div>
