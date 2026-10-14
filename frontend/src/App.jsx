@@ -65,7 +65,6 @@ const AddBillPage = lazy(() => import('./pages/Bills/AddBillPage'));
 const EditBillPage = lazy(() => import('./pages/Bills/EditBillPage'));
 const SettleBillPage = lazy(() => import('./pages/Bills/SettleBillPage'));
 const Management = lazy(() => import('./pages/Management/Management'));
-const CalendarPage = lazy(() => import('./pages/Calendar/CalendarPage'));
 const SettlementsPage = lazy(() => import('./pages/Settlements/SettlementsPage'));
 const DebtsPage = lazy(() => import('./pages/Utangs/DebtsPage'));
 const AddDebtPage = lazy(() => import('./pages/Utangs/AddDebtPage'));
@@ -178,14 +177,6 @@ const App = () => {
                                     element={
                                         <PrivateRoute pageTitle="Add Bill" pageSubtitle="Create a new bill entry">
                                             <AddBillPage />
-                                        </PrivateRoute>
-                                    } 
-                                />
-                                <Route 
-                                    path="/calendar" 
-                                    element={
-                                        <PrivateRoute pageTitle="Calendar" pageSubtitle="Track your bill due dates and payment schedule">
-                                            <CalendarPage />
                                         </PrivateRoute>
                                     } 
                                 />

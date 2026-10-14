@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
-  Calendar,
   LogOut,
   CheckCircle2,
   ChevronLeft,
@@ -20,7 +19,6 @@ import '../styles/shared/Sidebar.css';
 const menuItems = [
   { icon: <LayoutDashboard size={18} />, label: 'Dashboard',   path: '/dashboard' },
   { icon: <Plus size={18} />,            label: 'Add Bill',    path: '/add-bill' },
-  { icon: <Calendar size={18} />,        label: 'Calendar',    path: '/calendar' },
   { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },
   { icon: <Wallet2 size={18} />,         label: 'Utangs',      path: '/utangs' },
   { icon: <Printer size={18} />,         label: 'Print',       path: '/print' },

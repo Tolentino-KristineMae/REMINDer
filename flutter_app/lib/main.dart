@@ -21,7 +21,6 @@ import 'screens/debts/debts_screen.dart';
 import 'screens/debts/add_debt_screen.dart';
 import 'screens/debts/edit_debt_screen.dart';
 import 'screens/debts/settle_debt_screen.dart';
-import 'screens/calendar/calendar_screen.dart';
 import 'screens/settlements/settlements_screen.dart';
 import 'screens/management/management_screen.dart';
 import 'screens/test/notification_test_screen.dart';
@@ -102,7 +101,6 @@ class MyApp extends StatelessWidget {
           '/add-debt': (context) => const AddDebtScreen(),
           '/edit-debt': (context) => const EditDebtScreen(),
           '/settle-debt': (context) => const SettleDebtScreen(),
-          '/calendar': (context) => const CalendarScreen(),
           '/settlements': (context) => const SettlementsScreen(),
           '/management': (context) => const ManagementScreen(),
           '/notification-test': (context) => const NotificationTestScreen(),

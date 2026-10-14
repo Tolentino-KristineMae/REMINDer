@@ -222,15 +222,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             () => Navigator.pushNamed(context, '/add-bill'),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildQuickActionCard(
-                            'Calendar',
-                            Icons.calendar_today,
-                            const Color(0xFF3B82F6),
-                            () => Navigator.pushNamed(context, '/calendar'),
-                          ),
-                        ),
                       ],
                     ),
                   ],

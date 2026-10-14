@@ -75,12 +75,6 @@ class AppDrawer extends StatelessWidget {
                     ),
                     _buildMenuItem(
                       context,
-                      'Calendar',
-                      Icons.calendar_today,
-                      '/calendar',
-                    ),
-                    _buildMenuItem(
-                      context,
                       'Settlements',
                       Icons.receipt_long,
                       '/settlements',
