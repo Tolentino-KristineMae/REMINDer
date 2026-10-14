@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import remindearLogo from '../../assets/REMINDear-Logo.png';
 import BackgroundAuth from '../../Shared/BackgroundGreen';
-import '../../styles/Auth/LoginAndSignup/Signup.css';
+import styles from '../../styles/Auth/LoginAndSignup/Signup.module.css';
 
 const Signup = () => {
     const [firstName, setFirstName] = useState('');
@@ -34,74 +34,74 @@ const Signup = () => {
     };
 
     return (
-        <div className="root">
+        <div className={styles.root}>
             <BackgroundAuth />
 
-            <div className="card">
-                <div className="logoWrapper">
+            <div className={styles.card}>
+                <div className={styles.logoWrapper}>
                     <img src={remindearLogo} alt="REMINDear Logo" style={{ height: '60px', width: 'auto' }} />
                 </div>
 
-                <div className="title">Create Account</div>
-                <div className="subtitle">Create your REMINDear account</div>
+                <div className={styles.title}>Create Account</div>
+                <div className={styles.subtitle}>Create your REMINDear account</div>
 
                 {error && <div className={`${styles.alert} ${styles.alertError}`}>✕ {error}</div>}
 
                 <form onSubmit={handleSubmit}>
-                    <div className="formRow">
-                        <div className="formGroup">
-                            <label className="label">First Name</label>
+                    <div className={styles.formRow}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>First Name</label>
                             <input 
                                 type="text" 
                                 value={firstName} 
                                 onChange={e => setFirstName(e.target.value)} 
-                                className="input" 
+                                className={styles.input}
                                 placeholder="John" 
                                 required 
                                 disabled={loading} 
                             />
                         </div>
-                        <div className="formGroup">
-                            <label className="label">Last Name</label>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Last Name</label>
                             <input 
                                 type="text" 
                                 value={lastName} 
                                 onChange={e => setLastName(e.target.value)} 
-                                className="input" 
+                                className={styles.input}
                                 placeholder="Doe" 
                                 required 
                                 disabled={loading} 
                             />
                         </div>
                     </div>
-                    <div className="formGroup">
-                        <label className="label">Email Address</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Email Address</label>
                         <input 
                             type="email" 
                             value={email} 
                             onChange={e => setEmail(e.target.value)} 
-                            className="input" 
+                            className={styles.input}
                             placeholder="john@example.com" 
                             required 
                             disabled={loading} 
                         />
                     </div>
-                    <div className="formGroup">
-                        <label className="label">Password</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Password</label>
                         <input 
                             type="password" 
                             value={password} 
                             onChange={e => setPassword(e.target.value)} 
-                            className="input" 
+                            className={styles.input}
                             placeholder="••••••••" 
                             required 
                             disabled={loading} 
                         />
                     </div>
-                    <button type="submit" className="button" disabled={loading}>
+                    <button type="submit" className={styles.button} disabled={loading}>
                         {loading ? (
                             <>
-                                <div className="spinner"></div>
+                                <div className={styles.spinner}></div>
                                 Creating account...
                             </>
                         ) : (
@@ -110,22 +110,22 @@ const Signup = () => {
                     </button>
                 </form>
 
-                <div className="footer">
+                <div className={styles.footer}>
                     Already have an account? <Link to="/login">Sign In</Link>
                 </div>
 
-                <div className="infoBox">
-                    <div className="infoTitle">Secure Registration</div>
-                    <div className="infoDesc">
+                <div className={styles.infoBox}>
+                    <div className={styles.infoTitle}>Secure Registration</div>
+                    <div className={styles.infoDesc}>
                         Your data is protected by multi-layer encryption and secure authentication protocols.
                     </div>
-                    <div className="infoItem">
-                        <div className="infoDot"></div>
-                        <span className="infoLabel">End-to-End Encryption</span>
+                    <div className={styles.infoItem}>
+                        <div className={styles.infoDot}></div>
+                        <span className={styles.infoLabel}>End-to-End Encryption</span>
                     </div>
-                    <div className="infoItem">
-                        <div className="infoDot"></div>
-                        <span className="infoLabel">Privacy First Architecture</span>
+                    <div className={styles.infoItem}>
+                        <div className={styles.infoDot}></div>
+                        <span className={styles.infoLabel}>Privacy First Architecture</span>
                     </div>
                 </div>
             </div>
