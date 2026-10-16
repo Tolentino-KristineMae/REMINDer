@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api/axios';
@@ -9,113 +10,74 @@ import styles from '../../styles/Auth/LoginAndSignup/Login.module.css';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    // Wake up backend (cold start) as soon as user lands on login page
     useEffect(() => {
         api.get('/status').catch(() => {});
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
         setLoading(true);
         setError('');
         try {
             await login(email, password);
-            // Small delay to ensure state updates propagate before navigation
-            setTimeout(() => {
-                navigate('/dashboard', { replace: true });
-            }, 0);
+            navigate('/dashboard', { replace: true });
         } catch (err) {
-            const msg =
-                err?.response?.data?.message ||
-                'Invalid login details. Please try again.';
-            console.error('Login failed:', err);
-            setError(msg);
+            setError(err?.response?.data?.message || 'Invalid login details. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className={styles.root}>
+        <main className={styles.root}>
             <BackgroundAuth />
-
-            <div className={styles.card}>
-                <div className={styles.logoWrapper}>
-                    <img src={remindearLogo} alt="REMINDear Logo" style={{ height: '60px', width: 'auto' }} />
+            <section className={styles.card} aria-labelledby="login-title">
+                <div className={styles.brand}>
+                    <img src={remindearLogo} alt="REMINDear" />
                 </div>
 
-                <div className={styles.title}>Sign In</div>
-                <div className={styles.subtitle}>Sign in to continue</div>
+                <div className={styles.heading}>
+                    <h1 id="login-title">Welcome back</h1>
+                    <p>Sign in to continue.</p>
+                </div>
 
-                {error && <div className={`${styles.alert} ${styles.alertError}`}>✕ {error}</div>}
+                {error && <div className={styles.alert} role="alert">{error}</div>}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Email Address</label>
-                        <input 
-                            type="email" 
-                            value={email} 
-                            onChange={e => setEmail(e.target.value)} 
-                            className={styles.input}
-                            placeholder="admin@example.com" 
-                            required 
-                            disabled={loading} 
-                        />
+                        <label htmlFor="email" className={styles.label}>Email address</label>
+                        <div className={styles.inputWrapper}>
+                            <Mail size={18} aria-hidden="true" />
+                            <input id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} className={styles.input} placeholder="you@example.com" autoComplete="email" required disabled={loading} />
+                        </div>
                     </div>
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Password</label>
-                        <input 
-                            type="password" 
-                            value={password} 
-                            onChange={e => setPassword(e.target.value)} 
-                            className={styles.input}
-                            placeholder="••••••••" 
-                            required 
-                            disabled={loading} 
-                        />
-                        <div style={{ textAlign: 'right', marginTop: '6px' }}>
-                            <Link to="/forgot-password" style={{ fontSize: '11px', color: '#16a34a', fontWeight: 600, textDecoration: 'none', letterSpacing: '0.02em' }}>
-                                Forgot password?
-                            </Link>
+                        <div className={styles.labelRow}>
+                            <label htmlFor="password" className={styles.label}>Password</label>
+                            <Link to="/forgot-password">Forgot password?</Link>
+                        </div>
+                        <div className={styles.inputWrapper}>
+                            <LockKeyhole size={18} aria-hidden="true" />
+                            <input id="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => setPassword(event.target.value)} className={styles.input} placeholder="Enter your password" autoComplete="current-password" required disabled={loading} />
+                            <button type="button" className={styles.visibilityButton} onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
                     <button type="submit" className={styles.button} disabled={loading}>
-                        {loading ? (
-                            <>
-                                <div className={styles.spinner}></div>
-                                Signing in...
-                            </>
-                        ) : (
-                            'Log In'
-                        )}
+                        {loading ? <><span className={styles.spinner} /> Signing in...</> : 'Sign in'}
                     </button>
                 </form>
 
-                <div className={styles.footer}>
-                    Don't have an account? <Link to="/setup">Create one</Link>
-                </div>
-
-                <div className={styles.infoBox}>
-                    <div className={styles.infoTitle}>Secure Sign In</div>
-                    <div className={styles.infoDesc}>
-                        Authorized access only. Your login session is protected by multi-layer encryption and secure authentication protocols.
-                    </div>
-                    <div className={styles.infoItem}>
-                        <div className={styles.infoDot}></div>
-                        <span className={styles.infoLabel}>End-to-End Encryption</span>
-                    </div>
-                    <div className={styles.infoItem}>
-                        <div className={styles.infoDot}></div>
-                        <span className={styles.infoLabel}>Secure Session Logging</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <p className={styles.footer}>Don&apos;t have an account? <Link to="/setup">Create one</Link></p>
+            </section>
+        </main>
     );
 };
 
