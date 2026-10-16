@@ -22,8 +22,8 @@ const menuItems = [
   { icon: <CheckCircle2 size={18} />,    label: 'Settlements', path: '/paid-bills' },
   { icon: <Wallet2 size={18} />,         label: 'Utangs',      path: '/utangs' },
   { icon: <Printer size={18} />,         label: 'Print',       path: '/print' },
-  { icon: <Settings2 size={18} />,       label: 'Management',  path: '/management' },
-  { icon: <KeyRound size={18} />,        label: 'Password',    path: '/change-password' },
+  { icon: <Settings2 size={18} />,       label: 'Settings',   path: '/management' },
+  { icon: <KeyRound size={18} />,        label: 'Security',   path: '/change-password' },
 ];
 
 const Tooltip = ({ label }) => (

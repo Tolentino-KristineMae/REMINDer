@@ -167,7 +167,7 @@ const App = () => {
                                 <Route 
                                     path="/management" 
                                     element={
-                                        <PrivateRoute pageTitle="Management" pageSubtitle="Manage categories and team members">
+                                        <PrivateRoute pageTitle="Settings" pageSubtitle="Manage your workspace and account">
                                             <Management />
                                         </PrivateRoute>
                                     } 
