@@ -193,3 +193,74 @@ body {
     padding-bottom: 1.5rem;
   }
 }
+
+/* Final settlement surface overrides: keep status colors while avoiding legacy utility styles. */
+.settlements-page .settlements-pending-panel {
+  background: #fff7f7 !important;
+  border: 1px solid #fecaca !important;
+  border-top: 3px solid #ef4444 !important;
+}
+
+.settlements-page .settlements-history-panel {
+  background: #f6fff9 !important;
+  border: 1px solid #bbf7d0 !important;
+  border-top: 3px solid #22c55e !important;
+}
+
+.settlements-page .settlements-pending-panel > div:first-child {
+  background: #fff7f7 !important;
+  border-color: #fee2e2 !important;
+}
+
+.settlements-page .settlements-history-panel > div:first-child {
+  background: #f6fff9 !important;
+  border-color: #dcfce7 !important;
+}
+
+.settlements-page .settlements-pending-panel .settlements-list .group,
+.settlements-page .settlements-history-panel .group {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+}
+
+.settlements-page .settlements-pending-panel .settlements-list .group {
+  border-left: 4px solid #fb7185 !important;
+}
+
+.settlements-page .settlements-history-panel .group {
+  border-left: 4px solid #34d399 !important;
+}
+
+.settlements-page .settlements-pending-panel .settlements-list .group:hover,
+.settlements-page .settlements-history-panel .group:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+}
+
+.settlements-page .settlements-panel > div:not(:first-child) {
+  background: transparent !important;
+}
+
+.settlements-page .bg-gradient-to-br.from-red-500 {
+  background: linear-gradient(135deg, #ef4444, #e11d48) !important;
+  color: #fff !important;
+}
+
+.settlements-page .bg-gradient-to-br.from-emerald-500 {
+  background: linear-gradient(135deg, #10b981, #15803d) !important;
+  color: #fff !important;
+}
+
+.settlements-page .bg-gradient-to-br.from-red-500 .text-white,
+.settlements-page .bg-gradient-to-br.from-emerald-500 .text-white {
+  color: #fff !important;
+}
+
+.settlements-page .bg-gradient-to-br.from-red-500 .text-red-100,
+.settlements-page .bg-gradient-to-br.from-red-500 .text-red-200,
+.settlements-page .bg-gradient-to-br.from-emerald-500 .text-emerald-100,
+.settlements-page .bg-gradient-to-br.from-emerald-500 .text-emerald-200 {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
