@@ -30,3 +30,71 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f8fafc;
 }
+
+/* Paid bills: quiet surfaces, consistent hierarchy, and restrained status color. */
+.settlements-page {
+  background: #f7f8fa !important;
+  color: #17211b;
+}
+
+.settlements-page main {
+  max-width: 1180px;
+}
+
+.settlements-page > main > div:not(.fixed),
+.settlements-page > main section {
+  border-radius: 16px;
+}
+
+.settlements-page button {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.settlements-page .bg-gradient-to-br {
+  background: #ffffff !important;
+  color: #17211b !important;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.settlements-page .bg-gradient-to-br .text-white,
+.settlements-page .bg-gradient-to-br .text-red-100,
+.settlements-page .bg-gradient-to-br .text-emerald-100,
+.settlements-page .bg-gradient-to-br .text-red-200,
+.settlements-page .bg-gradient-to-br .text-emerald-200 {
+  color: #17211b !important;
+}
+
+.settlements-page .bg-gradient-to-br .bg-white\/20,
+.settlements-page .bg-gradient-to-br .bg-white\/15,
+.settlements-page .bg-gradient-to-br .bg-white\/10,
+.settlements-page .bg-gradient-to-br .bg-white\/5 {
+  background: #f1f5f3 !important;
+}
+
+.settlements-page .bg-red-50,
+.settlements-page .bg-red-50\/10 {
+  background: #ffffff !important;
+}
+
+.settlements-page .border-red-100,
+.settlements-page .border-red-50 {
+  border-color: #e5e7eb !important;
+}
+
+.settlements-page h3,
+.settlements-page h4 {
+  letter-spacing: -0.01em;
+}
+
+.settlements-page .shadow-xl,
+.settlements-page .shadow-2xl {
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+@media (max-width: 640px) {
+  .settlements-page main {
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+  }
+}
