@@ -133,11 +133,11 @@ const BillItem = React.memo(({
 
     if (isPending) {
         return (
-            <div className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md hover:border-red-200 transition-all duration-200 flex items-stretch">
+            <div className="group bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:border-red-200 transition-all duration-200 flex items-stretch">
                 {/* Left accent */}
                 <div className="w-1 flex-shrink-0 bg-gradient-to-b from-red-400 to-rose-500 rounded-l-2xl" />
 
-                <div className="flex-1 flex items-center gap-3 sm:gap-4 px-4 py-3.5">
+                <div className="flex-1 flex items-center gap-3 sm:gap-5 px-4 sm:px-5 py-4">
                     {/* Icon */}
                     <div className="flex-shrink-0 w-10 h-10 bg-red-50 border border-red-100 rounded-xl flex items-center justify-center">
                         <Receipt size={17} className="text-red-400" strokeWidth={2.5} />
@@ -145,7 +145,7 @@ const BillItem = React.memo(({
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                        <p className="font-bold text-gray-900 text-sm leading-snug truncate">{bill.details}</p>
+                        <p className="font-semibold text-slate-900 text-[15px] leading-snug truncate">{bill.details}</p>
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                             <span className="text-[11px] text-gray-400 font-medium flex items-center gap-1 whitespace-nowrap">
                                 <Calendar size={10} className="text-red-400" /> {formatDateLocal(bill.due_date)}
@@ -203,11 +203,11 @@ const BillItem = React.memo(({
 
     // Settled Item
     return (
-        <div className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md hover:border-emerald-200 transition-all duration-200 flex items-stretch">
+        <div className="group bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-200 flex items-stretch">
             {/* Left accent */}
             <div className="w-1 flex-shrink-0 bg-gradient-to-b from-emerald-400 to-green-600 rounded-l-2xl" />
 
-            <div className="flex-1 flex items-center gap-3 sm:gap-4 px-4 py-3.5">
+            <div className="flex-1 flex items-center gap-3 sm:gap-5 px-4 sm:px-5 py-4">
                 {/* Proof thumbnail or icon */}
                 <div className="flex-shrink-0 w-10 h-10 rounded-xl overflow-hidden border border-gray-100">
                     {bill.proof_of_payments?.[0]?.file_path ? (
@@ -226,7 +226,7 @@ const BillItem = React.memo(({
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                    <p className="font-bold text-gray-900 text-sm leading-snug truncate">{bill.details}</p>
+                    <p className="font-semibold text-slate-900 text-[15px] leading-snug truncate">{bill.details}</p>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                         {bill.proof_of_payments?.[0]?.created_at && (
                             <span className="text-[11px] text-emerald-500 font-semibold flex items-center gap-1 whitespace-nowrap">
@@ -710,8 +710,8 @@ const SettlementsPage = () => {
 
                 {/* Pending Settlements */}
                 {filteredPendingBills.length > 0 && (
-                    <div className="settlements-panel settlements-pending-panel bg-red-50 rounded-xl sm:rounded-2xl border border-red-100 shadow-sm overflow-hidden mb-6 sm:mb-8">
-                        <div className="p-3 sm:p-4 px-4 sm:px-5 border-b border-red-50 flex items-center justify-between bg-red-50/10">
+                    <div className="settlements-panel settlements-pending-panel bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-6 sm:mb-8">
+                        <div className="p-4 sm:px-5 border-b border-slate-100 flex items-center justify-between bg-white">
                             <div className="flex items-center gap-2 sm:gap-3">
                                 <h3 className="text-xs sm:text-sm font-black text-red-900 uppercase tracking-wider">Awaiting Settlement</h3>
                                 <div className="h-4 w-[1px] bg-red-200 hidden sm:block"></div>
@@ -881,8 +881,8 @@ const SettlementsPage = () => {
                 </div>
 
                 {/* Transaction History */}
-                <div className="settlements-panel settlements-history-panel bg-white rounded-xl sm:rounded-2xl border border-green-100 shadow-sm overflow-hidden">
-                    <div className="p-3 sm:p-4 px-4 sm:px-5 border-b border-green-50 flex items-center justify-between bg-green-50/10">
+                <div className="settlements-panel settlements-history-panel bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div className="p-4 sm:px-5 border-b border-slate-100 flex items-center justify-between bg-white">
                         <div className="flex items-center gap-2 sm:gap-3">
                             <h3 className="text-xs sm:text-sm font-black text-green-900 uppercase tracking-wider">Completed Transactions</h3>
                             <div className="h-4 w-[1px] bg-green-200 hidden sm:block"></div>
