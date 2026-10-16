@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Eye, EyeOff, LockKeyhole, Mail, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api/axios';
@@ -38,17 +38,13 @@ const Login = () => {
         <main className={styles.root}>
             <BackgroundAuth />
             <section className={styles.card} aria-labelledby="login-title">
-                <div className={styles.brandRow}>
-                    <div className={styles.logoWrapper}>
-                        <img src={remindearLogo} alt="REMINDear" />
-                    </div>
-                    <span className={styles.secureBadge}><ShieldCheck size={14} /> Secure</span>
+                <div className={styles.brand}>
+                    <img src={remindearLogo} alt="REMINDear" />
                 </div>
 
                 <div className={styles.heading}>
-                    <p className={styles.eyebrow}>Welcome back</p>
-                    <h1 id="login-title">Sign in to REMINDear</h1>
-                    <p className={styles.subtitle}>Keep your bills, debts, and due dates organized.</p>
+                    <h1 id="login-title">Welcome back</h1>
+                    <p>Sign in to continue to your account.</p>
                 </div>
 
                 {error && <div className={styles.alert} role="alert">{error}</div>}
@@ -79,11 +75,11 @@ const Login = () => {
                     </button>
                 </form>
 
-                <p className={styles.footer}>New to REMINDear? <Link to="/setup">Create an account</Link></p>
-                <p className={styles.privacy}>Your information is protected with secure authentication.</p>
+                <p className={styles.footer}>Don&apos;t have an account? <Link to="/setup">Create one</Link></p>
             </section>
         </main>
     );
 };
 
 export default Login;
+
