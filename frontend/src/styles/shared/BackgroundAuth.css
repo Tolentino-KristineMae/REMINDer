@@ -1,9 +1,9 @@
 .authBgRoot {
   position: absolute;
   inset: 0;
-  overflow: hidden;
   z-index: 0;
-  background: #f6f8f6;
+  overflow: hidden;
+  background: #f5f8f5;
 }
 
 .authBgRoot::before {
@@ -11,45 +11,15 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 8% 12%, rgba(94, 173, 113, 0.1), transparent 28%),
-    radial-gradient(circle at 92% 88%, rgba(164, 207, 174, 0.14), transparent 32%),
-    linear-gradient(135deg, #fafcfa 0%, #f1f5f2 100%);
+    radial-gradient(circle at 50% -10%, rgba(104, 177, 119, 0.12), transparent 42%),
+    linear-gradient(180deg, #fbfdfb 0%, #f3f7f4 100%);
 }
 
 .blob,
 .worm,
 .dot {
-  opacity: 0.045;
+  display: none;
 }
-
-.blob {
-  position: absolute;
-  pointer-events: none;
-  background: #71b981;
-  filter: blur(2px);
-  z-index: 1;
-}
-
-.b1 { width: 240px; height: 240px; top: 4%; left: 3%; border-radius: 60% 40% 55% 45% / 45% 55% 45% 55%; animation: floatA 7s ease-in-out infinite; }
-.b2 { width: 170px; height: 170px; bottom: 8%; left: 10%; border-radius: 40% 60% 45% 55% / 55% 45% 60% 40%; animation: floatB 9s ease-in-out infinite; }
-.b3 { width: 300px; height: 190px; top: 12%; right: 2%; border-radius: 55% 45% 60% 40% / 40% 60% 40% 60%; animation: floatC 8s ease-in-out infinite; }
-.b4 { width: 140px; height: 140px; bottom: 18%; right: 6%; border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; animation: floatA 6s ease-in-out infinite reverse; }
-.b5 { width: 110px; height: 110px; top: 42%; left: 1%; border-radius: 60% 40% 50% 50% / 50% 50% 60% 40%; animation: floatB 10s ease-in-out infinite; }
-.b6 { width: 85px; height: 85px; top: 62%; right: 16%; border-radius: 50%; animation: floatC 7.5s ease-in-out infinite reverse; }
-
-.worm { position: absolute; pointer-events: none; z-index: 1; }
-.w1 { top: 5%; left: 26%; animation: floatA 8s ease-in-out infinite; }
-.w2 { bottom: 6%; right: 20%; animation: floatB 9s ease-in-out infinite; }
-.w3 { top: 45%; right: 3%; animation: floatC 7s ease-in-out infinite; }
-.dot { position: absolute; border-radius: 50%; background: #70a77c; pointer-events: none; z-index: 1; }
-.d1 { width: 5px; height: 5px; top: 17%; left: 38%; animation: floatA 5s ease-in-out infinite; }
-.d2 { width: 3px; height: 3px; top: 73%; left: 52%; animation: floatB 6s ease-in-out infinite 1s; }
-.d3 { width: 4px; height: 4px; top: 38%; right: 14%; animation: floatC 7s ease-in-out infinite 0.5s; }
-.d4 { width: 3px; height: 3px; bottom: 22%; left: 42%; animation: floatA 4.5s ease-in-out infinite 2s; }
-
-@keyframes floatA { 0%, 100% { transform: translateY(0) rotate(0deg) scale(1); } 50% { transform: translateY(-12px) rotate(3deg) scale(1.02); } }
-@keyframes floatB { 0%, 100% { transform: translateY(0) rotate(0deg) scale(1); } 50% { transform: translateY(10px) rotate(-3deg) scale(1.02); } }
-@keyframes floatC { 0%, 100% { transform: translateY(0) rotate(0deg) scale(1); } 50% { transform: translateY(-14px) rotate(4deg) scale(1.03); } }
 
 @media (prefers-reduced-motion: reduce) {
   .blob, .worm, .dot { animation: none; }

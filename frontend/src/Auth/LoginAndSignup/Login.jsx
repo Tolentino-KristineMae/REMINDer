@@ -44,7 +44,7 @@ const Login = () => {
 
                 <div className={styles.heading}>
                     <h1 id="login-title">Welcome back</h1>
-                    <p>Sign in to continue to your account.</p>
+                    <p>Sign in to continue.</p>
                 </div>
 
                 {error && <div className={styles.alert} role="alert">{error}</div>}
@@ -82,4 +82,3 @@ const Login = () => {
 };
 
 export default Login;
-
