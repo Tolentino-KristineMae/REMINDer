@@ -710,7 +710,7 @@ const SettlementsPage = () => {
 
                 {/* Pending Settlements */}
                 {filteredPendingBills.length > 0 && (
-                    <div className="bg-red-50 rounded-xl sm:rounded-2xl border border-red-100 shadow-sm overflow-hidden mb-6 sm:mb-8">
+                    <div className="settlements-panel settlements-pending-panel bg-red-50 rounded-xl sm:rounded-2xl border border-red-100 shadow-sm overflow-hidden mb-6 sm:mb-8">
                         <div className="p-3 sm:p-4 px-4 sm:px-5 border-b border-red-50 flex items-center justify-between bg-red-50/10">
                             <div className="flex items-center gap-2 sm:gap-3">
                                 <h3 className="text-xs sm:text-sm font-black text-red-900 uppercase tracking-wider">Awaiting Settlement</h3>
@@ -738,7 +738,7 @@ const SettlementsPage = () => {
                         
                         <div className="p-3 sm:p-4">
                             {pendingViewMode === 'list' ? (
-                                <div className="flex flex-col gap-2 sm:gap-3">
+                                <div className="settlements-list flex flex-col gap-2 sm:gap-3">
                                     {filteredPendingBills.map((bill) => (
                                         <BillItem 
                                             key={bill.id}
@@ -881,7 +881,7 @@ const SettlementsPage = () => {
                 </div>
 
                 {/* Transaction History */}
-                <div className="bg-white rounded-xl sm:rounded-2xl border border-green-100 shadow-sm overflow-hidden">
+                <div className="settlements-panel settlements-history-panel bg-white rounded-xl sm:rounded-2xl border border-green-100 shadow-sm overflow-hidden">
                     <div className="p-3 sm:p-4 px-4 sm:px-5 border-b border-green-50 flex items-center justify-between bg-green-50/10">
                         <div className="flex items-center gap-2 sm:gap-3">
                             <h3 className="text-xs sm:text-sm font-black text-green-900 uppercase tracking-wider">Completed Transactions</h3>
@@ -909,7 +909,7 @@ const SettlementsPage = () => {
                     
                     <div className="p-3 sm:p-4 bg-white">
                         {viewMode === 'list' ? (
-                            <div className="space-y-2 sm:space-y-3">
+                            <div className="flex flex-col gap-2 sm:gap-3">
                                 {filteredSettledBills.map((bill) => (
                                     <BillItem 
                                         key={bill.id}
