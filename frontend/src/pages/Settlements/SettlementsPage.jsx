@@ -133,11 +133,8 @@ const BillItem = React.memo(({
 
     if (isPending) {
         return (
-            <div className="group bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:border-red-200 transition-all duration-200 flex items-stretch">
-                {/* Left accent */}
-                <div className="w-1 flex-shrink-0 bg-gradient-to-b from-red-400 to-rose-500 rounded-l-2xl" />
-
-                <div className="flex-1 flex items-center gap-3 sm:gap-5 px-4 sm:px-5 py-4">
+            <div className="group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(15,23,42,0.04)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.08)] hover:border-red-200 transition-all duration-200">
+                <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-4 px-4 sm:px-5 py-4">
                     {/* Icon */}
                     <div className="flex-shrink-0 w-10 h-10 bg-red-50 border border-red-100 rounded-xl flex items-center justify-center">
                         <Receipt size={17} className="text-red-400" strokeWidth={2.5} />
@@ -203,11 +200,8 @@ const BillItem = React.memo(({
 
     // Settled Item
     return (
-        <div className="group bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-200 flex items-stretch">
-            {/* Left accent */}
-            <div className="w-1 flex-shrink-0 bg-gradient-to-b from-emerald-400 to-green-600 rounded-l-2xl" />
-
-            <div className="flex-1 flex items-center gap-3 sm:gap-5 px-4 sm:px-5 py-4">
+        <div className="group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(15,23,42,0.04)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.08)] hover:border-emerald-200 transition-all duration-200">
+            <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-4 px-4 sm:px-5 py-4">
                 {/* Proof thumbnail or icon */}
                 <div className="flex-shrink-0 w-10 h-10 rounded-xl overflow-hidden border border-gray-100">
                     {bill.proof_of_payments?.[0]?.file_path ? (
@@ -736,9 +730,9 @@ const SettlementsPage = () => {
                             </div>
                         </div>
                         
-                        <div className="p-3 sm:p-4">
+                        <div className="p-3 sm:p-5 bg-slate-50/60">
                             {pendingViewMode === 'list' ? (
-                                <div className="settlements-list flex flex-col gap-2 sm:gap-3">
+                                <div className="settlements-list flex flex-col gap-3">
                                     {filteredPendingBills.map((bill) => (
                                         <BillItem 
                                             key={bill.id}
@@ -907,9 +901,9 @@ const SettlementsPage = () => {
                         </div>
                     </div>
                     
-                    <div className="p-3 sm:p-4 bg-white">
+                    <div className="p-3 sm:p-5 bg-slate-50/60">
                         {viewMode === 'list' ? (
-                            <div className="flex flex-col gap-2 sm:gap-3">
+                            <div className="flex flex-col gap-3">
                                 {filteredSettledBills.map((bill) => (
                                     <BillItem 
                                         key={bill.id}
